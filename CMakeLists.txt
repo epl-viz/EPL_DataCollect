@@ -90,8 +90,23 @@ new_project_library(
 # Generate Files #
 ##################
 
+include_directories( ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES} )
+
 if( NOT EXISTS ${PROJECT_SOURCE_DIR}/include )
   file( MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/include )
 endif( NOT EXISTS ${PROJECT_SOURCE_DIR}/include )
 
 configure_file( ${EPL_DC_TEMPLATES_DIR}/defines.in.hpp ${PROJECT_SOURCE_DIR}/include/defines.hpp @ONLY )
+
+generate_format_command( format 3.9.1 )
+
+######################
+# Add subdirectories #
+######################
+
+foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
+  add_subdirectory( "${I}" )
+endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
+
+
+

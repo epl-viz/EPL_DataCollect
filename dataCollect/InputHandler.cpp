@@ -28,17 +28,12 @@
  * \brief InputHandler class
  */
 
-#include <string>
-#include <iostream>
 #include "InputHandler.hpp"
+#include <iostream>
+#include <string>
 
 /*!
  * \brief Stuff
  * \param bar more stuff
  */
-void EPL_DataCollect::InputHandler::foo(std::string bar)
-{
-  std::cout << bar << std::endl;
-}
-
-
+void EPL_DataCollect::InputHandler::foo( std::string bar ) { std::cout << bar << std::endl; }

@@ -31,9 +31,8 @@
 #include <string>
 
 namespace EPL_DataCollect {
-  class InputHandler {
-  public:
-    void foo(std::string bar);
-  };
+class InputHandler {
+ public:
+  void foo( std::string bar );
+};
 }
-
