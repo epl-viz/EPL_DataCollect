@@ -1,0 +1,3 @@
+[submodule "cmake/cmakeBuildTools"]
+	path = cmake/cmakeBuildTools
+	url = git@github.com:mensinda/cmakeBuildTools.git
