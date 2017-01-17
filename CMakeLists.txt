@@ -64,6 +64,28 @@ add_compiler( Clang
                SANITIZE "-fsanitize=${SANITIZERS}"
                RELEASE  "-O2" )
 
+####################
+# Generate subdirs #
+####################
+
+new_project_library(
+  PATH     "${PROJECT_SOURCE_DIR}/dataCollect"
+  NAME     "epl_DataCollect"
+  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+)
+
+new_project_library(
+  PATH     "${PROJECT_SOURCE_DIR}/disector/"
+  NAME     "epl_disector"
+  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+)
+
+new_project_library(
+  PATH     "${PROJECT_SOURCE_DIR}/edsParser/"
+  NAME     "epl_edsParser"
+  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+)
+
 ##################
 # Generate Files #
 ##################

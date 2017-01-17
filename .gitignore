@@ -1,3 +1,4 @@
 *.kdev?
 /*build*
 /include
+/*/CMakeLists.txt
