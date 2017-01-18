@@ -59,7 +59,7 @@ verbose "clang-format command: $CLANG_FORMAT_EXEC"
 
 
 # Check the version
-CURENT_VERSION="$(clang-format --version | sed 's/^[^(]*(tags\/\([^/]*\).*/\1/g')"
+CURENT_VERSION="$($CLANG_FORMAT_EXEC --version | sed 's/^[^(]*(tags\/\([^/]*\).*/\1/g')"
 if [[ "$CLANG_FORMAT_VERSION" != "$CURENT_VERSION" ]]; then
   error "Invalid clang-format version! $CLANG_FORMAT_VERSION required but $CURENT_VERSION provided"
   exit 2
