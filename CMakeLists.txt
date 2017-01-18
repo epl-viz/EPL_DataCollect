@@ -49,7 +49,7 @@ set( EPL_DC_TEMPLATES_DIR ${PROJECT_SOURCE_DIR}/cmake/templates )
 
 run_git()
 
-add_compiler( GNU MIN_VERSION "6.3"
+add_compiler( GNU MIN_VERSION "6.2"
                ALL      "-Wall -Wextra -Wno-comment -std=c++14"
             #   DEBUG    "-Werror"
                SANITIZE "-fsanitize=${SANITIZERS}"
