@@ -9,16 +9,21 @@
 CLANG_FORMAT_VERSION="RELEASE_391"
 CALNG_FORMAT_DEFAULT_CMD="clang-format"
 EXTENSIONS=( cpp c hpp h )
+SOURCE_DIRS=( dataCollect disector edsParser )
 
 ########################
 #  END  CONFIG SECTION #
 ########################
 
 VERBOSE=0
+GIT_MODE=0
+ONLY_CHECK=0
 
 for I in "$@"; do
   case "$I" in
-    -v|--verbose) VERBOSE=1 ;;
+    -v|--verbose)    VERBOSE=1    ;;
+    -g|--git)        GIT_MODE=1   ;;
+    -c|--only-check) ONLY_CHECK=1 ;;
   esac
 done
 
@@ -78,7 +83,13 @@ checkFromat() {
 
   verbose " ==> Checking files"
 
-  for I in $(git diff --cached --name-only); do
+  if (( GIT_MODE == 1 )); then
+    SOURCE_LIST=$(git diff --cached --name-only)
+  else
+    SOURCE_LIST=$(find "${SOURCE_DIRS[@]}" -type f)
+  fi
+
+  for I in $SOURCE_LIST; do
     for J in "${EXTENSIONS[@]}"; do
       echo "$I" | grep -E "\.$J$" &> /dev/null
       (( $? != 0 )) && continue
@@ -107,9 +118,9 @@ checkFromat() {
 checkFromat check
 
 if (( ERROR != 0 )); then
-  exec < /dev/tty
-
   error "$ERROR out of $NUM_FILES files are not formated"
+  (( ONLY_CHECK == 1 )) && exit $ERROR
+
   read -p "  ==> Try formating source files [Y/n]? " -n 1 INPUT
   [ -z "$INPUT" ] && INPUT=y || echo ""
 
@@ -120,28 +131,41 @@ if (( ERROR != 0 )); then
       exit $ERROR
     fi
 
-    read -p "  ==> Show git diff [y/N]? " -n 1 INPUT
-    [ -z "$INPUT" ] && INPUT=n || echo ""
-    [[ "$INPUT" == "Y" || "$INPUT" == "y" ]] && git diff
+    if (( GIT_MODE == 1 )); then
+      read -p "  ==> Show formate updates diff [y/N]? " -n 1 INPUT
+      [ -z "$INPUT" ] && INPUT=n || echo ""
+      [[ "$INPUT" == "Y" || "$INPUT" == "y" ]] && git diff
+    fi
   else
-    exec <&-
     exit $ERROR
   fi
-  exec <&-
 fi
 
-echo -e '        \x1b[1;32m _____ ________  ______  ________ _____   _____ _   __ \x1b[0m'
-echo -e '        \x1b[1;32m/  __ \  _  |  \/  ||  \/  |_   _|_   _| |  _  | | / / \x1b[0m'
-echo -e '        \x1b[1;32m| /  \/ | | | .  . || .  . | | |   | |   | | | | |/ /  \x1b[0m'
-echo -e '        \x1b[1;32m| |   | | | | |\/| || |\/| | | |   | |   | | | |    \  \x1b[0m'
-echo -e '        \x1b[1;32m| \__/\ \_/ / |  | || |  | |_| |_  | |   \ \_/ / |\  \ \x1b[0m'
-echo -e '        \x1b[1;32m \____/\___/\_|  |_/\_|  |_/\___/  \_/    \___/\_| \_/ \x1b[0m'
-echo -e '        \x1b[1;32m                                                       \x1b[0m'
+if (( GIT_MODE == 0 )); then
+  echo -e '        \x1b[1;32m______ ______________  ___  ___ _____   _____ _   __ \x1b[0m'
+  echo -e '        \x1b[1;32m|  ___|  _  | ___ \  \/  | / _ \_   _| |  _  | | / / \x1b[0m'
+  echo -e '        \x1b[1;32m| |_  | | | | |_/ / .  . |/ /_\ \| |   | | | | |/ /  \x1b[0m'
+  echo -e '        \x1b[1;32m|  _| | | | |    /| |\/| ||  _  || |   | | | |    \  \x1b[0m'
+  echo -e '        \x1b[1;32m| |   \ \_/ / |\ \| |  | || | | || |   \ \_/ / |\  \ \x1b[0m'
+  echo -e '        \x1b[1;32m\_|    \___/\_| \_\_|  |_/\_| |_/\_/    \___/\_| \_/ \x1b[0m'
+  echo -e '        \x1b[1;32m                                                     \x1b[0m'
+else
+  echo -e '        \x1b[1;32m _____ ________  ______  ________ _____   _____ _   __ \x1b[0m'
+  echo -e '        \x1b[1;32m/  __ \  _  |  \/  ||  \/  |_   _|_   _| |  _  | | / / \x1b[0m'
+  echo -e '        \x1b[1;32m| /  \/ | | | .  . || .  . | | |   | |   | | | | |/ /  \x1b[0m'
+  echo -e '        \x1b[1;32m| |   | | | | |\/| || |\/| | | |   | |   | | | |    \  \x1b[0m'
+  echo -e '        \x1b[1;32m| \__/\ \_/ / |  | || |  | |_| |_  | |   \ \_/ / |\  \ \x1b[0m'
+  echo -e '        \x1b[1;32m \____/\___/\_|  |_/\_|  |_/\___/  \_/    \___/\_| \_/ \x1b[0m'
+  echo -e '        \x1b[1;32m                                                       \x1b[0m'
+fi
 echo -e "  \x1b[1;32m==>\x1b[0m All $NUM_FILES files are OK"
 
 # Add changes
-for I in "${TO_GIT_ADD[@]}"; do
-  git add "$I"
-done
+if (( GIT_MODE == 1 )); then
+  for I in "${TO_GIT_ADD[@]}"; do
+    echo "$I"
+    git add "$I"
+  done
+fi
 
 exit $ERROR
