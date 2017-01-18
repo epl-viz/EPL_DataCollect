@@ -46,16 +46,16 @@ verbose() {
 
 cd "$(dirname "$0")"
 
-[ -z "$CALNG_FORMAT_CMD" ] && CALNG_FORMAT_CMD="$CALNG_FORMAT_DEFAULT_CMD"
+[ -z "$CLANG_FORMAT_CMD" ] && CLANG_FORMAT_CMD="$CALNG_FORMAT_DEFAULT_CMD"
 
 # Check if the command exists
-CALNG_FORMAT_EXEC=$(which "$CALNG_FORMAT_CMD" 2> /dev/null)
+CLANG_FORMAT_EXEC=$(which "$CLANG_FORMAT_CMD" 2> /dev/null)
 if (( $? != 0 )); then
-  error "clang-format ($CALNG_FORMAT_CMD) not found. Try setting the CALNG_FORMAT_CMD environment variable"
+  error "clang-format ($CLANG_FORMAT_CMD) not found. Try setting the CLANG_FORMAT_CMD environment variable"
   exit 1
 fi
 
-verbose "clang-format command: $CALNG_FORMAT_EXEC"
+verbose "clang-format command: $CLANG_FORMAT_EXEC"
 
 
 # Check the version
@@ -98,13 +98,13 @@ checkFromat() {
 
       if [[ "$1" == "format" ]]; then
         verbose "   --> Fixing $I"
-        $CALNG_FORMAT_EXEC -i "$I"
+        $CLANG_FORMAT_EXEC -i "$I"
         TO_GIT_ADD+=( "$I" )
       fi
 
       verbose "   --> Checking $I"
 
-      RES=$( $CALNG_FORMAT_EXEC -output-replacements-xml "$I" | grep "<replacement " )
+      RES=$( $CLANG_FORMAT_EXEC -output-replacements-xml "$I" | grep "<replacement " )
       if [ -n "$RES" ]; then
         echo -e " \x1b[1;31mFormat check error: $I"
         (( ERROR++ ))
