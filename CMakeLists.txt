@@ -40,6 +40,11 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
 
+set( CMAKE_CXX_STANDARD          14 )
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set( CMAKE_C_STANDARD            11 )
+set( CMAKE_C_STANDARD_REQUIRED   ON )
+
 # Some useful variables
 set( EPL_DC_TEMPLATES_DIR ${PROJECT_SOURCE_DIR}/cmake/templates )
 
@@ -50,13 +55,13 @@ set( EPL_DC_TEMPLATES_DIR ${PROJECT_SOURCE_DIR}/cmake/templates )
 run_git()
 
 add_compiler( GNU MIN_VERSION "6.2"
-               ALL      "-Wall -Wextra -Wno-comment -std=c++14"
+               ALL      "-Wall -Wextra -Wno-comment"
             #   DEBUG    "-Werror"
                SANITIZE "-fsanitize=${SANITIZERS}"
                RELEASE  "-O3" )
 
 add_compiler( Clang
-               ALL      "-fvisibility=hidden -std=c++14 -Weverything -ftemplate-backtrace-limit=0"
+               ALL      "-fvisibility=hidden -Weverything -ftemplate-backtrace-limit=0"
                         "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
                         "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
                         "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
