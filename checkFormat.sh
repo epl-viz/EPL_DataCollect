@@ -6,7 +6,7 @@
 # BEGIN CONFIG SECTION #
 ########################
 
-CLANG_FORMAT_VERSION="RELEASE_391"
+CLANG_FORMAT_VERSION="3.9.1"
 CALNG_FORMAT_DEFAULT_CMD="clang-format"
 EXTENSIONS=( cpp c hpp h )
 SOURCE_DIRS=( dataCollect disector edsParser )
@@ -59,7 +59,8 @@ verbose "clang-format command: $CLANG_FORMAT_EXEC"
 
 
 # Check the version
-CURENT_VERSION="$($CLANG_FORMAT_EXEC --version | sed 's/^[^(]*(tags\/\([^/]*\).*/\1/g')"
+CURENT_VERSION="$($CLANG_FORMAT_EXEC --version | sed 's/^[^0-9]*//g')"
+CURENT_VERSION="$(echo "$CURENT_VERSION" | sed 's/^\([0-9.]*\).*/\1/g')"
 if [[ "$CLANG_FORMAT_VERSION" != "$CURENT_VERSION" ]]; then
   error "Invalid clang-format version! $CLANG_FORMAT_VERSION required but $CURENT_VERSION provided"
   exit 2
