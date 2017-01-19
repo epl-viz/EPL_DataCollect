@@ -54,20 +54,39 @@ set( EPL_DC_TEMPLATES_DIR ${PROJECT_SOURCE_DIR}/cmake/templates )
 
 run_git()
 
-add_compiler( GNU MIN_VERSION "6.2"
-               ALL      "-Wall -Wextra -Wno-comment"
-            #   DEBUG    "-Werror"
-               SANITIZE "-fsanitize=${SANITIZERS}"
-               RELEASE  "-O3" )
+add_compiler(
+  GNU MIN_VERSION "6.2"
+  ALL        "-Wall -Wextra -Wno-comment"
+  DEBUG      "-Werror"
+  RELEASE    "-O3"
 
-add_compiler( Clang
-               ALL      "-fvisibility=hidden -Weverything -ftemplate-backtrace-limit=0"
-                        "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
-                        "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
-                        "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
-            #   DEBUG    "-Werror"
-               SANITIZE "-fsanitize=${SANITIZERS}"
-               RELEASE  "-O2" )
+  C_DEBUG    "-Werror"
+  C_ALL      "-Wall -Wextra -Wno-comment"
+  C_RELEASE  "-O3"
+
+  SANITIZE   "-fsanitize=${SANITIZERS}"
+)
+
+add_compiler(
+  Clang MIN_VERSION 3.9
+  ALL        "-Weverything -ftemplate-backtrace-limit=0"
+             "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
+             "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
+             "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
+             "-Wno-documentation-unknown-command"
+  DEBUG      "-Werror"
+  RELEASE    "-O2"
+
+  C_ALL      "-Weverything -ftemplate-backtrace-limit=0"
+             "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
+             "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
+             "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
+             "-Wno-documentation-unknown-command"
+  C_DEBUG    "-Werror"
+  C_RELEASE  "-O2"
+
+  SANITIZE "-fsanitize=${SANITIZERS}"
+)
 
 ####################
 # Generate subdirs #
