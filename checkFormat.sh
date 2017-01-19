@@ -85,12 +85,21 @@ checkFromat() {
   verbose " ==> Checking files"
 
   if (( GIT_MODE == 1 )); then
-    SOURCE_LIST=$(git diff --cached --name-only)
+    SOURCE_LIST=()
+    for I in $(git diff --cached --name-only); do
+      for J in "${SOURCE_DIRS[@]}"; do
+        echo "$I" | grep -E "^$J" &> /dev/null
+        if (( $? == 0 )); then
+          SOURCE_LIST+=( "$I" )
+          break
+        fi
+      done
+    done
   else
-    SOURCE_LIST=$(find "${SOURCE_DIRS[@]}" -type f)
+    SOURCE_LIST=( $(find "${SOURCE_DIRS[@]}" -type f) )
   fi
 
-  for I in $SOURCE_LIST; do
+  for I in "${SOURCE_LIST[@]}"; do
     for J in "${EXTENSIONS[@]}"; do
       echo "$I" | grep -E "\.$J$" &> /dev/null
       (( $? != 0 )) && continue
