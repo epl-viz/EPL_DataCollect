@@ -30,6 +30,7 @@ message( STATUS "Using CMake version: ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSI
 include( ${PROJECT_SOURCE_DIR}/cmake/cmakeScripLoader.cmake )
 
 include( CMakePackageConfigHelpers )
+include( ExternalProject )
 
 ######################
 # Set some variables #
@@ -47,8 +48,13 @@ set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_C_STANDARD            11 )
 set( CMAKE_C_STANDARD_REQUIRED   ON )
 
+option( DISABLE_TESTS "Disables all tests" OFF )
+
+list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
+
 # Some useful variables
-set( EPL_DC_TEMPLATES_DIR ${PROJECT_SOURCE_DIR}/cmake/templates )
+set( EPL_DC_TEMPLATES_DIR "${PROJECT_SOURCE_DIR}/cmake/templates" )
+set( EPL_DC_INCLUDES_DIR  "${PROJECT_SOURCE_DIR}/include" )
 
 ################################
 # Set up the build environment #
@@ -90,6 +96,24 @@ add_compiler(
   SANITIZE "-fsanitize=${SANITIZERS}"
 )
 
+######################
+# Check Dependencies #
+######################
+
+find_package( Git REQUIRED )
+
+ExternalProject_Add( catch
+  PREFIX            ${CMAKE_BINARY_DIR}/catch
+  GIT_REPOSITORY    https://github.com/philsquared/Catch.git
+  UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+)
+
+ExternalProject_Get_Property( catch source_dir )
+set( CATCH_INCLUDE_DIR "${source_dir}/include" )
+
 ####################
 # Generate subdirs #
 ####################
@@ -101,17 +125,35 @@ new_project_library(
 )
 
 new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/disector/"
+  PATH     "${PROJECT_SOURCE_DIR}/disector"
   NAME     "epl_disector"
   TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
 )
 
 new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/edsParser/"
+  PATH     "${PROJECT_SOURCE_DIR}/edsParser"
   NAME     "epl_edsParser"
   TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
 )
 
+if( NOT DISABLE_TESTS )
+  new_project_executable(
+    PATH         "${PROJECT_SOURCE_DIR}/tests"
+    NAME         "tests"
+    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
+    DEPENDENCIES epl_DataCollect_shared epl_disector_shared epl_edsParser_shared
+  )
+endif( NOT DISABLE_TESTS )
+
+##############################
+# Update include directories #
+##############################
+
+include_directories( ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES} ${CATCH_INCLUDE_DIR} ${EPL_DC_INCLUDES_DIR} )
+
+if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
+  file( MAKE_DIRECTORY "${EPL_DC_INCLUDES_DIR}" )
+endif( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
 
 ######################
 # Add subdirectories #
@@ -121,17 +163,15 @@ foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
   add_subdirectory( "${I}" )
 endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 
+if( NOT DISABLE_TESTS )
+  add_custom_target( check COMMAND tests )
+endif( NOT DISABLE_TESTS )
+
 ##################
 # Generate Files #
 ##################
 
-include_directories( ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES} )
-
-if( NOT EXISTS ${PROJECT_SOURCE_DIR}/include )
-  file( MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/include )
-endif( NOT EXISTS ${PROJECT_SOURCE_DIR}/include )
-
-configure_file( ${EPL_DC_TEMPLATES_DIR}/defines.in.hpp ${PROJECT_SOURCE_DIR}/include/defines.hpp @ONLY )
+configure_file( "${EPL_DC_TEMPLATES_DIR}/defines.in.hpp" "${EPL_DC_INCLUDES_DIR}/defines.hpp" @ONLY )
 
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Version.cmake"

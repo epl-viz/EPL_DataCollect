@@ -34,5 +34,6 @@ namespace EPL_DataCollect {
 class InputHandler {
  public:
   void foo( std::string bar );
+  int add( int a, int b );
 };
 }

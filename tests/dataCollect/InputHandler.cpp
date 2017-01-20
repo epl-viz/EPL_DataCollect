@@ -23,25 +23,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file InputHandler.cpp
- * \brief InputHandler class
- */
 
-#include "InputHandler.hpp"
-#include <iostream>
-#include <string>
+#include <InputHandler.hpp>
+#include <catch.hpp>
 
-/*!
- * \brief Stuff
- * \param bar more stuff
- */
-void EPL_DataCollect::InputHandler::foo( std::string bar ) { std::cout << bar << std::endl; }
+TEST_CASE( "InputHandler add functions works", "[InputHandler]" ) {
+  EPL_DataCollect::InputHandler handler;
 
-/*!
- * \brief Adder function
- * \param a val1
- * \param b val2
- * \returns a + b
- */
-int EPL_DataCollect::InputHandler::add( int a, int b ) { return a + b; }
+  SECTION( "adding positiv values" ) {
+    REQUIRE( handler.add( 1, 2 ) == 3 );
+    REQUIRE( handler.add( 100, 7 ) == 107 );
+    REQUIRE( handler.add( 1, 2 ) == 3 );
+  }
+
+  SECTION( "adding negative values" ) {
+    REQUIRE( handler.add( -1, -2 ) == -3 );
+    REQUIRE( handler.add( -100, -7 ) == -107 );
+    REQUIRE( handler.add( -6, -2 ) == -8 );
+  }
+
+  SECTION( "adding positive and negative values" ) {
+    REQUIRE( handler.add( -1, 2 ) == 1 );
+    REQUIRE( handler.add( 5, -7 ) == -2 );
+    REQUIRE( handler.add( 11, -6 ) == 5 );
+  }
+}

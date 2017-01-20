@@ -23,25 +23,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file InputHandler.cpp
- * \brief InputHandler class
- */
 
-#include "InputHandler.hpp"
-#include <iostream>
-#include <string>
+#define CATCH_CONFIG_RUNNER
+#include <catch.hpp>
 
-/*!
- * \brief Stuff
- * \param bar more stuff
- */
-void EPL_DataCollect::InputHandler::foo( std::string bar ) { std::cout << bar << std::endl; }
+int main( int argc, char *argv[] ) {
+  Catch::Session session;
 
-/*!
- * \brief Adder function
- * \param a val1
- * \param b val2
- * \returns a + b
- */
-int EPL_DataCollect::InputHandler::add( int a, int b ) { return a + b; }
+  int returnCode = session.applyCommandLine( argc, argv );
+  if ( returnCode != 0 ) // Indicates a command line error
+    return returnCode;
+
+  return session.run();
+}

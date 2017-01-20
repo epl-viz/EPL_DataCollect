@@ -9,7 +9,7 @@
 CLANG_FORMAT_VERSION="3.9.1"
 CALNG_FORMAT_DEFAULT_CMD="clang-format"
 EXTENSIONS=( cpp c hpp h )
-SOURCE_DIRS=( dataCollect disector edsParser )
+SOURCE_DIRS=( dataCollect disector edsParser tests )
 
 ########################
 #  END  CONFIG SECTION #
