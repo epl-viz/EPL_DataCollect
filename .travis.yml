@@ -34,6 +34,4 @@ script:
   - $CMAKE_EXEC -DENABLE_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
   - make
   - make check
-
-after_success:
-  - make coveralls
+  - [[ "$CXX" == "g++-6" ]] && make coveralls
