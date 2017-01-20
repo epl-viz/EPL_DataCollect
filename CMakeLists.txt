@@ -42,13 +42,15 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/coveralls-cmake/cmake )
 
 set( CMAKE_CXX_STANDARD          14 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_C_STANDARD            11 )
 set( CMAKE_C_STANDARD_REQUIRED   ON )
 
-option( DISABLE_TESTS "Disables all tests" OFF )
+option( DISABLE_TESTS        "Disables all tests"          OFF )
+option( ENABLE_CODE_COVERAGE "Enables code coverage tests" OFF )
 
 list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 
@@ -65,11 +67,11 @@ run_git()
 add_compiler(
   GNU MIN_VERSION "6.2"
   ALL        "-Wall -Wextra -Wno-comment"
-  DEBUG      "-Werror"
+  DEBUG      "-O0 -Werror --coverage"
   RELEASE    "-O3"
 
-  C_DEBUG    "-Werror"
   C_ALL      "-Wall -Wextra -Wno-comment"
+  C_DEBUG    "-O0 -Werror --coverage"
   C_RELEASE  "-O3"
 
   SANITIZE   "-fsanitize=${SANITIZERS}"
@@ -143,6 +145,9 @@ if( NOT DISABLE_TESTS )
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
     DEPENDENCIES epl_DataCollect_shared epl_disector_shared epl_edsParser_shared
   )
+
+  enable_testing()
+  add_test( NAME AllTests COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
 ##############################
@@ -190,4 +195,17 @@ install( EXPORT ${PROJECT_NAME}Targets DESTINATION lib/cmake/${PROJECT_NAME} )
 
 generate_format_command( format 3.9.1 )
 
+#################
+# Code Coverage #
+#################
 
+if( ENABLE_CODE_COVERAGE )
+
+  include(Coveralls)
+
+  coveralls_setup(
+    "${${PROJECT_NAME}_ALL_UNASIGNED_CPP}" # The source files.
+    ON                  # If we should upload.
+  )
+
+endif( ENABLE_CODE_COVERAGE )

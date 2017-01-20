@@ -31,6 +31,9 @@ install:
 script:
   - ./checkFormat.sh --only-check
   - mkdir build; cd build
-  - $CMAKE_EXEC ..
-  - make
-  - make check
+  - $CMAKE_EXEC -DENABLE_CODE_COVERAGE ..
+  - $CMAKE_EXEC --build .
+  - $CMAKE_EXEC --build . --target check
+
+after_success:
+  - $CMAKE_EXEC --build . --target coveralls
