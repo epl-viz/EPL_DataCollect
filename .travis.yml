@@ -19,6 +19,8 @@ addons:
       - gcc-6
       - clang-3.9
       - clang-format-3.9
+      - lcov
+      - curl
 
 install:
   - git clone https://github.com/epl-viz/travisDependencies
@@ -27,6 +29,8 @@ install:
   - if [[ "$CXX" == "clang++" ]]; then export CXX=clang++-3.9; export CC=clang-3.9; fi
   - if [[ "$CXX" == "g++"     ]]; then export CXX=g++-6;       export CC=gcc-6;     fi
   - export CLANG_FORMAT_CMD="clang-format-3.9"
+  - export COVERALLS_SERVICE_NAME=travis-ci
+  - export COVERALLS_REPO_TOKEN=abc12345
 
 script:
   - ./checkFormat.sh --only-check
