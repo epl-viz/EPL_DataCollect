@@ -145,9 +145,6 @@ if( NOT DISABLE_TESTS )
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
     DEPENDENCIES epl_DataCollect_shared epl_disector_shared epl_edsParser_shared
   )
-
-  enable_testing()
-  add_test( NAME AllTests COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
 ##############################
@@ -199,13 +196,15 @@ generate_format_command( format 3.9.1 )
 # Code Coverage #
 #################
 
-if( ENABLE_CODE_COVERAGE )
+if( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+  message( STATUS "COVERAGE ON" )
+  enable_testing()
+  add_test( NAME AllTests COMMAND tests )
 
   include(Coveralls)
 
   coveralls_setup(
-    "${${PROJECT_NAME}_ALL_UNASIGNED_CPP}" # The source files.
-    ON                  # If we should upload.
+    "${${PROJECT_NAME}_ALL_UNASIGNED_CPP}"
+    ON
   )
-
-endif( ENABLE_CODE_COVERAGE )
+endif( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
