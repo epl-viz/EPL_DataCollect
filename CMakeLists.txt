@@ -196,15 +196,15 @@ generate_format_command( format 3.9.1 )
 # Code Coverage #
 #################
 
-if( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
-  message( STATUS "COVERAGE ON" )
-  enable_testing()
-  add_test( NAME AllTests COMMAND tests )
-
-  include(Coveralls)
-
-  coveralls_setup(
-    "${${PROJECT_NAME}_ALL_UNASIGNED_CPP}"
-    ON
-  )
-endif( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+# if( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+#   message( STATUS "COVERAGE ON" )
+#   enable_testing()
+#   add_test( NAME AllTests COMMAND tests )
+#
+#   include(Coveralls)
+#
+#   coveralls_setup(
+#     "${${PROJECT_NAME}_ALL_UNASIGNED_CPP}"
+#     ON
+#   )
+# endif( ENABLE_CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL GNU )
