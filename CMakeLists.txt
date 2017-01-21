@@ -62,16 +62,20 @@ set( EPL_DC_INCLUDES_DIR  "${PROJECT_SOURCE_DIR}/include" )
 # Set up the build environment #
 ################################
 
+if( ENABLE_CODE_COVERAGE )
+  set( COVERAGE_COMPILER_FLAG "--coverage" )
+endif( ENABLE_CODE_COVERAGE )
+
 run_git()
 
 add_compiler(
   GNU MIN_VERSION "6.2"
   ALL        "-Wall -Wextra -Wno-comment"
-  DEBUG      "-O0 -Werror --coverage"
+  DEBUG      "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
   C_ALL      "-Wall -Wextra -Wno-comment"
-  C_DEBUG    "-O0 -Werror --coverage"
+  C_DEBUG    "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
   C_RELEASE  "-O3"
 
   SANITIZE   "-fsanitize=${SANITIZERS}"
