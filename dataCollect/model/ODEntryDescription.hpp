@@ -24,32 +24,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file ODEntryDescription.hpp
+ * \brief Contains class ODEntryDescription
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+
+#include "defines.hpp"
+#include "ODEntry.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * class ODEntryDescription
+  * \brief Description of a specific OD entry
   */
-class InputHandler {
+class ODEntryDescription {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +52,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  ODEntryDescription();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~ODEntryDescription();
+
+  ODEntryDescription( const ODEntryDescription & ) = default;
+  ODEntryDescription( ODEntryDescription && )      = default;
+
+  ODEntryDescription &operator=( const ODEntryDescription & ) = default;
+  ODEntryDescription &operator=( ODEntryDescription && ) = default;
 
   // Static Public attributes
   //
@@ -71,6 +71,9 @@ class InputHandler {
   // Public attributes
   //
 
+  std::string name;
+  ODEntryType type;
+  int         defaultValue;
 
   // Public attribute accessor methods
   //
@@ -80,34 +83,41 @@ class InputHandler {
   //
 
 
+  /*!
+   * Set the value of name
+   * \param new_var the new value of name
+   */
+  void setName( std::string new_var ) { name = new_var; }
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * Get the value of name
+   * \return the value of name
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
+  std::string getName() { return name; }
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * Set the value of type
+   * \param new_var the new value of type
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  void setType( ODEntryType new_var ) { type = new_var; }
+
+  /*!
+   * Get the value of type
+   * \return the value of type
+   */
+  ODEntryType getType() { return type; }
+
+  /*!
+   * Set the value of defaultValue
+   * \param new_var the new value of defaultValue
+   */
+  void setDefaultValue( int new_var ) { defaultValue = new_var; }
+
+  /*!
+   * Get the value of defaultValue
+   * \return the value of defaultValue
+   */
+  int getDefaultValue() { return defaultValue; }
 
  protected:
   // Static Protected attributes
@@ -133,8 +143,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +151,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

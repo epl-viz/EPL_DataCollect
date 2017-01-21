@@ -24,8 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file CycleContainer.hpp
+ * \brief Contains class CycleContainer
  * \todo IMPLEMENT
  */
 
@@ -34,22 +34,15 @@
 #include "defines.hpp"
 
 #include <vector>
-#include "Packet.hpp"
+#include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * class CycleContainer
+  * \brief Container interface for all cycles
   */
-class InputHandler {
+class CycleContainer {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +51,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  CycleContainer();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~CycleContainer();
 
   // Static Public attributes
   //
@@ -82,32 +75,22 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns the specified cycle
+   * \throws When the cycle does not exist
+   * \return Cycle
+   * \param  cycleNum The ID of the cycle to get
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
+  Cycle getCycle( unsigned int cycleNum ) {
     (void)cycleNum;
-    return std::vector<Packet>();
+    return Cycle();
   }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns the latest cycle
+   * \return Cycle
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  Cycle pollCycle() { return Cycle(); }
 
  protected:
   // Static Protected attributes
@@ -133,8 +116,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +124,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

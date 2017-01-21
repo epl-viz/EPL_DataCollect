@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file Node.cpp
+ * \brief Contains class Node
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "Node.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+Node::Node() {}
+
+Node::~Node() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

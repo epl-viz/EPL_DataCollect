@@ -24,32 +24,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file EventLog.hpp
+ * \brief Contains class EventLog
  * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "defines.hpp"
-
 #include <vector>
-#include "Packet.hpp"
+#include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class EventLog
+  * \brief Container for all events of a CaptureInstance
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
+  * The EventLog class is the main container for all events and has functions to
+  * access them.
+  * Furthermore it has logic for:
   *
-  * The ODDescription is also copied (\sa ODDescription).
+  *  - detecting and handling duplicate events
+  *  - continuation of events (extending the cycle range of previous events)
+  *  - replacing events (see continuous events)
+  *
+  * \par Continuous events
+  * Special events that should be active until the next event of the same type is
+  * triggered (for example GEvImage) can have a flag set that activates this special
+  * treatment.
   */
-class InputHandler {
+class EventLog {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +63,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  EventLog();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~EventLog();
 
   // Static Public attributes
   //
@@ -82,32 +87,44 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns all events triggered after the last pollEvents call with the same
+   * appID
+   * \return std::vector<EventBase*>
+   * \param  appID Identifies the user polling the events
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
+  std::vector<EventBase *> pollEvents( unsigned int appID = 0 ) {
+    (void)appID;
+    return std::vector<EventBase *>();
   }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns a unique ID that should be used in pollEvents
+   * \return unsigned int
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
+  unsigned int getAppID() { return 0; }
+
+
+  /*!
+   * \brief Returns all events triggered within the cycle range
+   * Use -1 for start/end to select the first/last cycle
+   * \return std::vector<EventBase*>
+   * \param  begin The begin of the cycle range
+   * \param  end The end of the cycle range
+   */
+  std::vector<EventBase *> getEventsInRange( int begin = -1, int end = -1 ) {
+    (void)begin;
+    (void)end;
+    return std::vector<EventBase *>();
   }
+
+
+  /*!
+   * \brief Returns all events triggered
+   * Wrapper for getEventsInRange
+   * \return std::vector<EventBase*>
+   */
+  std::vector<EventBase *> getAllEvents() { return getEventsInRange( -1, -1 ); }
 
  protected:
   // Static Protected attributes
@@ -133,8 +150,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +158,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

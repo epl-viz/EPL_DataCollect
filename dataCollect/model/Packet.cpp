@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file Packet.cpp
+ * \brief Contains class Packet
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "Packet.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+Packet::Packet() {}
+
+Packet::~Packet() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

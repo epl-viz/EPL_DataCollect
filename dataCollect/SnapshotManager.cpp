@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file SnapshotManager.hpp
+ * \brief Contains class SnapshotManager
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "SnapshotManager.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+SnapshotManager::SnapshotManager() {}
+
+SnapshotManager::~SnapshotManager() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

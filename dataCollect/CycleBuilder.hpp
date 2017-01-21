@@ -24,32 +24,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file CycleBuilder.hpp
+ * \brief Contains class CycleBuilder
  * \todo IMPLEMENT
  */
 
 #pragma once
 
-#include "defines.hpp"
-
-#include <vector>
-#include "Packet.hpp"
+#include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class CycleBuilder
+  * \brief Updates the cycle
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * This class is responsible for deterministically generating / updating cycle with
+  * the provided packet from the InputHandler and the invocation of the
+  * PluginManager
   */
-class InputHandler {
+class CycleBuilder {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +52,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  CycleBuilder();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~CycleBuilder();
 
   // Static Public attributes
   //
@@ -82,32 +76,46 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Starts the build loop
+   * Returns false if a loop is already running
+   * \return bool
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
+  bool startLoop() { return false; }
+
+
+  /*!
+   * \brief Stopps the build loop
+   * Returns false if no loop is running
+   * \return bool
+   */
+  bool stopLoop() { return false; }
+
+
+  /*!
+   * \brief Returns whether the build loop is running or not
+   * \return bool
+   */
+  bool isRunning() { return false; }
+
+
+  /*!
+   * \brief (Re)constructs a specific cycle
+   * This function uses a specific start cycle as a base to compute the targetCycle.
+   * \return Cycle
+   * \param  targetCycle The target cycle
+   * \param  start The base cycle to iterate over
+   */
+  Cycle seekCycle( unsigned int targetCycle, Cycle start ) {
+    (void)targetCycle;
+    return start;
   }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns the last cycle completely processed by the buildLoop
+   * \return Cycle
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  Cycle getCurrentCycle() { return Cycle(); }
 
  protected:
   // Static Protected attributes
@@ -133,8 +141,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -144,7 +150,10 @@ class InputHandler {
   // Private attribute accessor methods
   //
 
-
  private:
+  /*!
+   * \brief Main cycle builder loop. Runs in a seperate thread
+   */
+  void buildLoop() {}
 };
 }

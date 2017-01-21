@@ -24,9 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file ProtocolValidator.cpp
+ * \brief Contains class ProtocolValidator
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "ProtocolValidator.hpp"
+
+namespace EPL_DataCollect {
+namespace plugins {
+
+// Constructors/Destructors
+//
+
+ProtocolValidator::ProtocolValidator() {}
+
+ProtocolValidator::~ProtocolValidator() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}
+}

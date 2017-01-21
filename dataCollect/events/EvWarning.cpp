@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file EvWarning.cpp
+ * \brief Contains class EvWarning
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "EvWarning.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+EvWarning::EvWarning() {}
+
+EvWarning::~EvWarning() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

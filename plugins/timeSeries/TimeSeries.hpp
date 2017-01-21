@@ -24,32 +24,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file TimeSeries.hpp
+ * \brief Contains class TimeSeries
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+#include "defines.hpp"
+#include <string>
+#include "CycleStorageBase.hpp"
+#include "ODEntry.hpp"
 
 namespace EPL_DataCollect {
+namespace plugins {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+ * \brief The type of the TimeSeries
+ * \todo IMPLEMENT
+ */
+enum TimeSeriesDataType { TS_DT_INT };
+
+/*!
+  * class TimeSeries
+  * \brief Time series for a specific OD (or CycleStorage) entry
   */
-class InputHandler {
+class TimeSeries {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +60,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  TimeSeries();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~TimeSeries();
 
   // Static Public attributes
   //
@@ -82,32 +84,52 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief returns whether the specified OD entry is a custom Entry
+   * \return bool
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  bool isCustomEntry() { return false; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns the type of the data to store
+   * \return TimeSeriesDataType
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  TimeSeriesDataType getType() { return type; }
+
+
+  /*!
+   * \brief returns the OD / custom entry index for this time series
+   * \return unsigned int
+   */
+  unsigned int getIndex() { return 0; }
+
+
+  /*!
+   * \brief Returns the ID of the Node
+   * \return unsigned int
+   */
+  unsigned int getNodeID() { return 0; }
+
+
+  /*!
+   * \brief Returns the ID of the cycle storage
+   * \return std::string
+   */
+  std::string getCSID() { return ""; }
+
+
+  /*!
+   * \brief Adds a new data point to the timeseries
+   * \param  data The new data point
+   */
+  void addDataPoint( ODEntry *data ) { (void)data; }
+
+
+  /*!
+   * \brief Adds a new data point to the timeseries
+   * \param  data The new data point
+   */
+  void addDataPoint( CycleStorageBase *data ) { (void)data; }
 
  protected:
   // Static Protected attributes
@@ -133,7 +155,8 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  // The type of the data
+  TimeSeriesDataType type;
 
  public:
   // Private attribute accessor methods
@@ -147,4 +170,5 @@ class InputHandler {
 
  private:
 };
+}
 }

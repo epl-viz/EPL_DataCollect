@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file edsTest.h
+ * \file edsTest.hpp
  * \brief Test
  * etc.
  */

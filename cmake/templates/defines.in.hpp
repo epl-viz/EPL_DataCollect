@@ -31,17 +31,17 @@
 
 #pragma once
 
+#include <string>
+
 namespace EPL_DataCollect {
 
 namespace constants {
 
-static const int   EPL_DC_VERSION_MAJOR     = @CM_VERSION_MAJOR@;
-static const int   EPL_DC_VERSION_MINOR     = @CM_VERSION_MINOR@;
-static const int   EPL_DC_VERSION_SUBMINOR  = @CM_VERSION_SUBMINOR@;
-static const int   EPL_DC_GIT_LAST_TAG_DIFF = @CM_TAG_DIFF@;
-static const char *EPL_DC_VERSION_GIT       = "@CM_VERSION_GIT@";
-static const char *EPL_DC_INSTALL_PREFIX    = "@CMAKE_INSTALL_PREFIX@";
-
+static const int         EPL_DC_VERSION_MAJOR     = @CM_VERSION_MAJOR@;
+static const int         EPL_DC_VERSION_MINOR     = @CM_VERSION_MINOR@;
+static const int         EPL_DC_VERSION_SUBMINOR  = @CM_VERSION_SUBMINOR@;
+static const int         EPL_DC_GIT_LAST_TAG_DIFF = @CM_TAG_DIFF@;
+static const std::string EPL_DC_VERSION_GIT       = "@CM_VERSION_GIT@";
+static const std::string EPL_DC_INSTALL_PREFIX    = "@CMAKE_INSTALL_PREFIX@";
 }
-
 }

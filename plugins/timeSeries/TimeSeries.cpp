@@ -24,9 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file TimeSeries.cpp
+ * \brief Contains class TimeSeries
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "TimeSeries.hpp"
+
+namespace EPL_DataCollect {
+namespace plugins {
+
+// Constructors/Destructors
+//
+
+TimeSeries::TimeSeries() {}
+
+TimeSeries::~TimeSeries() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}
+}

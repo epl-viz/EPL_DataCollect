@@ -24,9 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file CSPythonPluginStorage.cpp
+ * \brief Contains class CSPythonPluginStorage
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "CSPythonPluginStorage.hpp"
+
+namespace EPL_DataCollect {
+namespace plugins {
+
+// Constructors/Destructors
+//
+
+CSPythonPluginStorage::CSPythonPluginStorage() {}
+
+CSPythonPluginStorage::~CSPythonPluginStorage() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}
+}

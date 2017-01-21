@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file EventBase.cpp
+ * \brief Contains class EventBase
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "EventBase.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+EventBase::EventBase() {}
+
+EventBase::~EventBase() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

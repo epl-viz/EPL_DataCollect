@@ -24,32 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file ODDescription.hpp
+ * \brief Contains class ODDescription
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+
+#include "defines.hpp"
+#include "ODEntryDescription.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class ODDescription
+  * \brief Main high level structure describing the OD of ONE Node
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * This structure is generated and managed by the Wireshark backend.
+  * For each node one object is created.
+  * Each disected packet in the Wireshark backend and C++ backend Packet class has a
+  * pointer to its corresponding ODDescription.
+  * It is the responsibility of the CycleBuilder to interpret the Packet data with
+  * the information of this struct.
   */
-class InputHandler {
+class ODDescription {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +59,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  ODDescription();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~ODDescription();
+
+  ODDescription( const ODDescription & ) = default;
+  ODDescription( ODDescription && )      = default;
+
+  ODDescription &operator=( const ODDescription & ) = default;
+  ODDescription &operator=( ODDescription && ) = default;
 
   // Static Public attributes
   //
@@ -79,35 +86,6 @@ class InputHandler {
   // Public attribute accessor methods
   //
 
-
-
-  /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
-   */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
-
-  /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
-   */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
 
  protected:
   // Static Protected attributes
@@ -133,7 +111,7 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  ODEntryDescription entries;
 
  public:
   // Private attribute accessor methods
@@ -144,6 +122,18 @@ class InputHandler {
   // Private attribute accessor methods
   //
 
+
+  /*!
+   * Set the value of entries
+   * \param new_var the new value of entries
+   */
+  void setEntries( ODEntryDescription new_var ) { entries = new_var; }
+
+  /*!
+   * Get the value of entries
+   * \return the value of entries
+   */
+  ODEntryDescription *getEntries() { return &entries; }
 
  private:
 };

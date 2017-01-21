@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file CycleStorageBase.cpp
+ * \brief Contains class CycleStorageBase
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "CycleStorageBase.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+CycleStorageBase::CycleStorageBase() {}
+
+CycleStorageBase::~CycleStorageBase() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

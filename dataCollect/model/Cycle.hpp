@@ -24,32 +24,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file Cycle.hpp
+ * \brief Contains class Cycle
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
+
+#include "defines.hpp"
+#include "CycleStorageBase.hpp"
+#include "EventBase.hpp"
+#include "Node.hpp"
 #include "Packet.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class Cycle
+  * \brief Root entity of the ethernetPOWERLINK model
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * Stores all information available during (after completion) of the specific
+  * cycle.
   */
-class InputHandler {
+class Cycle {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +58,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  Cycle();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~Cycle();
+
+  Cycle( const Cycle & ) = default;
+  Cycle( Cycle && )      = default;
+
+  Cycle &operator=( const Cycle & ) = default;
+  Cycle &operator=( Cycle && ) = default;
 
   // Static Public attributes
   //
@@ -82,31 +88,53 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns the number of nodes
+   * \return unsigned int
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
+  unsigned int getNumNodes() { return 0; }
+
+
+  /*!
+   * \brief Returns the specified node
+   * \return Node
+   * \param  node The ID / index of the node
+   */
+  Node getNode( unsigned int node ) {
+    (void)node;
+    return Node();
   }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns all events active in the cycle
+   * \return std::vector<EventBase*>
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
+  std::vector<EventBase *> getActiveEvents() { return std::vector<EventBase *>(); }
+
+
+  /*!
+   * \brief Returns all packets in the cycle
+   * \return std::vector<Packet>
+   */
+  std::vector<Packet> getPackets() { return std::vector<Packet>(); }
+
+
+  /*!
+   * \brief Returns the cycle number of this Cycle
+   * \return unsigned int
+   */
+  unsigned int getCycleNum() { return 0; }
+
+
+  /*!
+   * \brief Returns a pointer to the cycle storage corresponding to the ID
+   * \note Returns nullptr on error
+   * \return CycleStorageBase *
+   * \param  id The ID of the storage
+   */
+  CycleStorageBase *getCycleStorage( std::string id ) {
+    (void)id;
+    return nullptr;
   }
 
  protected:
@@ -133,7 +161,8 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  EventBase events;
+  Packet    packets;
 
  public:
   // Private attribute accessor methods
@@ -146,5 +175,14 @@ class InputHandler {
 
 
  private:
+  /*!
+   * \brief Updates the packet list and increases the cycle counter.
+   * This will clear the old packet list and increment the cycle counter by one.
+   * \note This function will NOT change the OD entries!
+   *
+   * C++: friend class CycleBuilder
+   * \param  newPackets The packets to apply
+   */
+  void updatePackets( std::vector<Packet> newPackets ) { (void)newPackets; }
 };
 }

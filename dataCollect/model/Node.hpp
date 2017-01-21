@@ -24,32 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file Node.hpp
+ * \brief Contains class Node
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+
+#include "defines.hpp"
+#include "OD.hpp"
+#include "ODDescription.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+ * \brief The status of the node
+ * \todo IMPLEMENT
+ */
+enum NodeStatus { NS_OK };
+
+/*!
+  * class Node
+  * \brief Representation of a Node in ethernetPOWERLINK
   */
-class InputHandler {
+class Node {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +59,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  Node();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~Node();
+
+  Node( const Node & ) = default;
+  Node( Node && )      = default;
+
+  Node &operator=( const Node & ) = default;
+  Node &operator=( Node && ) = default;
 
   // Static Public attributes
   //
@@ -82,32 +89,24 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns a pointer to the OD
+   * \return OD *
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  OD *getOD() { return nullptr; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns a pointer to the ODDescription object
+   * \return ODDescription *
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  ODDescription *getODDescription() { return nullptr; }
+
+
+  /*!
+   * \brief Returns the status of the node
+   * \return NodeStatus
+   */
+  NodeStatus getStatus() { return NS_OK; }
 
  protected:
   // Static Protected attributes
@@ -133,7 +132,10 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  // The Object dictionary
+  OD od;
+  // Pointer to the ODDescription of the Node
+  ODDescription odDesc;
 
  public:
   // Private attribute accessor methods
@@ -144,6 +146,34 @@ class InputHandler {
   // Private attribute accessor methods
   //
 
+
+  /*!
+   * Set the value of od
+   * The Object dictionary
+   * \param new_var the new value of od
+   */
+  void setOd( OD new_var ) { od = new_var; }
+
+  /*!
+   * Get the value of od
+   * The Object dictionary
+   * \return the value of od
+   */
+  OD *getOd() { return &od; }
+
+  /*!
+   * Set the value of odDesc
+   * Pointer to the ODDescription of the Node
+   * \param new_var the new value of odDesc
+   */
+  void setOdDesc( ODDescription new_var ) { odDesc = new_var; }
+
+  /*!
+   * Get the value of odDesc
+   * Pointer to the ODDescription of the Node
+   * \return the value of odDesc
+   */
+  ODDescription *getOdDesc() { return &odDesc; }
 
  private:
 };

@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file PluginEvText.cpp
+ * \brief Contains class PluginEvText
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "PluginEvText.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+PluginEvText::PluginEvText() {}
+
+PluginEvText::~PluginEvText() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

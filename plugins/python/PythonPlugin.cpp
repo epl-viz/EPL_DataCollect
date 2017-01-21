@@ -24,9 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file PythonPlugin.cpp
+ * \brief Contains class PythonPlugin
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "PythonPlugin.hpp"
+
+namespace EPL_DataCollect {
+namespace plugins {
+
+// Constructors/Destructors
+//
+
+PythonPlugin::PythonPlugin() {}
+
+PythonPlugin::~PythonPlugin() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}
+}

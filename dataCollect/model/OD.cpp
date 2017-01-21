@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file OD.cpp
+ * \brief Contains class OD
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "OD.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+OD::OD() {}
+
+OD::~OD() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

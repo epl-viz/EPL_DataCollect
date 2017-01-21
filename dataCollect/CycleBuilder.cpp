@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file CycleBuilder.cpp
+ * \brief Contains class CycleBuilder
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "CycleBuilder.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+CycleBuilder::CycleBuilder() {}
+
+CycleBuilder::~CycleBuilder() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

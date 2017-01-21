@@ -24,32 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file ODEntry.hpp
+ * \brief Contains class ODEntry
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+
+#include "defines.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+ * \brief Type of the Entry
+ * \todo IMPLEMENT
+ */
+enum ODEntryType { TYPE1 };
+
+/*!
+  * class ODEntry
+  * \brief Represents an entry in the OD
   */
-class InputHandler {
+class ODEntry {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +57,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  ODEntry();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~ODEntry();
+
+  ODEntry( const ODEntry & ) = default;
+  ODEntry( ODEntry && )      = default;
+
+  ODEntry &operator=( const ODEntry & ) = default;
+  ODEntry &operator=( ODEntry && ) = default;
 
   // Static Public attributes
   //
@@ -82,32 +87,23 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \return ODEntryType
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  virtual ODEntryType getType() { return TYPE1; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns a numeric Representation of the Entry
+   * \return double
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  virtual double getNumericValue() { return 0; }
+
+
+  /*!
+   * \brief Returns whether the Entry can be represented as ONE numeric value
+   * \return bool
+   */
+  virtual bool isNumericValue() { return false; }
 
  protected:
   // Static Protected attributes
@@ -133,8 +129,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +137,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

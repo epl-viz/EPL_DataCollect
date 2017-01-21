@@ -24,32 +24,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file SnapshotManager.hpp
+ * \brief Contains class SnapshotManager
  * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "defines.hpp"
-
-#include <vector>
-#include "Packet.hpp"
+#include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * class SnapshotManager
+  * \brief Internal class for saving strategically important cycles
   */
-class InputHandler {
+
+class SnapshotManager {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +50,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  SnapshotManager();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~SnapshotManager();
 
   // Static Public attributes
   //
@@ -82,31 +74,21 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Notifies the SnapshotManager about a new cycle
+   * The SnapshotManager MAY create a snapshot for this cycle
+   * \param  cycle The cycle to register
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  void registerCycle( Cycle cycle ) { (void)cycle; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns a saved cycle, closest to cycleNum
+   * \return Cycle
+   * \param  cycleNum The target cycle number
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
+  Cycle getClosestCycle( unsigned int cycleNum ) {
+    (void)cycleNum;
+    return Cycle();
   }
 
  protected:
@@ -133,8 +115,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +123,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

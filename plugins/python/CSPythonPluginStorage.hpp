@@ -24,32 +24,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file CSPythonPluginStorage.hpp
+ * \brief Contains class CSPythonPluginStorage
  * \todo IMPLEMENT
  */
+
 
 #pragma once
 
 #include "defines.hpp"
-
-#include <vector>
-#include "Packet.hpp"
+#include <unordered_map>
+#include "CycleStorageBase.hpp"
 
 namespace EPL_DataCollect {
+namespace plugins {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * class CSPythonPluginStorage
+  * \brief Structure used to store data describing the state of a plugin
   */
-class InputHandler {
+class CSPythonPluginStorage : public CycleStorageBase {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +52,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  CSPythonPluginStorage();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~CSPythonPluginStorage();
 
   // Static Public attributes
   //
@@ -71,6 +65,7 @@ class InputHandler {
   // Public attributes
   //
 
+  std::unordered_map<std::string, std::string> map;
 
   // Public attribute accessor methods
   //
@@ -80,34 +75,17 @@ class InputHandler {
   //
 
 
+  /*!
+   * Set the value of map
+   * \param new_var the new value of map
+   */
+  void setMap( std::unordered_map<std::string, std::string> new_var ) { map = new_var; }
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * Get the value of map
+   * \return the value of map
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
-
-  /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
-   */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  std::unordered_map<std::string, std::string> *getMap() { return &map; }
 
  protected:
   // Static Protected attributes
@@ -133,8 +111,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,8 +119,8 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };
+}
 }

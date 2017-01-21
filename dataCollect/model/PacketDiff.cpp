@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file PacketDiff.cpp
+ * \brief Contains class PacketDiff
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "PacketDiff.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+PacketDiff::PacketDiff() {}
+
+PacketDiff::~PacketDiff() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

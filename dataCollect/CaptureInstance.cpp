@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file CaptureInstance.cpp
+ * \brief Contains class CaptureInstance
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "CaptureInstance.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+CaptureInstance::CaptureInstance() {}
+
+CaptureInstance::~CaptureInstance() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

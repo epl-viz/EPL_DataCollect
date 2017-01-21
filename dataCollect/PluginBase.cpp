@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file PluginBase.cpp
+ * \brief Contains class PluginBase
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "PluginBase.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+PluginBase::PluginBase() {}
+
+PluginBase::~PluginBase() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

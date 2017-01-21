@@ -25,23 +25,30 @@
  */
 /*!
  * \file InputHandler.cpp
- * \brief InputHandler class
+ * \brief Contains class InputHandler
+ * \todo IMPLEMENT
  */
 
 #include "InputHandler.hpp"
-#include <iostream>
-#include <string>
 
-/*!
- * \brief Stuff
- * \param bar more stuff
- */
-void EPL_DataCollect::InputHandler::foo( std::string bar ) { std::cout << bar << std::endl; }
+namespace EPL_DataCollect {
 
-/*!
- * \brief Adder function
- * \param a val1
- * \param b val2
- * \returns a + b
- */
-int EPL_DataCollect::InputHandler::add( int a, int b ) { return a + b; }
+// Constructors/Destructors
+//
+
+InputHandler::InputHandler() {}
+
+InputHandler::~InputHandler() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

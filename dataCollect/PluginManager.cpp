@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file PluginManager.cpp
+ * \brief Contains class PluginManager
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "PluginManager.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+PluginManager::PluginManager() {}
+
+PluginManager::~PluginManager() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

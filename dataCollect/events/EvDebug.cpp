@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file EvDebug.cpp
+ * \brief Contains class EvDebug
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "EvDebug.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+EvDebug::EvDebug() {}
+
+EvDebug::~EvDebug() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

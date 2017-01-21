@@ -24,32 +24,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file PacketDiff.hpp
+ * \brief Contains class PacketDiff
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+
+#include "defines.hpp"
+#include "ODEntry.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * class PacketDiff
+  * \brief One change of one ODEntry in one Packet
   */
-class InputHandler {
+class PacketDiff {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +52,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  PacketDiff();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~PacketDiff();
 
   // Static Public attributes
   //
@@ -79,35 +73,6 @@ class InputHandler {
   // Public attribute accessor methods
   //
 
-
-
-  /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
-   */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
-
-  /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
-   */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
 
  protected:
   // Static Protected attributes
@@ -133,7 +98,10 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  // Describes the index in the OD
+  unsigned int odIndex;
+  // The new value of the entry
+  ODEntry newEntry;
 
  public:
   // Private attribute accessor methods
@@ -143,6 +111,12 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
+
+  /*!
+   * \brief Get the Index of the OD
+   * \returns The Index
+   */
+  unsigned int getIndex() { return odIndex; }
 
 
  private:

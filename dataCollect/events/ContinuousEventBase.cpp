@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file ContinuousEventBase.cpp
+ * \brief Contains class ContinuousEventBase
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "ContinuousEventBase.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+ContinuousEventBase::ContinuousEventBase() {}
+
+ContinuousEventBase::~ContinuousEventBase() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

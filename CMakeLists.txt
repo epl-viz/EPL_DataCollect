@@ -125,9 +125,10 @@ set( CATCH_INCLUDE_DIR "${source_dir}/include" )
 ####################
 
 new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/dataCollect"
-  NAME     "epl_DataCollect"
-  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+  PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
+  NAME         "epl_DataCollect"
+  TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+  DEPENDENCIES epl_disector_shared epl_edsParser_shared
 )
 
 new_project_library(
@@ -141,6 +142,15 @@ new_project_library(
   NAME     "epl_edsParser"
   TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
 )
+
+foreach( I IN ITEMS protocolValidator python timeSeries )
+  new_project_library(
+    PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
+    NAME         "eplp_${I}"
+    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+    DEPENDENCIES epl_DataCollect_shared
+  )
+endforeach( I IN ITEMS protocolValidator python timeSeries )
 
 if( NOT DISABLE_TESTS )
   new_project_executable(

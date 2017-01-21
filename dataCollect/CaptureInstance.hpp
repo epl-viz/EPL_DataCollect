@@ -24,8 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file CaptureInstance.hpp
+ * \brief Contains class CaptureInstance
  * \todo IMPLEMENT
  */
 
@@ -34,22 +34,19 @@
 #include "defines.hpp"
 
 #include <vector>
-#include "Packet.hpp"
+#include "CycleContainer.hpp"
+#include "EventLog.hpp"
+#include "PluginManager.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class CaptureInstance
+  * \brief Root class for the EPL-Viz backend
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * This class handles all relevant data necessary to process the ePL Packets
   */
-class InputHandler {
+class CaptureInstance {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +55,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  CaptureInstance();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~CaptureInstance();
 
   // Static Public attributes
   //
@@ -82,32 +79,79 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Loads the specified XDD file
+   * \param  path the xdd file to load
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
+  void loadXDD( std::string path ) { (void)path; }
+
+
+  /*!
+   * \brief starts recording on the specified ethernet device
+   *
+   * A list of available devices can be obtained with getDevices()
+   * \param  interface The network device to use for the live capture
+   */
+  void startRecording( std::string interface ) { (void)interface; }
+
+
+  /*!
+   * \brief ends the live capture
+   */
+  void stopRecording() {}
+
+
+  /*!
+   * \brief loads a previously captured PCAP
+   * \param  file The file to load
+   */
+  void loadPCAP( std::string file ) { (void)file; }
+
+
+  /*!
+   * \brief Adds a new cycle storage entry
+   * Returns false when the index is already occupied
+   * TEMPLATED
+   * \return bool
+   * \param  index The new index to register
+   */
+  bool registerCycleStorage( std::string index ) {
+    (void)index;
+    return false;
   }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns a list of available network devices
+   * \return std::vector<std::string>
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  std::vector<std::string> getDevices() { return std::vector<std::string>(); }
+
+
+  /*!
+   * \brief Returns a pointer to the EventLog
+   * \note The pointer is valid for the entire lifetime of the CaptureInstance
+   * instance
+   * \return EventLog
+   */
+  EventLog *getEventLog() { return &eventLog; }
+
+
+  /*!
+   * \brief Returns a pointer to the PluginManager
+   * \note The pointer is valid for the entire lifetime of the CaptureInstance
+   * instance
+   * \return PluginManager
+   */
+  PluginManager *getPluginManager() { return &pluginManager; }
+
+
+  /*!
+   * \brief Returns a pointer to the CycleContainer
+   * \note The pointer is valid for the entire lifetime of the CaptureInstance
+   * instance
+   * \return CycleContainer
+   */
+  CycleContainer *getCycleContainer() { return &cycleContainer; }
 
  protected:
   // Static Protected attributes
@@ -133,7 +177,12 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  // The PluginManager for this capture instance
+  PluginManager pluginManager;
+  // The EventLog of this capture instance
+  EventLog eventLog;
+  // The CycleContainer of this capture instance
+  CycleContainer cycleContainer;
 
  public:
   // Private attribute accessor methods
@@ -141,10 +190,6 @@ class InputHandler {
 
  private:
  public:
-  // Private attribute accessor methods
-  //
-
-
  private:
 };
 }

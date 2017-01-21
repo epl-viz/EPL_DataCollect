@@ -2,4 +2,5 @@
 /*build*
 /include
 /*/CMakeLists.txt
+/plugins/*/CMakeLists.txt
 customPreComit.sh

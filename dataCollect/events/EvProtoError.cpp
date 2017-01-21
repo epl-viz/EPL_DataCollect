@@ -24,9 +24,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file EvProtoError.cpp
+ * \brief Contains class EvProtoError
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "EvProtoError.hpp"
+
+namespace EPL_DataCollect {
+
+// Constructors/Destructors
+//
+
+EvProtoError::EvProtoError() {}
+
+EvProtoError::~EvProtoError() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}

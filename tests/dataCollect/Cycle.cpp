@@ -23,10 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file disTest.hpp
- * \brief Test
- * etc.
- */
 
-int bar( const char *foo );
+#include <Cycle.hpp>
+#include <catch.hpp>
+
+TEST_CASE( "InputHandler getNumNodes functions works", "[Cycle]" ) {
+  EPL_DataCollect::Cycle c;
+
+  SECTION( "Test the stub" ) { REQUIRE( c.getNumNodes() == 0 ); }
+}

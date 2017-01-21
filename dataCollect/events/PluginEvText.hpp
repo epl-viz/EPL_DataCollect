@@ -24,32 +24,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file PluginEvText.hpp
+ * \brief Contains class PluginEvText
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
-
-#include <vector>
-#include "Packet.hpp"
+#include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class PluginEvText
+  * \brief Event that contains a text message from a Plugin
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * \note This event type should only be used when a plugin would write to the
+  * standard output. Always consider the other event types first (EvProtoError,
+  * EvError, EvWarning EvInfo, EvDebug)
   */
-class InputHandler {
+class PluginEvText : virtual public EventBase {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +53,12 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  PluginEvText();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~PluginEvText();
 
   // Static Public attributes
   //
@@ -82,32 +77,10 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns the stored message
+   * \return std::string
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
-
-  /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
-   */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  std::string getText() { return ""; }
 
  protected:
   // Static Protected attributes
@@ -133,8 +106,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +114,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

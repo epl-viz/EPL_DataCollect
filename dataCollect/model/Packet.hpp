@@ -24,32 +24,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file Packet.hpp
+ * \brief Contains class Packet
  * \todo IMPLEMENT
  */
 
+
 #pragma once
 
-#include "defines.hpp"
 
+
+#include "defines.hpp"
 #include <vector>
-#include "Packet.hpp"
+#include "ODDescription.hpp"
+#include "PacketDiff.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
-  *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+ * \brief The type of a packet
+ * \todo IMPLEMENT
+ */
+enum PacketType { PKT_A };
+
+/*!
+  * class Packet
+  * \brief Represents a packet on the Ethernet bus
   */
-class InputHandler {
+class Packet {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +60,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  Packet();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~Packet();
+
+  Packet( const Packet & ) = default;
+  Packet( Packet && )      = default;
+
+  Packet &operator=( const Packet & ) = default;
+  Packet &operator=( Packet && ) = default;
 
   // Static Public attributes
   //
@@ -82,32 +90,38 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Returns the packet type
+   * \return PacketType
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  PacketType getType() { return PKT_A; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief Returns the changes of the packet in the OD
+   * \return std::vector<PacketDiff>
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  std::vector<PacketDiff> getDiffs() { return std::vector<PacketDiff>(); }
+
+
+  /*!
+   * \brief Returns other data as a std::string
+   * \return std::string
+   */
+  std::string getOtherData() { return ""; }
+
+
+  /*!
+   * \brief Returns the wireshark data parsed and formated
+   * \return std::string
+   */
+  std::string getWiresharkString() { return ""; }
+
+
+  /*!
+   * \brief Returns a pointer to the parsed OD information
+   * \return ODDescription *
+   */
+  ODDescription *getODDesc() { return odDesc; }
 
  protected:
   // Static Protected attributes
@@ -133,7 +147,7 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  ODDescription *odDesc;
 
  public:
   // Private attribute accessor methods
@@ -141,10 +155,6 @@ class InputHandler {
 
  private:
  public:
-  // Private attribute accessor methods
-  //
-
-
  private:
 };
 }

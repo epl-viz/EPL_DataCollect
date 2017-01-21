@@ -24,8 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file InputHandler.hpp
- * \brief Contains class InputHandler
+ * \file PluginBase.hpp
+ * \brief Contains class PluginBase
  * \todo IMPLEMENT
  */
 
@@ -33,23 +33,18 @@
 
 #include "defines.hpp"
 
-#include <vector>
-#include "Packet.hpp"
+#include "Cycle.hpp"
+#include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class InputHandler
-  * \brief The InputHandler is a wrapper for the libwireshark backend
+  * class PluginBase
+  * \brief Base class for all plugins
   *
-  * The input handler accumulates a set of packets, representing a full cycle, on
-  * request.
-  * The C / Wireshark style representation of those packets is then transformed into
-  * a more usable C++ representation (The \sa Packet class).
-  *
-  * The ODDescription is also copied (\sa ODDescription).
+  * Also provides an interface for registering cycle storage and generating events.
   */
-class InputHandler {
+class PluginBase {
  public:
   // Constructors/Destructors
   //
@@ -58,12 +53,18 @@ class InputHandler {
   /*!
    * Empty Constructor
    */
-  InputHandler();
+  PluginBase();
 
   /*!
    * Empty Destructor
    */
-  virtual ~InputHandler();
+  virtual ~PluginBase();
+
+  PluginBase( const PluginBase & ) = default;
+  PluginBase( PluginBase && )      = default;
+
+  PluginBase &operator=( const PluginBase & ) = default;
+  PluginBase &operator=( PluginBase && ) = default;
 
   // Static Public attributes
   //
@@ -82,32 +83,31 @@ class InputHandler {
 
 
   /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
+   * \brief Execute the plugin
+   * \warning This function must be FAST
+   * \param  cycle The cycle to process
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
+  virtual void run( Cycle cycle ) { (void)cycle; }
 
 
   /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
+   * \brief initializes the plugin
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
+  virtual void initialize() {}
+
+
+  /*!
+   * \brief Returns a semicolon seperated list of dependencies
+   * \return std::string
+   */
+  virtual std::string getDependencies() { return ""; }
+
+
+  /*!
+   * \brief Returns an ID std::string
+   * \return std::string
+   */
+  virtual std::string getID() { return ""; }
 
  protected:
   // Static Protected attributes
@@ -126,6 +126,31 @@ class InputHandler {
   //
 
  protected:
+  /*!
+   * \brief Adds an event to the event log
+   * \return int
+   * \param  event The event to add
+   */
+  int addEvent( EventBase event ) {
+    (void)event;
+    return 0;
+  }
+
+
+  /*!
+   * \brief Adds a new cycle storage entry
+   * Returns false when the index is already occupied
+   * TEMPLATED
+   *
+   * Wrapper for the CaptureInstance function
+   * \return bool
+   * \param  index The index to register
+   */
+  bool registerCycleStorage( std::string index ) {
+    (void)index;
+    return false;
+  }
+
  private:
   // Static Private attributes
   //
@@ -133,8 +158,6 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
-
  public:
   // Private attribute accessor methods
   //
@@ -143,7 +166,6 @@ class InputHandler {
  public:
   // Private attribute accessor methods
   //
-
 
  private:
 };

@@ -24,9 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file disTest.hpp
- * \brief Test
- * etc.
+ * \file CSTimeSeriesPtr.cpp
+ * \brief Contains class CSTimeSeriesPtr
+ * \todo IMPLEMENT
  */
 
-int bar( const char *foo );
+#include "CSTimeSeriesPtr.hpp"
+
+namespace EPL_DataCollect {
+namespace plugins {
+
+// Constructors/Destructors
+//
+
+CSTimeSeriesPtr::CSTimeSeriesPtr() {}
+
+CSTimeSeriesPtr::~CSTimeSeriesPtr() {}
+
+//
+// Methods
+//
+
+
+// Accessor methods
+//
+
+
+// Other methods
+//
+}
+}
