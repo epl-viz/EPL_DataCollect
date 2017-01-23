@@ -9,7 +9,7 @@
 CLANG_FORMAT_VERSION="3.9.1"
 CALNG_FORMAT_DEFAULT_CMD="clang-format"
 EXTENSIONS=( cpp c hpp h )
-SOURCE_DIRS=( dataCollect disector edsParser tests )
+SOURCE_DIRS=( dataCollect dissector edsParser tests )
 
 ########################
 #  END  CONFIG SECTION #
@@ -59,14 +59,14 @@ verbose "clang-format command: $CLANG_FORMAT_EXEC"
 
 
 # Check the version
-CURENT_VERSION="$($CLANG_FORMAT_EXEC --version | sed 's/^[^0-9]*//g')"
-CURENT_VERSION="$(echo "$CURENT_VERSION" | sed 's/^\([0-9.]*\).*/\1/g')"
-if [[ "$CLANG_FORMAT_VERSION" != "$CURENT_VERSION" ]]; then
-  error "Invalid clang-format version! $CLANG_FORMAT_VERSION required but $CURENT_VERSION provided"
+CURRENT_VERSION="$($CLANG_FORMAT_EXEC --version | sed 's/^[^0-9]*//g')"
+CURRENT_VERSION="$(echo "$CURRENT_VERSION" | sed 's/^\([0-9.]*\).*/\1/g')"
+if [[ "$CLANG_FORMAT_VERSION" != "$CURRENT_VERSION" ]]; then
+  error "Invalid clang-format version! $CLANG_FORMAT_VERSION required but $CURRENT_VERSION provided"
   exit 2
 fi
 
-verbose "clang-froamt version: $CURENT_VERSION\n"
+verbose "clang-format version: $CURRENT_VERSION\n"
 
 
 #########################
@@ -77,7 +77,7 @@ ERROR=0
 NUM_FILES=0
 TO_GIT_ADD=()
 
-checkFromat() {
+checkFormat() {
   local I J
   NUM_FILES=0
   ERROR=0
@@ -125,19 +125,19 @@ checkFromat() {
   done
 }
 
-checkFromat check
+checkFormat check
 
 if (( ERROR != 0 )); then
   error "$ERROR out of $NUM_FILES files are not formated"
   (( ONLY_CHECK == 1 )) && exit $ERROR
 
-  read -p "  ==> Try formating source files [Y/n]? " -n 1 INPUT
+  read -p "  ==> Try formatting source files [Y/n]? " -n 1 INPUT
   [ -z "$INPUT" ] && INPUT=y || echo ""
 
   if [[ "$INPUT" == "Y" || "$INPUT" == "y" ]]; then
-    checkFromat format
+    checkFormat format
     if (( ERROR != 0 )); then
-      error "$ERROR out of $NUM_FILES files are not formated -- CLANG FORMAT FAIL"
+      error "$ERROR out of $NUM_FILES files are not formatted -- CLANG FORMAT FAIL"
       exit $ERROR
     fi
 
