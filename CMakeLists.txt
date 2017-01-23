@@ -128,7 +128,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES epl_disector_shared epl_edsParser_shared
+  DEPENDENCIES epl_dissector_shared epl_edsParser_shared
 )
 
 new_project_library(
