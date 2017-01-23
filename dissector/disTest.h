@@ -29,4 +29,4 @@
  * etc.
  */
 
-int bar( const char *foo );
+int bar(const char *foo);

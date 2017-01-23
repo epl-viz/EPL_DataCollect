@@ -66,11 +66,11 @@ class ODDescription {
    */
   virtual ~ODDescription();
 
-  ODDescription( const ODDescription & ) = default;
-  ODDescription( ODDescription && )      = default;
+  ODDescription(const ODDescription &) = default;
+  ODDescription(ODDescription &&)      = default;
 
-  ODDescription &operator=( const ODDescription & ) = default;
-  ODDescription &operator=( ODDescription && ) = default;
+  ODDescription &operator=(const ODDescription &) = default;
+  ODDescription &operator=(ODDescription &&) = default;
 
   // Static Public attributes
   //
@@ -127,7 +127,7 @@ class ODDescription {
    * Set the value of entries
    * \param new_var the new value of entries
    */
-  void setEntries( ODEntryDescription new_var ) { entries = new_var; }
+  void setEntries(ODEntryDescription new_var) { entries = new_var; }
 
   /*!
    * Get the value of entries

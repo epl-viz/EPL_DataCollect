@@ -60,11 +60,11 @@ class PluginBase {
    */
   virtual ~PluginBase();
 
-  PluginBase( const PluginBase & ) = default;
-  PluginBase( PluginBase && )      = default;
+  PluginBase(const PluginBase &) = default;
+  PluginBase(PluginBase &&)      = default;
 
-  PluginBase &operator=( const PluginBase & ) = default;
-  PluginBase &operator=( PluginBase && ) = default;
+  PluginBase &operator=(const PluginBase &) = default;
+  PluginBase &operator=(PluginBase &&) = default;
 
   // Static Public attributes
   //
@@ -87,7 +87,7 @@ class PluginBase {
    * \warning This function must be FAST
    * \param  cycle The cycle to process
    */
-  virtual void run( Cycle cycle ) { (void)cycle; }
+  virtual void run(Cycle cycle) { (void)cycle; }
 
 
   /*!
@@ -131,7 +131,7 @@ class PluginBase {
    * \return int
    * \param  event The event to add
    */
-  int addEvent( EventBase event ) {
+  int addEvent(EventBase event) {
     (void)event;
     return 0;
   }
@@ -146,7 +146,7 @@ class PluginBase {
    * \return bool
    * \param  index The index to register
    */
-  bool registerCycleStorage( std::string index ) {
+  bool registerCycleStorage(std::string index) {
     (void)index;
     return false;
   }

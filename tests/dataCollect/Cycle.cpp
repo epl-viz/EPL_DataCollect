@@ -27,8 +27,8 @@
 #include <Cycle.hpp>
 #include <catch.hpp>
 
-TEST_CASE( "InputHandler getNumNodes functions works", "[Cycle]" ) {
+TEST_CASE("InputHandler getNumNodes functions works", "[Cycle]") {
   EPL_DataCollect::Cycle c;
 
-  SECTION( "Test the stub" ) { REQUIRE( c.getNumNodes() == 0 ); }
+  SECTION("Test the stub") { REQUIRE(c.getNumNodes() == 0); }
 }

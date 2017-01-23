@@ -32,7 +32,7 @@
 #include "disTest.h"
 #include "stdio.h"
 
-int bar( const char *foo ) {
-  printf( "%s", foo );
+int bar(const char *foo) {
+  printf("%s", foo);
   return 1;
 }

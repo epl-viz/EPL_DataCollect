@@ -78,7 +78,7 @@ class SnapshotManager {
    * The SnapshotManager MAY create a snapshot for this cycle
    * \param  cycle The cycle to register
    */
-  void registerCycle( Cycle cycle ) { (void)cycle; }
+  void registerCycle(Cycle cycle) { (void)cycle; }
 
 
   /*!
@@ -86,7 +86,7 @@ class SnapshotManager {
    * \return Cycle
    * \param  cycleNum The target cycle number
    */
-  Cycle getClosestCycle( unsigned int cycleNum ) {
+  Cycle getClosestCycle(unsigned int cycleNum) {
     (void)cycleNum;
     return Cycle();
   }

@@ -105,7 +105,7 @@ class CycleBuilder {
    * \param  targetCycle The target cycle
    * \param  start The base cycle to iterate over
    */
-  Cycle seekCycle( unsigned int targetCycle, Cycle start ) {
+  Cycle seekCycle(unsigned int targetCycle, Cycle start) {
     (void)targetCycle;
     return start;
   }

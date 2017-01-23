@@ -32,7 +32,7 @@
 #include "edsTest.h"
 #include "stdio.h"
 
-int foo( const char *bar ) {
-  printf( "%s", bar );
+int foo(const char *bar) {
+  printf("%s", bar);
   return 1;
 }

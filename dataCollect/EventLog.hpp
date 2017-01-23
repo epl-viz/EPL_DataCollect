@@ -32,8 +32,8 @@
 #pragma once
 
 #include "defines.hpp"
-#include <vector>
 #include "EventBase.hpp"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -92,7 +92,7 @@ class EventLog {
    * \return std::vector<EventBase*>
    * \param  appID Identifies the user polling the events
    */
-  std::vector<EventBase *> pollEvents( unsigned int appID = 0 ) {
+  std::vector<EventBase *> pollEvents(unsigned int appID = 0) {
     (void)appID;
     return std::vector<EventBase *>();
   }
@@ -112,7 +112,7 @@ class EventLog {
    * \param  begin The begin of the cycle range
    * \param  end The end of the cycle range
    */
-  std::vector<EventBase *> getEventsInRange( int begin = -1, int end = -1 ) {
+  std::vector<EventBase *> getEventsInRange(int begin = -1, int end = -1) {
     (void)begin;
     (void)end;
     return std::vector<EventBase *>();
@@ -124,7 +124,7 @@ class EventLog {
    * Wrapper for getEventsInRange
    * \return std::vector<EventBase*>
    */
-  std::vector<EventBase *> getAllEvents() { return getEventsInRange( -1, -1 ); }
+  std::vector<EventBase *> getAllEvents() { return getEventsInRange(-1, -1); }
 
  protected:
   // Static Protected attributes

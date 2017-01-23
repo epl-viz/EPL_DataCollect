@@ -27,12 +27,12 @@
 #include <InputHandler.hpp>
 #include <catch.hpp>
 
-TEST_CASE( "InputHandler add functions works", "[InputHandler]" ) {
+TEST_CASE("InputHandler add functions works", "[InputHandler]") {
   EPL_DataCollect::InputHandler handler;
 
-  SECTION( "adding positiv values" ) { REQUIRE( 1 + 2 == 3 ); }
+  SECTION("adding positiv values") { REQUIRE(1 + 2 == 3); }
 
-  SECTION( "adding negative values" ) { REQUIRE( -1 + -2 == -3 ); }
+  SECTION("adding negative values") { REQUIRE(-1 + -2 == -3); }
 
-  SECTION( "adding positive and negative values" ) { REQUIRE( -1 + 2 == 1 ); }
+  SECTION("adding positive and negative values") { REQUIRE(-1 + 2 == 1); }
 }

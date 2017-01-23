@@ -65,11 +65,11 @@ class Cycle {
    */
   virtual ~Cycle();
 
-  Cycle( const Cycle & ) = default;
-  Cycle( Cycle && )      = default;
+  Cycle(const Cycle &) = default;
+  Cycle(Cycle &&)      = default;
 
-  Cycle &operator=( const Cycle & ) = default;
-  Cycle &operator=( Cycle && ) = default;
+  Cycle &operator=(const Cycle &) = default;
+  Cycle &operator=(Cycle &&) = default;
 
   // Static Public attributes
   //
@@ -99,7 +99,7 @@ class Cycle {
    * \return Node
    * \param  node The ID / index of the node
    */
-  Node getNode( unsigned int node ) {
+  Node getNode(unsigned int node) {
     (void)node;
     return Node();
   }
@@ -132,7 +132,7 @@ class Cycle {
    * \return CycleStorageBase *
    * \param  id The ID of the storage
    */
-  CycleStorageBase *getCycleStorage( std::string id ) {
+  CycleStorageBase *getCycleStorage(std::string id) {
     (void)id;
     return nullptr;
   }
@@ -183,6 +183,6 @@ class Cycle {
    * C++: friend class CycleBuilder
    * \param  newPackets The packets to apply
    */
-  void updatePackets( std::vector<Packet> newPackets ) { (void)newPackets; }
+  void updatePackets(std::vector<Packet> newPackets) { (void)newPackets; }
 };
 }

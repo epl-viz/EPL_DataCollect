@@ -78,7 +78,7 @@ class PluginManager {
    * Does nothing if the plugin is already added
    * \param  cmd The command to add
    */
-  void addPlugin( PluginBase cmd ) { (void)cmd; }
+  void addPlugin(PluginBase cmd) { (void)cmd; }
 
 
   /*!
@@ -87,7 +87,7 @@ class PluginManager {
    * \return int
    * \param  cycle The cycle to process
    */
-  int processCycle( Cycle cycle ) {
+  int processCycle(Cycle cycle) {
     (void)cycle;
     return 0;
   }
@@ -148,7 +148,7 @@ class PluginManager {
    * Array of all plugins
    * \param new_var the new value of plugins
    */
-  void setPlugins( PluginBase new_var ) { plugins = new_var; }
+  void setPlugins(PluginBase new_var) { plugins = new_var; }
 
   /*!
    * Get the value of plugins

@@ -35,9 +35,9 @@
 
 
 #include "defines.hpp"
-#include <vector>
 #include "ODDescription.hpp"
 #include "PacketDiff.hpp"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -67,11 +67,11 @@ class Packet {
    */
   virtual ~Packet();
 
-  Packet( const Packet & ) = default;
-  Packet( Packet && )      = default;
+  Packet(const Packet &) = default;
+  Packet(Packet &&)      = default;
 
-  Packet &operator=( const Packet & ) = default;
-  Packet &operator=( Packet && ) = default;
+  Packet &operator=(const Packet &) = default;
+  Packet &operator=(Packet &&) = default;
 
   // Static Public attributes
   //

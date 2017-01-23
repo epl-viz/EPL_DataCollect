@@ -31,4 +31,4 @@
 
 #pragma once
 
-int foo( const char *bar );
+int foo(const char *bar);

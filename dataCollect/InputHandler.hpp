@@ -33,8 +33,8 @@
 
 #include "defines.hpp"
 
-#include <vector>
 #include "Packet.hpp"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -89,7 +89,7 @@ class InputHandler {
    * \return std::vector<Packet>
    * \param  cycleNum The number of the cycle
    */
-  std::vector<Packet> getCyclePackets( unsigned int cycleNum ) {
+  std::vector<Packet> getCyclePackets(unsigned int cycleNum) {
     (void)cycleNum;
     return std::vector<Packet>();
   }
@@ -103,7 +103,7 @@ class InputHandler {
    * \param  num The number of the cycle to wait for
    * \param  timeout The timeout in milliseconds (0 for no timeout)
    */
-  bool waitForCycle( unsigned int num, unsigned long int timeout = 0 ) {
+  bool waitForCycle(unsigned int num, unsigned long int timeout = 0) {
     (void)num;
     (void)timeout;
     return false;

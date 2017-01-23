@@ -59,11 +59,11 @@ class OD {
    */
   virtual ~OD();
 
-  OD( const OD & ) = default;
-  OD( OD && )      = default;
+  OD(const OD &) = default;
+  OD(OD &&)      = default;
 
-  OD &operator=( const OD & ) = default;
-  OD &operator=( OD && ) = default;
+  OD &operator=(const OD &) = default;
+  OD &operator=(OD &&) = default;
 
   // Static Public attributes
   //
@@ -86,7 +86,7 @@ class OD {
    * \return ODEntry *
    * \param  entry The entry ID
    */
-  ODEntry *getEntry( unsigned int entry ) {
+  ODEntry *getEntry(unsigned int entry) {
     (void)entry;
     return nullptr;
   }
@@ -131,7 +131,7 @@ class OD {
    * Set the value of entries
    * \param new_var the new value of entries
    */
-  void setEntries( ODEntry new_var ) { entries = new_var; }
+  void setEntries(ODEntry new_var) { entries = new_var; }
 
   /*!
    * Get the value of entries

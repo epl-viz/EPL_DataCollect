@@ -59,11 +59,11 @@ class ODEntryDescription {
    */
   virtual ~ODEntryDescription();
 
-  ODEntryDescription( const ODEntryDescription & ) = default;
-  ODEntryDescription( ODEntryDescription && )      = default;
+  ODEntryDescription(const ODEntryDescription &) = default;
+  ODEntryDescription(ODEntryDescription &&)      = default;
 
-  ODEntryDescription &operator=( const ODEntryDescription & ) = default;
-  ODEntryDescription &operator=( ODEntryDescription && ) = default;
+  ODEntryDescription &operator=(const ODEntryDescription &) = default;
+  ODEntryDescription &operator=(ODEntryDescription &&) = default;
 
   // Static Public attributes
   //
@@ -87,7 +87,7 @@ class ODEntryDescription {
    * Set the value of name
    * \param new_var the new value of name
    */
-  void setName( std::string new_var ) { name = new_var; }
+  void setName(std::string new_var) { name = new_var; }
 
   /*!
    * Get the value of name
@@ -99,7 +99,7 @@ class ODEntryDescription {
    * Set the value of type
    * \param new_var the new value of type
    */
-  void setType( ODEntryType new_var ) { type = new_var; }
+  void setType(ODEntryType new_var) { type = new_var; }
 
   /*!
    * Get the value of type
@@ -111,7 +111,7 @@ class ODEntryDescription {
    * Set the value of defaultValue
    * \param new_var the new value of defaultValue
    */
-  void setDefaultValue( int new_var ) { defaultValue = new_var; }
+  void setDefaultValue(int new_var) { defaultValue = new_var; }
 
   /*!
    * Get the value of defaultValue

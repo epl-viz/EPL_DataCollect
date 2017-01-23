@@ -33,8 +33,8 @@
 
 #include "defines.hpp"
 
-#include <vector>
 #include "Cycle.hpp"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -80,7 +80,7 @@ class CycleContainer {
    * \return Cycle
    * \param  cycleNum The ID of the cycle to get
    */
-  Cycle getCycle( unsigned int cycleNum ) {
+  Cycle getCycle(unsigned int cycleNum) {
     (void)cycleNum;
     return Cycle();
   }

@@ -66,11 +66,11 @@ class Node {
    */
   virtual ~Node();
 
-  Node( const Node & ) = default;
-  Node( Node && )      = default;
+  Node(const Node &) = default;
+  Node(Node &&)      = default;
 
-  Node &operator=( const Node & ) = default;
-  Node &operator=( Node && ) = default;
+  Node &operator=(const Node &) = default;
+  Node &operator=(Node &&) = default;
 
   // Static Public attributes
   //
@@ -152,7 +152,7 @@ class Node {
    * The Object dictionary
    * \param new_var the new value of od
    */
-  void setOd( OD new_var ) { od = new_var; }
+  void setOd(OD new_var) { od = new_var; }
 
   /*!
    * Get the value of od
@@ -166,7 +166,7 @@ class Node {
    * Pointer to the ODDescription of the Node
    * \param new_var the new value of odDesc
    */
-  void setOdDesc( ODDescription new_var ) { odDesc = new_var; }
+  void setOdDesc(ODDescription new_var) { odDesc = new_var; }
 
   /*!
    * Get the value of odDesc

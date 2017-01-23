@@ -64,11 +64,11 @@ class ODEntry {
    */
   virtual ~ODEntry();
 
-  ODEntry( const ODEntry & ) = default;
-  ODEntry( ODEntry && )      = default;
+  ODEntry(const ODEntry &) = default;
+  ODEntry(ODEntry &&)      = default;
 
-  ODEntry &operator=( const ODEntry & ) = default;
-  ODEntry &operator=( ODEntry && ) = default;
+  ODEntry &operator=(const ODEntry &) = default;
+  ODEntry &operator=(ODEntry &&) = default;
 
   // Static Public attributes
   //

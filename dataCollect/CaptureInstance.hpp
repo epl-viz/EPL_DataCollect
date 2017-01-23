@@ -33,10 +33,10 @@
 
 #include "defines.hpp"
 
-#include <vector>
 #include "CycleContainer.hpp"
 #include "EventLog.hpp"
 #include "PluginManager.hpp"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -82,7 +82,7 @@ class CaptureInstance {
    * \brief Loads the specified XDD file
    * \param  path the xdd file to load
    */
-  void loadXDD( std::string path ) { (void)path; }
+  void loadXDD(std::string path) { (void)path; }
 
 
   /*!
@@ -91,7 +91,7 @@ class CaptureInstance {
    * A list of available devices can be obtained with getDevices()
    * \param  interface The network device to use for the live capture
    */
-  void startRecording( std::string interface ) { (void)interface; }
+  void startRecording(std::string interface) { (void)interface; }
 
 
   /*!
@@ -104,7 +104,7 @@ class CaptureInstance {
    * \brief loads a previously captured PCAP
    * \param  file The file to load
    */
-  void loadPCAP( std::string file ) { (void)file; }
+  void loadPCAP(std::string file) { (void)file; }
 
 
   /*!
@@ -114,7 +114,7 @@ class CaptureInstance {
    * \return bool
    * \param  index The new index to register
    */
-  bool registerCycleStorage( std::string index ) {
+  bool registerCycleStorage(std::string index) {
     (void)index;
     return false;
   }

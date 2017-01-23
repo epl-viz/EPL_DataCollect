@@ -65,11 +65,11 @@ class EventBase {
    */
   virtual ~EventBase();
 
-  EventBase( const EventBase & ) = default;
-  EventBase( EventBase && )      = default;
+  EventBase(const EventBase &) = default;
+  EventBase(EventBase &&)      = default;
 
-  EventBase &operator=( const EventBase & ) = default;
-  EventBase &operator=( EventBase && ) = default;
+  EventBase &operator=(const EventBase &) = default;
+  EventBase &operator=(EventBase &&) = default;
 
   // Static Public attributes
   //
@@ -119,7 +119,7 @@ class EventBase {
    * \param  first The first cycle where the event occurred
    * \param  last The last cycle where the event occurred
    */
-  void getCycleRange( unsigned int *first, unsigned int *last ) {
+  void getCycleRange(unsigned int *first, unsigned int *last) {
     *first = 0;
     *last  = 0;
   }
@@ -157,7 +157,7 @@ class EventBase {
    * \param  first The first cycle
    * \param  last The last cycle
    */
-  void updateRange( int first = -1, int last = -1 ) {
+  void updateRange(int first = -1, int last = -1) {
     (void)first;
     (void)last;
   }
@@ -186,7 +186,7 @@ class EventBase {
    * \param  desc The description
    * \param  flags Flags for the new event \sa EvFlags
    */
-  EventBase( EvType type, std::string name, std::string desc, unsigned long int flags ) {
+  EventBase(EvType type, std::string name, std::string desc, unsigned long int flags) {
     (void)type;
     (void)name;
     (void)desc;
