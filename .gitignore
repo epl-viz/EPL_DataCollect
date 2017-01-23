@@ -3,4 +3,6 @@
 /include
 /*/CMakeLists.txt
 /plugins/*/CMakeLists.txt
+*.sw*
+*.pyc
 customPreCommit.sh

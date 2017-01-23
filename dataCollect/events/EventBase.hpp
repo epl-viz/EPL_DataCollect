@@ -34,6 +34,7 @@
 
 
 
+#include "defines.hpp"
 #include <unordered_map>
 
 namespace EPL_DataCollect {
