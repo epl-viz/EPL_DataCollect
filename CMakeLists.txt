@@ -132,8 +132,8 @@ new_project_library(
 )
 
 new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/disector"
-  NAME     "epl_disector"
+  PATH     "${PROJECT_SOURCE_DIR}/dissector"
+  NAME     "epl_dissector"
   TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
 )
 
@@ -157,7 +157,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared epl_disector_shared epl_edsParser_shared
+    DEPENDENCIES epl_DataCollect_shared epl_dissector_shared epl_edsParser_shared
   )
 endif( NOT DISABLE_TESTS )
 
