@@ -58,8 +58,14 @@ testExec lcov --directory . --zerocounters
 testExec ./checkFormat.sh --only-check
 testExec mkdir $BUILD_DIR
 testExec cd    $BUILD_DIR
+
+msg "START BUILD"
+
 testExec cmake -DENABLE_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
 testExec make
+
+msg "START TEST"
+
 testExec make check
 
 if [[ "$CXX" == "g++" ]]; then
