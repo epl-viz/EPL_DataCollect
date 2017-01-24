@@ -14,6 +14,10 @@ msg_error() {
   echo -e "\x1b[1;31m[ERROR]\x1b[0;31m $@\x1b[0m"
 }
 
+print_version() {
+  msg "  - $1: \x1b[1m$(pacman -Qi $1 | grep Version | sed 's/[^:]*: //g')"
+}
+
 ERROR_COUNT=0
 
 testExec() {
@@ -39,12 +43,12 @@ if [ -z "$1" ]; then
 fi
 
 if [[ "$1" == "g++" ]]; then
-  msg "Detected compiler \x1b[1mGCC"
+  msg "Detected compiler \x1b[1;33mGCC"
   msg "Enabling Coverage data collection"
   export CXX=g++
   export CC=gcc
 elif [[ "$1" == "clang++" ]]; then
-  msg "Detected compiler \x1b[1mLLVM / CLANG"
+  msg "Detected compiler \x1b[1;33mLLVM / CLANG"
   msg "Disabling Coverage data collection"
   export CXX=clang++
   export CC=clang
@@ -53,6 +57,10 @@ else
   exit 1
 fi
 
+msg "Versions:"
+print_version cmake
+print_version gcc
+print_version clang
 
 testExec lcov --directory . --zerocounters
 testExec ./checkFormat.sh --only-check
