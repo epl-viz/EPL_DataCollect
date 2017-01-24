@@ -36,7 +36,7 @@ namespace EPL_DataCollect {
 // Constructors/Destructors
 //
 
-CycleBuilder::CycleBuilder() {}
+CycleBuilder::CycleBuilder() { return thisIsAnError; }
 
 CycleBuilder::~CycleBuilder() {}
 
