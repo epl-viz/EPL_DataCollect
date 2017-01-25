@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+EvWarning::~EvWarning() {}
+
 /*!
  * \brief Constructor for the EvWarning class
  * \param evPluginID The plugin ID

@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+EvPluginText::~EvPluginText() {}
+
 /*!
  * \brief Constructor for the EvPluginText class
  * \param evPluginID The plugin ID

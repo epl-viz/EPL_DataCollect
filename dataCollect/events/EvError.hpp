@@ -43,8 +43,8 @@ namespace EPL_DataCollect {
   */
 class EvError : public EventBase {
  public:
-  EvError()          = delete;
-  virtual ~EvError() = default;
+  EvError() = delete;
+  virtual ~EvError();
 
   EvError(std::string          evPluginID,
           std::string          evName,

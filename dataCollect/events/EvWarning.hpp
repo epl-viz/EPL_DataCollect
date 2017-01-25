@@ -41,8 +41,8 @@ namespace EPL_DataCollect {
   */
 class EvWarning : public EventBase {
  public:
-  EvWarning()          = delete;
-  virtual ~EvWarning() = default;
+  EvWarning() = delete;
+  virtual ~EvWarning();
 
   EvWarning(std::string          evPluginID,
             std::string          evName,

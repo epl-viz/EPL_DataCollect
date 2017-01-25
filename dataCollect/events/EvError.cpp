@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+EvError::~EvError() {}
+
 /*!
  * \brief Constructor for the EvError class
  * \param evPluginID The plugin ID

@@ -155,10 +155,10 @@ void EventBase::getCycleRange(uint32_t *first, uint32_t *last) noexcept {
  */
 void EventBase::updateRange(int first, int last) noexcept {
   if (first >= 0)
-    firstCycle = first;
+    firstCycle = static_cast<uint32_t>(first);
 
   if (last >= 0)
-    lastCycle = last;
+    lastCycle = static_cast<uint32_t>(last);
 }
 
 

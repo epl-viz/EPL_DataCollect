@@ -36,7 +36,7 @@ namespace EPL_DataCollect {
 // Constructors/Destructors
 //
 
-Cycle::Cycle() {}
+Cycle::Cycle() { events = nullptr; }
 
 Cycle::~Cycle() {}
 

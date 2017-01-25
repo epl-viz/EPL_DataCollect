@@ -43,8 +43,8 @@ namespace EPL_DataCollect {
   */
 class EvDebug : public EventBase {
  public:
-  EvDebug()          = delete;
-  virtual ~EvDebug() = default;
+  EvDebug() = delete;
+  virtual ~EvDebug();
 
   EvDebug(std::string          evPluginID,
           std::string          evName,

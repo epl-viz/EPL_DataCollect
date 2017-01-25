@@ -42,8 +42,8 @@ namespace EPL_DataCollect {
   */
 class EvProtoError : public EventBase {
  public:
-  EvProtoError()          = delete;
-  virtual ~EvProtoError() = default;
+  EvProtoError() = delete;
+  virtual ~EvProtoError();
 
   EvProtoError(std::string          evPluginID,
                std::string          evName,

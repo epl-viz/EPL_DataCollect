@@ -34,9 +34,9 @@
 
 
 #include "defines.hpp"
-#include <string>
 #include "CycleStorageBase.hpp"
 #include "ODEntry.hpp"
+#include <string>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -122,14 +122,14 @@ class TimeSeries {
    * \brief Adds a new data point to the timeseries
    * \param  data The new data point
    */
-  void addDataPoint( ODEntry *data ) { (void)data; }
+  void addDataPoint(ODEntry *data) { (void)data; }
 
 
   /*!
    * \brief Adds a new data point to the timeseries
    * \param  data The new data point
    */
-  void addDataPoint( CycleStorageBase *data ) { (void)data; }
+  void addDataPoint(CycleStorageBase *data) { (void)data; }
 
  protected:
   // Static Protected attributes

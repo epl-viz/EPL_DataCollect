@@ -33,8 +33,8 @@
 #pragma once
 
 #include "defines.hpp"
-#include <unordered_map>
 #include "CycleStorageBase.hpp"
+#include <unordered_map>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -79,7 +79,7 @@ class CSPythonPluginStorage : public CycleStorageBase {
    * Set the value of map
    * \param new_var the new value of map
    */
-  void setMap( std::unordered_map<std::string, std::string> new_var ) { map = new_var; }
+  void setMap(std::unordered_map<std::string, std::string> new_var) { map = new_var; }
 
   /*!
    * Get the value of map

@@ -46,8 +46,8 @@ namespace EPL_DataCollect {
   */
 class EvPluginText : public EventBase {
  public:
-  EvPluginText()          = delete;
-  virtual ~EvPluginText() = default;
+  EvPluginText() = delete;
+  virtual ~EvPluginText();
 
   EvPluginText(std::string          evPluginID,
                std::string          evName,

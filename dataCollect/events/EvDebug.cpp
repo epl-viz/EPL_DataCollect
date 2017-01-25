@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+EvDebug::~EvDebug() {}
+
 /*!
  * \brief Constructor for the EvDebug class
  * \param evPluginID The plugin ID

@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+EvProtoError::~EvProtoError() {}
+
 /*!
  * \brief Constructor for the EvDebug class
  * \param evPluginID The plugin EvProtoError
