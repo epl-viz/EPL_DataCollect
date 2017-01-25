@@ -75,8 +75,9 @@ testExec make
 msg "START TEST"
 
 testCheckFail() {
+  msg "Testing wrong CMD parameters"
   ./bin/tests --asd-asdf &> /dev/null
-  (( $? != 0 )) return 0
+  (( $? != 0 )) && return 0
   return 1
 }
 
