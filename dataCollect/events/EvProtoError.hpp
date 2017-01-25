@@ -26,7 +26,6 @@
 /*!
  * \file EvProtoError.hpp
  * \brief Contains class EvProtoError
- * \todo IMPLEMENT
  */
 
 
@@ -37,74 +36,26 @@
 namespace EPL_DataCollect {
 
 /*!
-  * class EvProtoError
-  * \brief This event should only be triggered when a ethernetPOWERLINK protocol
-  * error occurred
+  * \brief This event should only be triggered when a ethernetPOWERLINK protocol error occurred
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
   */
-class EvProtoError : virtual public EventBase {
+class EvProtoError : public EventBase {
  public:
-  // Constructors/Destructors
-  //
+  EvProtoError()          = delete;
+  virtual ~EvProtoError() = default;
 
+  EvProtoError(std::string          evPluginID,
+               std::string          evName,
+               std::string          evDesc,
+               uint64_t             evFlags,
+               Cycle *              cycle,
+               EventBase::INDEX_MAP evIndices);
 
-  /*!
-   * Empty Constructor
-   */
-  EvProtoError();
+  EvProtoError(const EvProtoError &) = default;
+  EvProtoError(EvProtoError &&)      = default;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EvProtoError();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  EvProtoError &operator=(const EvProtoError &) = default;
+  EvProtoError &operator=(EvProtoError &&) = default;
 };
 }

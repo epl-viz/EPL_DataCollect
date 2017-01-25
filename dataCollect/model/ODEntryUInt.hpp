@@ -41,7 +41,7 @@ namespace EPL_DataCollect {
   * class ODEntryUInt
   * \brief Unsigned Integer type OD entry
   */
-class ODEntryUInt : virtual public ODEntry {
+class ODEntryUInt : public ODEntry {
  public:
   // Constructors/Destructors
   //

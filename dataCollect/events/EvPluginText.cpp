@@ -24,31 +24,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file ContinuousEventBase.cpp
- * \brief Contains class ContinuousEventBase
- * \todo IMPLEMENT
+ * \file EvPluginText.cpp
+ * \brief Contains class EvPluginText
  */
 
-#include "ContinuousEventBase.hpp"
+#include "EvPluginText.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-ContinuousEventBase::ContinuousEventBase() {}
-
-ContinuousEventBase::~ContinuousEventBase() {}
-
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+ * \brief Constructor for the EvPluginText class
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EvPluginText::EvPluginText(std::string          evPluginID,
+                           std::string          evName,
+                           std::string          evDesc,
+                           uint64_t             evFlags,
+                           Cycle *              cycle,
+                           EventBase::INDEX_MAP evIndices)
+    : EventBase(EVT_PLUGIN_EV_TEXT, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

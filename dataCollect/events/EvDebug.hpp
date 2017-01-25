@@ -26,84 +26,37 @@
 /*!
  * \file EvDebug.hpp
  * \brief Contains class EvDebug
- * \todo IMPLEMENT
  */
 
 
 #pragma once
 
+#include "defines.hpp"
 #include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class EvDebug
   * \brief A generic debug event
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
   */
-class EvDebug : virtual public EventBase {
+class EvDebug : public EventBase {
  public:
-  // Constructors/Destructors
-  //
+  EvDebug()          = delete;
+  virtual ~EvDebug() = default;
 
+  EvDebug(std::string          evPluginID,
+          std::string          evName,
+          std::string          evDesc,
+          uint64_t             evFlags,
+          Cycle *              cycle,
+          EventBase::INDEX_MAP evIndices);
 
-  /*!
-   * Empty Constructor
-   */
-  EvDebug();
+  EvDebug(const EvDebug &) = default;
+  EvDebug(EvDebug &&)      = default;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EvDebug();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  EvDebug &operator=(const EvDebug &) = default;
+  EvDebug &operator=(EvDebug &&) = default;
 };
 }

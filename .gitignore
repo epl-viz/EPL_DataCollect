@@ -6,3 +6,4 @@
 *.sw*
 *.pyc
 customPreCommit.sh
+EPLEnum2Str.*

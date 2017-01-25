@@ -26,7 +26,6 @@
 /*!
  * \file EvInfo.hpp
  * \brief Contains class EvInfo
- * \todo IMPLEMENT
  */
 
 
@@ -37,73 +36,26 @@
 namespace EPL_DataCollect {
 
 /*!
-  * class EvInfo
   * \brief A generic info was generated
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
   */
-class EvInfo : virtual public EventBase {
+class EvInfo : public EventBase {
  public:
-  // Constructors/Destructors
-  //
+  EvInfo()          = delete;
+  virtual ~EvInfo() = default;
 
+  EvInfo(std::string          evPluginID,
+         std::string          evName,
+         std::string          evDesc,
+         uint64_t             evFlags,
+         Cycle *              cycle,
+         EventBase::INDEX_MAP evIndices);
 
-  /*!
-   * Empty Constructor
-   */
-  EvInfo();
+  EvInfo(const EvInfo &) = default;
+  EvInfo(EvInfo &&)      = default;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EvInfo();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  EvInfo &operator=(const EvInfo &) = default;
+  EvInfo &operator=(EvInfo &&) = default;
 };
 }

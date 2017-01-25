@@ -41,7 +41,7 @@ namespace EPL_DataCollect {
   * class ODEntryArray
   * \brief Array type OD entry
   */
-class ODEntryArray : virtual public ODEntry {
+class ODEntryArray : public ODEntry {
  public:
   // Constructors/Destructors
   //

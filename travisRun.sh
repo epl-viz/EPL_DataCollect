@@ -74,7 +74,14 @@ testExec make
 
 msg "START TEST"
 
+testCheckFail() {
+  ./bin/tests --asd-asdf &> /dev/null
+  (( $? != 0 )) return 0
+  return 1
+}
+
 testExec make check
+testExec testCheckFail
 
 if [[ "$CXX" == "g++" ]]; then
   msg "Parsing coverage data"

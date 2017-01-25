@@ -24,31 +24,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file PluginEvText.cpp
- * \brief Contains class PluginEvText
- * \todo IMPLEMENT
+ * \file EvPluginText.hpp
+ * \brief Contains class EvPluginText
  */
 
-#include "PluginEvText.hpp"
+
+#pragma once
+
+#include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
+/*!
+  * \brief Event that contains a text message from a Plugin
+  *
+  * \note This event type should only be used when a plugin would write to the
+  *   standard output. Always consider the other event types first (EvProtoError,
+  *   EvError, EvWarning EvInfo, EvDebug)
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
+  */
+class EvPluginText : public EventBase {
+ public:
+  EvPluginText()          = delete;
+  virtual ~EvPluginText() = default;
 
-PluginEvText::PluginEvText() {}
+  EvPluginText(std::string          evPluginID,
+               std::string          evName,
+               std::string          evDesc,
+               uint64_t             evFlags,
+               Cycle *              cycle,
+               EventBase::INDEX_MAP evIndices);
 
-PluginEvText::~PluginEvText() {}
+  EvPluginText(const EvPluginText &) = default;
+  EvPluginText(EvPluginText &&)      = default;
 
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+  EvPluginText &operator=(const EvPluginText &) = default;
+  EvPluginText &operator=(EvPluginText &&) = default;
+};
 }

@@ -26,29 +26,156 @@
 /*!
  * \file EventBase.cpp
  * \brief Contains class EventBase
- * \todo IMPLEMENT
  */
 
 #include "EventBase.hpp"
+#include "Cycle.hpp"
+#include "EPLEnum2Str.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
 
-EventBase::EventBase() {}
+/*!
+ * This constructor must be called by a child class
+ * \param evType The event type
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EventBase::EventBase(EvType      evType,
+                     std::string evPluginID,
+                     std::string evName,
+                     std::string evDesc,
+                     uint64_t    evFlags,
+                     Cycle *     cycle,
+                     INDEX_MAP   evIndices)
+    : EventBase(evType, EPLEnum2Str::toStr(evType), evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 
-EventBase::~EventBase() {}
 
-//
-// Methods
-//
+/*!
+ * This constructor must be called by a child class
+ * \param evType The event type
+ * \param evTypeSTR The optional Type as a string for non standard events
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EventBase::EventBase(EvType      evType,
+                     std::string evTypeSTR,
+                     std::string evPluginID,
+                     std::string evName,
+                     std::string evDesc,
+                     uint64_t    evFlags,
+                     Cycle *     cycle,
+                     INDEX_MAP   evIndices)
+    : type(evType),
+      typeSTR(evTypeSTR),
+      flags(evFlags),
+      pluginID(evPluginID),
+      name(evName),
+      description(evDesc),
+      firstCycle(UINT32_MAX),
+      lastCycle(UINT32_MAX),
+      affectedIndices(evIndices) {
+
+  if (cycle != nullptr) {
+    firstCycle = cycle->getCycleNum();
+    lastCycle  = cycle->getCycleNum();
+  }
+}
 
 
-// Accessor methods
-//
+/*!
+  * \brief Get the type of the event
+  * \return EvType
+  */
+EvType EventBase::getType() const noexcept { return type; }
 
 
-// Other methods
-//
+/*!
+ * \brief Get the type of the event as a string
+ * \return The type of the event represented as a std::string
+ */
+std::string EventBase::getTypeAsString() const noexcept { return typeSTR; }
+
+
+/*!
+ * \brief Get the name of the Event
+ * \return The name as a std::string
+ */
+std::string EventBase::getName() const noexcept { return name; }
+
+
+/*!
+ * \brief Returns the description of the event
+ * \return The description as a std::string
+ */
+std::string EventBase::getDescription() const noexcept { return description; }
+
+
+/*!
+ * \brief Returns the ID of the plugin triggering the event
+ * \return The plugin ID as a std::string
+ */
+std::string EventBase::getPluginID() const noexcept { return pluginID; }
+
+
+/*!
+ * \brief Returns the event type flags
+ * \return unsigned long int
+ */
+uint64_t EventBase::getEventFlags() const noexcept { return flags; }
+
+
+/*!
+ * \brief Returns the cycle range
+ * \param[out] first The first cycle where the event occurred
+ * \param[out] last The last cycle where the event occurred
+ */
+void EventBase::getCycleRange(uint32_t *first, uint32_t *last) noexcept {
+  if (first != nullptr)
+    *first = firstCycle;
+
+  if (last != nullptr)
+    *last = lastCycle;
+}
+
+
+/*!
+ * \brief Updates the cycle range
+ * \note -1 represents no change
+ * \param  first The first cycle
+ * \param  last The last cycle
+ */
+void EventBase::updateRange(int first, int last) noexcept {
+  if (first >= 0)
+    firstCycle = first;
+
+  if (last >= 0)
+    lastCycle = last;
+}
+
+
+/*!
+ * \brief Returns a list / map of affected OD indecies by this event.
+ * Also contains a descriptive std::string
+ * \return unordered_map<int, std::string>
+ */
+EventBase::INDEX_MAP EventBase::getAffectedIndices() const noexcept { return affectedIndices; }
+
+
+/*!
+ *\brief Returns a pointer to Event specific metadata
+ * Returns nullptr when no data is specified or the child class does not overwrite
+ * this function
+ *
+ * \return unordered_map<std::string,std::string>*
+ */
+EventBase::MDATA_MAP *EventBase::getMetadata() noexcept { return nullptr; }
 }

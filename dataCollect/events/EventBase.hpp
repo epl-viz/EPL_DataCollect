@@ -26,44 +26,76 @@
 /*!
  * \file EventBase.hpp
  * \brief Contains class EventBase
- * \todo IMPLEMENT
  */
 
 
 #pragma once
-
-
 
 #include "defines.hpp"
 #include <unordered_map>
 
 namespace EPL_DataCollect {
 
-/*!
- * \brief The type of an event
- * \todo IMPLEMENT
- */
-enum EvType { EVT_ERROR };
+class Cycle;
 
 /*!
-  * class EventBase
+ * \brief The type of an event
+ */
+enum EvType {
+  EVT_PROTO_ERROR,
+  EVT_ERROR,
+  EVT_WARNING,
+  EVT_INFO,
+  EVT_DEBUG,
+  EVT_PLUGIN_EV_TEXT,
+
+  EVT_PLUGIN_OTHER = 0x1000,
+
+  EVT_FRONTEND_OTHER = 0x2000,
+
+  EVT_UNKNOWN = INT32_MAX
+};
+
+/*!
   * \brief Base class for all events
   */
 class EventBase {
  public:
-  // Constructors/Destructors
-  //
+  typedef std::unordered_map<int, std::string>         INDEX_MAP;
+  typedef std::unordered_map<std::string, std::string> MDATA_MAP;
 
+ private:
+  EvType      type        = EVT_UNKNOWN;
+  std::string typeSTR     = "<NOT SET>";
+  uint64_t    flags       = 0;
+  std::string pluginID    = "<NOT SET>";
+  std::string name        = "<NOT SET>";
+  std::string description = "<NOT SET>";
+  uint32_t    firstCycle  = 0;
+  uint32_t    lastCycle   = 0;
+  INDEX_MAP   affectedIndices;
 
-  /*!
-   * Empty Constructor
-   */
-  EventBase();
+ protected:
+  EventBase(EvType      evType,
+            std::string evPluginID,
+            std::string evName,
+            std::string evDesc,
+            uint64_t    evFlags,
+            Cycle *     cycle,
+            INDEX_MAP   evIndices);
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EventBase();
+  EventBase(EvType      evType,
+            std::string evTypeSTR,
+            std::string evPluginID,
+            std::string evName,
+            std::string evDesc,
+            uint64_t    evFlags,
+            Cycle *     cycle,
+            INDEX_MAP   evIndices);
+
+ public:
+  EventBase()          = delete;
+  virtual ~EventBase() = default;
 
   EventBase(const EventBase &) = default;
   EventBase(EventBase &&)      = default;
@@ -71,144 +103,17 @@ class EventBase {
   EventBase &operator=(const EventBase &) = default;
   EventBase &operator=(EventBase &&) = default;
 
-  // Static Public attributes
-  //
+  EvType      getType() const noexcept;
+  std::string getTypeAsString() const noexcept;
+  std::string getName() const noexcept;
+  std::string getDescription() const noexcept;
+  std::string getPluginID() const noexcept;
+  uint64_t    getEventFlags() const noexcept;
+  INDEX_MAP   getAffectedIndices() const noexcept;
 
-  // Public attributes
-  //
+  void getCycleRange(uint32_t *first, uint32_t *last = nullptr) noexcept;
+  void updateRange(int first = -1, int last = -1) noexcept;
 
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * Get the type of the event
-   * \return EvType
-   */
-  EvType getType() const { return EVT_ERROR; }
-
-
-  /*!
-   * Get the name of the Event
-   * \return std::string
-   */
-  std::string getName() const { return ""; }
-
-
-  /*!
-   * Returns the description of the event
-   * \return std::string
-   */
-  std::string getDescription() const { return ""; }
-
-
-  /*!
-   * Returns the event type flags
-   * \return unsigned long int
-   */
-  unsigned long int getEventFlags() const { return 0; }
-
-
-  /*!
-   * \param  first The first cycle where the event occurred
-   * \param  last The last cycle where the event occurred
-   */
-  void getCycleRange(unsigned int *first, unsigned int *last) {
-    *first = 0;
-    *last  = 0;
-  }
-
-
-  /*!
-   * Returns a list / map of affected OD indecies by this event. Also contains a
-   * descriptive std::string
-   * TODO: use a vector of tuples instead of an unordered_map?
-   * \return unordered_map<int, std::string>
-   */
-  std::unordered_map<int, std::string> getAffectedIndices() const { return std::unordered_map<int, std::string>(); }
-
-
-  /*!
-   * Returns a pointer to Event specific metadata
-   * Returns nullptr when no data is specified or the child class does not overwrite
-   * this function
-   *
-   * \return unordered_map<std::string,std::string>*
-   */
-  virtual std::unordered_map<std::string, std::string> *getMetadata() const { return nullptr; }
-
-
-  /*!
-   * \brief Returns the ID of the plugin triggering the event
-   * \return std::string
-   */
-  std::string getPluginID() { return ""; }
-
-
-  /*!
-   * \brief Updates the cycle range
-   * \note -1 represents no change
-   * \param  first The first cycle
-   * \param  last The last cycle
-   */
-  void updateRange(int first = -1, int last = -1) {
-    (void)first;
-    (void)last;
-  }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
-  /*!
-   * This constructor must be called by a child class
-   * \param  type The event type
-   * \param  name The name of the event
-   * \param  desc The description
-   * \param  flags Flags for the new event \sa EvFlags
-   */
-  EventBase(EvType type, std::string name, std::string desc, unsigned long int flags) {
-    (void)type;
-    (void)name;
-    (void)desc;
-    (void)flags;
-  }
-
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  virtual MDATA_MAP *getMetadata() noexcept;
 };
 }

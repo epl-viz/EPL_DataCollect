@@ -26,29 +26,26 @@
 /*!
  * \file EvProtoError.cpp
  * \brief Contains class EvProtoError
- * \todo IMPLEMENT
  */
 
 #include "EvProtoError.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-EvProtoError::EvProtoError() {}
-
-EvProtoError::~EvProtoError() {}
-
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+ * \brief Constructor for the EvDebug class
+ * \param evPluginID The plugin EvProtoError
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EvProtoError::EvProtoError(std::string          evPluginID,
+                           std::string          evName,
+                           std::string          evDesc,
+                           uint64_t             evFlags,
+                           Cycle *              cycle,
+                           EventBase::INDEX_MAP evIndices)
+    : EventBase(EVT_PROTO_ERROR, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

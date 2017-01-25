@@ -26,9 +26,7 @@
 /*!
  * \file EvWarning.hpp
  * \brief Contains class EvWarning
- * \todo IMPLEMENT
  */
-
 
 #pragma once
 
@@ -37,73 +35,26 @@
 namespace EPL_DataCollect {
 
 /*!
-  * class EvWarning
   * \brief A generic warning was generated
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
   */
-class EvWarning : virtual public EventBase {
+class EvWarning : public EventBase {
  public:
-  // Constructors/Destructors
-  //
+  EvWarning()          = delete;
+  virtual ~EvWarning() = default;
 
+  EvWarning(std::string          evPluginID,
+            std::string          evName,
+            std::string          evDesc,
+            uint64_t             evFlags,
+            Cycle *              cycle,
+            EventBase::INDEX_MAP evIndices);
 
-  /*!
-   * Empty Constructor
-   */
-  EvWarning();
+  EvWarning(const EvWarning &) = default;
+  EvWarning(EvWarning &&)      = default;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EvWarning();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  EvWarning &operator=(const EvWarning &) = default;
+  EvWarning &operator=(EvWarning &&) = default;
 };
 }

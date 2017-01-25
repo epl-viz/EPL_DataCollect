@@ -41,7 +41,7 @@ namespace EPL_DataCollect {
   * class ODEntryString
   * \brief String type OD entry
   */
-class ODEntryString : virtual public ODEntry {
+class ODEntryString : public ODEntry {
  public:
   // Constructors/Destructors
   //

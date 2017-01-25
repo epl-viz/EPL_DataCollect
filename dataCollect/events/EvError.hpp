@@ -26,84 +26,37 @@
 /*!
  * \file EvError.hpp
  * \brief Contains class EvError
- * \todo IMPLEMENT
  */
 
 
 #pragma once
 
+#include "defines.hpp"
 #include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class EvError
   * \brief A generic error occurred
+  *
+  * This class does not do much. Most of the logic is handled in EventBase
   */
-class EvError : virtual public EventBase {
+class EvError : public EventBase {
  public:
-  // Constructors/Destructors
-  //
+  EvError()          = delete;
+  virtual ~EvError() = default;
 
+  EvError(std::string          evPluginID,
+          std::string          evName,
+          std::string          evDesc,
+          uint64_t             evFlags,
+          Cycle *              cycle,
+          EventBase::INDEX_MAP evIndices);
 
-  /*!
-   * Empty Constructor
-   */
-  EvError();
+  EvError(const EvError &) = default;
+  EvError(EvError &&)      = default;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~EvError();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  EvError &operator=(const EvError &) = default;
+  EvError &operator=(EvError &&) = default;
 };
 }

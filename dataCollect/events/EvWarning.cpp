@@ -26,29 +26,26 @@
 /*!
  * \file EvWarning.cpp
  * \brief Contains class EvWarning
- * \todo IMPLEMENT
  */
 
 #include "EvWarning.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-EvWarning::EvWarning() {}
-
-EvWarning::~EvWarning() {}
-
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+ * \brief Constructor for the EvWarning class
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EvWarning::EvWarning(std::string          evPluginID,
+                     std::string          evName,
+                     std::string          evDesc,
+                     uint64_t             evFlags,
+                     Cycle *              cycle,
+                     EventBase::INDEX_MAP evIndices)
+    : EventBase(EVT_WARNING, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

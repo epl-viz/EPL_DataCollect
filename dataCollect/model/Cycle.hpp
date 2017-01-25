@@ -161,8 +161,8 @@ class Cycle {
   // Private attributes
   //
 
-  EventBase events;
-  Packet    packets;
+  EventBase *events;
+  Packet     packets;
 
  public:
   // Private attribute accessor methods

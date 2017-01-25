@@ -124,6 +124,10 @@ set( CATCH_INCLUDE_DIR "${source_dir}/include" )
 # Generate subdirs #
 ####################
 
+# Write dummy files, so that they can be detected
+file( WRITE "${PROJECT_SOURCE_DIR}/dataCollect/EPLEnum2Str.hpp" "" )
+file( WRITE "${PROJECT_SOURCE_DIR}/dataCollect/EPLEnum2Str.cpp" "" )
+
 new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
@@ -203,6 +207,21 @@ install(
 )
 
 install( EXPORT ${PROJECT_NAME}Targets DESTINATION lib/cmake/${PROJECT_NAME} )
+
+install(
+  FILES "${EPL_VIZ_INCLUDES_DIR}/defines.hpp"
+  DESTINATION include/eplViz
+)
+
+enum2str_generate(
+  PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
+  CLASS_NAME "EPLEnum2Str"
+  FUNC_NAME  "toStr"
+  INCLUDES   "EventBase.hpp"
+  NAMESPACE  "EPL_DataCollect"
+  ENUMS      "EvType"
+  BLACKLIST
+)
 
 generate_format_command( format 3.9.1 )
 

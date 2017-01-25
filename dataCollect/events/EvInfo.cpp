@@ -26,29 +26,26 @@
 /*!
  * \file EvInfo.cpp
  * \brief Contains class EvInfo
- * \todo IMPLEMENT
  */
 
 #include "EvInfo.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-EvInfo::EvInfo() {}
-
-EvInfo::~EvInfo() {}
-
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+ * \brief Constructor for the EvInfo class
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indecies
+ */
+EvInfo::EvInfo(std::string          evPluginID,
+               std::string          evName,
+               std::string          evDesc,
+               uint64_t             evFlags,
+               Cycle *              cycle,
+               EventBase::INDEX_MAP evIndices)
+    : EventBase(EVT_INFO, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }
