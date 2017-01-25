@@ -83,6 +83,7 @@ TEST_CASE("Test all event classes", "[Events]") {
     REQUIRE(ev.getDescription() == strings[2]);
     REQUIRE(ev.getEventFlags() == 0);
     REQUIRE(ev.getAffectedIndices() == map);
+    REQUIRE(ev.getMetadata() == nullptr);
 
     ev.getCycleRange(&first, &last);
     REQUIRE(first == c.getCycleNum());
