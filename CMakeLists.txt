@@ -70,11 +70,11 @@ run_git()
 
 add_compiler(
   GNU MIN_VERSION "6.2"
-  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow"
+  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas"
   DEBUG      "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
-  C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow"
+  C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas"
   C_DEBUG    "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
   C_RELEASE  "-O3"
 
@@ -87,7 +87,7 @@ add_compiler(
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
-             "-Wno-documentation-unknown-command"
+             "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
   DEBUG      "-Werror"
   RELEASE    "-O2"
 
@@ -95,7 +95,7 @@ add_compiler(
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
-             "-Wno-documentation-unknown-command"
+             "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
   C_DEBUG    "-Werror"
   C_RELEASE  "-O2"
 
