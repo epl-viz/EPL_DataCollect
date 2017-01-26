@@ -121,9 +121,9 @@ class Cycle {
 
   /*!
    * \brief Returns the cycle number of this Cycle
-   * \return unsigned int
+   * \return uint32_t
    */
-  unsigned int getCycleNum() { return 0; }
+  mockable uint32_t getCycleNum() { return 0; }
 
 
   /*!

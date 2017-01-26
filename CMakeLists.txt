@@ -58,6 +58,8 @@ list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 set( EPL_DC_TEMPLATES_DIR "${PROJECT_SOURCE_DIR}/cmake/templates" )
 set( EPL_DC_INCLUDES_DIR  "${PROJECT_SOURCE_DIR}/include" )
 
+set( CM_ENABLE_MOCKING 0 )
+
 ################################
 # Set up the build environment #
 ################################
@@ -88,6 +90,7 @@ add_compiler(
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
+             "-Wno-disabled-macro-expansion"
   DEBUG      "-Werror"
   RELEASE    "-O2"
 
@@ -96,6 +99,7 @@ add_compiler(
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
+             "-Wno-disabled-macro-expansion"
   C_DEBUG    "-Werror"
   C_RELEASE  "-O2"
 
@@ -108,17 +112,43 @@ add_compiler(
 
 find_package( Git REQUIRED )
 
-ExternalProject_Add( catch
-  PREFIX            ${CMAKE_BINARY_DIR}/catch
-  GIT_REPOSITORY    https://github.com/philsquared/Catch.git
-  UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND     ""
-  INSTALL_COMMAND   ""
-)
+if( NOT DISABLE_TESTS )
+  set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )
+  set( FUNC_RED_INSTALL_DIR "${FUNC_RED_PREFIX}/install_dir" )
+  set( FUNC_RED_LIB_DIR     "${FUNC_RED_INSTALL_DIR}/lib" )
 
-ExternalProject_Get_Property( catch source_dir )
-set( CATCH_INCLUDE_DIR "${source_dir}/include" )
+  set( FUNC_RED_INCLUDE_DIRS "${FUNC_RED_INSTALL_DIR}/include/funcRedirect" )
+
+  ExternalProject_Add( catch
+    PREFIX            ${CMAKE_BINARY_DIR}/catch
+    GIT_REPOSITORY    https://github.com/philsquared/Catch.git
+    UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND     ""
+    INSTALL_COMMAND   ""
+  )
+
+  ExternalProject_Add( FakeIt
+    PREFIX            ${CMAKE_BINARY_DIR}/FakeIt
+    GIT_REPOSITORY    https://github.com/eranpeer/FakeIt.git
+    UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND     ""
+    INSTALL_COMMAND   ""
+  )
+
+  ExternalProject_Get_Property( catch source_dir )
+  set( CATCH_INCLUDE_DIR "${source_dir}/include" )
+
+  ExternalProject_Get_Property( FakeIt source_dir )
+  set( FAKE_IT_INCLUDE_DIR "${source_dir}/single_header/standalone" )
+
+  if( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+    string( APPEND CMAKE_CXX_FLAGS " -isystem ${FAKE_IT_INCLUDE_DIR} " )
+  endif( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+
+  set( CM_ENABLE_MOCKING 1 )
+endif( NOT DISABLE_TESTS )
 
 ####################
 # Generate subdirs #
@@ -169,7 +199,12 @@ endif( NOT DISABLE_TESTS )
 # Update include directories #
 ##############################
 
-include_directories( ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES} ${CATCH_INCLUDE_DIR} ${EPL_DC_INCLUDES_DIR} )
+include_directories(
+  ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES}
+  ${CATCH_INCLUDE_DIR}
+  ${FAKE_IT_INCLUDE_DIR}
+  ${EPL_DC_INCLUDES_DIR}
+)
 
 if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
   file( MAKE_DIRECTORY "${EPL_DC_INCLUDES_DIR}" )

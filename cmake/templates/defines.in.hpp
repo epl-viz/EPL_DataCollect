@@ -34,6 +34,16 @@
 #include <stdint.h>
 #include <string>
 
+#define EPL_DC_ENABLE_MOCKING @CM_ENABLE_MOCKING@
+
+#ifndef mockable
+#if EPL_DC_ENABLE_MOCKING
+#define mockable virtual
+#else
+#define mockable
+#endif
+#endif
+
 namespace EPL_DataCollect {
 
 namespace constants {

@@ -103,16 +103,16 @@ class EventBase {
   EventBase &operator=(const EventBase &) = default;
   EventBase &operator=(EventBase &&) = default;
 
-  EvType      getType() const noexcept;
-  std::string getTypeAsString() const noexcept;
-  std::string getName() const noexcept;
-  std::string getDescription() const noexcept;
-  std::string getPluginID() const noexcept;
-  uint64_t    getEventFlags() const noexcept;
-  INDEX_MAP   getAffectedIndices() const noexcept;
+  mockable EvType getType() const noexcept;
+  mockable std::string getTypeAsString() const noexcept;
+  mockable std::string getName() const noexcept;
+  mockable std::string getDescription() const noexcept;
+  mockable std::string getPluginID() const noexcept;
+  mockable uint64_t getEventFlags() const noexcept;
+  mockable INDEX_MAP getAffectedIndices() const noexcept;
 
-  void getCycleRange(uint32_t *first, uint32_t *last = nullptr) noexcept;
-  void updateRange(int first = -1, int last = -1) noexcept;
+  mockable void getCycleRange(uint32_t *first, uint32_t *last = nullptr) noexcept;
+  mockable void updateRange(int first = -1, int last = -1) noexcept;
 
   virtual MDATA_MAP *getMetadata() noexcept;
 };

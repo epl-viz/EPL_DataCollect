@@ -33,14 +33,19 @@
 #include <EvWarning.hpp>
 #include <EventBase.hpp>
 #include <catch.hpp>
+#include <fakeit.hpp>
 
 using namespace EPL_DataCollect;
+using namespace fakeit;
 
 TEST_CASE("Test all event classes", "[Events]") {
-  Cycle                c;
   EventBase::INDEX_MAP map;
   map[1]    = "asdf";
   map[1000] = "dfsfgh";
+
+  Mock<Cycle> mock;
+  When(Method(mock, getCycleNum)).Return(1, 1);
+  Cycle &c = mock.get();
 
   std::string strings[] = {"TestPlugin",
                            "ASDG",
@@ -57,8 +62,8 @@ TEST_CASE("Test all event classes", "[Events]") {
     EvProtoError ev(strings[3], strings[4], strings[5], 0, &c, map);
 
     ev.getCycleRange(&first, &last);
-    REQUIRE(first == c.getCycleNum());
-    REQUIRE(last == c.getCycleNum());
+    REQUIRE(first == 1);
+    REQUIRE(last == 1);
 
     ev.updateRange(0xDEAD, 0xBADA55);
 
@@ -86,8 +91,10 @@ TEST_CASE("Test all event classes", "[Events]") {
     REQUIRE(ev.getMetadata() == nullptr);
 
     ev.getCycleRange(&first, &last);
-    REQUIRE(first == c.getCycleNum());
-    REQUIRE(last == c.getCycleNum());
+    REQUIRE(first == 1);
+    REQUIRE(last == 1);
+
+    REQUIRE(Verify(Method(mock, getCycleNum)) == true);
   }
 
   SECTION("Test EvError") {
@@ -104,31 +111,29 @@ TEST_CASE("Test all event classes", "[Events]") {
     ev.getCycleRange(&first, &last);
     REQUIRE(first == UINT32_MAX);
     REQUIRE(last == UINT32_MAX);
+
+    REQUIRE(Verify(Method(mock, getCycleNum)) == false);
   }
 
   SECTION("Test EvWarning") {
-    uint32_t  first = 0xDEADBEAF, last = 0xDEADBEAF;
     EvWarning ev(strings[0], strings[1], strings[2], 0, &c, map);
     REQUIRE(ev.getTypeAsString() == "EVT_WARNING");
     REQUIRE(ev.getType() == EVT_WARNING);
   }
 
   SECTION("Test EvInfo") {
-    uint32_t first = 0xDEADBEAF, last = 0xDEADBEAF;
-    EvInfo   ev(strings[0], strings[1], strings[2], 0, &c, map);
+    EvInfo ev(strings[0], strings[1], strings[2], 0, &c, map);
     REQUIRE(ev.getTypeAsString() == "EVT_INFO");
     REQUIRE(ev.getType() == EVT_INFO);
   }
 
   SECTION("Test EvDebug") {
-    uint32_t first = 0xDEADBEAF, last = 0xDEADBEAF;
-    EvDebug  ev(strings[0], strings[1], strings[2], 0, &c, map);
+    EvDebug ev(strings[0], strings[1], strings[2], 0, &c, map);
     REQUIRE(ev.getTypeAsString() == "EVT_DEBUG");
     REQUIRE(ev.getType() == EVT_DEBUG);
   }
 
   SECTION("Test EvPluginText") {
-    uint32_t     first = 0xDEADBEAF, last = 0xDEADBEAF;
     EvPluginText ev(strings[0], strings[1], strings[2], 0, &c, map);
     REQUIRE(ev.getTypeAsString() == "EVT_PLUGIN_EV_TEXT");
     REQUIRE(ev.getType() == EVT_PLUGIN_EV_TEXT);

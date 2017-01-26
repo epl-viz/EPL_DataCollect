@@ -31,6 +31,7 @@
 
 #pragma once
 
+#include "defines.hpp"
 #include "EventBase.hpp"
 
 namespace EPL_DataCollect {
