@@ -250,7 +250,7 @@ install(
 install( EXPORT ${PROJECT_NAME}Targets DESTINATION lib/cmake/${PROJECT_NAME} )
 
 install(
-  FILES "${EPL_VIZ_INCLUDES_DIR}/defines.hpp"
+  FILES "${EPL_DC_INCLUDES_DIR}/defines.hpp" "${EPL_DC_INCLUDES_DIR}/EPLEnums.h"
   DESTINATION include/eplViz
 )
 
