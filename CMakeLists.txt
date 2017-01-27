@@ -110,7 +110,11 @@ add_compiler(
 # Check Dependencies #
 ######################
 
-find_package( Git REQUIRED )
+find_package( Git              REQUIRED )
+find_package( PythonInterp 3.6 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
+find_package( PythonLibs   3.6 REQUIRED )
+find_package( PkgConfig        REQUIRED )
+pkg_search_module( LIBWIRESHARK REQUIRED wireshark )
 
 if( NOT DISABLE_TESTS )
   set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )
@@ -162,7 +166,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES epl_dissector_shared epl_edsParser_shared
+  DEPENDENCIES epl_dissector_shared epl_edsParser_shared ${PYTHON_LIBRARIES}
 )
 
 new_project_library(
@@ -204,6 +208,8 @@ include_directories(
   ${CATCH_INCLUDE_DIR}
   ${FAKE_IT_INCLUDE_DIR}
   ${EPL_DC_INCLUDES_DIR}
+  ${PYTHON_INCLUDE_DIRS}
+  ${LIBWIRESHARK_INCLUDE_DIRS}
 )
 
 if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
@@ -252,7 +258,7 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EPLenums.h"
+  INCLUDES   "EPLEnums.h"
   NAMESPACE  "EPL_DataCollect"
   ENUMS      "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
   BLACKLIST
