@@ -26,29 +26,80 @@
 /*!
  * \file ODDescription.cpp
  * \brief Contains class ODDescription
- * \todo IMPLEMENT
  */
 
 #include "ODDescription.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
+/*!
+ * \brief Checks whether an index is already set
+ * \param index The index to check
+ * \returns Whether the entry description is already set
+ */
+bool ODDescription::exists(uint16_t index) noexcept {
+  auto found = entries.find(index);
+  if (found == entries.end())
+    return false;
 
-ODDescription::ODDescription() {}
+  return true;
+}
 
-ODDescription::~ODDescription() {}
+/*!
+ * \brief Adds a new entry to the OD description
+ * \note This function can not override existing entries
+ * \param index the index of the new entry description
+ * \param desc the entry description
+ * \returns false when the entry already exists
+ */
+bool ODDescription::setEntry(uint16_t index, ODEntryDescription desc) noexcept {
+  if (exists(index))
+    return false;
 
-//
-// Methods
-//
+  entries[index] = desc;
+  return true;
+}
+
+/*!
+ * \brief Overrides an OD entry description
+ * \note This function can not insert new entries
+ * \param index the index of the new entry description
+ * \param desc the entry description
+ * \returns false when the entry does not exist
+ */
+bool ODDescription::overrideEntry(uint16_t index, ODEntryDescription desc) noexcept {
+  if (!exists(index))
+    return false;
+
+  entries[index] = desc;
+  return true;
+}
+
+/*!
+ * \brief Returns a pointer to an entry description
+ * \note This function can not insert new entries
+ * \param index the index of the entry description
+ * \returns nullptr if the entry does not exist
+ */
+ODEntryDescription *ODDescription::getEntry(uint16_t index) noexcept {
+  if (!exists(index))
+    return nullptr;
+
+  return &entries[index];
+}
+
+/*!
+ * \brief Applies a new description set on top of this one
+ * \note already existing entries will be overwritten
+ * \param desc the new description set
+ * \todo Use c++17 merge
+ */
+void ODDescription::applyDesc(ODDescription &desc) noexcept {
+  for (auto &i : desc.getEntries()) {
+    entries[i.first] = i.second;
+  }
+}
 
 
-// Accessor methods
-//
-
-
-// Other methods
-//
+ODDescription::MAP &ODDescription::getEntries() noexcept { return entries; }
 }

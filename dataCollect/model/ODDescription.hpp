@@ -26,16 +26,13 @@
 /*!
  * \file ODDescription.hpp
  * \brief Contains class ODDescription
- * \todo IMPLEMENT
  */
-
 
 #pragma once
 
-
-
 #include "defines.hpp"
 #include "ODEntryDescription.hpp"
+#include <unordered_map>
 
 namespace EPL_DataCollect {
 
@@ -52,19 +49,16 @@ namespace EPL_DataCollect {
   */
 class ODDescription {
  public:
-  // Constructors/Destructors
-  //
+  typedef std::unordered_map<uint16_t, ODEntryDescription> MAP;
 
+ private:
+  MAP entries;
 
-  /*!
-   * Empty Constructor
-   */
-  ODDescription();
+  mockable MAP &getEntries() noexcept;
 
-  /*!
-   * Empty Destructor
-   */
-  virtual ~ODDescription();
+ public:
+  ODDescription()          = default;
+  virtual ~ODDescription() = default;
 
   ODDescription(const ODDescription &) = default;
   ODDescription(ODDescription &&)      = default;
@@ -72,69 +66,11 @@ class ODDescription {
   ODDescription &operator=(const ODDescription &) = default;
   ODDescription &operator=(ODDescription &&) = default;
 
-  // Static Public attributes
-  //
+  mockable bool exists(uint16_t index) noexcept;
 
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  ODEntryDescription entries;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
-  /*!
-   * Set the value of entries
-   * \param new_var the new value of entries
-   */
-  void setEntries(ODEntryDescription new_var) { entries = new_var; }
-
-  /*!
-   * Get the value of entries
-   * \return the value of entries
-   */
-  ODEntryDescription *getEntries() { return &entries; }
-
- private:
+  mockable bool setEntry(uint16_t index, ODEntryDescription desc) noexcept;
+  mockable bool overrideEntry(uint16_t index, ODEntryDescription desc) noexcept;
+  mockable ODEntryDescription *getEntry(uint16_t index) noexcept;
+  mockable void applyDesc(ODDescription &desc) noexcept;
 };
 }
