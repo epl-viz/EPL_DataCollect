@@ -47,7 +47,7 @@ namespace EPL_DataCollect {
   * It is the responsibility of the CycleBuilder to interpret the Packet data with
   * the information of this struct.
   */
-class ODDescription {
+class ODDescription final {
  public:
   typedef std::unordered_map<uint16_t, ODEntryDescription> MAP;
 
@@ -57,8 +57,8 @@ class ODDescription {
   mockable MAP &getEntries() noexcept;
 
  public:
-  ODDescription()          = default;
-  virtual ~ODDescription() = default;
+  ODDescription()  = default;
+  ~ODDescription() = default;
 
   ODDescription(const ODDescription &) = default;
   ODDescription(ODDescription &&)      = default;
