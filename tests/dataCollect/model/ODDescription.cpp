@@ -54,6 +54,7 @@ TEST_CASE("Test ODDescription", "[Model]") {
     REQUIRE(d1.setEntry(101, entries[15]) == false);
     REQUIRE(d1.getEntry(100)->name == "Entry 0");
     REQUIRE(d1.getEntry(101)->name == "Entry 2");
+    REQUIRE(d1.getEntry(500) == nullptr);
   }
 
   SECTION("Override Entries") {
