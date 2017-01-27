@@ -25,133 +25,39 @@
  */
 /*!
  * \file ODEntryDescription.hpp
- * \brief Contains class ODEntryDescription
- * \todo IMPLEMENT
+ * \brief Contains struct ODEntryDescription
  */
 
 
 #pragma once
 
-
-
 #include "defines.hpp"
 #include "ODEntry.hpp"
+#include "EPLEnums.h"
 
 namespace EPL_DataCollect {
 
 /*!
-  * class ODEntryDescription
   * \brief Description of a specific OD entry
   */
-class ODEntryDescription {
- public:
-  // Constructors/Destructors
-  //
+struct ODEntryDescription {
+  uint16_t       index        = 0;       //!< \brief The 16bit Index of the OD Entry
+  ObjectType     type         = OT_NULL; //!< \brief The Object typpe (see EPSG DS 301 v1.3.0 Section 6.2.1)
+  std::string    name         = "<UNDEFINED>";
+  ObjectDataType dataType     = ODT_BOOLEAN;
+  ObjectCategory category     = OC_NOT_RELEVANT;
+  ObjectAccess   access       = OACS_CONST;
+  ODEntry *      valueMin     = nullptr;
+  ODEntry *      valueMax     = nullptr;
+  ODEntry *      defaultValue = nullptr;
 
-
-  /*!
-   * Empty Constructor
-   */
-  ODEntryDescription();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~ODEntryDescription();
+  ODEntryDescription()  = default;
+  ~ODEntryDescription() = default;
 
   ODEntryDescription(const ODEntryDescription &) = default;
   ODEntryDescription(ODEntryDescription &&)      = default;
 
   ODEntryDescription &operator=(const ODEntryDescription &) = default;
   ODEntryDescription &operator=(ODEntryDescription &&) = default;
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-  std::string name;
-  ODEntryType type;
-  int         defaultValue;
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  /*!
-   * Set the value of name
-   * \param new_var the new value of name
-   */
-  void setName(std::string new_var) { name = new_var; }
-
-  /*!
-   * Get the value of name
-   * \return the value of name
-   */
-  std::string getName() { return name; }
-
-  /*!
-   * Set the value of type
-   * \param new_var the new value of type
-   */
-  void setType(ODEntryType new_var) { type = new_var; }
-
-  /*!
-   * Get the value of type
-   * \return the value of type
-   */
-  ODEntryType getType() { return type; }
-
-  /*!
-   * Set the value of defaultValue
-   * \param new_var the new value of defaultValue
-   */
-  void setDefaultValue(int new_var) { defaultValue = new_var; }
-
-  /*!
-   * Get the value of defaultValue
-   * \return the value of defaultValue
-   */
-  int getDefaultValue() { return defaultValue; }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
 };
 }

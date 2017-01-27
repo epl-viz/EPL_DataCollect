@@ -1,6 +1,6 @@
 *.kdev?
 /*build*
-/include
+/include/defines.hpp
 /*/CMakeLists.txt
 /plugins/*/CMakeLists.txt
 *.sw*

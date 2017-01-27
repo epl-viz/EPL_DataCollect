@@ -33,16 +33,10 @@
 #pragma once
 
 
-
 #include "defines.hpp"
+#include "EPLEnums.h"
 
 namespace EPL_DataCollect {
-
-/*!
- * \brief Type of the Entry
- * \todo IMPLEMENT
- */
-enum ODEntryType { TYPE1 };
 
 /*!
   * class ODEntry
@@ -89,7 +83,7 @@ class ODEntry {
   /*!
    * \return ODEntryType
    */
-  virtual ODEntryType getType() { return TYPE1; }
+  virtual ObjectDataType getType() { return ODT_BOOLEAN; }
 
 
   /*!

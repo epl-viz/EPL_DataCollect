@@ -252,9 +252,9 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EventBase.hpp"
+  INCLUDES   "EPLenums.h"
   NAMESPACE  "EPL_DataCollect"
-  ENUMS      "EvType"
+  ENUMS      "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
   BLACKLIST
 )
 

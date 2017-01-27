@@ -32,29 +32,12 @@
 #pragma once
 
 #include "defines.hpp"
+#include "EPLEnums.h"
 #include <unordered_map>
 
 namespace EPL_DataCollect {
 
 class Cycle;
-
-/*!
- * \brief The type of an event
- */
-enum EvType {
-  EVT_PROTO_ERROR,
-  EVT_ERROR,
-  EVT_WARNING,
-  EVT_INFO,
-  EVT_DEBUG,
-  EVT_PLUGIN_EV_TEXT,
-
-  EVT_PLUGIN_OTHER = 0x1000,
-
-  EVT_FRONTEND_OTHER = 0x2000,
-
-  EVT_UNKNOWN = INT32_MAX
-};
 
 /*!
   * \brief Base class for all events
