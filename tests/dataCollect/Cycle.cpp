@@ -27,8 +27,20 @@
 #include <Cycle.hpp>
 #include <catch.hpp>
 
-TEST_CASE("InputHandler getNumNodes functions works", "[Cycle]") {
+TEST_CASE("Standard return values work", "[Cycle]") {
   EPL_DataCollect::Cycle c;
 
-  SECTION("Test the stub") { REQUIRE(c.getNumNodes() == 0); }
+  SECTION("Test getNumNodes()") { REQUIRE(c.getNumNodes() == 0); }
+  SECTION("Test getCycleNum()") { REQUIRE(c.getCycleNum() == 0); }
+  SECTION("Test getPackets()") { REQUIRE(c.getPackets().empty() == true); }
+  SECTION("Test getActiveEvents()") { REQUIRE(c.getActiveEvents().empty() == true); }
+}
+
+TEST_CASE("Fetching non existant values fails", "[Cycle]") {
+  EPL_DataCollect::Cycle c;
+
+  SECTION("Test getNode() throwing an exception") { REQUIRE_THROWS(c.getNode(200)); }
+  SECTION("Test getCycleStorage() returning a nullptr") {
+    REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
+  }
 }
