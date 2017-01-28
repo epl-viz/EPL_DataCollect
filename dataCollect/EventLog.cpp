@@ -38,7 +38,7 @@ EventLog::~EventLog() {}
  * \brief Returns a unique ID that should be used in pollEvents
  * \return unsigned int
  */
-uint32_t EventLog::getAppID() {
+uint32_t EventLog::getAppID() noexcept {
   std::lock_guard<std::mutex> lock(accessMutex);
   return nextAppID++;
 }
@@ -49,7 +49,7 @@ uint32_t EventLog::getAppID() {
  * \return std::vector<EventBase*>
  * \param  appID Identifies the user polling the events
  */
-std::vector<EventBase *> EventLog::pollEvents(uint32_t appID) {
+std::vector<EventBase *> EventLog::pollEvents(uint32_t appID) noexcept {
   std::lock_guard<std::mutex> lock(accessMutex);
   if (pollList.find(appID) == pollList.end())
     pollList[appID] = 0;
@@ -73,7 +73,7 @@ std::vector<EventBase *> EventLog::pollEvents(uint32_t appID) {
  * \param  begin The begin of the cycle range
  * \param  end The end of the cycle range
  */
-std::vector<EventBase *> EventLog::getEventsInRange(int begin, int end) {
+std::vector<EventBase *> EventLog::getEventsInRange(int begin, int end) noexcept {
   std::lock_guard<std::mutex> lock(accessMutex);
   std::vector<EventBase *>    evList;
 
@@ -98,14 +98,14 @@ std::vector<EventBase *> EventLog::getEventsInRange(int begin, int end) {
  * Wrapper for getEventsInRange
  * \return std::vector<EventBase*>
  */
-std::vector<EventBase *> EventLog::getAllEvents() { return getEventsInRange(-1, -1); }
+std::vector<EventBase *> EventLog::getAllEvents() noexcept { return getEventsInRange(-1, -1); }
 
 /*!
  * \brief Adds a new event to the event log
  * \note This function will increase the cycle range of past events, if possible
  * \param ev The event to add
  */
-void EventLog::addEvent(std::unique_ptr<EventBase> ev) {
+void EventLog::addEvent(std::unique_ptr<EventBase> ev) noexcept {
   std::lock_guard<std::mutex> lock(accessMutex);
 
   uint32_t evStart, evEnd;

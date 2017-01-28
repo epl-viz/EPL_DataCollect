@@ -77,10 +77,16 @@ class EventLog {
   EventLog() = default;
   virtual ~EventLog();
 
-  mockable std::vector<EventBase *> pollEvents(uint32_t appID = 0);
-  mockable uint32_t getAppID();
-  mockable std::vector<EventBase *> getEventsInRange(int begin = -1, int end = -1);
-  mockable std::vector<EventBase *> getAllEvents();
-  mockable void addEvent(std::unique_ptr<EventBase> ev);
+  EventLog(const EventLog &) = default;
+  EventLog(EventLog &&)      = default;
+
+  EventLog &operator=(const EventLog &) = default;
+  EventLog &operator=(EventLog &&) = default;
+
+  mockable std::vector<EventBase *> pollEvents(uint32_t appID = 0) noexcept;
+  mockable uint32_t getAppID() noexcept;
+  mockable std::vector<EventBase *> getEventsInRange(int begin = -1, int end = -1) noexcept;
+  mockable std::vector<EventBase *> getAllEvents() noexcept;
+  mockable void addEvent(std::unique_ptr<EventBase> ev) noexcept;
 };
 }
