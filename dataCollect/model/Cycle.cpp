@@ -26,29 +26,72 @@
 /*!
  * \file Cycle.cpp
  * \brief Contains class Cycle
- * \todo IMPLEMENT
  */
 
 #include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-Cycle::Cycle() { events = nullptr; }
-
-Cycle::~Cycle() {}
-
-//
-// Methods
-//
+/*!
+ * \brief Returns the number of nodes
+ * \return The amount of nodes as an unsigned char
+ */
+uint8_t Cycle::getNumNodes() const noexcept { return nodeCount; }
 
 
-// Accessor methods
-//
+/*!
+ * \brief Returns all events active in the cycle
+ * \return The currently active events as an std::vector<EventBase*>
+ */
+std::vector<EventBase *> Cycle::getActiveEvents() const noexcept { return events; }
 
 
-// Other methods
-//
+/*!
+ * \brief Returns all packets in the cycle
+ * \return The packets currently in the cycle as an std::vector<Packet>
+ */
+std::vector<Packet> Cycle::getPackets() const noexcept { return packets; }
+
+
+/*!
+ * \brief Returns the cycle number of this Cycle
+ * \return The current cycle number as an unsigned int
+ */
+uint32_t Cycle::getCycleNum() const noexcept { return cycleNum; }
+
+
+/*!
+ * \brief Returns the specified node
+ * \param  node The ID / index of the node
+ * \throws std::out_of_range if no node with the given ID exists
+ * \return The node given by the ID as type Node
+ */
+Node Cycle::getNode(uint8_t node) { return nodes.at(node); }
+
+
+/*!
+ * \brief Returns a pointer to the cycle storage corresponding to the ID
+ * \note Returns nullptr on error
+ * \return The pointer to the cycle storage as a CycleStorageBase*
+ * \param  id The ID of the storage
+ */
+CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
+  try {
+    return cycleStorages.at(id);
+  } catch (const std::out_of_range &ex) { return nullptr; }
+}
+
+
+/*!
+   * \brief Updates the packet list and increases the cycle counter.
+   * This will clear the old packet list and increment the cycle counter by one.
+   * \note This function will NOT change the OD entries!
+   *
+   * C++: friend class CycleBuilder
+   * \param  newPackets The packets to apply
+   */
+void Cycle::updatePackets(std::vector<Packet> newPackets) {
+  packets = newPackets;
+  cycleNum++;
+}
 }

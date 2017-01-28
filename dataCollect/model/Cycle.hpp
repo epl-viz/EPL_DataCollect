@@ -50,20 +50,19 @@ namespace EPL_DataCollect {
   * cycle.
   */
 class Cycle {
+
+ private:
+  std::vector<EventBase *> events;
+  std::vector<Packet>      packets;
+  std::unordered_map<uint8_t, Node>                   nodes;
+  std::unordered_map<std::string, CycleStorageBase *> cycleStorages;
+
+  uint8_t  nodeCount = 0;
+  uint32_t cycleNum  = 0;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  Cycle();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~Cycle();
+  Cycle()          = default;
+  virtual ~Cycle() = default;
 
   Cycle(const Cycle &) = default;
   Cycle(Cycle &&)      = default;
@@ -71,118 +70,17 @@ class Cycle {
   Cycle &operator=(const Cycle &) = default;
   Cycle &operator=(Cycle &&) = default;
 
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
 
 
-  // Public attribute accessor methods
-  //
+  mockable std::vector<EventBase *> getActiveEvents() const noexcept;
+  mockable std::vector<Packet> getPackets() const noexcept;
+  mockable uint32_t getCycleNum() const noexcept;
+  mockable uint8_t getNumNodes() const noexcept;
 
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns the number of nodes
-   * \return unsigned int
-   */
-  unsigned int getNumNodes() { return 0; }
-
-
-  /*!
-   * \brief Returns the specified node
-   * \return Node
-   * \param  node The ID / index of the node
-   */
-  Node getNode(unsigned int node) {
-    (void)node;
-    return Node();
-  }
-
-
-  /*!
-   * \brief Returns all events active in the cycle
-   * \return std::vector<EventBase*>
-   */
-  std::vector<EventBase *> getActiveEvents() { return std::vector<EventBase *>(); }
-
-
-  /*!
-   * \brief Returns all packets in the cycle
-   * \return std::vector<Packet>
-   */
-  std::vector<Packet> getPackets() { return std::vector<Packet>(); }
-
-
-  /*!
-   * \brief Returns the cycle number of this Cycle
-   * \return uint32_t
-   */
-  mockable uint32_t getCycleNum() { return 0; }
-
-
-  /*!
-   * \brief Returns a pointer to the cycle storage corresponding to the ID
-   * \note Returns nullptr on error
-   * \return CycleStorageBase *
-   * \param  id The ID of the storage
-   */
-  CycleStorageBase *getCycleStorage(std::string id) {
-    (void)id;
-    return nullptr;
-  }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  EventBase *events;
-  Packet     packets;
-
- public:
-  // Private attribute accessor methods
-  //
+  mockable Node getNode(uint8_t node);
+  mockable CycleStorageBase *getCycleStorage(std::string id) noexcept;
 
  private:
- public:
-  // Private attribute accessor methods
-  //
-
-
- private:
-  /*!
-   * \brief Updates the packet list and increases the cycle counter.
-   * This will clear the old packet list and increment the cycle counter by one.
-   * \note This function will NOT change the OD entries!
-   *
-   * C++: friend class CycleBuilder
-   * \param  newPackets The packets to apply
-   */
-  void updatePackets(std::vector<Packet> newPackets) { (void)newPackets; }
+  mockable void updatePackets(std::vector<Packet> newPackets);
 };
 }
