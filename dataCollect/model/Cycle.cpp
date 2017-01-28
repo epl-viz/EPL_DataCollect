@@ -76,9 +76,13 @@ Node Cycle::getNode(uint8_t node) { return nodes.at(node); }
  * \param  id The ID of the storage
  */
 CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
-  try {
-    return cycleStorages.at(id);
-  } catch (const std::out_of_range &ex) { return nullptr; }
+  auto cs = cycleStorages.find(id);
+
+  if (cs == cycleStorages.end()) {
+    return nullptr;
+  } else {
+    return cs;
+  }
 }
 
 
