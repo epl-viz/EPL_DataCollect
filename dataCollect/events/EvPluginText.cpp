@@ -41,7 +41,7 @@ EvPluginText::~EvPluginText() {}
  * \param evDesc The description
  * \param evFlags Flags for the new event \sa EvFlags
  * \param cycle Pointer to the first cycle the event occurred
- * \param evIndices Affected indecies
+ * \param evIndices Affected indices
  */
 EvPluginText::EvPluginText(std::string          evPluginID,
                            std::string          evName,

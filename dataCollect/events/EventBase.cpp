@@ -43,7 +43,7 @@ namespace EPL_DataCollect {
  * \param evDesc The description
  * \param evFlags Flags for the new event \sa EvFlags
  * \param cycle Pointer to the first cycle the event occurred
- * \param evIndices Affected indecies
+ * \param evIndices Affected indices
  */
 EventBase::EventBase(EvType      evType,
                      std::string evPluginID,
@@ -64,7 +64,7 @@ EventBase::EventBase(EvType      evType,
  * \param evDesc The description
  * \param evFlags Flags for the new event \sa EvFlags
  * \param cycle Pointer to the first cycle the event occurred
- * \param evIndices Affected indecies
+ * \param evIndices Affected indices
  */
 EventBase::EventBase(EvType      evType,
                      std::string evTypeSTR,
@@ -163,7 +163,7 @@ void EventBase::updateRange(int first, int last) noexcept {
 
 
 /*!
- * \brief Returns a list / map of affected OD indecies by this event.
+ * \brief Returns a list / map of affected OD indices by this event.
  * Also contains a descriptive std::string
  * \return unordered_map<int, std::string>
  */

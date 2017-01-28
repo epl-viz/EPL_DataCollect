@@ -41,7 +41,7 @@ EvWarning::~EvWarning() {}
  * \param evDesc The description
  * \param evFlags Flags for the new event \sa EvFlags
  * \param cycle Pointer to the first cycle the event occurred
- * \param evIndices Affected indecies
+ * \param evIndices Affected indices
  */
 EvWarning::EvWarning(std::string          evPluginID,
                      std::string          evName,
