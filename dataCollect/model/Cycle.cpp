@@ -81,7 +81,7 @@ CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
   if (cs == cycleStorages.end()) {
     return nullptr;
   } else {
-    return cs;
+    return cs->second;
   }
 }
 
