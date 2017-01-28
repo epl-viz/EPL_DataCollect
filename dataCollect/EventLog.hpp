@@ -26,13 +26,16 @@
 /*!
  * \file EventLog.hpp
  * \brief Contains class EventLog
- * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "defines.hpp"
 #include "EventBase.hpp"
+#include <memory>
+#include <mutex>
+#include <plf_colony.h>
+#include <unordered_map>
 #include <vector>
 
 namespace EPL_DataCollect {
@@ -49,116 +52,35 @@ namespace EPL_DataCollect {
   *  - continuation of events (extending the cycle range of previous events)
   *  - replacing events (see continuous events)
   *
+  * \warning It is assumed that events are added in chronological (based on the cycle number) order!
+  *
   * \par Continuous events
   * Special events that should be active until the next event of the same type is
   * triggered (for example GEvImage) can have a flag set that activates this special
   * treatment.
   */
 class EventLog {
+  typedef std::vector<std::unique_ptr<EventBase>> EV_CONTAINER;
+  typedef std::unordered_map<uint32_t, uint32_t> POLL_MAP;
+
+  static const uint32_t MAX_LATEST_KEEP = 5;
+
+ private:
+  std::mutex               accessMutex;
+  EV_CONTAINER             events;
+  POLL_MAP                 pollList;
+  plf::colony<EventBase *> latestEvents;
+
+  uint32_t nextAppID = 0;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  EventLog();
-
-  /*!
-   * Empty Destructor
-   */
+  EventLog() = default;
   virtual ~EventLog();
 
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns all events triggered after the last pollEvents call with the same
-   * appID
-   * \return std::vector<EventBase*>
-   * \param  appID Identifies the user polling the events
-   */
-  std::vector<EventBase *> pollEvents(unsigned int appID = 0) {
-    (void)appID;
-    return std::vector<EventBase *>();
-  }
-
-
-  /*!
-   * \brief Returns a unique ID that should be used in pollEvents
-   * \return unsigned int
-   */
-  unsigned int getAppID() { return 0; }
-
-
-  /*!
-   * \brief Returns all events triggered within the cycle range
-   * Use -1 for start/end to select the first/last cycle
-   * \return std::vector<EventBase*>
-   * \param  begin The begin of the cycle range
-   * \param  end The end of the cycle range
-   */
-  std::vector<EventBase *> getEventsInRange(int begin = -1, int end = -1) {
-    (void)begin;
-    (void)end;
-    return std::vector<EventBase *>();
-  }
-
-
-  /*!
-   * \brief Returns all events triggered
-   * Wrapper for getEventsInRange
-   * \return std::vector<EventBase*>
-   */
-  std::vector<EventBase *> getAllEvents() { return getEventsInRange(-1, -1); }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  mockable std::vector<EventBase *> pollEvents(uint32_t appID = 0);
+  mockable uint32_t getAppID();
+  mockable std::vector<EventBase *> getEventsInRange(int begin = -1, int end = -1);
+  mockable std::vector<EventBase *> getAllEvents();
+  mockable void addEvent(std::unique_ptr<EventBase> ev);
 };
 }

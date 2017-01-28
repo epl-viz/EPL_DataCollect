@@ -44,7 +44,7 @@ TEST_CASE("Test all event classes", "[Events]") {
   map[1000] = "dfsfgh";
 
   Mock<Cycle> mock;
-  When(Method(mock, getCycleNum)).Return(1, 1);
+  When(Method(mock, getCycleNum)).Return(1);
   Cycle &c = mock.get();
 
   std::string strings[] = {"TestPlugin",

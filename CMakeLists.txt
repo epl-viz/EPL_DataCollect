@@ -57,6 +57,7 @@ list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 # Some useful variables
 set( EPL_DC_TEMPLATES_DIR "${PROJECT_SOURCE_DIR}/cmake/templates" )
 set( EPL_DC_INCLUDES_DIR  "${PROJECT_SOURCE_DIR}/include" )
+set( PLF_COLONY_DIR       "${PROJECT_SOURCE_DIR}/external/plf_colony/" )
 
 set( CM_ENABLE_MOCKING 0 )
 
@@ -154,6 +155,10 @@ if( NOT DISABLE_TESTS )
   set( CM_ENABLE_MOCKING 1 )
 endif( NOT DISABLE_TESTS )
 
+if( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+  string( APPEND CMAKE_CXX_FLAGS " -isystem ${PLF_COLONY_DIR} " )
+endif( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+
 ####################
 # Generate subdirs #
 ####################
@@ -210,6 +215,7 @@ include_directories(
   ${EPL_DC_INCLUDES_DIR}
   ${PYTHON_INCLUDE_DIRS}
   ${LIBWIRESHARK_INCLUDE_DIRS}
+  ${PLF_COLONY_DIR}
 )
 
 if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )

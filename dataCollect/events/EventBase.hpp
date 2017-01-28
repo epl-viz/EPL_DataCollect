@@ -97,6 +97,8 @@ class EventBase {
   mockable void getCycleRange(uint32_t *first, uint32_t *last = nullptr) noexcept;
   mockable void updateRange(int first = -1, int last = -1) noexcept;
 
+  bool operator==(const EventBase &b) const;
+
   virtual MDATA_MAP *getMetadata() noexcept;
 };
 }

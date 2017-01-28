@@ -26,29 +26,113 @@
 /*!
  * \file EventLog.cpp
  * \brief Contains class EventLog
- * \todo IMPLEMENT
  */
 
 #include "EventLog.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-EventLog::EventLog() {}
-
 EventLog::~EventLog() {}
 
-//
-// Methods
-//
+/*!
+ * \brief Returns a unique ID that should be used in pollEvents
+ * \return unsigned int
+ */
+uint32_t EventLog::getAppID() {
+  std::lock_guard<std::mutex> lock(accessMutex);
+  return nextAppID++;
+}
+
+/*!
+ * \brief Returns all events triggered after the last pollEvents call with the same
+ * appID
+ * \return std::vector<EventBase*>
+ * \param  appID Identifies the user polling the events
+ */
+std::vector<EventBase *> EventLog::pollEvents(uint32_t appID) {
+  std::lock_guard<std::mutex> lock(accessMutex);
+  if (pollList.find(appID) == pollList.end())
+    pollList[appID] = 0;
+
+  std::vector<EventBase *> evList;
+
+  uint32_t i;
+  for (i = pollList[appID]; i < events.size(); i++) {
+    evList.push_back(events[i].get());
+  }
+
+  pollList[appID] = i;
+  return evList;
+}
 
 
-// Accessor methods
-//
+/*!
+ * \brief Returns all events triggered within the cycle range
+ * Use -1 for start/end to select the first/last cycle
+ * \return std::vector<EventBase*>
+ * \param  begin The begin of the cycle range
+ * \param  end The end of the cycle range
+ */
+std::vector<EventBase *> EventLog::getEventsInRange(int begin, int end) {
+  std::lock_guard<std::mutex> lock(accessMutex);
+  std::vector<EventBase *>    evList;
 
+  uint32_t cS;
+  for (auto &i : events) {
+    i->getCycleRange(&cS, nullptr);
 
-// Other methods
-//
+    if (static_cast<int>(cS) < begin)
+      continue;
+
+    if (static_cast<int>(cS) > end && end >= 0)
+      continue;
+
+    evList.push_back(i.get());
+  }
+
+  return evList;
+}
+
+/*!
+ * \brief Returns all events triggered
+ * Wrapper for getEventsInRange
+ * \return std::vector<EventBase*>
+ */
+std::vector<EventBase *> EventLog::getAllEvents() { return getEventsInRange(-1, -1); }
+
+/*!
+ * \brief Adds a new event to the event log
+ * \note This function will increase the cycle range of past events, if possible
+ * \param ev The event to add
+ */
+void EventLog::addEvent(std::unique_ptr<EventBase> ev) {
+  std::lock_guard<std::mutex> lock(accessMutex);
+
+  uint32_t evStart, evEnd;
+  uint32_t endRange;
+  ev->getCycleRange(&evStart, &evEnd);
+
+  auto it = latestEvents.begin();
+  while (it != latestEvents.end()) {
+    auto i = *it;
+    i->getCycleRange(nullptr, &endRange);
+
+    if (evStart == endRange + 1) {
+      if (*ev.get() == *i) {
+        i->updateRange(-1, static_cast<int>(evEnd));
+        return;
+      }
+    }
+    // remove outdated / cold events
+    else if (static_cast<int64_t>(endRange) <= static_cast<int64_t>(evStart) - static_cast<int64_t>(MAX_LATEST_KEEP)) {
+      it = latestEvents.erase(it);
+      continue;
+    }
+
+    ++it;
+  }
+
+  events.emplace_back(std::move(ev));
+  latestEvents.insert(events.back().get());
+}
 }

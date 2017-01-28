@@ -86,7 +86,7 @@ EventBase::EventBase(EvType      evType,
 
   if (cycle != nullptr) {
     firstCycle = cycle->getCycleNum();
-    lastCycle  = cycle->getCycleNum();
+    lastCycle  = firstCycle;
   }
 }
 
@@ -178,4 +178,12 @@ EventBase::INDEX_MAP EventBase::getAffectedIndices() const noexcept { return aff
  * \return unordered_map<std::string,std::string>*
  */
 EventBase::MDATA_MAP *EventBase::getMetadata() noexcept { return nullptr; }
+
+/*!
+ * \brief Checks if two events are SIMILAR enough to combine
+ */
+bool EventBase::operator==(const EventBase &b) const {
+  return type == b.type && typeSTR == b.typeSTR && flags == b.flags && pluginID == b.pluginID && name == b.name &&
+         description == b.description;
+}
 }
