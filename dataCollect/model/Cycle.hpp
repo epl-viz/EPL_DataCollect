@@ -42,6 +42,8 @@
 
 namespace EPL_DataCollect {
 
+class CycleBuilder;
+
 /*!
   * class Cycle
   * \brief Root entity of the ethernetPOWERLINK model
@@ -73,6 +75,8 @@ class Cycle {
   Cycle &operator=(const Cycle &) = default;
   Cycle &operator=(Cycle &&) = default;
 
+
+  friend CycleBuilder;
 
 
   mockable std::vector<EventBase *> getActiveEvents() const noexcept;
