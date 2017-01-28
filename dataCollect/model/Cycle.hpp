@@ -48,12 +48,15 @@ namespace EPL_DataCollect {
   *
   * Stores all information available during (after completion) of the specific
   * cycle.
+  *
+  * \todo Update methods are still to be implemented
   */
 class Cycle {
 
  private:
   std::vector<EventBase *> events;
   std::vector<Packet>      packets;
+
   std::unordered_map<uint8_t, Node>                   nodes;
   std::unordered_map<std::string, CycleStorageBase *> cycleStorages;
 
