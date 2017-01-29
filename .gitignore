@@ -1,3 +1,4 @@
+/.vscode
 *.kdev?
 /*build*
 /include/defines.hpp
