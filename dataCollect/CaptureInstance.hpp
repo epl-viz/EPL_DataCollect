@@ -26,16 +26,19 @@
 /*!
  * \file CaptureInstance.hpp
  * \brief Contains class CaptureInstance
- * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "defines.hpp"
 
+#include "Cycle.hpp"
+#include "CycleBuilder.hpp"
 #include "CycleContainer.hpp"
 #include "EventLog.hpp"
 #include "PluginManager.hpp"
+#include <memory>
+#include <mutex>
 #include <vector>
 
 namespace EPL_DataCollect {
@@ -43,153 +46,76 @@ namespace EPL_DataCollect {
 /*!
   * class CaptureInstance
   * \brief Root class for the EPL-Viz backend
+  * \note One CaptureInstance can run EXACTLY ONE capture / PCAP
+  *
+  * The Capture instance has 4 states:
+  *  - SETUP   the capture has not run yet
+  *  - RUNNING the capture is running
+  *  - DONE    the Capture is complete / the file completely parsed; the CaptureInstance can no longer be used
+  *  - ERRORED the CaptureInstance can no longer be used
   *
   * This class handles all relevant data necessary to process the ePL Packets
   */
 class CaptureInstance {
  public:
-  // Constructors/Destructors
-  //
+  enum CIstate { SETUP, RUNNING, DONE, ERRORED };
 
-
-  /*!
-   * Empty Constructor
-   */
-  CaptureInstance();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~CaptureInstance();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Loads the specified XDD file
-   * \param  path the xdd file to load
-   */
-  void loadXDD(std::string path) { (void)path; }
-
-
-  /*!
-   * \brief starts recording on the specified ethernet device
-   *
-   * A list of available devices can be obtained with getDevices()
-   * \param  interface The network device to use for the live capture
-   */
-  void startRecording(std::string interface) { (void)interface; }
-
-
-  /*!
-   * \brief ends the live capture
-   */
-  void stopRecording() {}
-
-
-  /*!
-   * \brief loads a previously captured PCAP
-   * \param  file The file to load
-   */
-  void loadPCAP(std::string file) { (void)file; }
-
-
-  /*!
-   * \brief Adds a new cycle storage entry
-   * Returns false when the index is already occupied
-   * TEMPLATED
-   * \return bool
-   * \param  index The new index to register
-   */
-  bool registerCycleStorage(std::string index) {
-    (void)index;
-    return false;
-  }
-
-
-  /*!
-   * \brief Returns a list of available network devices
-   * \return std::vector<std::string>
-   */
-  std::vector<std::string> getDevices() { return std::vector<std::string>(); }
-
-
-  /*!
-   * \brief Returns a pointer to the EventLog
-   * \note The pointer is valid for the entire lifetime of the CaptureInstance
-   * instance
-   * \return EventLog
-   */
-  EventLog *getEventLog() { return &eventLog; }
-
-
-  /*!
-   * \brief Returns a pointer to the PluginManager
-   * \note The pointer is valid for the entire lifetime of the CaptureInstance
-   * instance
-   * \return PluginManager
-   */
-  PluginManager *getPluginManager() { return &pluginManager; }
-
-
-  /*!
-   * \brief Returns a pointer to the CycleContainer
-   * \note The pointer is valid for the entire lifetime of the CaptureInstance
-   * instance
-   * \return CycleContainer
-   */
-  CycleContainer *getCycleContainer() { return &cycleContainer; }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
  private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  // The PluginManager for this capture instance
-  PluginManager pluginManager;
-  // The EventLog of this capture instance
-  EventLog eventLog;
-  // The CycleContainer of this capture instance
+  PluginManager  pluginManager;
+  EventLog       eventLog;
   CycleContainer cycleContainer;
 
- public:
-  // Private attribute accessor methods
-  //
+  CycleBuilder builder;
 
- private:
+  std::recursive_mutex accessMutex;
+  CIstate              state = SETUP;
+
+  Cycle startCycle;
+
+  mockable int setupLoop();
+
  public:
- private:
+  CaptureInstance() = default;
+  virtual ~CaptureInstance();
+
+  CaptureInstance(const CaptureInstance &) = delete;
+  CaptureInstance(CaptureInstance &&)      = delete;
+
+  CaptureInstance &operator=(const CaptureInstance &) = delete;
+  CaptureInstance &operator=(CaptureInstance &&) = delete;
+
+
+  mockable void loadXDD(std::string path) noexcept;
+
+  mockable int startRecording(std::string interface) noexcept;
+  mockable int stopRecording() noexcept;
+  mockable int loadPCAP(std::string file) noexcept;
+
+  template <class C, class... ARGS>
+  inline bool registerCycleStorage(std::string index, ARGS... args);
+
+  mockable std::vector<std::string> getDevices() noexcept;
+
+  mockable EventLog *getEventLog() noexcept;
+  mockable PluginManager *getPluginManager() noexcept;
+  mockable CycleContainer *getCycleContainer() noexcept;
+
+  mockable CIstate getState() noexcept;
 };
+
+
+/*!
+ * \brief Adds a new cycle storage entry
+ * Returns false when the index is already occupied
+ * TEMPLATED
+ * \return bool
+ * \param  index The new index to register
+ */
+template <class C, class... ARGS>
+bool CaptureInstance::registerCycleStorage(std::string index, ARGS... args) {
+  if (state != SETUP)
+    return false;
+
+  return startCycle.registerCycleStorage(index, std::make_unique<C>(args...));
+}
 }

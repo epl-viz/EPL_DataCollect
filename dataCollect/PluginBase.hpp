@@ -38,6 +38,8 @@
 
 namespace EPL_DataCollect {
 
+class CaptureInstance;
+
 /*!
   * class PluginBase
   * \brief Base class for all plugins
@@ -92,8 +94,21 @@ class PluginBase {
 
   /*!
    * \brief initializes the plugin
+   * \param ci A pointer to the capture instance
    */
-  virtual bool initialize() { return true; }
+  virtual bool initialize(CaptureInstance *ci) {
+    (void)ci;
+    return true;
+  }
+
+
+  /*!
+   * \brief initializes the plugin
+   */
+  virtual bool reset(CaptureInstance *ci) {
+    (void)ci;
+    return true;
+  }
 
 
   /*!

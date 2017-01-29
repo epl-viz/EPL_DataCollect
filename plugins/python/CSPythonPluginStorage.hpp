@@ -59,6 +59,12 @@ class CSPythonPluginStorage : public CycleStorageBase {
    */
   virtual ~CSPythonPluginStorage();
 
+  CSPythonPluginStorage(const CSPythonPluginStorage &) = default;
+  CSPythonPluginStorage(CSPythonPluginStorage &&)      = default;
+
+  CSPythonPluginStorage &operator=(const CSPythonPluginStorage &) = default;
+  CSPythonPluginStorage &operator=(CSPythonPluginStorage &&) = default;
+
   // Static Public attributes
   //
 
@@ -86,6 +92,8 @@ class CSPythonPluginStorage : public CycleStorageBase {
    * \return the value of map
    */
   std::unordered_map<std::string, std::string> *getMap() { return &map; }
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<CSPythonPluginStorage>(*this); }
 
  protected:
   // Static Protected attributes

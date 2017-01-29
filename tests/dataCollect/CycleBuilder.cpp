@@ -24,20 +24,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define CATCH_CONFIG_RUNNER
 #include <CycleBuilder.hpp>
 #include <catch.hpp>
+#include <fakeit.hpp>
 
-int main(int argc, char *argv[]) {
-  {
-    EPL_DataCollect::CycleBuilder cb;
-    (void)cb;
+using namespace EPL_DataCollect;
+using namespace fakeit;
+
+TEST_CASE("Testing CycleBuilder", "[CycleBuilder]") {
+  CycleBuilder cb;
+  Cycle        c;
+
+  SECTION("Test Start Stop") {
+    REQUIRE(cb.startLoop(c) == true);
+    REQUIRE(cb.isRunning() == true);
+    REQUIRE(cb.startLoop(c) == false);
+
+    REQUIRE(cb.isRunning() == true);
+
+    REQUIRE(cb.stopLoop() == true);
+    REQUIRE(cb.isRunning() == false);
+    REQUIRE(cb.stopLoop() == false);
+    REQUIRE(cb.isRunning() == false);
   }
-  Catch::Session session;
 
-  int returnCode = session.applyCommandLine(argc, argv);
-  if (returnCode != 0) // Indicates a command line error
-    return returnCode;
-
-  return session.run();
+  SECTION("Test stubbs") {
+    REQUIRE(cb.seekCycle(16, c) == c);
+    REQUIRE(cb.getCurrentCycle() == Cycle());
+  }
 }

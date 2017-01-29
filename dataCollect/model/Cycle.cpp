@@ -32,6 +32,32 @@
 
 namespace EPL_DataCollect {
 
+Cycle::Cycle(const Cycle &c) {
+  events    = c.events;
+  packets   = c.packets;
+  nodes     = c.nodes;
+  nodeCount = c.nodeCount;
+  cycleNum  = c.cycleNum;
+
+  for (auto &i : c.cycleStorages) {
+    cycleStorages[i.first] = i.second->clone();
+  }
+}
+
+Cycle &Cycle::operator=(const Cycle &c) {
+  events    = c.events;
+  packets   = c.packets;
+  nodes     = c.nodes;
+  nodeCount = c.nodeCount;
+  cycleNum  = c.cycleNum;
+
+  for (auto &i : c.cycleStorages) {
+    cycleStorages[i.first] = i.second->clone();
+  }
+
+  return *this;
+}
+
 /*!
  * \brief Returns the number of nodes
  * \return The amount of nodes as an unsigned char
@@ -81,8 +107,25 @@ CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
   if (cs == cycleStorages.end()) {
     return nullptr;
   } else {
-    return cs->second;
+    return cs->second.get();
   }
+}
+
+
+/*!
+ * \brief Registers a new cycle storage
+ * \param id  the id of the new CS
+ * \param ptr a pointer to the new CycleStorage
+ * \returns true on success, false if id already exists
+ */
+bool Cycle::registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept {
+  // Check if id alerady exists
+  if (getCycleStorage(id) != nullptr) {
+    return false;
+  }
+
+  cycleStorages[id] = std::move(ptr);
+  return true;
 }
 
 
@@ -97,5 +140,10 @@ CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
 void Cycle::updatePackets(std::vector<Packet> newPackets) {
   packets = newPackets;
   cycleNum++;
+}
+
+bool Cycle::operator==(const Cycle &b) const {
+  return events == b.events && /*packets == b.packets && nodes == b.nodes &&*/ nodeCount == b.nodeCount &&
+         cycleNum == b.cycleNum;
 }
 }

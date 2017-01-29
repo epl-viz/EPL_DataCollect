@@ -40,6 +40,8 @@
 
 namespace EPL_DataCollect {
 
+class CaptureInstance;
+
 /*!
   * class PluginManager
   * \brief Central mechanism for handling all plugins
@@ -61,16 +63,16 @@ class PluginManager {
   PluginManager() = default;
   virtual ~PluginManager();
 
-  PluginManager(const PluginManager &) = default;
-  PluginManager(PluginManager &&)      = default;
+  PluginManager(const PluginManager &) = delete;
+  PluginManager(PluginManager &&)      = delete;
 
-  PluginManager &operator=(const PluginManager &) = default;
-  PluginManager &operator=(PluginManager &&) = default;
+  PluginManager &operator=(const PluginManager &) = delete;
+  PluginManager &operator=(PluginManager &&) = delete;
 
   mockable int processCycle(Cycle *cycle) noexcept;
 
-  mockable bool init() noexcept;
-  mockable bool reset() noexcept;
+  mockable bool init(CaptureInstance *ci) noexcept;
+  mockable bool reset(CaptureInstance *ci) noexcept;
   mockable bool canEditPlugins() noexcept;
 
   mockable bool addPlugin(std::shared_ptr<PluginBase> cmd) noexcept;

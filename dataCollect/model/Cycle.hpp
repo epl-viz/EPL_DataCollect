@@ -39,6 +39,7 @@
 #include "EventBase.hpp"
 #include "Node.hpp"
 #include "Packet.hpp"
+#include <memory>
 
 namespace EPL_DataCollect {
 
@@ -54,13 +55,15 @@ class CycleBuilder;
   * \todo Update methods are still to be implemented
   */
 class Cycle {
+ public:
+  typedef std::unordered_map<std::string, std::unique_ptr<CycleStorageBase>> CS_MAP;
 
  private:
   std::vector<EventBase *> events;
   std::vector<Packet>      packets;
 
-  std::unordered_map<uint8_t, Node>                   nodes;
-  std::unordered_map<std::string, CycleStorageBase *> cycleStorages;
+  std::unordered_map<uint8_t, Node> nodes;
+  CS_MAP cycleStorages;
 
   uint8_t  nodeCount = 0;
   uint32_t cycleNum  = 0;
@@ -69,15 +72,13 @@ class Cycle {
   Cycle()          = default;
   virtual ~Cycle() = default;
 
-  Cycle(const Cycle &) = default;
-  Cycle(Cycle &&)      = default;
+  Cycle(const Cycle &);
+  Cycle(Cycle &&) = default;
 
-  Cycle &operator=(const Cycle &) = default;
+  Cycle &operator=(const Cycle &);
   Cycle &operator=(Cycle &&) = default;
 
-
   friend CycleBuilder;
-
 
   mockable std::vector<EventBase *> getActiveEvents() const noexcept;
   mockable std::vector<Packet> getPackets() const noexcept;
@@ -86,8 +87,13 @@ class Cycle {
 
   mockable Node getNode(uint8_t node);
   mockable CycleStorageBase *getCycleStorage(std::string id) noexcept;
+  mockable bool registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept;
 
+  bool operator==(const Cycle &b) const;
+
+#if EPL_DC_ENABLE_MOCKING == 0
  private:
+#endif
   mockable void updatePackets(std::vector<Packet> newPackets);
 };
 }

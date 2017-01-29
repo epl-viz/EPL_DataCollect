@@ -26,12 +26,14 @@
 /*!
  * \file CycleBuilder.hpp
  * \brief Contains class CycleBuilder
- * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "Cycle.hpp"
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 
 namespace EPL_DataCollect {
 
@@ -44,116 +46,40 @@ namespace EPL_DataCollect {
   * PluginManager
   */
 class CycleBuilder {
+ private:
+  Cycle                currentCycle;
+  std::recursive_mutex accessMutex;
+  std::thread          loopThread;
+
+  std::mutex              startLoopSignal;
+  std::mutex              stopLoopSignal;
+  std::condition_variable startLoopWait;
+  std::condition_variable stopLoopWait;
+
+  bool isLoopRunning = false;
+  bool keepLoopAlive = false;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  CycleBuilder();
-
-  /*!
-   * Empty Destructor
-   */
+  CycleBuilder() = default;
   virtual ~CycleBuilder();
 
-  // Static Public attributes
-  //
+  CycleBuilder(const CycleBuilder &) = delete;
+  CycleBuilder(CycleBuilder &&)      = delete;
 
-  // Public attributes
-  //
+  CycleBuilder &operator=(const CycleBuilder &) = delete;
+  CycleBuilder &operator=(CycleBuilder &&) = delete;
 
+  mockable bool startLoop(Cycle startPoint) noexcept;
+  mockable bool stopLoop() noexcept;
+  mockable bool isRunning() noexcept;
 
-  // Public attribute accessor methods
-  //
+  mockable Cycle seekCycle(uint32_t targetCycle, Cycle start) noexcept;
+  mockable Cycle getCurrentCycle() noexcept;
 
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Starts the build loop
-   * Returns false if a loop is already running
-   * \return bool
-   */
-  bool startLoop() { return false; }
-
-
-  /*!
-   * \brief Stopps the build loop
-   * Returns false if no loop is running
-   * \return bool
-   */
-  bool stopLoop() { return false; }
-
-
-  /*!
-   * \brief Returns whether the build loop is running or not
-   * \return bool
-   */
-  bool isRunning() { return false; }
-
-
-  /*!
-   * \brief (Re)constructs a specific cycle
-   * This function uses a specific start cycle as a base to compute the targetCycle.
-   * \return Cycle
-   * \param  targetCycle The target cycle
-   * \param  start The base cycle to iterate over
-   */
-  Cycle seekCycle(unsigned int targetCycle, Cycle start) {
-    (void)targetCycle;
-    return start;
-  }
-
-
-  /*!
-   * \brief Returns the last cycle completely processed by the buildLoop
-   * \return Cycle
-   */
-  Cycle getCurrentCycle() { return Cycle(); }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
+#if EPL_DC_ENABLE_MOCKING == 0
  private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
-  /*!
-   * \brief Main cycle builder loop. Runs in a seperate thread
-   */
-  void buildLoop() {}
+#endif
+  mockable void buildNextCycle() noexcept;
+  mockable void buildLoop() noexcept;
 };
 }

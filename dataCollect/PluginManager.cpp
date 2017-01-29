@@ -117,7 +117,7 @@ std::vector<std::string> PluginManager::splitString(std::string const &str, char
  * Plugins can now no longer be added or deleted
  * \returns false if dependencies could not be resolved
  */
-bool PluginManager::init() noexcept {
+bool PluginManager::init(CaptureInstance *ci) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (status == INIT)
     return false;
@@ -176,6 +176,10 @@ bool PluginManager::init() noexcept {
     }
   }
 
+  for (auto i : pluginsOrdered) {
+    i->initialize(ci);
+  }
+
   status = INIT;
   return true;
 }
@@ -185,10 +189,14 @@ bool PluginManager::init() noexcept {
  * \brief Resets all plugins but does not delete them.
  * Plugins may be added and deleted now
  */
-bool PluginManager::reset() noexcept {
+bool PluginManager::reset(CaptureInstance *ci) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (status == EDIT)
     return false;
+
+  for (auto i : pluginsOrdered) {
+    i->reset(ci);
+  }
 
   pluginsOrdered.clear();
 

@@ -25,22 +25,22 @@
  */
 
 #include <CaptureInstance.hpp>
-#include <Cycle.hpp>
-#include <PluginManager.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
 
 using namespace EPL_DataCollect;
 using namespace fakeit;
 
-TEST_CASE("Testing PluginManager", "[plugins]") {
-  PluginManager pm;
+class CSTest1 : public CycleStorageBase {
+ public:
+  virtual std::unique_ptr<CycleStorageBase> clone() override;
+};
 
-  Mock<CaptureInstance> mockCI;
-  CaptureInstance *     ci = &mockCI.get();
+std::unique_ptr<CycleStorageBase> CSTest1::clone() { return std::make_unique<CSTest1>(*this); }
 
-  Mock<Cycle> mock;
-  Cycle &     c = mock.get();
+TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
+  CaptureInstance ci;
+  PluginManager & pm = *ci.getPluginManager();
 
   Mock<PluginBase> pbMock[16];
   for (uint32_t i = 0; i < 16; i++) {
@@ -83,13 +83,7 @@ TEST_CASE("Testing PluginManager", "[plugins]") {
   When(Method(pbMock[0xE], getDependencies)).AlwaysReturn("PF"); // Circle
   When(Method(pbMock[0xF], getDependencies)).AlwaysReturn("PD"); // Circle
 
-  SECTION("Add duplicate") {
-    auto tmp = std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {});
-    REQUIRE(pm.addPlugin(tmp) == true);
-    REQUIRE(pm.addPlugin(tmp) == false);
-  }
-
-  SECTION("Adding plugins and init") {
+  SECTION("Adding plugins -- live capture") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
@@ -98,7 +92,31 @@ TEST_CASE("Testing PluginManager", "[plugins]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
 
-    REQUIRE(pm.init(ci) == true);
+    REQUIRE(ci.getState() == CaptureInstance::SETUP);
+    REQUIRE(ci.startRecording("") == 0);
+    REQUIRE(ci.startRecording("") == -1);
+    REQUIRE(ci.getState() == CaptureInstance::RUNNING);
+    REQUIRE(ci.stopRecording() == 0);
+    REQUIRE(ci.stopRecording() == -1);
+    REQUIRE(ci.getState() == CaptureInstance::DONE);
+  }
+
+  SECTION("Adding plugins -- PCAP") {
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x4].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
+    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
+
+    REQUIRE(ci.getState() == CaptureInstance::SETUP);
+    REQUIRE(ci.loadPCAP("") == 0);
+    REQUIRE(ci.loadPCAP("") == -1);
+    REQUIRE(ci.getState() == CaptureInstance::RUNNING);
+    REQUIRE(ci.stopRecording() == 0);
+    REQUIRE(ci.stopRecording() == -1);
+    REQUIRE(ci.getState() == CaptureInstance::DONE);
   }
 
   SECTION("Missing dependency") {
@@ -110,114 +128,26 @@ TEST_CASE("Testing PluginManager", "[plugins]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xB].get(), [](PluginBase *) {}));
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xC].get(), [](PluginBase *) {}));
 
-    REQUIRE(pm.init(ci) == false);
+    REQUIRE(ci.getState() == CaptureInstance::SETUP);
+    REQUIRE(ci.startRecording("") == 1);
+    REQUIRE(ci.startRecording("") == -1);
+    REQUIRE(ci.getState() == CaptureInstance::ERRORED);
   }
 
-  SECTION("Dependency cycle") {
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xD].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xE].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xF].get(), [](PluginBase *) {}));
-
-    REQUIRE(pm.init(ci) == false);
+  SECTION("Testing adding CycleStorage") {
+    REQUIRE(ci.registerCycleStorage<CSTest1>("A") == true);
+    REQUIRE(ci.registerCycleStorage<CSTest1>("B") == true);
+    REQUIRE(ci.registerCycleStorage<CSTest1>("A") == false);
+    REQUIRE(ci.startRecording("") == 0);
+    REQUIRE(ci.stopRecording() == 0);
+    REQUIRE(ci.registerCycleStorage<CSTest1>("C") == false);
   }
 
-  SECTION("Access after init") {
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x4].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
-
-    REQUIRE(pm.canEditPlugins() == true);
-    REQUIRE(pm.removePlugin("P5") == true);
-    REQUIRE(pm.init(ci) == true);
-    auto tmp = std::shared_ptr<PluginBase>(&pbMock[0xF].get(), [](PluginBase *) {});
-    REQUIRE(pm.addPlugin(tmp) == false);
-    REQUIRE(pm.removePlugin("P4") == false);
-    REQUIRE(pm.canEditPlugins() == false);
-  }
-
-  SECTION("Get List and remove plugins") {
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x4].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
-
-    std::vector<std::string> toFind = {"P0", "P1", "P2", "P3", "P4", "P5", "P6"};
-    auto                     plList = pm.getPluginList();
-
-    for (auto i : toFind) {
-      bool found = false;
-      for (auto j : plList) {
-        if (i == j) {
-          found = true;
-          break;
-        }
-      }
-      REQUIRE(found == true);
-    }
-
-    REQUIRE(pm.canEditPlugins() == true);
-    REQUIRE(pm.removePlugin("P5") == true);
-
-    toFind = {"P0", "P1", "P2", "P3", "P4", /*"P5",*/ "P6"};
-    plList = pm.getPluginList();
-
-    for (auto i : toFind) {
-      bool found = false;
-      for (auto j : plList) {
-        if (i == j) {
-          found = true;
-          break;
-        }
-      }
-      REQUIRE(found == true);
-    }
-
-    REQUIRE(pm.init(ci) == true);
-    REQUIRE(pm.init(ci) == false);
-
-    REQUIRE(pm.removePlugin("PF") == false);
-    REQUIRE(pm.canEditPlugins() == false);
-
-    REQUIRE(pm.reset(ci) == true);
-    REQUIRE(pm.reset(ci) == false);
-
-    REQUIRE(pm.canEditPlugins() == true);
-    REQUIRE(pm.removePlugin("PF") == false); // PF does not exist
-    REQUIRE(pm.removePlugin("P0") == true);
-
-    toFind = {/*"P0",*/ "P1", "P2", "P3", "P4", /*"P5",*/ "P6"};
-    plList = pm.getPluginList();
-
-    for (auto i : toFind) {
-      bool found = false;
-      for (auto j : plList) {
-        if (i == j) {
-          found = true;
-          break;
-        }
-      }
-      REQUIRE(found == true);
-    }
-  }
-
-  SECTION("Run Plugins") {
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x4].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
-    pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
-
-    REQUIRE(pm.processCycle(&c) == 1);
-    REQUIRE(pm.init(ci) == true);
-    REQUIRE(pm.processCycle(&c) == 0);
+  SECTION("Testing the stubs") {
+    REQUIRE(ci.getEventLog() != nullptr);
+    REQUIRE(ci.getPluginManager() != nullptr);
+    REQUIRE(ci.getCycleContainer() != nullptr);
+    REQUIRE(ci.getDevices() == std::vector<std::string>());
+    ci.loadXDD("");
   }
 }

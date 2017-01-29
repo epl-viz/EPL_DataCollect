@@ -32,9 +32,8 @@
 
 #pragma once
 
-
-
 #include "defines.hpp"
+#include <memory>
 
 namespace EPL_DataCollect {
 
@@ -61,6 +60,12 @@ class CycleStorageBase {
    * Empty Destructor
    */
   virtual ~CycleStorageBase();
+
+  CycleStorageBase(const CycleStorageBase &) = default;
+  CycleStorageBase(CycleStorageBase &&)      = default;
+
+  CycleStorageBase &operator=(const CycleStorageBase &) = default;
+  CycleStorageBase &operator=(CycleStorageBase &&) = default;
 
   // Static Public attributes
   //
@@ -90,6 +95,8 @@ class CycleStorageBase {
    * \return bool
    */
   virtual bool isNumericValue() { return false; }
+
+  virtual std::unique_ptr<CycleStorageBase> clone() = 0;
 
  protected:
   // Static Protected attributes
