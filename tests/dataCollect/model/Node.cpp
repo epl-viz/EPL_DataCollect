@@ -31,5 +31,5 @@
 TEST_CASE("Node Status is unknown when not set", "[Node]") {
   EPL_DataCollect::Node n;
 
-  SECTION("Test getNumNodes()") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
+  SECTION("Test getStatus()") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
 }
