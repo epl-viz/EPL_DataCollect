@@ -25,8 +25,8 @@
  */
 /*!
  * \file Node.hpp
- * \brief Contains class Node
- * \todo IMPLEMENT
+ * \brief The Node class represents a device in an ethernetPOWERLINK network
+ * \todo Add more information on this representation of the Nodes and implement attribute accessors
  */
 
 
@@ -42,29 +42,27 @@ namespace EPL_DataCollect {
 
 /*!
  * \brief The status of the node
- * \todo IMPLEMENT
+ * \todo Check if more values are needed
  */
-enum NodeStatus { NS_OK };
+enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
 
 /*!
   * class Node
   * \brief Representation of a Node in ethernetPOWERLINK
   */
 class Node {
+
+ private:
+  // The Object dictionary
+  OD od;
+  // The ODDescription of the Node
+  ODDescription odDesc;
+  // Current status of the Node
+  NodeStatus status = NS_UNKNOWN;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
   Node();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~Node();
+  virtual ~Node() = default;
 
   Node(const Node &) = default;
   Node(Node &&)      = default;
@@ -72,109 +70,14 @@ class Node {
   Node &operator=(const Node &) = default;
   Node &operator=(Node &&) = default;
 
-  // Static Public attributes
-  //
+  // TODO: Add friend class
 
-  // Public attributes
-  //
+  mockable OD *getOD() noexcept;
+  mockable ODDescription *getODDesc() noexcept;
+  mockable NodeStatus getStatus() const noexcept;
 
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns a pointer to the OD
-   * \return OD *
-   */
-  OD *getOD() { return nullptr; }
-
-
-  /*!
-   * \brief Returns a pointer to the ODDescription object
-   * \return ODDescription *
-   */
-  ODDescription *getODDescription() { return nullptr; }
-
-
-  /*!
-   * \brief Returns the status of the node
-   * \return NodeStatus
-   */
-  NodeStatus getStatus() { return NS_OK; }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  // The Object dictionary
-  OD od;
-  // Pointer to the ODDescription of the Node
-  ODDescription odDesc;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
-  /*!
-   * Set the value of od
-   * The Object dictionary
-   * \param new_var the new value of od
-   */
-  void setOd(OD new_var) { od = new_var; }
-
-  /*!
-   * Get the value of od
-   * The Object dictionary
-   * \return the value of od
-   */
-  OD *getOd() { return &od; }
-
-  /*!
-   * Set the value of odDesc
-   * Pointer to the ODDescription of the Node
-   * \param new_var the new value of odDesc
-   */
-  void setOdDesc(ODDescription new_var) { odDesc = new_var; }
-
-  /*!
-   * Get the value of odDesc
-   * Pointer to the ODDescription of the Node
-   * \return the value of odDesc
-   */
-  ODDescription *getOdDesc() { return &odDesc; }
-
- private:
+  // TODO: Add accessor for the node status and update the ones for the OD and ODDesc
+  mockable void setOD(OD new_var) noexcept;
+  mockable void setODDesc(ODDescription new_var) noexcept;
 };
 }

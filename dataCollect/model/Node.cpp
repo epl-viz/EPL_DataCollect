@@ -26,29 +26,44 @@
 /*!
  * \file Node.cpp
  * \brief Contains class Node
- * \todo IMPLEMENT
  */
 
 #include "Node.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
+Node::Node() {
+  // TODO: Initialize OD, ODDescription and Node Status
+}
 
-Node::Node() {}
+/*!
+ * \brief Returns the status of the node
+ * \return The current NodeStatus
+ */
+NodeStatus Node::getStatus() const noexcept { return status; }
 
-Node::~Node() {}
+/*!
+ * \brief Returns a pointer to the Object Dictionary of the node
+ * \return The pointer to the OD
+ */
+OD *Node::getOD() noexcept { return &od; }
 
-//
-// Methods
-//
+/*!
+ * \brief Returns a pointer to the Object Dictionary Description of the Node
+ * \return The pointer to the OD
+ */
+ODDescription *Node::getODDesc() noexcept { return &odDesc; }
 
 
-// Accessor methods
-//
+/*!
+ * \brief Sets the Object Dictionary of the Node
+ * \param newOD The new OD
+ */
+void Node::setOD(OD newOD) noexcept { od = newOD; }
 
-
-// Other methods
-//
+/*!
+ * \brief Sets the Object Dictionary Description of the Node
+ * \param newODDesc The new ODDesc
+ */
+void Node::setODDesc(ODDescription newODDesc) noexcept { odDesc = newODDesc; }
 }
