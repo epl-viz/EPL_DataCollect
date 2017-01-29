@@ -32,10 +32,6 @@
 
 namespace EPL_DataCollect {
 
-Node::Node() {
-  // TODO: Initialize OD, ODDescription and Node Status
-}
-
 /*!
  * \brief Returns the status of the node
  * \return The current NodeStatus
@@ -53,17 +49,4 @@ OD *Node::getOD() noexcept { return &od; }
  * \return The pointer to the OD
  */
 ODDescription *Node::getODDesc() noexcept { return &odDesc; }
-
-
-/*!
- * \brief Sets the Object Dictionary of the Node
- * \param newOD The new OD
- */
-void Node::setOD(OD newOD) noexcept { od = newOD; }
-
-/*!
- * \brief Sets the Object Dictionary Description of the Node
- * \param newODDesc The new ODDesc
- */
-void Node::setODDesc(ODDescription newODDesc) noexcept { odDesc = newODDesc; }
 }
