@@ -40,12 +40,6 @@
 
 namespace EPL_DataCollect {
 
-/*!
- * \brief The status of the node
- * \todo Check if more values are needed
- */
-enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
-
 class CycleBuilder;
 
 /*!
@@ -63,8 +57,8 @@ class Node {
   Node()          = default;
   virtual ~Node() = default;
 
-  Node(const Node &) = delete;
-  Node(Node &&)      = delete;
+  Node(const Node &) = default;
+  Node(Node &&)      = default;
 
   Node &operator=(const Node &) = delete;
   Node &operator=(Node &&) = delete;
@@ -75,6 +69,6 @@ class Node {
   mockable ODDescription *getODDesc() noexcept;
   mockable NodeStatus getStatus() const noexcept;
 
-  // TODO: Add accessors for the node status
+  // TODO: Add accessors for the node variables
 };
 }

@@ -25,10 +25,11 @@
  */
 
 #include <Node.hpp>
+#include <EPLEnums.h>
 #include <catch.hpp>
 
 TEST_CASE("Node Status is unknown when not set", "[Node]") {
   EPL_DataCollect::Node n;
 
-  SECTION("Test getNumNodes()") { REQUIRE(n.getStatus() == EPL_DataCollect::NS_UNKNOWN); }
+  SECTION("Test getNumNodes()") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
 }

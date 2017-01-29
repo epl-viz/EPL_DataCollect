@@ -266,7 +266,7 @@ enum2str_generate(
   FUNC_NAME  "toStr"
   INCLUDES   "EPLEnums.h"
   NAMESPACE  "EPL_DataCollect"
-  ENUMS      "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
+  ENUMS      "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
   BLACKLIST
 )
 
