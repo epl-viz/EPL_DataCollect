@@ -29,10 +29,6 @@
 #include <catch.hpp>
 
 int main(int argc, char *argv[]) {
-  {
-    EPL_DataCollect::CycleBuilder cb;
-    (void)cb;
-  }
   Catch::Session session;
 
   int returnCode = session.applyCommandLine(argc, argv);

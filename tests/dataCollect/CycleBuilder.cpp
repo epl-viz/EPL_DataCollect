@@ -52,4 +52,9 @@ TEST_CASE("Testing CycleBuilder", "[CycleBuilder]") {
     REQUIRE(cb.seekCycle(16, c) == c);
     REQUIRE(cb.getCurrentCycle() == Cycle());
   }
+
+  SECTION("Test Deconstructor") {
+    REQUIRE(cb.startLoop(c) == true);
+    REQUIRE(cb.isRunning() == true);
+  }
 }
