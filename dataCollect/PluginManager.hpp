@@ -26,7 +26,6 @@
 /*!
  * \file PluginManager.hpp
  * \brief Contains class PluginManager
- * \todo IMPLEMENT
  */
 
 #pragma once
@@ -34,6 +33,10 @@
 #include "defines.hpp"
 #include "Cycle.hpp"
 #include "PluginBase.hpp"
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -43,120 +46,35 @@ namespace EPL_DataCollect {
   */
 class PluginManager {
  public:
-  // Constructors/Destructors
-  //
+  enum pmStatus { EDIT, INIT };
 
+ private:
+  pmStatus             status = EDIT;
+  std::recursive_mutex accessMutex;
 
-  /*!
-   * Empty Constructor
-   */
-  PluginManager();
+  std::vector<std::shared_ptr<PluginBase>> plugins;
+  std::vector<PluginBase *>                pluginsOrdered;
 
-  /*!
-   * Empty Destructor
-   */
+  std::vector<std::string> splitString(std::string const &str, char c) const noexcept;
+
+ public:
+  PluginManager() = default;
   virtual ~PluginManager();
 
-  // Static Public attributes
-  //
+  PluginManager(const PluginManager &) = default;
+  PluginManager(PluginManager &&)      = default;
 
-  // Public attributes
-  //
+  PluginManager &operator=(const PluginManager &) = default;
+  PluginManager &operator=(PluginManager &&) = default;
 
+  mockable int processCycle(Cycle *cycle) noexcept;
 
-  // Public attribute accessor methods
-  //
+  mockable bool init() noexcept;
+  mockable bool reset() noexcept;
+  mockable bool canEditPlugins() noexcept;
 
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief adds the plugin
-   * Does nothing if the plugin is already added
-   * \param  cmd The command to add
-   */
-  void addPlugin(PluginBase cmd) { (void)cmd; }
-
-
-  /*!
-   * \brief Processes all plugins
-   * Can only be called when all plugins are initialized
-   * \return int
-   * \param  cycle The cycle to process
-   */
-  int processCycle(Cycle cycle) {
-    (void)cycle;
-    return 0;
-  }
-
-
-  /*!
-   * \brief Initializes all added plugins
-   * Plugins can now no longer be added or deleted
-   */
-  void init() {}
-
-
-  /*!
-   * \brief Resets all plugins but does not delete them.
-   * Plugins may be added and deleted now
-   */
-  void reset() {}
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  // Array of all plugins
-  PluginBase plugins;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
-  /*!
-   * Set the value of plugins
-   * Array of all plugins
-   * \param new_var the new value of plugins
-   */
-  void setPlugins(PluginBase new_var) { plugins = new_var; }
-
-  /*!
-   * Get the value of plugins
-   * Array of all plugins
-   * \return the value of plugins
-   */
-  PluginBase *getPlugins() { return &plugins; }
-
- private:
+  mockable bool addPlugin(std::shared_ptr<PluginBase> cmd) noexcept;
+  mockable std::vector<std::string> getPluginList() noexcept;
+  mockable bool removePlugin(std::string pluginID) noexcept;
 };
 }

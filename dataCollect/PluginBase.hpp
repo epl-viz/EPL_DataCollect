@@ -87,13 +87,13 @@ class PluginBase {
    * \warning This function must be FAST
    * \param  cycle The cycle to process
    */
-  virtual void run(Cycle cycle) { (void)cycle; }
+  virtual void run(Cycle *cycle) { (void)cycle; }
 
 
   /*!
    * \brief initializes the plugin
    */
-  virtual void initialize() {}
+  virtual bool initialize() { return true; }
 
 
   /*!

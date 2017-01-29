@@ -26,29 +26,197 @@
 /*!
  * \file PluginManager.cpp
  * \brief Contains class PluginManager
- * \todo IMPLEMENT
  */
 
 #include "PluginManager.hpp"
+#include <iostream>
+#include <plf_colony.h>
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-PluginManager::PluginManager() {}
-
 PluginManager::~PluginManager() {}
 
-//
-// Methods
-//
+
+/*!
+ * \brief adds the plugin
+ * Does nothing if the plugin is already added
+ * \param plugin The plugin to add
+ * \returns true on success and false if the plugin already exists
+ */
+bool PluginManager::addPlugin(std::shared_ptr<PluginBase> plugin) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (!canEditPlugins())
+    return false;
+
+  for (auto i : plugins) {
+    if (i->getID() == plugin->getID())
+      return false;
+  }
+
+  plugins.emplace_back(plugin);
+  return true;
+}
+
+bool PluginManager::removePlugin(std::string pluginID) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (!canEditPlugins())
+    return false;
+
+  auto it = plugins.begin();
+  while (it != plugins.end()) {
+    auto i = it->get();
+    if (i->getID() == pluginID) {
+      plugins.erase(it);
+      return true;
+    }
+    ++it;
+  }
+
+  return false;
+}
+
+/*!
+ * \brief Processes all plugins
+ * Can only be called when all plugins are initialized
+ * \returns 0 on success
+ * \returns 1 if not init
+ * \param  cycle The cycle to process
+ */
+int PluginManager::processCycle(Cycle *cycle) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (status != INIT)
+    return 1;
+
+  for (auto i : pluginsOrdered)
+    i->run(cycle);
+
+  return 0;
+}
+
+/*!
+ * \brief Splits a string by c into a vector of strings
+ */
+std::vector<std::string> PluginManager::splitString(std::string const &str, char c) const noexcept {
+  std::vector<std::string> res;
+  for (auto i : str) {
+    if (res.empty())
+      res.emplace_back();
+
+    if (i == c) {
+      res.emplace_back();
+      continue;
+    }
+
+    res.back() += i;
+  }
+  return res;
+}
+
+/*!
+ * \brief Initializes all added plugins
+ * Plugins can now no longer be added or deleted
+ * \returns false if dependencies could not be resolved
+ */
+bool PluginManager::init() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (status == INIT)
+    return false;
+
+  plf::colony<PluginBase *> todo;
+  for (auto i : plugins) {
+    todo.insert(i.get());
+  }
+
+  plf::colony<std::string> depDone;
+
+  pluginsOrdered.clear();
+
+  // Add plugins
+  while (!todo.empty()) {
+    size_t oldSize = todo.size();
+
+    auto it = todo.begin();
+    while (it != todo.end()) {
+      auto                     i      = *it;
+      std::string              depStr = i->getDependencies();
+      std::vector<std::string> deps   = splitString(depStr, ';');
+
+      bool missingDep = false;
+
+      // Checks if plugin can be added now
+      for (auto const &j : deps) {
+        bool foundDep = false;
+        for (auto const &k : depDone) {
+          if (j == k) {
+            foundDep = true;
+            break;
+          }
+        }
+
+        // Can not add plugin (yet)
+        if (!foundDep) {
+          missingDep = true;
+          break;
+        }
+      }
+
+      if (missingDep) {
+        ++it;
+        continue;
+      }
+
+      depDone.insert(i->getID());
+      pluginsOrdered.emplace_back(i);
+      it = todo.erase(it);
+    }
+
+    // We are stuck in a dependency cycle or a dependnecy is missing
+    if (todo.size() >= oldSize) {
+      return false;
+    }
+  }
+
+  status = INIT;
+  return true;
+}
 
 
-// Accessor methods
-//
+/*!
+ * \brief Resets all plugins but does not delete them.
+ * Plugins may be added and deleted now
+ */
+bool PluginManager::reset() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (status == EDIT)
+    return false;
 
+  pluginsOrdered.clear();
 
-// Other methods
-//
+  status = EDIT;
+  return true;
+}
+
+/*!
+ * \brief Returns whether or not the plugin list can be edited
+ */
+bool PluginManager::canEditPlugins() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return status == EDIT;
+}
+
+/*!
+ * \brief Returns a list of Plugin IDS
+ */
+std::vector<std::string> PluginManager::getPluginList() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  std::vector<std::string>              plList;
+
+  plList.resize(plugins.size());
+
+  for (auto i : plugins) {
+    plList.emplace_back(i->getID());
+  }
+
+  return plList;
+}
 }
