@@ -31,6 +31,7 @@
 using namespace EPL_DataCollect;
 using namespace fakeit;
 
+
 /*!
   * class TestStorage
   * \brief Stub for testing the CycleStorage system
@@ -40,8 +41,8 @@ using namespace fakeit;
   */
 class TestStorage : public CycleStorageBase {
  public:
-  TestStorage()          = default;
-  virtual ~TestStorage() = default;
+  TestStorage() = default;
+  virtual ~TestStorage();
 
   TestStorage(const TestStorage &) = default;
   TestStorage(TestStorage &&)      = default;
@@ -51,6 +52,8 @@ class TestStorage : public CycleStorageBase {
 
   std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<TestStorage>(*this); }
 };
+
+TestStorage::~TestStorage() {}
 
 TEST_CASE("Standard return values work", "[Cycle]") {
   Cycle c;
