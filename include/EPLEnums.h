@@ -229,6 +229,41 @@ enum EvType {
  */
 enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
 
+/*!
+ * \brief The type of a packet
+ */
+enum PacketType {
+  PT_UNDEF,
+  PT_SDO_REQ,
+  PT_SDO_RESP,
+  PT_PDO_REQ,
+  PT_PDO_RESP,
+  PT_START_OF_CYCLE,
+  PT_START_OF_ASYNC,
+  PT_UPLOAD,
+  PT_DOWNLOAD
+};
+
+/*!
+ * \brief Command ID
+ */
+enum CommandID {
+  CMD_ID_NIL                            = 0x00,
+  CMD_ID_WRITE_BY_IDEX                  = 0x01,
+  CMD_ID_READ_BY_INDEX                  = 0x02,
+  CMD_ID_WRITE_ALL_BY_INDEX             = 0x03,
+  CMD_ID_READ_ALL_BY_INDEX              = 0x04,
+  CMD_ID_WRITE_BY_NAME                  = 0x05,
+  CMD_ID_READ_BY_NAME                   = 0x06,
+  CMD_ID_FILE_WRITE                     = 0x20,
+  CMD_ID_FILE_READ                      = 0x21,
+  CMD_ID_WRITE_MULTIPLE_PARAMETER_INDEX = 0x31,
+  CMD_ID_READ_MULTIPLE_PARAMETER_INDEX  = 0x32,
+  CMD_ID_MAXIMUM_SEGMENT_SIZE           = 0x70,
+  CMD_ID_BEGIN_MANUFACTURER_SPECIFIC    = 0x80,
+  CMD_ID_END_MANUFACTURER_SPECIFIC      = 0xFF
+};
+
 #ifdef __cplusplus
 }
 #endif

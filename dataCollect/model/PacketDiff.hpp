@@ -26,16 +26,13 @@
 /*!
  * \file PacketDiff.hpp
  * \brief Contains class PacketDiff
- * \todo IMPLEMENT
  */
-
 
 #pragma once
 
-
-
 #include "defines.hpp"
 #include "ODEntry.hpp"
+#include <memory>
 
 namespace EPL_DataCollect {
 
@@ -44,81 +41,27 @@ namespace EPL_DataCollect {
   * \brief One change of one ODEntry in one Packet
   */
 class PacketDiff {
+ private:
+  uint16_t                 odIndex;
+  std::shared_ptr<ODEntry> newEntry = nullptr;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  PacketDiff();
-
-  /*!
-   * Empty Destructor
-   */
+  PacketDiff() = delete;
   virtual ~PacketDiff();
 
-  // Static Public attributes
-  //
+  PacketDiff(uint16_t index, std::shared_ptr<ODEntry> entry);
 
-  // Public attributes
-  //
+  PacketDiff(const PacketDiff &) = default;
+  PacketDiff(PacketDiff &&)      = default;
 
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  // Describes the index in the OD
-  unsigned int odIndex;
-  // The new value of the entry
-  ODEntry newEntry;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
+  PacketDiff &operator=(const PacketDiff &) = default;
+  PacketDiff &operator=(PacketDiff &&) = default;
 
   /*!
    * \brief Get the Index of the OD
    * \returns The Index
    */
-  unsigned int getIndex() { return odIndex; }
-
-
- private:
+  uint16_t getIndex() const noexcept;
+  ODEntry *getEntry() noexcept;
 };
 }

@@ -26,46 +26,59 @@
 /*!
  * \file Packet.hpp
  * \brief Contains class Packet
- * \todo IMPLEMENT
  */
 
-
 #pragma once
-
-
 
 #include "defines.hpp"
 #include "ODDescription.hpp"
 #include "PacketDiff.hpp"
+#include "EPLEnums.h"
+#include <chrono>
+#include <plf_colony.h>
 #include <vector>
 
 namespace EPL_DataCollect {
 
 /*!
- * \brief The type of a packet
- * \todo IMPLEMENT
+ * class Packet
+ * \brief Represents a packet on the Ethernet bus
  */
-enum PacketType { PKT_A };
-
-/*!
-  * class Packet
-  * \brief Represents a packet on the Ethernet bus
-  */
 class Packet {
  public:
-  // Constructors/Destructors
-  //
+  typedef std::chrono::system_clock::time_point TIME_POINT;
 
+ private:
+  PacketType              type      = PT_UNDEF;
+  CommandID               commandID = CMD_ID_NIL;
+  ODDescription *         odDesc    = nullptr;
+  plf::colony<PacketDiff> diffs;
 
-  /*!
-   * Empty Constructor
-   */
-  Packet();
+  std::string wiresharkSTR = "";
+  std::string otherData    = "<N/A>";
 
-  /*!
-   * Empty Destructor
-   */
+  uint32_t nodeSource;
+  uint32_t nodeDest;
+
+  TIME_POINT timeStamp;
+
+  uint8_t  transactionID = 0;
+  uint32_t numOfSegments = 0;
+
+ public:
+  Packet() = delete;
   virtual ~Packet();
+
+  Packet(PacketType     t,
+         CommandID      cID,
+         ODDescription *oDesc,
+         std::string    wireSTR,
+         std::string    other,
+         uint32_t       src,
+         uint32_t       dest,
+         TIME_POINT     ts,
+         uint8_t        tID       = 0,
+         uint32_t       nSegments = 0);
 
   Packet(const Packet &) = default;
   Packet(Packet &&)      = default;
@@ -73,88 +86,17 @@ class Packet {
   Packet &operator=(const Packet &) = default;
   Packet &operator=(Packet &&) = default;
 
-  // Static Public attributes
-  //
+  mockable PacketType getType() const noexcept;
+  mockable uint8_t getTransactionID() const noexcept;
+  mockable uint32_t getNumSegments() const noexcept;
+  mockable plf::colony<PacketDiff> *getDiffs() noexcept;
+  mockable std::string getOtherData() const noexcept;
+  mockable std::string getWiresharkString() const noexcept;
+  mockable ODDescription *getODDesc() noexcept;
+  mockable uint32_t getSrcNode() const noexcept;
+  mockable uint32_t getDestNode() const noexcept;
+  mockable TIME_POINT getTimeStamp() const noexcept;
 
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns the packet type
-   * \return PacketType
-   */
-  PacketType getType() { return PKT_A; }
-
-
-  /*!
-   * \brief Returns the changes of the packet in the OD
-   * \return std::vector<PacketDiff>
-   */
-  std::vector<PacketDiff> getDiffs() { return std::vector<PacketDiff>(); }
-
-
-  /*!
-   * \brief Returns other data as a std::string
-   * \return std::string
-   */
-  std::string getOtherData() { return ""; }
-
-
-  /*!
-   * \brief Returns the wireshark data parsed and formated
-   * \return std::string
-   */
-  std::string getWiresharkString() { return ""; }
-
-
-  /*!
-   * \brief Returns a pointer to the parsed OD information
-   * \return ODDescription *
-   */
-  ODDescription *getODDesc() { return odDesc; }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  ODDescription *odDesc;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
- private:
+  mockable void addDiff(uint16_t index, std::shared_ptr<ODEntry> entry) noexcept;
 };
 }

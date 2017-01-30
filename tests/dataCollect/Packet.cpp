@@ -23,28 +23,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file PacketDiff.cpp
- * \brief Contains class PacketDiff
- */
 
-#include "PacketDiff.hpp"
+#include <Packet.hpp>
+#include <catch.hpp>
+#include <fakeit.hpp>
 
-namespace EPL_DataCollect {
+using namespace EPL_DataCollect;
+using namespace fakeit;
 
-PacketDiff::PacketDiff(uint16_t index, std::shared_ptr<ODEntry> entry) : odIndex(index), newEntry(std::move(entry)) {}
+TEST_CASE("Testing Packet", "[Packet]") {
+  plf::colony<std::shared_ptr<ODEntry>> ods;
+  ods.emplace(std::make_shared<ODEntry>());
+  ods.emplace(std::make_shared<ODEntry>());
+  ods.emplace(std::make_shared<ODEntry>());
+  ods.emplace(std::make_shared<ODEntry>());
 
-PacketDiff::~PacketDiff() {}
+  std::string wire  = "assdagagdagaerg";
+  std::string other = "affbytsysrtharthathaeheeh";
 
-/*!
- * \brief Get the Index of the OD
- * \returns The Index
- */
-uint16_t PacketDiff::getIndex() const noexcept { return odIndex; }
+  auto tp = std::chrono::system_clock::now();
 
-/*!
- * \brief Get The new OD Entry
- * \returns a pointer to the new ODEntry
- */
-ODEntry *PacketDiff::getEntry() noexcept { return newEntry.get(); }
+  Packet p(PT_PDO_REQ, CMD_ID_WRITE_BY_NAME, nullptr, wire, other, 10, 20, tp, 1, 2);
+
+  for (auto &i : ods) {
+    p.addDiff(1, i);
+  }
+
+  REQUIRE(p.getODDesc() == nullptr);
+  REQUIRE(p.getOtherData() == other);
+  REQUIRE(p.getWiresharkString() == wire);
+  REQUIRE(p.getDestNode() == 20);
+  REQUIRE(p.getSrcNode() == 10);
+  REQUIRE(p.getTimeStamp() == tp);
+  REQUIRE(p.getTransactionID() == 1);
+  REQUIRE(p.getNumSegments() == 2);
+
+  auto diffs = p.getDiffs();
+  for (auto &it : ods) {
+    bool found = false;
+    for (auto &i : *diffs) {
+      REQUIRE(i.getIndex() == 1);
+      if (i.getEntry() == it.get()) {
+        found = true;
+        break;
+      }
+    }
+
+    REQUIRE(found == true);
+  }
 }

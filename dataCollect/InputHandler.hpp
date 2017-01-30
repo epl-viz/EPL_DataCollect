@@ -133,7 +133,7 @@ class InputHandler {
   // Private attributes
   //
 
-  Packet packets;
+  std::vector<Packet> packets;
 
  public:
   // Private attribute accessor methods
