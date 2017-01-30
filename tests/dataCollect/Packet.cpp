@@ -57,6 +57,8 @@ TEST_CASE("Testing Packet", "[Packet]") {
   REQUIRE(p.getTimeStamp() == tp);
   REQUIRE(p.getTransactionID() == 1);
   REQUIRE(p.getNumSegments() == 2);
+  REQUIRE(p.getType() == PT_PDO_REQ);
+  REQUIRE(p.getCommandID() == CMD_ID_WRITE_BY_NAME);
 
   auto diffs = p.getDiffs();
   for (auto &it : ods) {

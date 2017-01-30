@@ -87,6 +87,7 @@ class Packet {
   Packet &operator=(Packet &&) = default;
 
   mockable PacketType getType() const noexcept;
+  mockable CommandID getCommandID() const noexcept;
   mockable uint8_t getTransactionID() const noexcept;
   mockable uint32_t getNumSegments() const noexcept;
   mockable plf::colony<PacketDiff> *getDiffs() noexcept;

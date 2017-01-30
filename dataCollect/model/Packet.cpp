@@ -76,6 +76,12 @@ PacketType Packet::getType() const noexcept { return type; }
 
 
 /*!
+ * \brief Returns the Command ID of the packet
+ */
+CommandID Packet::getCommandID() const noexcept { return commandID; }
+
+
+/*!
  * \brief Returns the transaction id of the packet
  */
 uint8_t Packet::getTransactionID() const noexcept { return transactionID; }
