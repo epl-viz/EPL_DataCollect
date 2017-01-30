@@ -69,8 +69,8 @@ class Cycle {
   uint32_t cycleNum  = 0;
 
  public:
-  Cycle()          = default;
-  virtual ~Cycle() = default;
+  Cycle() = default;
+  virtual ~Cycle();
 
   Cycle(const Cycle &);
   Cycle(Cycle &&) = default;

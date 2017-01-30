@@ -61,8 +61,8 @@ class Node {
   NodeStatus status = NS_UNKNOWN;
 
  public:
-  Node();
-  virtual ~Node() = default;
+  Node() = default;
+  virtual ~Node();
 
   Node(const Node &) = default;
   Node(Node &&)      = default;

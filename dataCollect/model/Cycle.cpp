@@ -32,6 +32,8 @@
 
 namespace EPL_DataCollect {
 
+Cycle::~Cycle() {}
+
 Cycle::Cycle(const Cycle &c) {
   events    = c.events;
   packets   = c.packets;

@@ -32,9 +32,7 @@
 
 namespace EPL_DataCollect {
 
-Node::Node() {
-  // TODO: Initialize OD, ODDescription and Node Status
-}
+Node::~Node() {}
 
 /*!
  * \brief Returns the status of the node
