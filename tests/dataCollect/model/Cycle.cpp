@@ -26,9 +26,34 @@
 
 #include <Cycle.hpp>
 #include <catch.hpp>
+#include <fakeit.hpp>
+
+using namespace EPL_DataCollect;
+using namespace fakeit;
+
+/*!
+  * class TestStorage
+  * \brief Stub for testing the CycleStorage system
+  *
+  * Implements CycleStorageBase in order to provide a target for the test case of the CycleStorage testcase.
+  *
+  */
+class TestStorage : public CycleStorageBase {
+ public:
+  TestStorage()          = default;
+  virtual ~TestStorage() = default;
+
+  TestStorage(const TestStorage &) = default;
+  TestStorage(TestStorage &&)      = default;
+
+  TestStorage &operator=(const TestStorage &) = default;
+  TestStorage &operator=(TestStorage &&) = default;
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<TestStorage>(*this); }
+};
 
 TEST_CASE("Standard return values work", "[Cycle]") {
-  EPL_DataCollect::Cycle c;
+  Cycle c;
 
   SECTION("Test getNumNodes()") { REQUIRE(c.getNumNodes() == 0); }
   SECTION("Test getCycleNum()") { REQUIRE(c.getCycleNum() == 0); }
@@ -37,10 +62,29 @@ TEST_CASE("Standard return values work", "[Cycle]") {
 }
 
 TEST_CASE("Fetching non existant values fails", "[Cycle]") {
-  EPL_DataCollect::Cycle c;
+  Cycle c;
 
   SECTION("Test getNode() throwing an exception") { REQUIRE_THROWS(c.getNode(200)); }
   SECTION("Test getCycleStorage() returning a nullptr") {
     REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
+  }
+}
+
+TEST_CASE("Cycle Storage system works") {
+  Cycle c;
+
+  SECTION("Test registering a new CycleStorage") {
+    REQUIRE(c.registerCycleStorage("TestPlugin", std::make_unique<TestStorage>()) == true);
+  }
+  SECTION("Test registering a duplicate CycleStorage") {
+    REQUIRE(c.registerCycleStorage("TestPlugin", std::make_unique<TestStorage>()) == true);
+    REQUIRE(c.registerCycleStorage("TestPlugin", std::make_unique<TestStorage>()) == false);
+  }
+  SECTION("Test retrieving a registered CycleStorage") {
+    auto              ptr = std::make_unique<TestStorage>();
+    CycleStorageBase *p   = ptr.get();
+
+    REQUIRE(c.registerCycleStorage("TestPlugin", std::move(ptr)) == true);
+    REQUIRE(c.getCycleStorage("TestPlugin") == p);
   }
 }
