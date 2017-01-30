@@ -40,11 +40,7 @@
 
 namespace EPL_DataCollect {
 
-/*!
- * \brief The status of the node
- * \todo Check if more values are needed
- */
-enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
+class CycleBuilder;
 
 /*!
   * class Node
@@ -53,12 +49,9 @@ enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
 class Node {
 
  private:
-  // The Object dictionary
-  OD od;
-  // The ODDescription of the Node
-  ODDescription odDesc;
-  // Current status of the Node
-  NodeStatus status = NS_UNKNOWN;
+  OD            od;                  //!< \brief The Object dictionary of the Node
+  ODDescription odDesc;              //!< \brief The ODDescription of the Node
+  NodeStatus    status = NS_UNKNOWN; //!< \brief Current status of the Node
 
  public:
   Node() = default;
@@ -67,17 +60,15 @@ class Node {
   Node(const Node &) = default;
   Node(Node &&)      = default;
 
-  Node &operator=(const Node &) = default;
-  Node &operator=(Node &&) = default;
+  Node &operator=(const Node &) = delete;
+  Node &operator=(Node &&) = delete;
 
-  // TODO: Add friend class
+  friend CycleBuilder;
 
   mockable OD *getOD() noexcept;
   mockable ODDescription *getODDesc() noexcept;
   mockable NodeStatus getStatus() const noexcept;
 
-  // TODO: Add accessor for the node status and update the ones for the OD and ODDesc
-  mockable void setOD(OD new_var) noexcept;
-  mockable void setODDesc(ODDescription new_var) noexcept;
+  // TODO: Add accessors for the node variables
 };
 }

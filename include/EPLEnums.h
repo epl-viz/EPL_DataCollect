@@ -223,6 +223,12 @@ enum EvType {
   EVT_UNKNOWN = INT32_MAX
 };
 
+/*!
+ * \brief The status of the node
+ * \todo Check if more values are needed
+ */
+enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
+
 #ifdef __cplusplus
 }
 #endif

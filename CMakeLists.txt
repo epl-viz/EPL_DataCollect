@@ -115,6 +115,7 @@ find_package( Git              REQUIRED )
 find_package( PythonInterp 3.6 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
 find_package( PythonLibs   3.6 REQUIRED )
 find_package( PkgConfig        REQUIRED )
+find_package( Threads          REQUIRED )
 pkg_search_module( LIBWIRESHARK REQUIRED wireshark )
 
 if( NOT DISABLE_TESTS )
@@ -171,7 +172,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES epl_dissector_shared epl_edsParser_shared ${PYTHON_LIBRARIES}
+  DEPENDENCIES epl_dissector_shared epl_edsParser_shared ${PYTHON_LIBRARIES} Threads::Threads
 )
 
 new_project_library(
@@ -266,7 +267,7 @@ enum2str_generate(
   FUNC_NAME  "toStr"
   INCLUDES   "EPLEnums.h"
   NAMESPACE  "EPL_DataCollect"
-  ENUMS      "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
+  ENUMS      "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
   BLACKLIST
 )
 
