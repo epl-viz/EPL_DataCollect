@@ -41,7 +41,7 @@ OD::~OD() {}
  */
 bool OD::hasEntry(uint16_t index) const noexcept {
   auto s = entries.find(index);
-  return (s != entries.end())
+  return (s != entries.end());
 }
 
 /*!
@@ -49,5 +49,11 @@ bool OD::hasEntry(uint16_t index) const noexcept {
    * \return The pointer to the requested ODEntry
    * \param  index The ID of the ODEntry
    */
-ODEntry *OD::getEntry(uint16_t index) noexcept { return entries[index].getData(); }
+ODEntry *OD::getEntry(uint16_t index) noexcept {
+  if (hasEntry(index)) {
+    return *entries.at(index);
+  } else {
+    return nullptr;
+  }
+}
 }
