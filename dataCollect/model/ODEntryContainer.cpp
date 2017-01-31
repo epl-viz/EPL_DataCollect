@@ -78,7 +78,8 @@ ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
   init<ODEntryComplex>(dt);
 }
 
-ODEntryContainer::ODEntryContainer(ObjectDataType type) : ODEntryContainer(getOCTbyODT(type), type) {}
+ODEntryContainer::ODEntryContainer(ObjectDataType type, ObjectType ot)
+    : ODEntryContainer(getOCTbyODT(ot, type), type) {}
 
 ODEntry *ODEntryContainer::operator*() noexcept { return getData<ODEntry>(); }
 ODEntry *ODEntryContainer::operator->() noexcept { return getData<ODEntry>(); }

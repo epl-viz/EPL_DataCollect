@@ -56,7 +56,7 @@ bool ODDescription::setEntry(uint16_t index, ODEntryDescription desc) noexcept {
   if (exists(index))
     return false;
 
-  entries[index] = desc;
+  entries.insert({index, desc});
   return true;
 }
 
@@ -71,7 +71,7 @@ bool ODDescription::overrideEntry(uint16_t index, ODEntryDescription desc) noexc
   if (!exists(index))
     return false;
 
-  entries[index] = desc;
+  entries.at(index) = desc;
   return true;
 }
 
@@ -85,7 +85,7 @@ ODEntryDescription *ODDescription::getEntry(uint16_t index) noexcept {
   if (!exists(index))
     return nullptr;
 
-  return &entries[index];
+  return &entries.at(index);
 }
 
 /*!
@@ -96,7 +96,11 @@ ODEntryDescription *ODDescription::getEntry(uint16_t index) noexcept {
  */
 void ODDescription::applyDesc(ODDescription &desc) noexcept {
   for (auto &i : desc.getEntries()) {
-    entries[i.first] = i.second;
+    if (exists(i.first)) {
+      overrideEntry(i.first, i.second);
+    } else {
+      setEntry(i.first, i.second);
+    }
   }
 }
 

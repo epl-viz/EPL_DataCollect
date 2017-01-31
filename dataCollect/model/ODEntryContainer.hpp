@@ -83,7 +83,7 @@ class ODEntryContainer final {
   ~ODEntryContainer();
 
   ODEntryContainer(ObjectClassType type, ObjectDataType dt);
-  ODEntryContainer(ObjectDataType type);
+  ODEntryContainer(ObjectDataType type, ObjectType ot = OT_VAR);
 
   ODEntryContainer(const ODEntryContainer &);
   ODEntryContainer(ODEntryContainer &&);
@@ -91,7 +91,7 @@ class ODEntryContainer final {
   ODEntryContainer &operator=(const ODEntryContainer &);
   ODEntryContainer &operator=(ODEntryContainer &&);
 
-  static constexpr ObjectClassType getOCTbyODT(ObjectDataType dt) noexcept;
+  static constexpr ObjectClassType getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept;
 
   template <class C>
   C *getData() noexcept;
@@ -121,7 +121,34 @@ C *ODEntryContainer::init(ObjectDataType type) noexcept {
   return new (data) C(type); // This created C on top of the already allocated memory data
 }
 
-constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectDataType dt) noexcept {
+constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept {
+  if (ot == OT_ARRAY) {
+    switch (dt) {
+      case ODT_BOOLEAN: return OCT_ARRAY_BOOL;
+      case ODT_INTEGER8:
+      case ODT_INTEGER16:
+      case ODT_INTEGER24:
+      case ODT_INTEGER32:
+      case ODT_INTEGER40:
+      case ODT_INTEGER48:
+      case ODT_INTEGER56:
+      case ODT_INTEGER64: return OCT_ARRAY_INTEGER;
+
+      case ODT_UNSIGNED8:
+      case ODT_UNSIGNED16:
+      case ODT_UNSIGNED24:
+      case ODT_UNSIGNED32:
+      case ODT_UNSIGNED40:
+      case ODT_UNSIGNED48:
+      case ODT_UNSIGNED56:
+      case ODT_UNSIGNED64: return OCT_ARRAY_UNSIGNED;
+
+      case ODT_REAL32:
+      case ODT_REAL64: return OCT_ARRAY_REAL;
+      default: break;
+    }
+  }
+
   switch (dt) {
     case ODT_BOOLEAN: return OCT_BOOL;
     case ODT_INTEGER8:

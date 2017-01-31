@@ -30,8 +30,9 @@
 using namespace EPL_DataCollect;
 
 TEST_CASE("Test ODDescription", "[Model]") {
-  ODEntryDescription entries[16];
-  for (int i = 0; i < 16; i++) {
+  std::vector<ODEntryDescription> entries;
+  for (size_t i = 0; i < 16; i++) {
+    entries.emplace_back(OT_VAR, ODT_BOOLEAN);
     entries[i].name = "Entry " + std::to_string(i);
   }
 
