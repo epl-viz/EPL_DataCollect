@@ -73,6 +73,27 @@ TEST_CASE("Fetching non existant values fails", "[Cycle]") {
   }
 }
 
+TEST_CASE("Packets are updated correctly") {
+  Cycle               c;
+  std::vector<Packet> newPackets;
+  uint32_t            oldCycleNum = c.getCycleNum();
+
+  // Create sample packets
+  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 1, 10, std::chrono::system_clock::now());
+  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 10, 1, std::chrono::system_clock::now());
+  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 100, 50, std::chrono::system_clock::now());
+  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 30, 80, std::chrono::system_clock::now());
+  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 90, 10, std::chrono::system_clock::now());
+
+
+  SECTION("Updating Packets") {
+    c.updatePackets(newPackets);
+
+    REQUIRE(c.getPackets() == newPackets);
+    REQUIRE(c.getCycleNum() == oldCycleNum + 1);
+  }
+}
+
 TEST_CASE("Cycle Storage system works") {
   Cycle c;
 
