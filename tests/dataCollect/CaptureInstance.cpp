@@ -33,9 +33,13 @@ using namespace fakeit;
 
 class CSTest1 : public CycleStorageBase {
  public:
+  virtual bool                              isNumericValue() override;
+  virtual double                            getNumericValue() override;
   virtual std::unique_ptr<CycleStorageBase> clone() override;
 };
 
+bool                              CSTest1::isNumericValue() { return false; }
+double                            CSTest1::getNumericValue() { return 0; }
 std::unique_ptr<CycleStorageBase> CSTest1::clone() { return std::make_unique<CSTest1>(*this); }
 
 TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {

@@ -50,8 +50,15 @@ class TestStorage : public CycleStorageBase {
   TestStorage &operator=(const TestStorage &) = default;
   TestStorage &operator=(TestStorage &&) = default;
 
-  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<TestStorage>(*this); }
+  virtual bool                              isNumericValue() override;
+  virtual double                            getNumericValue() override;
+  virtual std::unique_ptr<CycleStorageBase> clone() override;
 };
+
+bool                              TestStorage::isNumericValue() { return false; }
+double                            TestStorage::getNumericValue() { return 0; }
+std::unique_ptr<CycleStorageBase> TestStorage::clone() { return std::make_unique<TestStorage>(*this); }
+
 
 TestStorage::~TestStorage() {}
 

@@ -80,6 +80,10 @@ class CSPythonPluginStorage : public CycleStorageBase {
   // Public attribute accessor methods
   //
 
+  double getNumericValue() override { return 0; }
+
+  bool isNumericValue() override { return false; }
+
 
   /*!
    * Set the value of map
@@ -93,42 +97,9 @@ class CSPythonPluginStorage : public CycleStorageBase {
    */
   std::unordered_map<std::string, std::string> *getMap() { return &map; }
 
+
+
   std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<CSPythonPluginStorage>(*this); }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
 };
 }
 }
