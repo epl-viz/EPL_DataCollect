@@ -25,16 +25,14 @@
  */
 /*!
  * \file ODEntry.hpp
- * \brief Contains class ODEntry
- * \todo IMPLEMENT
+ * \brief Contains class ODEntry as well as all derived classes
  */
-
 
 #pragma once
 
-
 #include "defines.hpp"
 #include "EPLEnums.h"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -44,18 +42,17 @@ namespace EPL_DataCollect {
   */
 class ODEntry {
  public:
-  // Constructors/Destructors
-  //
+  typedef double REAL_TYPE;
 
+ private:
+  ObjectClassType type;
+  ObjectDataType  dataType;
+  bool            isNumerical;
 
-  /*!
-   * Empty Constructor
-   */
-  ODEntry();
+ public:
+  ODEntry() = delete;
+  ODEntry(ObjectClassType t, ObjectDataType dt, bool num);
 
-  /*!
-   * Empty Destructor
-   */
   virtual ~ODEntry();
 
   ODEntry(const ODEntry &) = default;
@@ -64,74 +61,86 @@ class ODEntry {
   ODEntry &operator=(const ODEntry &) = default;
   ODEntry &operator=(ODEntry &&) = default;
 
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \return ODEntryType
-   */
-  virtual ObjectDataType getType() { return ODT_BOOLEAN; }
-
+  mockable ObjectClassType getType() const noexcept;
+  mockable ObjectDataType getDataType() const noexcept;
+  mockable bool           isNumericValue() const noexcept;
 
   /*!
    * \brief Returns a numeric Representation of the Entry
    * \return double
    */
-  virtual double getNumericValue() { return 0; }
+  virtual REAL_TYPE getNumericValue() = 0;
+};
 
 
-  /*!
-   * \brief Returns whether the Entry can be represented as ONE numeric value
-   * \return bool
-   */
-  virtual bool isNumericValue() { return false; }
 
- protected:
-  // Static Protected attributes
-  //
+struct ODEntryInt : public ODEntry {
+  int64_t data = 0;
 
-  // Protected attributes
-  //
+  ODEntryInt(ObjectDataType dt) : ODEntry(OCT_INTEGER, dt, true) {}
+  REAL_TYPE                 getNumericValue() override;
+};
 
- public:
-  // Protected attribute accessor methods
-  //
+struct ODEntryUInt final : public ODEntry {
+  uint64_t data = 0;
 
- protected:
- public:
-  // Protected attribute accessor methods
-  //
+  ODEntryUInt(ObjectDataType dt) : ODEntry(OCT_UNSIGNED, dt, true) {}
+  REAL_TYPE                  getNumericValue() override;
+};
 
- protected:
- private:
-  // Static Private attributes
-  //
+struct ODEntryBool final : public ODEntry {
+  bool data = false;
 
-  // Private attributes
-  //
+  ODEntryBool(ObjectDataType dt) : ODEntry(OCT_BOOL, dt, true) {}
+  REAL_TYPE                  getNumericValue() override;
+};
 
- public:
-  // Private attribute accessor methods
-  //
+struct ODEntryReal final : public ODEntry {
+  REAL_TYPE data = 0;
 
- private:
- public:
-  // Private attribute accessor methods
-  //
+  ODEntryReal(ObjectDataType dt) : ODEntry(OCT_REAL, dt, true) {}
+  REAL_TYPE                  getNumericValue() override;
+};
 
- private:
+struct ODEntryString final : public ODEntry {
+  std::string data = "";
+
+  ODEntryString(ObjectDataType dt) : ODEntry(OCT_STRING, dt, false) {}
+  REAL_TYPE                    getNumericValue() override;
+};
+
+struct ODEntryArrayInt final : public ODEntry {
+  std::vector<int64_t> data;
+
+  ODEntryArrayInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_INTEGER, dt, false) {}
+  REAL_TYPE                      getNumericValue() override;
+};
+
+struct ODEntryArrayUInt final : public ODEntry {
+  std::vector<uint64_t> data;
+
+  ODEntryArrayUInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_UNSIGNED, dt, false) {}
+  REAL_TYPE                       getNumericValue() override;
+};
+
+struct ODEntryArrayBool final : public ODEntry {
+  std::vector<bool> data;
+
+  ODEntryArrayBool(ObjectDataType dt) : ODEntry(OCT_ARRAY_BOOL, dt, false) {}
+  REAL_TYPE                       getNumericValue() override;
+};
+
+struct ODEntryArrayReal final : public ODEntry {
+  std::vector<REAL_TYPE> data;
+
+  ODEntryArrayReal(ObjectDataType dt) : ODEntry(OCT_ARRAY_REAL, dt, false) {}
+  REAL_TYPE                       getNumericValue() override;
+};
+
+struct ODEntryComplex final : public ODEntry {
+  std::vector<ODEntry *> data;
+
+  ODEntryComplex(ObjectDataType dt) : ODEntry(OCT_COMPLEX, dt, false) {}
+  REAL_TYPE                     getNumericValue() override;
 };
 }

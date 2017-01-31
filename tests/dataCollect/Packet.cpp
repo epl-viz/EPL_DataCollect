@@ -33,10 +33,10 @@ using namespace fakeit;
 
 TEST_CASE("Testing Packet", "[Packet]") {
   plf::colony<std::shared_ptr<ODEntry>> ods;
-  ods.emplace(std::make_shared<ODEntry>());
-  ods.emplace(std::make_shared<ODEntry>());
-  ods.emplace(std::make_shared<ODEntry>());
-  ods.emplace(std::make_shared<ODEntry>());
+  ods.emplace(std::make_shared<ODEntryInt>(ODT_BOOLEAN));
+  ods.emplace(std::make_shared<ODEntryUInt>(ODT_BOOLEAN));
+  ods.emplace(std::make_shared<ODEntryReal>(ODT_BOOLEAN));
+  ods.emplace(std::make_shared<ODEntryInt>(ODT_BOOLEAN));
 
   std::string wire  = "assdagagdagaerg";
   std::string other = "affbytsysrtharthathaeheeh";

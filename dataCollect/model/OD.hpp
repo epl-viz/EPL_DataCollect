@@ -115,7 +115,7 @@ class OD {
   // Private attributes
   //
 
-  ODEntry entries;
+  ODEntry *entries;
 
  public:
   // Private attribute accessor methods
@@ -131,13 +131,13 @@ class OD {
    * Set the value of entries
    * \param new_var the new value of entries
    */
-  void setEntries(ODEntry new_var) { entries = new_var; }
+  void setEntries(ODEntry *new_var) { entries = new_var; }
 
   /*!
    * Get the value of entries
    * \return the value of entries
    */
-  ODEntry *getEntries() { return &entries; }
+  ODEntry *getEntries() { return entries; }
 
  private:
 };

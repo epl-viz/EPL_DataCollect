@@ -26,29 +26,50 @@
 /*!
  * \file ODEntry.cpp
  * \brief Contains class ODEntry
- * \todo IMPLEMENT
  */
 
 #include "ODEntry.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-ODEntry::ODEntry() {}
+/*!
+ * \brief The constructor
+ * \param t   the class type of the Entry (the ID of the child class)
+ * \param dt  the ethernetPOWERLINK data type
+ * \param num Whether the type can be represented as a number
+ */
+ODEntry::ODEntry(ObjectClassType t, ObjectDataType dt, bool num) : type(t), dataType(dt), isNumerical(num) {}
 
 ODEntry::~ODEntry() {}
 
-//
-// Methods
-//
+/*!
+ * \brief Returns the class type of the entry
+ * \return ObjectClassType
+ */
+ObjectClassType ODEntry::getType() const noexcept { return type; }
+
+/*!
+ * \brief Returns the class type of the entry
+ * \return ObjectClassType
+ */
+ObjectDataType ODEntry::getDataType() const noexcept { return dataType; }
+
+/*!
+ * \brief Returns whether the Entry can be represented as ONE numeric value
+ * \return bool
+ */
+bool ODEntry::isNumericValue() const noexcept { return isNumerical; }
 
 
-// Accessor methods
-//
 
-
-// Other methods
-//
+ODEntry::REAL_TYPE ODEntryInt::getNumericValue() { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryUInt::getNumericValue() { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryBool::getNumericValue() { return data ? 1 : 0; }
+ODEntry::REAL_TYPE ODEntryReal::getNumericValue() { return data; }
+ODEntry::REAL_TYPE ODEntryString::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryComplex::getNumericValue() { return 0; }
 }

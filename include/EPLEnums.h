@@ -182,6 +182,22 @@ enum ObjectDataType {
 };
 
 /*!
+ * \brief Describes which class to use
+ */
+enum ObjectClassType {
+  OCT_INTEGER,
+  OCT_UNSIGNED,
+  OCT_BOOL,
+  OCT_REAL,
+  OCT_STRING,
+  OCT_ARRAY_INTEGER,
+  OCT_ARRAY_UNSIGNED,
+  OCT_ARRAY_BOOL,
+  OCT_ARRAY_REAL,
+  OCT_COMPLEX
+};
+
+/*!
  * \brief Describes how the Entry can be accessed
  */
 enum ObjectAccess {

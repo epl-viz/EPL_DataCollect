@@ -172,6 +172,7 @@ bool PluginManager::init(CaptureInstance *ci) noexcept {
 
     // We are stuck in a dependency cycle or a dependnecy is missing
     if (todo.size() >= oldSize) {
+      std::cerr << "[PluginManager] Could not resolve plugin dependencies" << std::endl;
       return false;
     }
   }

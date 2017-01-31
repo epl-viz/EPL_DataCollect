@@ -24,31 +24,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file ODEntryInt.cpp
- * \brief Contains class ODEntryInt
- * \todo IMPLEMENT
+ * \file ODEntryContainer.cpp
+ * \brief Contains class ODEntryContainer
  */
 
-#include "ODEntryInt.hpp"
+#include "ODEntryContainer.hpp"
+#include <string.h>
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
+ODEntryContainer::ODEntryContainer() { memset(data, 0, internal::calcSize()); }
 
-ODEntryInt::ODEntryInt() {}
-
-ODEntryInt::~ODEntryInt() {}
-
-//
-// Methods
-//
+ODEntryContainer::~ODEntryContainer() {
+  // Manually call the destructor
+  if (isCreated) {
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+  }
+}
 
 
-// Accessor methods
-//
+ODEntry *ODEntryContainer::initByOCT(ObjectClassType type, ObjectDataType dt) noexcept {
+  switch (type) {
+    case OCT_INTEGER: return init<ODEntryInt>(dt);
+    case OCT_UNSIGNED: return init<ODEntryUInt>(dt);
+    case OCT_BOOL: return init<ODEntryBool>(dt);
+    case OCT_REAL: return init<ODEntryReal>(dt);
+    case OCT_STRING: return init<ODEntryString>(dt);
+    case OCT_ARRAY_INTEGER: return init<ODEntryArrayInt>(dt);
+    case OCT_ARRAY_UNSIGNED: return init<ODEntryArrayUInt>(dt);
+    case OCT_ARRAY_BOOL: return init<ODEntryArrayBool>(dt);
+    case OCT_ARRAY_REAL: return init<ODEntryArrayReal>(dt);
+    case OCT_COMPLEX: return init<ODEntryComplex>(dt);
+  }
+}
 
-
-// Other methods
-//
+ODEntry *ODEntryContainer::initByODT(ObjectDataType type) noexcept { return initByOCT(getOCTbyODT(type), type); }
 }

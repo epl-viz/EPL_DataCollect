@@ -29,7 +29,9 @@
  */
 
 #include "CaptureInstance.hpp"
+#include "EPLEnum2Str.hpp"
 #include "PluginManager.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -44,10 +46,6 @@ CaptureInstance::~CaptureInstance() {}
  */
 int CaptureInstance::setupLoop() {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  if (state != SETUP) {
-    return -1;
-  }
-
   if (!pluginManager.init(this)) {
     state = ERRORED;
     return 1;
@@ -55,6 +53,7 @@ int CaptureInstance::setupLoop() {
 
   if (!builder.startLoop(startCycle)) {
     state = ERRORED;
+    std::cerr << "[CaptureInstance] (startRecording) Failed to start build loop" << std::endl;
     return 100;
   }
 
@@ -87,6 +86,7 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
   (void)interface;
 
   if (state != SETUP) {
+    std::cerr << "[CaptureInstance] (startRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
   }
 
@@ -102,7 +102,9 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
  */
 int CaptureInstance::stopRecording() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
+
   if (state != RUNNING) {
+    std::cerr << "[CaptureInstance] (stopRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
   }
 
@@ -127,6 +129,7 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
   (void)file;
 
   if (state != SETUP) {
+    std::cerr << "[CaptureInstance] (loadPCAP) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
   }
 
