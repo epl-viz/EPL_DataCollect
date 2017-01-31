@@ -86,6 +86,8 @@ class Packet {
   Packet &operator=(const Packet &) = default;
   Packet &operator=(Packet &&) = default;
 
+  bool operator==(const Packet &r) const;
+
   mockable PacketType getType() const noexcept;
   mockable CommandID getCommandID() const noexcept;
   mockable uint8_t getTransactionID() const noexcept;

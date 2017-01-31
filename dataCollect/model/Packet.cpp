@@ -68,6 +68,12 @@ Packet::Packet(PacketType     t,
 
 Packet::~Packet() {}
 
+bool Packet::operator==(const Packet &r) const {
+  return ((type == r.type) && (commandID == r.commandID) && (odDesc == r.odDesc) && (wiresharkSTR == r.wiresharkSTR) &&
+          (otherData == r.otherData) && (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp) &&
+          (transactionID == r.transactionID) && (numOfSegments == r.numOfSegments));
+}
+
 /*!
  * \brief Returns the packet type
  * \return PacketType
