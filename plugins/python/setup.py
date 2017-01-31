@@ -3,6 +3,17 @@ from distutils.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
+#Plugin Wrapper
+setup(
+	name = 'Plugin',
+	ext_modules = [ 
+		Extension("Plugin",
+           		sources=["Plugin.pyx"],  # additional source file(s)
+           		language="c++"),             # generate C++ code
+      	],
+	cmdclass = {'build_ext': build_ext}
+)
+
 #Backend API
 setup(
   name = 'PluginAPI',
@@ -27,3 +38,5 @@ setup(ext_modules = cythonize(
 		include_path = [],
 		language = "c++",
 	))
+
+
