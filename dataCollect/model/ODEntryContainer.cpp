@@ -33,30 +33,53 @@
 
 namespace EPL_DataCollect {
 
-ODEntryContainer::ODEntryContainer() { memset(data, 0, internal::calcSize()); }
-
 ODEntryContainer::~ODEntryContainer() {
   // Manually call the destructor
-  if (isCreated) {
-    reinterpret_cast<ODEntry *>(data)->~ODEntry();
-  }
+  reinterpret_cast<ODEntry *>(data)->~ODEntry();
 }
 
+ODEntryContainer::ODEntryContainer(const ODEntryContainer &c) {
+  memset(data, 0, internal::calcSize());
+  reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+}
+ODEntryContainer::ODEntryContainer(ODEntryContainer &&c) {
+  memset(data, 0, internal::calcSize());
+  reinterpret_cast<ODEntry *>(c.data)->clone(data);
+}
 
-ODEntry *ODEntryContainer::initByOCT(ObjectClassType type, ObjectDataType dt) noexcept {
+ODEntryContainer &ODEntryContainer::operator=(const ODEntryContainer &c) {
+  memset(data, 0, internal::calcSize());
+  reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+  return *this;
+}
+
+ODEntryContainer &ODEntryContainer::operator=(ODEntryContainer &&c) {
+  memset(data, 0, internal::calcSize());
+  reinterpret_cast<ODEntry *>(c.data)->clone(data);
+  return *this;
+}
+
+ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
+  memset(data, 0, internal::calcSize());
+
   switch (type) {
-    case OCT_INTEGER: return init<ODEntryInt>(dt);
-    case OCT_UNSIGNED: return init<ODEntryUInt>(dt);
-    case OCT_BOOL: return init<ODEntryBool>(dt);
-    case OCT_REAL: return init<ODEntryReal>(dt);
-    case OCT_STRING: return init<ODEntryString>(dt);
-    case OCT_ARRAY_INTEGER: return init<ODEntryArrayInt>(dt);
-    case OCT_ARRAY_UNSIGNED: return init<ODEntryArrayUInt>(dt);
-    case OCT_ARRAY_BOOL: return init<ODEntryArrayBool>(dt);
-    case OCT_ARRAY_REAL: return init<ODEntryArrayReal>(dt);
-    case OCT_COMPLEX: return init<ODEntryComplex>(dt);
+    case OCT_INTEGER: init<ODEntryInt>(dt); return;
+    case OCT_UNSIGNED: init<ODEntryUInt>(dt); return;
+    case OCT_BOOL: init<ODEntryBool>(dt); return;
+    case OCT_REAL: init<ODEntryReal>(dt); return;
+    case OCT_STRING: init<ODEntryString>(dt); return;
+    case OCT_ARRAY_INTEGER: init<ODEntryArrayInt>(dt); return;
+    case OCT_ARRAY_UNSIGNED: init<ODEntryArrayUInt>(dt); return;
+    case OCT_ARRAY_BOOL: init<ODEntryArrayBool>(dt); return;
+    case OCT_ARRAY_REAL: init<ODEntryArrayReal>(dt); return;
+    case OCT_COMPLEX: init<ODEntryComplex>(dt); return;
   }
+
+  init<ODEntryComplex>(dt);
 }
 
-ODEntry *ODEntryContainer::initByODT(ObjectDataType type) noexcept { return initByOCT(getOCTbyODT(type), type); }
+ODEntryContainer::ODEntryContainer(ObjectDataType type) : ODEntryContainer(getOCTbyODT(type), type) {}
+
+ODEntry *ODEntryContainer::operator*() noexcept { return getData<ODEntry>(); }
+ODEntry *ODEntryContainer::operator->() noexcept { return getData<ODEntry>(); }
 }

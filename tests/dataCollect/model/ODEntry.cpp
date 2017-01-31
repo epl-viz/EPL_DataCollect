@@ -68,109 +68,115 @@ TEST_CASE("Testing ODT 2 OCT", "[ODEntry]") {
   REQUIRE(ODEntryContainer::getOCTbyODT(ODT_IDENTITY) == OCT_COMPLEX);
 }
 
-TEST_CASE("Testing ODEntry container", "[ODEntry]") {
-  ODEntryContainer ct;
+TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
+  std::cout << "ODEntry container size: " << EPL_DataCollect::internal::calcSize() << " Byte" << std::endl;
 
-  SECTION("Testing ODEntryInt") {
-    std::cout << "ODEntry container size: " << EPL_DataCollect::internal::calcSize() << " Byte" << std::endl;
+  ODEntryContainer ct(ODT_INTEGER32);
+  auto             ptr   = *ct;
+  ODEntryInt *     t     = ct.getData<ODEntryInt>();
+  ODEntry *        entry = *ct;
+  t->data                = 42;
+  REQUIRE(t->getType() == OCT_INTEGER);
+  REQUIRE(t->getType() == ct->getType());
+  REQUIRE(t->getDataType() == ODT_INTEGER32);
+  REQUIRE(t->getDataType() == entry->getDataType());
+  REQUIRE(t->isNumericValue() == true);
+  REQUIRE(checkDouble(t->getNumericValue(), 42) == true);
+  REQUIRE(ptr == entry);
+}
 
-    auto        ptr   = ct.initByODT(ODT_INTEGER32);
-    ODEntryInt *t     = ct.getData<ODEntryInt>();
-    ODEntry *   entry = *ct;
-    t->data           = 42;
-    REQUIRE(t->getType() == OCT_INTEGER);
-    REQUIRE(t->getType() == ct->getType());
-    REQUIRE(t->getDataType() == ODT_INTEGER32);
-    REQUIRE(t->getDataType() == entry->getDataType());
-    REQUIRE(t->isNumericValue() == true);
-    REQUIRE(checkDouble(t->getNumericValue(), 42) == true);
-    REQUIRE(ptr == entry);
+TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
+  ODEntryContainer ct(ODT_UNSIGNED16);
+  ODEntryUInt &    t = *ct.getData<ODEntryUInt>();
+  t.data             = 42;
+  REQUIRE(t.getType() == OCT_UNSIGNED);
+  REQUIRE(t.getDataType() == ODT_UNSIGNED16);
+  REQUIRE(t.isNumericValue() == true);
+  REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
 
-    REQUIRE(ct.init<ODEntryUInt>(ODT_INTEGER32) == nullptr);
-  }
+  ODEntryContainer ct2(ct);
+  ODEntryContainer ct3(std::move(ct));
+}
 
-  SECTION("Testing ODEntryUInt") {
-    ct.initByODT(ODT_UNSIGNED16);
-    ODEntryUInt &t = *ct.getData<ODEntryUInt>();
-    t.data         = 42;
-    REQUIRE(t.getType() == OCT_UNSIGNED);
-    REQUIRE(t.getDataType() == ODT_UNSIGNED16);
-    REQUIRE(t.isNumericValue() == true);
-    REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
-  }
+TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
+  ODEntryContainer ct(ODT_BOOLEAN);
+  ODEntryBool &    t = *ct.getData<ODEntryBool>();
+  t.data             = true;
+  REQUIRE(t.getType() == OCT_BOOL);
+  REQUIRE(t.getDataType() == ODT_BOOLEAN);
+  REQUIRE(t.isNumericValue() == true);
+  REQUIRE(checkDouble(t.getNumericValue(), 1) == true);
+}
 
-  SECTION("Testing ODEntryBool") {
-    ct.initByODT(ODT_BOOLEAN);
-    ODEntryBool &t = *ct.getData<ODEntryBool>();
-    t.data         = true;
-    REQUIRE(t.getType() == OCT_BOOL);
-    REQUIRE(t.getDataType() == ODT_BOOLEAN);
-    REQUIRE(t.isNumericValue() == true);
-    REQUIRE(checkDouble(t.getNumericValue(), 1) == true);
-  }
+TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
+  ODEntryContainer ct(ODT_REAL32);
+  ODEntryReal &    t = *ct.getData<ODEntryReal>();
+  t.data             = 42;
+  REQUIRE(t.getType() == OCT_REAL);
+  REQUIRE(t.getDataType() == ODT_REAL32);
+  REQUIRE(t.isNumericValue() == true);
+  REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
+}
 
-  SECTION("Testing ODEntryReal") {
-    ct.initByODT(ODT_REAL32);
-    ODEntryReal &t = *ct.getData<ODEntryReal>();
-    t.data         = 42;
-    REQUIRE(t.getType() == OCT_REAL);
-    REQUIRE(t.getDataType() == ODT_REAL32);
-    REQUIRE(t.isNumericValue() == true);
-    REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
-  }
+TEST_CASE("Testing ODEntryString", "[ODEntry]") {
+  ODEntryContainer ct(ODT_VISIBLE_STRING);
+  ODEntryString &  t = *ct.getData<ODEntryString>();
+  t.data             = "Hello world";
+  REQUIRE(t.getType() == OCT_STRING);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
-  SECTION("Testing ODEntryString") {
-    ct.initByODT(ODT_VISIBLE_STRING);
-    ODEntryString &t = *ct.getData<ODEntryString>();
-    t.data           = "Hello world";
-    REQUIRE(t.getType() == OCT_STRING);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+  // Test copying of complex stuff
+  ODEntryContainer ct2(ct);
+  t = *ct2.getData<ODEntryString>();
+  REQUIRE(t.data == "Hello world");
+  ODEntryContainer ct3(std::move(ct));
+  t = *ct3.getData<ODEntryString>();
+  REQUIRE(t.data == "Hello world");
+}
 
-  SECTION("Testing ODEntryArrayInt") {
-    ct.initByOCT(OCT_ARRAY_INTEGER, ODT_VISIBLE_STRING);
-    ODEntryArrayInt &t = *ct.getData<ODEntryArrayInt>();
-    REQUIRE(t.getType() == OCT_ARRAY_INTEGER);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
+  ODEntryContainer ct(OCT_ARRAY_INTEGER, ODT_VISIBLE_STRING);
+  ODEntryArrayInt &t = *ct.getData<ODEntryArrayInt>();
+  REQUIRE(t.getType() == OCT_ARRAY_INTEGER);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+}
 
-  SECTION("Testing ODEntryArrayUInt") {
-    ct.initByOCT(OCT_ARRAY_UNSIGNED, ODT_VISIBLE_STRING);
-    ODEntryArrayUInt &t = *ct.getData<ODEntryArrayUInt>();
-    REQUIRE(t.getType() == OCT_ARRAY_UNSIGNED);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
+  ODEntryContainer  ct(OCT_ARRAY_UNSIGNED, ODT_VISIBLE_STRING);
+  ODEntryArrayUInt &t = *ct.getData<ODEntryArrayUInt>();
+  REQUIRE(t.getType() == OCT_ARRAY_UNSIGNED);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+}
 
-  SECTION("Testing ODEntryArrayBool") {
-    ct.initByOCT(OCT_ARRAY_BOOL, ODT_VISIBLE_STRING);
-    ODEntryArrayBool &t = *ct.getData<ODEntryArrayBool>();
-    REQUIRE(t.getType() == OCT_ARRAY_BOOL);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
+  ODEntryContainer  ct(OCT_ARRAY_BOOL, ODT_VISIBLE_STRING);
+  ODEntryArrayBool &t = *ct.getData<ODEntryArrayBool>();
+  REQUIRE(t.getType() == OCT_ARRAY_BOOL);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+}
 
-  SECTION("Testing ODEntryArrayReal") {
-    ct.initByOCT(OCT_ARRAY_REAL, ODT_VISIBLE_STRING);
-    ODEntryArrayReal &t = *ct.getData<ODEntryArrayReal>();
-    REQUIRE(t.getType() == OCT_ARRAY_REAL);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
+  ODEntryContainer  ct(OCT_ARRAY_REAL, ODT_VISIBLE_STRING);
+  ODEntryArrayReal &t = *ct.getData<ODEntryArrayReal>();
+  REQUIRE(t.getType() == OCT_ARRAY_REAL);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+}
 
-  SECTION("Testing ODEntryComplex") {
-    ct.initByOCT(OCT_COMPLEX, ODT_VISIBLE_STRING);
-    ODEntryComplex &t = *ct.getData<ODEntryComplex>();
-    REQUIRE(t.getType() == OCT_COMPLEX);
-    REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
-    REQUIRE(t.isNumericValue() == false);
-    REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
-  }
+TEST_CASE("Testing ODEntryComplex", "[ODEntry]") {
+  ODEntryContainer ct(OCT_COMPLEX, ODT_VISIBLE_STRING);
+  ODEntryComplex & t = *ct.getData<ODEntryComplex>();
+  REQUIRE(t.getType() == OCT_COMPLEX);
+  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.isNumericValue() == false);
+  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 }

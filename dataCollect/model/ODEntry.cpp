@@ -72,4 +72,15 @@ ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue() { return 0; }
 ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue() { return 0; }
 ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue() { return 0; }
 ODEntry::REAL_TYPE ODEntryComplex::getNumericValue() { return 0; }
+
+void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); };
+void ODEntryUInt::clone(void *pos) { new (pos) ODEntryUInt(*this); };
+void ODEntryBool::clone(void *pos) { new (pos) ODEntryBool(*this); };
+void ODEntryReal::clone(void *pos) { new (pos) ODEntryReal(*this); };
+void ODEntryString::clone(void *pos) { new (pos) ODEntryString(*this); };
+void ODEntryArrayInt::clone(void *pos) { new (pos) ODEntryArrayInt(*this); };
+void ODEntryArrayUInt::clone(void *pos) { new (pos) ODEntryArrayUInt(*this); };
+void ODEntryArrayBool::clone(void *pos) { new (pos) ODEntryArrayBool(*this); };
+void ODEntryArrayReal::clone(void *pos) { new (pos) ODEntryArrayReal(*this); };
+void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
 }

@@ -36,6 +36,8 @@
 
 namespace EPL_DataCollect {
 
+class ODEntryContainer;
+
 /*!
   * class ODEntry
   * \brief Represents an entry in the OD
@@ -70,77 +72,138 @@ class ODEntry {
    * \return double
    */
   virtual REAL_TYPE getNumericValue() = 0;
+  virtual void clone(void *pos)       = 0;
 };
 
 
 
-struct ODEntryInt : public ODEntry {
+class ODEntryInt final : public ODEntry {
+ public:
   int64_t data = 0;
 
   ODEntryInt(ObjectDataType dt) : ODEntry(OCT_INTEGER, dt, true) {}
   REAL_TYPE                 getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryUInt final : public ODEntry {
+class ODEntryUInt final : public ODEntry {
+ public:
   uint64_t data = 0;
 
   ODEntryUInt(ObjectDataType dt) : ODEntry(OCT_UNSIGNED, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryBool final : public ODEntry {
+class ODEntryBool final : public ODEntry {
+ public:
   bool data = false;
 
   ODEntryBool(ObjectDataType dt) : ODEntry(OCT_BOOL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryReal final : public ODEntry {
+class ODEntryReal final : public ODEntry {
+ public:
   REAL_TYPE data = 0;
 
   ODEntryReal(ObjectDataType dt) : ODEntry(OCT_REAL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryString final : public ODEntry {
+class ODEntryString final : public ODEntry {
+ public:
   std::string data = "";
 
   ODEntryString(ObjectDataType dt) : ODEntry(OCT_STRING, dt, false) {}
   REAL_TYPE                    getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryArrayInt final : public ODEntry {
+class ODEntryArrayInt final : public ODEntry {
+ public:
   std::vector<int64_t> data;
 
   ODEntryArrayInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_INTEGER, dt, false) {}
   REAL_TYPE                      getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryArrayUInt final : public ODEntry {
+class ODEntryArrayUInt final : public ODEntry {
+ public:
   std::vector<uint64_t> data;
 
   ODEntryArrayUInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_UNSIGNED, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryArrayBool final : public ODEntry {
+class ODEntryArrayBool final : public ODEntry {
+ public:
   std::vector<bool> data;
 
   ODEntryArrayBool(ObjectDataType dt) : ODEntry(OCT_ARRAY_BOOL, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryArrayReal final : public ODEntry {
+class ODEntryArrayReal final : public ODEntry {
+ public:
   std::vector<REAL_TYPE> data;
 
   ODEntryArrayReal(ObjectDataType dt) : ODEntry(OCT_ARRAY_REAL, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 
-struct ODEntryComplex final : public ODEntry {
+class ODEntryComplex final : public ODEntry {
+ public:
   std::vector<ODEntry *> data;
 
   ODEntryComplex(ObjectDataType dt) : ODEntry(OCT_COMPLEX, dt, false) {}
   REAL_TYPE                     getNumericValue() override;
+
+  friend class ODEntryContainer;
+
+ private:
+  void clone(void *pos) override;
 };
 }

@@ -31,7 +31,7 @@
 #pragma once
 
 #include "defines.hpp"
-#include "ODEntry.hpp"
+#include "ODEntryContainer.hpp"
 #include <memory>
 
 namespace EPL_DataCollect {
@@ -42,14 +42,14 @@ namespace EPL_DataCollect {
   */
 class PacketDiff {
  private:
-  uint16_t                 odIndex;
-  std::shared_ptr<ODEntry> newEntry = nullptr;
+  uint16_t         odIndex;
+  ODEntryContainer newEntry;
 
  public:
   PacketDiff() = delete;
   virtual ~PacketDiff();
 
-  PacketDiff(uint16_t index, std::shared_ptr<ODEntry> entry);
+  PacketDiff(uint16_t index, ODEntryContainer entry);
 
   PacketDiff(const PacketDiff &) = default;
   PacketDiff(PacketDiff &&)      = default;

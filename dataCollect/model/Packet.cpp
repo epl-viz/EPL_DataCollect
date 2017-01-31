@@ -139,7 +139,5 @@ uint32_t Packet::getDestNode() const noexcept { return nodeDest; }
 Packet::TIME_POINT Packet::getTimeStamp() const noexcept { return timeStamp; }
 
 
-void Packet::addDiff(uint16_t index, std::shared_ptr<ODEntry> entry) noexcept {
-  diffs.emplace(index, std::move(entry));
-}
+void Packet::addDiff(uint16_t index, ODEntryContainer entry) noexcept { diffs.emplace(index, std::move(entry)); }
 }

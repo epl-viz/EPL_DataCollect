@@ -74,19 +74,24 @@ constexpr uint32_t calcSize() {
 class ODEntryContainer final {
  private:
   char data[internal::calcSize()]; //!< The data storage
-  bool isCreated = false;
-
- public:
-  ODEntryContainer();
-  ~ODEntryContainer();
-
-  static constexpr ObjectClassType getOCTbyODT(ObjectDataType dt) noexcept;
-
-  ODEntry *initByOCT(ObjectClassType type, ObjectDataType dt) noexcept;
-  ODEntry *initByODT(ObjectDataType type) noexcept;
 
   template <class C>
   C *init(ObjectDataType type) noexcept;
+
+ public:
+  ODEntryContainer() = delete;
+  ~ODEntryContainer();
+
+  ODEntryContainer(ObjectClassType type, ObjectDataType dt);
+  ODEntryContainer(ObjectDataType type);
+
+  ODEntryContainer(const ODEntryContainer &);
+  ODEntryContainer(ODEntryContainer &&);
+
+  ODEntryContainer &operator=(const ODEntryContainer &);
+  ODEntryContainer &operator=(ODEntryContainer &&);
+
+  static constexpr ObjectClassType getOCTbyODT(ObjectDataType dt) noexcept;
 
   template <class C>
   C *getData() noexcept;
@@ -113,16 +118,8 @@ C *ODEntryContainer::init(ObjectDataType type) noexcept {
   static_assert(sizeof(C) <= internal::calcSize(), "Invalid data type");
   static_assert(std::is_base_of<ODEntry, C>::value, "C is not drived from ODEntry");
 
-  if (isCreated)
-    return nullptr;
-
-  auto ptr  = new (data) C(type); // This created C on top of the already allocated memory data
-  isCreated = true;
-  return ptr;
+  return new (data) C(type); // This created C on top of the already allocated memory data
 }
-
-ODEntry *ODEntryContainer::operator*() noexcept { return getData<ODEntry>(); }
-ODEntry *ODEntryContainer::operator->() noexcept { return getData<ODEntry>(); }
 
 constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectDataType dt) noexcept {
   switch (dt) {

@@ -32,11 +32,11 @@ using namespace EPL_DataCollect;
 using namespace fakeit;
 
 TEST_CASE("Testing Packet", "[Packet]") {
-  plf::colony<std::shared_ptr<ODEntry>> ods;
-  ods.emplace(std::make_shared<ODEntryInt>(ODT_BOOLEAN));
-  ods.emplace(std::make_shared<ODEntryUInt>(ODT_BOOLEAN));
-  ods.emplace(std::make_shared<ODEntryReal>(ODT_BOOLEAN));
-  ods.emplace(std::make_shared<ODEntryInt>(ODT_BOOLEAN));
+  plf::colony<ODEntryContainer> ods;
+  ods.emplace(ODEntryContainer(ODT_INTEGER24));
+  ods.emplace(ODEntryContainer(ODT_BOOLEAN));
+  ods.emplace(ODEntryContainer(ODT_VISIBLE_STRING));
+  ods.emplace(ODEntryContainer(ODT_REAL64));
 
   std::string wire  = "assdagagdagaerg";
   std::string other = "affbytsysrtharthathaeheeh";
@@ -65,7 +65,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
     bool found = false;
     for (auto &i : *diffs) {
       REQUIRE(i.getIndex() == 1);
-      if (i.getEntry() == it.get()) {
+      if (i.getEntry()->getDataType() == it->getDataType()) {
         found = true;
         break;
       }

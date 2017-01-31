@@ -32,7 +32,7 @@
 
 namespace EPL_DataCollect {
 
-PacketDiff::PacketDiff(uint16_t index, std::shared_ptr<ODEntry> entry) : odIndex(index), newEntry(std::move(entry)) {}
+PacketDiff::PacketDiff(uint16_t index, ODEntryContainer entry) : odIndex(index), newEntry(std::move(entry)) {}
 
 PacketDiff::~PacketDiff() {}
 
@@ -46,5 +46,5 @@ uint16_t PacketDiff::getIndex() const noexcept { return odIndex; }
  * \brief Get The new OD Entry
  * \returns a pointer to the new ODEntry
  */
-ODEntry *PacketDiff::getEntry() noexcept { return newEntry.get(); }
+ODEntry *PacketDiff::getEntry() noexcept { return *newEntry; }
 }

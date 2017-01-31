@@ -98,6 +98,6 @@ class Packet {
   mockable uint32_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
 
-  mockable void addDiff(uint16_t index, std::shared_ptr<ODEntry> entry) noexcept;
+  mockable void addDiff(uint16_t index, ODEntryContainer entry) noexcept;
 };
 }
