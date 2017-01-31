@@ -4,7 +4,9 @@ from libcpp.map cimport map
 from libcpp.pair cimport pair
 from libcpp.vector cimport vector
 import time
+import pyPlugins
 from pyPlugins import *
+import pkgutil
 
 ## PyInit -> initmodule -> run function from c++ for test use ##
 
@@ -141,10 +143,18 @@ class Plugin (object):
 	
 #Testmethod
 def main():
-	print("main running")
+	print("main running...")
 	plug = PyPlugin()
 	plug.bla()
 	plug2 = Plugin()
 	plug2.run(0)
 	PluginA.run()
 	PluginB.run()
+	package = pyPlugins
+	prefix = package.__name__ + "."
+	print(prefix)
+	for importer, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
+		print "Found submodule %s (is a package: %s)" % (modname, ispkg)
+		module = __import__(modname, fromlist="dummy")
+		exec(modname + ".run()")
+		print "Imported", module
