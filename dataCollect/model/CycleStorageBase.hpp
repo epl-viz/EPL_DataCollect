@@ -26,7 +26,6 @@
 /*!
  * \file CycleStorageBase.hpp
  * \brief Contains class CycleStorageBase
- * \todo IMPLEMENT
  */
 
 
@@ -39,27 +38,16 @@ namespace EPL_DataCollect {
 
 /*!
   * class CycleStorageBase
-  * \brief Base class for OD like storage in the a cycle
+  * \brief Base class for OD like storage in a cycle
   *
-  * Contains additional generic information that is not in the OD. Should mostly
-  * only be used for comunication between plugins and the frontend or storing cycle
+  * Contains additional generic information that is not in the OD.
+  * Should only be used for communication between plugins and the frontend or for storing cycle
   * dependent information.
   */
 class CycleStorageBase {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  CycleStorageBase();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~CycleStorageBase();
+  CycleStorageBase()          = default;
+  virtual ~CycleStorageBase() = default;
 
   CycleStorageBase(const CycleStorageBase &) = default;
   CycleStorageBase(CycleStorageBase &&)      = default;
@@ -67,70 +55,18 @@ class CycleStorageBase {
   CycleStorageBase &operator=(const CycleStorageBase &) = default;
   CycleStorageBase &operator=(CycleStorageBase &&) = default;
 
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
   /*!
    * \brief Returns a numeric Representation of the stored information
    * \return double
    */
-  virtual double getNumericValue() { return 0; }
-
+  virtual double getNumericValue() = 0;
 
   /*!
    * \brief Returns whether the Entry can be represented as ONE numeric value
    * \return bool
    */
-  virtual bool isNumericValue() { return false; }
+  virtual bool isNumericValue() = 0;
 
   virtual std::unique_ptr<CycleStorageBase> clone() = 0;
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
 };
 }
