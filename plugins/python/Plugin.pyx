@@ -4,6 +4,7 @@ from libcpp.map cimport map
 from libcpp.pair cimport pair
 from libcpp.vector cimport vector
 import time
+from pyPlugins import *
 
 ## PyInit -> initmodule -> run function from c++ for test use ##
 
@@ -145,3 +146,5 @@ def main():
 	plug.bla()
 	plug2 = Plugin()
 	plug2.run(0)
+	PluginA.run()
+	PluginB.run()
