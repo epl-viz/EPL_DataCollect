@@ -24,49 +24,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file CycleStorageBase.hpp
+ * \file CycleStorageBase.cpp
  * \brief Contains class CycleStorageBase
  */
 
-
-#pragma once
-
-#include "defines.hpp"
-#include <memory>
+#include "CycleStorageBase.hpp"
 
 namespace EPL_DataCollect {
 
-/*!
-  * class CycleStorageBase
-  * \brief Base class for OD like storage in a cycle
-  *
-  * Contains additional generic information that is not in the OD.
-  * Should only be used for communication between plugins and the frontend or for storing cycle
-  * dependent information.
-  */
-class CycleStorageBase {
- public:
-  CycleStorageBase() = default;
-  virtual ~CycleStorageBase();
-
-  CycleStorageBase(const CycleStorageBase &) = default;
-  CycleStorageBase(CycleStorageBase &&)      = default;
-
-  CycleStorageBase &operator=(const CycleStorageBase &) = default;
-  CycleStorageBase &operator=(CycleStorageBase &&) = default;
-
-  /*!
-   * \brief Returns a numeric Representation of the stored information
-   * \return double
-   */
-  virtual double getNumericValue() = 0;
-
-  /*!
-   * \brief Returns whether the Entry can be represented as ONE numeric value
-   * \return bool
-   */
-  virtual bool isNumericValue() = 0;
-
-  virtual std::unique_ptr<CycleStorageBase> clone() = 0;
-};
+CycleStorageBase::~CycleStorageBase() {}
 }
