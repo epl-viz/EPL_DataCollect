@@ -26,7 +26,6 @@
 /*!
  * \file Cycle.hpp
  * \brief Contains class Cycle
- * \todo IMPLEMENT
  */
 
 
@@ -49,7 +48,7 @@ class CycleBuilder;
   * class Cycle
   * \brief Root entity of the ethernetPOWERLINK model
   *
-  * Stores all information available during (after completion) of the specific
+  * Stores all information available during (and after completion of) the specific
   * cycle.
   *
   * \todo Update methods are still to be implemented
@@ -94,6 +93,6 @@ class Cycle {
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif
-  mockable void updatePackets(std::vector<Packet> newPackets);
+  mockable void updatePackets(std::vector<Packet> newPackets) noexcept;
 };
 }

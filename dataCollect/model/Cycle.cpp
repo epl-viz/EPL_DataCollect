@@ -121,7 +121,7 @@ CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
  * \returns true on success, false if id already exists
  */
 bool Cycle::registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept {
-  // Check if id alerady exists
+  // Check if id already exists
   if (getCycleStorage(id) != nullptr) {
     return false;
   }
@@ -139,7 +139,7 @@ bool Cycle::registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBas
    * C++: friend class CycleBuilder
    * \param  newPackets The packets to apply
    */
-void Cycle::updatePackets(std::vector<Packet> newPackets) {
+void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
   packets = newPackets;
   cycleNum++;
 }

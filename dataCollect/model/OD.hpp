@@ -49,7 +49,7 @@ namespace EPL_DataCollect {
   */
 class OD {
  private:
-  std::unordered_map<uint16_t, ODEntryContainer> entries; // TODO: ODEntry vs ODEntryContainer?
+  std::unordered_map<uint16_t, ODEntryContainer> entries;
 
  public:
   OD() = default;

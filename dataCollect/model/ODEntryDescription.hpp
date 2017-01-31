@@ -42,7 +42,7 @@ namespace EPL_DataCollect {
   */
 struct ODEntryDescription final {
   uint16_t         index    = 0;       //!< \brief The 16bit Index of the OD Entry
-  ObjectType       type     = OT_NULL; //!< \brief The Object typpe (see EPSG DS 301 v1.3.0 Section 6.2.1)
+  ObjectType       type     = OT_NULL; //!< \brief The Object type (see EPSG DS 301 v1.3.0 Section 6.2.1)
   std::string      name     = "<UNDEFINED>";
   ObjectDataType   dataType = ODT_BOOLEAN;
   ObjectCategory   category = OC_NOT_RELEVANT;
