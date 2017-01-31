@@ -23,7 +23,7 @@ setup(
 
 #Wrapper for Cycle class
 setup(ext_modules = cythonize(
-		"Cyc.pyx",
+		"Cycle.pyx",
 		include_path = [],
 		language = "c++",
 	))
