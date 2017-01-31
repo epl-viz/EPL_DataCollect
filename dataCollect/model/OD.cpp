@@ -45,10 +45,11 @@ bool OD::hasEntry(uint16_t index) const noexcept {
 }
 
 /*!
-   * \brief Returns a pointer to the entry with the given index
-   * \return The pointer to the requested ODEntry
-   * \param  index The ID of the ODEntry
-   */
+ * \brief Returns a pointer to the entry with the given index
+ * \return The pointer to the requested ODEntry
+ * \param  index The ID of the ODEntry
+ * \todo Implement inserting new entries
+ */
 ODEntry *OD::getEntry(uint16_t index) noexcept {
   if (hasEntry(index)) {
     return *entries.at(index);
