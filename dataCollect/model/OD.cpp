@@ -26,29 +26,28 @@
 /*!
  * \file OD.cpp
  * \brief Contains class OD
- * \todo IMPLEMENT
  */
 
 #include "OD.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-OD::OD() {}
-
 OD::~OD() {}
 
-//
-// Methods
-//
+/*!
+ * \brief Checks if there is an entry with the given index
+ * \return true if there is an entry with given index, false if not
+ * \param index The index to check for
+ */
+bool OD::hasEntry(uint16_t index) const noexcept {
+  auto s = entries.find(index);
+  return (s != entries.end())
+}
 
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+   * \brief Returns a pointer to the entry with the given index
+   * \return The pointer to the requested ODEntry
+   * \param  index The ID of the ODEntry
+   */
+ODEntry *OD::getEntry(uint16_t index) noexcept { return entries[index].getData(); }
 }

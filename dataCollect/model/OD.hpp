@@ -26,7 +26,6 @@
 /*!
  * \file OD.hpp
  * \brief Contains class OD
- * \todo IMPLEMENT
  */
 
 
@@ -41,22 +40,18 @@ namespace EPL_DataCollect {
 
 /*!
   * class OD
-  * \brief Representation of the OD of a Node
+  * \brief Representation of the Object Dictionary of a Node
+  *
+  * Each entry in the Object Dictionary has, per definition, a specified 16-bit index.
+  * This class realizes this by providing a map that uses a 16-bit unsigned integer for keys and the class
+  * ODEntryContainer, which encapsules generic data, for values.
   */
 class OD {
+ private:
+  std::unordered_map<uint16_t, ODEntryContainer> entries; // TODO: ODEntry vs ODEntryContainer?
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  OD();
-
-  /*!
-   * Empty Destructor
-   */
+  OD() = default;
   virtual ~OD();
 
   OD(const OD &) = default;
@@ -65,80 +60,8 @@ class OD {
   OD &operator=(const OD &) = default;
   OD &operator=(OD &&) = default;
 
-  // Static Public attributes
-  //
+  mockable bool hasEntry(uint16_t index) const noexcept;
 
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns a POINTER to an entry
-   * \return ODEntry *
-   * \param  entry The entry ID
-   */
-  ODEntry *getEntry(unsigned int entry) {
-    (void)entry;
-    return nullptr;
-  }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  ODEntry *entries;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
-  /*!
-   * Set the value of entries
-   * \param new_var the new value of entries
-   */
-  void setEntries(ODEntry *new_var) { entries = new_var; }
-
-  /*!
-   * Get the value of entries
-   * \return the value of entries
-   */
-  ODEntry *getEntries() { return entries; }
-
- private:
+  mockable ODEntry *getEntry(uint16_t index) noexcept;
 };
 }
