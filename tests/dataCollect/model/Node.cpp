@@ -39,3 +39,20 @@ TEST_CASE("Initialization succeeds", "[Node]") {
     REQUIRE(n.getODDesc() != nullptr);
   }
 }
+
+TEST_CASE("Changing Status works") {
+  Node n;
+
+  SECTION("Test setting to starting") {
+    n.setStatus(NS_STARTING);
+    REQUIRE(n.getStatus() == NS_STARTING);
+  }
+  SECTION("Test setting to OK") {
+    n.setStatus(NS_OK);
+    REQUIRE(n.getStatus() == NS_OK);
+  }
+  SECTION("Test setting to error") {
+    n.setStatus(NS_ERROR);
+    REQUIRE(n.getStatus() == NS_ERROR);
+  }
+}
