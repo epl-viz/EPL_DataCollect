@@ -92,7 +92,8 @@ TEST_CASE("Testing ODT 2 OCT", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
-  std::cout << "ODEntry container size: " << EPL_DataCollect::internal::calcSize() << " Byte" << std::endl;
+  std::cout << "ODEntry container size: \x1b[33;1m" << EPL_DataCollect::internal::calcSize() << "\x1b[0m Byte"
+            << std::endl;
 
   ODEntryContainer ct(ODT_INTEGER32);
   auto             ptr   = *ct;

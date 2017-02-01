@@ -170,7 +170,7 @@ class ODEntryArrayUInt final : public ODEntry {
 
 class ODEntryArrayBool final : public ODEntry {
  public:
-  std::vector<bool> data;
+  std::vector<uint8_t> data;
 
   ODEntryArrayBool(ObjectDataType dt) : ODEntry(OCT_ARRAY_BOOL, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
