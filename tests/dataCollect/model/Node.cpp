@@ -28,8 +28,14 @@
 #include <EPLEnums.h>
 #include <catch.hpp>
 
-TEST_CASE("Node Status is unknown when not set", "[Node]") {
-  EPL_DataCollect::Node n;
+using namespace EPL_DataCollect;
 
-  SECTION("Test getStatus()") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
+TEST_CASE("Initialization succeeds", "[Node]") {
+  Node n;
+
+  SECTION("Test node status initialized to unknown") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
+  SECTION("Test OD Initialization") {
+    REQUIRE(n.getOD() != nullptr);
+    REQUIRE(n.getODDesc() != nullptr);
+  }
 }
