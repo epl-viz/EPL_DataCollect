@@ -67,6 +67,9 @@ class Node {
   mockable ODDescription *getODDesc() noexcept;
   mockable NodeStatus getStatus() const noexcept;
 
-  // TODO: Add accessors for the node variables
+#if EPL_DC_ENABLE_MOCKING == 0
+ private:
+#endif
+  mockable void setStatus(NodeStatus newStatus) noexcept;
 };
 }

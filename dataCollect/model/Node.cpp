@@ -51,4 +51,10 @@ OD *Node::getOD() noexcept { return &od; }
  * \return The pointer to the OD
  */
 ODDescription *Node::getODDesc() noexcept { return od.getODDesc(); }
+
+/*!
+ * \brief Sets the node status
+ * \param newStatus The new node status
+ */
+void Node::setStatus(NodeStatus newStatus) noexcept { status = newStatus; }
 }
