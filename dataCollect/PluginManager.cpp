@@ -199,7 +199,7 @@ bool PluginManager::reset(CaptureInstance *ci) noexcept {
     return false;
 
   for (auto i : pluginsOrdered) {
-    if (!i->reset(ci)) {
+    if (!i->runReset(ci)) {
       return false;
     }
   }
