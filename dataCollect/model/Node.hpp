@@ -36,7 +36,6 @@
 
 #include "defines.hpp"
 #include "OD.hpp"
-#include "ODDescription.hpp"
 
 namespace EPL_DataCollect {
 
@@ -49,9 +48,8 @@ class CycleBuilder;
 class Node {
 
  private:
-  OD            od;                  //!< \brief The Object dictionary of the Node
-  ODDescription odDesc;              //!< \brief The ODDescription of the Node
-  NodeStatus    status = NS_UNKNOWN; //!< \brief Current status of the Node
+  OD         od;                  //!< \brief The Object dictionary of the Node
+  NodeStatus status = NS_UNKNOWN; //!< \brief Current status of the Node
 
  public:
   Node() = default;

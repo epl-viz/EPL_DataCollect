@@ -57,4 +57,10 @@ ODEntry *OD::getEntry(uint16_t index) noexcept {
     return nullptr;
   }
 }
+
+/*!
+ * \brief Returns a pointer to the OD Description
+ * \return The pointer to the OD Description
+ */
+ODDescription *OD::getODDesc() noexcept { return &odDesc; }
 }

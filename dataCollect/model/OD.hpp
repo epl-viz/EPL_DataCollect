@@ -34,8 +34,10 @@
 
 #include "defines.hpp"
 
+#include "ODDescription.hpp"
 #include "ODEntryContainer.hpp"
 #include <unordered_map>
+
 
 namespace EPL_DataCollect {
 
@@ -49,7 +51,8 @@ namespace EPL_DataCollect {
   */
 class OD {
  private:
-  std::unordered_map<uint16_t, ODEntryContainer> entries;
+  std::unordered_map<uint16_t, ODEntryContainer> entries; //!< \brief The entries in the Object Dictionary
+  ODDescription odDesc; //!< \brief The description of the Object Dictionary of the Node
 
  public:
   OD() = default;
@@ -63,6 +66,7 @@ class OD {
 
   mockable bool hasEntry(uint16_t index) const noexcept;
 
+  mockable ODDescription *getODDesc() noexcept;
   mockable ODEntry *getEntry(uint16_t index) noexcept;
 };
 }

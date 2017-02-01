@@ -50,5 +50,5 @@ OD *Node::getOD() noexcept { return &od; }
  * \brief Returns a pointer to the Object Dictionary Description of the Node
  * \return The pointer to the OD
  */
-ODDescription *Node::getODDesc() noexcept { return &odDesc; }
+ODDescription *Node::getODDesc() noexcept { return od.getODDesc(); }
 }
