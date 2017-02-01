@@ -30,6 +30,7 @@
 
 #include "CaptureInstance.hpp"
 #include "EPLEnum2Str.hpp"
+#include "PluginBase.hpp"
 #include "PluginManager.hpp"
 #include <iostream>
 
@@ -98,6 +99,7 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
  * \brief ends the live capture
  * \returns 0  on success; the new state is now DONE
  * \returns -1 when the current state is not RUNNING
+ * \returns 1  on PluginManager error; THIS SETS THE STATE TO ERRORED
  * \returns 2  when the build loop could not be stopped; THIS SETS THE STATE TO ERRORED
  */
 int CaptureInstance::stopRecording() noexcept {
@@ -111,6 +113,11 @@ int CaptureInstance::stopRecording() noexcept {
   if (!builder.stopLoop()) {
     state = ERRORED;
     return 2;
+  }
+
+  if (!pluginManager.reset(this)) {
+    state = ERRORED;
+    return 1;
   }
 
   state = DONE;

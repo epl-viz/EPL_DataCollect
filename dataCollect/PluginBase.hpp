@@ -26,19 +26,18 @@
 /*!
  * \file PluginBase.hpp
  * \brief Contains class PluginBase
- * \todo IMPLEMENT
  */
 
 #pragma once
 
 #include "defines.hpp"
-
+#include "CaptureInstance.hpp"
 #include "Cycle.hpp"
 #include "EventBase.hpp"
 
 namespace EPL_DataCollect {
 
-class CaptureInstance;
+class PluginManager;
 
 /*!
   * class PluginBase
@@ -47,19 +46,14 @@ class CaptureInstance;
   * Also provides an interface for registering cycle storage and generating events.
   */
 class PluginBase {
+ private:
+  CaptureInstance *ciPTR = nullptr;
+
+  bool runInitialize(CaptureInstance *ci);
+  bool runReset(CaptureInstance *ci);
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  PluginBase();
-
-  /*!
-   * Empty Destructor
-   */
+  PluginBase() = default;
   virtual ~PluginBase();
 
   PluginBase(const PluginBase &) = default;
@@ -68,120 +62,77 @@ class PluginBase {
   PluginBase &operator=(const PluginBase &) = default;
   PluginBase &operator=(PluginBase &&) = default;
 
-  // Static Public attributes
-  //
+  virtual void run(Cycle *cycle)        = 0;
+  virtual std::string getDependencies() = 0;
+  virtual std::string getID()           = 0;
 
-  // Public attributes
-  //
+  friend class PluginManager;
 
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Execute the plugin
-   * \warning This function must be FAST
-   * \param  cycle The cycle to process
-   */
-  virtual void run(Cycle *cycle) { (void)cycle; }
-
-
-  /*!
-   * \brief initializes the plugin
-   * \param ci A pointer to the capture instance
-   */
-  virtual bool initialize(CaptureInstance *ci) {
-    (void)ci;
-    return true;
-  }
-
-
-  /*!
-   * \brief initializes the plugin
-   */
-  virtual bool reset(CaptureInstance *ci) {
-    (void)ci;
-    return true;
-  }
-
-
-  /*!
-   * \brief Returns a semicolon seperated list of dependencies
-   * \return std::string
-   */
-  virtual std::string getDependencies() { return ""; }
-
-
-  /*!
-   * \brief Returns an ID std::string
-   * \return std::string
-   */
-  virtual std::string getID() { return ""; }
-
+#if not EPL_DC_ENABLE_MOCKING
  protected:
-  // Static Protected attributes
-  //
+#endif
+  virtual bool initialize(CaptureInstance *ci) = 0;
+  virtual bool reset(CaptureInstance *ci)      = 0;
 
-  // Protected attributes
-  //
+  bool addEvent(std::unique_ptr<EventBase> event) noexcept;
 
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
-  /*!
-   * \brief Adds an event to the event log
-   * \return int
-   * \param  event The event to add
-   */
-  int addEvent(EventBase event) {
-    (void)event;
-    return 0;
-  }
+  template <class C, class... ARGS>
+  inline bool registerCycleStorage(std::string index, ARGS &&... args);
+};
 
 
-  /*!
-   * \brief Adds a new cycle storage entry
-   * Returns false when the index is already occupied
-   * TEMPLATED
-   *
-   * Wrapper for the CaptureInstance function
-   * \return bool
-   * \param  index The index to register
-   */
-  bool registerCycleStorage(std::string index) {
-    (void)index;
+/*!
+ * \brief Adds a new cycle storage entry
+ * Returns false when the index is already occupied
+ *
+ * \note this is a wrapper for the CaptureInstance function
+ * \warning This function may only be called after or during initialize
+ * \return bool
+ * \param  index The index to register
+ */
+template <class C, class... ARGS>
+inline bool PluginBase::registerCycleStorage(std::string index, ARGS &&... args) {
+  if (ciPTR == nullptr) {
     return false;
   }
 
- private:
-  // Static Private attributes
-  //
+  return ciPTR->registerCycleStorage<C>(index, std::forward<ARGS>(args)...);
+}
 
-  // Private attributes
-  //
 
- public:
-  // Private attribute accessor methods
-  //
+/*!
+ * \fn void PluginBase::run(Cycle *cycle)
+ * \brief Execute the plugin
+ * \warning This function must be FAST
+ * \note This function MUST be implemented by a plugin
+ * \param  cycle The cycle to process
+ */
 
- private:
- public:
-  // Private attribute accessor methods
-  //
+/*!
+ * \fn bool PluginBase::initialize(CaptureInstance *ci)
+ * \brief initializes the plugin
+ * \note This function MUST be implemented by a plugin
+ * \param ci A pointer to the capture instance
+ */
 
- private:
-};
+/*!
+ * \fn bool PluginBase::reset(CaptureInstance *ci)
+ * \brief resets the plugin
+ * \note This function MUST be implemented by a plugin
+ * \param ci A pointer to the capture instance
+ */
+
+/*!
+ * \fn std::string PluginBase::getDependencies(CaptureInstance *ci)
+ * \brief Returns a semicolon seperated list of dependencies
+ * \note This function MUST be implemented by a plugin
+ * \return the list as a std::string
+ */
+
+/*!
+ * \fn std::string PluginBase::getID(CaptureInstance *ci)
+ * \brief Returns an ID std::string
+ * \note This function MUST be implemented by a plugin
+ * \return std::string
+ */
 }

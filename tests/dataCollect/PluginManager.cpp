@@ -26,6 +26,7 @@
 
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
+#include <PluginBase.hpp>
 #include <PluginManager.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
@@ -45,8 +46,8 @@ TEST_CASE("Testing PluginManager", "[plugins]") {
   Mock<PluginBase> pbMock[16];
   for (uint32_t i = 0; i < 16; i++) {
     When(Method(pbMock[i], run)).AlwaysReturn();
-    When(Method(pbMock[i], initialize)).AlwaysReturn();
-    When(Method(pbMock[i], reset)).AlwaysReturn();
+    When(Method(pbMock[i], initialize)).AlwaysReturn(true);
+    When(Method(pbMock[i], reset)).AlwaysReturn(true);
   }
 
   When(Method(pbMock[0x0], getID)).AlwaysReturn("P0");

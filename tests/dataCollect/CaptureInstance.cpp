@@ -25,6 +25,7 @@
  */
 
 #include <CaptureInstance.hpp>
+#include <PluginBase.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
 
@@ -49,8 +50,8 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
   Mock<PluginBase> pbMock[16];
   for (uint32_t i = 0; i < 16; i++) {
     When(Method(pbMock[i], run)).AlwaysReturn();
-    When(Method(pbMock[i], initialize)).AlwaysReturn();
-    When(Method(pbMock[i], reset)).AlwaysReturn();
+    When(Method(pbMock[i], initialize)).AlwaysReturn(true);
+    When(Method(pbMock[i], reset)).AlwaysReturn(true);
   }
 
   When(Method(pbMock[0x0], getID)).AlwaysReturn("P0");
@@ -154,4 +155,68 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.getDevices() == std::vector<std::string>());
     ci.loadXDD("");
   }
+}
+
+TEST_CASE("Testing CaptureInstance -- plugin init error", "[CaptureInstance]") {
+  CaptureInstance ci;
+  PluginManager & pm = *ci.getPluginManager();
+
+  Mock<PluginBase> pbMock[4];
+  for (uint32_t i = 0; i < 4; i++) {
+    When(Method(pbMock[i], run)).AlwaysReturn();
+    When(Method(pbMock[i], initialize)).AlwaysReturn(false);
+    When(Method(pbMock[i], reset)).AlwaysReturn(true);
+  }
+
+  When(Method(pbMock[0x0], getID)).AlwaysReturn("P0");
+  When(Method(pbMock[0x1], getID)).AlwaysReturn("P1");
+  When(Method(pbMock[0x2], getID)).AlwaysReturn("P2");
+  When(Method(pbMock[0x3], getID)).AlwaysReturn("P3");
+
+  When(Method(pbMock[0x0], getDependencies)).AlwaysReturn("");
+  When(Method(pbMock[0x1], getDependencies)).AlwaysReturn("");
+  When(Method(pbMock[0x2], getDependencies)).AlwaysReturn("P3");
+  When(Method(pbMock[0x3], getDependencies)).AlwaysReturn("");
+
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
+
+  REQUIRE(ci.getState() == CaptureInstance::SETUP);
+  REQUIRE(ci.startRecording("") == 1);
+  REQUIRE(ci.getState() == CaptureInstance::ERRORED);
+}
+
+TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") {
+  CaptureInstance ci;
+  PluginManager & pm = *ci.getPluginManager();
+
+  Mock<PluginBase> pbMock[4];
+  for (uint32_t i = 0; i < 4; i++) {
+    When(Method(pbMock[i], run)).AlwaysReturn();
+    When(Method(pbMock[i], initialize)).AlwaysReturn(true);
+    When(Method(pbMock[i], reset)).AlwaysReturn(false);
+  }
+
+  When(Method(pbMock[0x0], getID)).AlwaysReturn("P0");
+  When(Method(pbMock[0x1], getID)).AlwaysReturn("P1");
+  When(Method(pbMock[0x2], getID)).AlwaysReturn("P2");
+  When(Method(pbMock[0x3], getID)).AlwaysReturn("P3");
+
+  When(Method(pbMock[0x0], getDependencies)).AlwaysReturn("");
+  When(Method(pbMock[0x1], getDependencies)).AlwaysReturn("");
+  When(Method(pbMock[0x2], getDependencies)).AlwaysReturn("P3");
+  When(Method(pbMock[0x3], getDependencies)).AlwaysReturn("");
+
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x0].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x1].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x2].get(), [](PluginBase *) {}));
+  pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
+
+  REQUIRE(ci.getState() == CaptureInstance::SETUP);
+  REQUIRE(ci.startRecording("") == 0);
+  REQUIRE(ci.getState() == CaptureInstance::RUNNING);
+  REQUIRE(ci.stopRecording() == 1);
+  REQUIRE(ci.getState() == CaptureInstance::ERRORED);
 }

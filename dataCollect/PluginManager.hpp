@@ -32,7 +32,6 @@
 
 #include "defines.hpp"
 #include "Cycle.hpp"
-#include "PluginBase.hpp"
 #include <memory>
 #include <mutex>
 #include <string>
@@ -41,6 +40,7 @@
 namespace EPL_DataCollect {
 
 class CaptureInstance;
+class PluginBase;
 
 /*!
   * class PluginManager

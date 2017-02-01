@@ -29,6 +29,7 @@
  */
 
 #include "PluginManager.hpp"
+#include "PluginBase.hpp"
 #include <iostream>
 #include <plf_colony.h>
 
@@ -178,7 +179,9 @@ bool PluginManager::init(CaptureInstance *ci) noexcept {
   }
 
   for (auto i : pluginsOrdered) {
-    i->initialize(ci);
+    if (!i->runInitialize(ci)) {
+      return false;
+    }
   }
 
   status = INIT;
@@ -196,7 +199,9 @@ bool PluginManager::reset(CaptureInstance *ci) noexcept {
     return false;
 
   for (auto i : pluginsOrdered) {
-    i->reset(ci);
+    if (!i->reset(ci)) {
+      return false;
+    }
   }
 
   pluginsOrdered.clear();

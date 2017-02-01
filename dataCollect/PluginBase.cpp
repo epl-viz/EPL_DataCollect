@@ -30,25 +30,45 @@
  */
 
 #include "PluginBase.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-PluginBase::PluginBase() {}
-
 PluginBase::~PluginBase() {}
 
-//
-// Methods
-//
+/*!
+ * \brief Adds an event to the event log
+ * \return true on success
+ * \warning This function may only be called after or during initialize
+ * \param  event The event to add
+ */
+bool PluginBase::addEvent(std::unique_ptr<EventBase> event) noexcept {
+  if (ciPTR == nullptr)
+    return false;
 
+  ciPTR->getEventLog()->addEvent(std::move(event));
+  return true;
+}
 
-// Accessor methods
-//
+bool PluginBase::runInitialize(CaptureInstance *ci) {
+  ciPTR    = ci;
+  bool ret = initialize(ci);
 
+  if (!ret) {
+    std::cerr << "[PluginBase] Failed to initialize plugin " << getID() << std::endl;
+  }
 
-// Other methods
-//
+  return ret;
+}
+
+bool PluginBase::runReset(CaptureInstance *ci) {
+  bool ret = reset(ci);
+
+  if (!ret) {
+    std::cerr << "[PluginBase] Failed to reset plugin " << getID() << std::endl;
+  }
+
+  ciPTR = nullptr;
+  return ret;
+}
 }
