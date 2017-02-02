@@ -22,16 +22,28 @@ cdef public double cy_fct(double val):
 cdef public class PyPlug[object PyPlug, type PyType]:
 	def __cinit__(self):
 		pass
-	cdef public int run(self):
-		return 52
-
+		
+	cdef public void initialize(self):
+		pass
+	  
+	cdef public void run(self):
+		package = pyPlugins
+		prefix = package.__name__ + "."
+		for importer, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
+			print "Found submodule %s (is a package: %s)" % (modname, ispkg)
+			module = __import__(modname, fromlist="dummy")
+			exec(modname + ".run()")
+			
+	cdef public void unload(self, modulename):
+		pass
+  
 ## constructor function for c++
 cdef public PyPlug buildPyPlug():
 	return PyPlug()
 
 ## wrapper functions for c
-cdef public int run_wrapper(PyPlug obj):
-	return obj.run()
+cdef public void run_wrapper(PyPlug obj):
+	obj.run()
 # -------------------------------end
 
 cdef class PyPlugin:
@@ -148,8 +160,7 @@ def main():
 	plug.bla()
 	plug2 = Plugin()
 	plug2.run(0)
-	PluginA.run()
-	PluginB.run()
+	###
 	package = pyPlugins
 	prefix = package.__name__ + "."
 	print(prefix)

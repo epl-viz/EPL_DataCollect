@@ -32,11 +32,13 @@ setup(
   cmdclass = {'build_ext': build_ext}
 )
 
+extension = [Extension('Cycle',
+			sources = [ 'Cycle.pyx' ],
+			extra_compile_args = [ '-std=c++14' ],
+			language = 'c++',)
+]
+
 #Wrapper for Cycle class
-setup(ext_modules = cythonize(
-		"Cycle.pyx",
-		include_path = [],
-		language = "c++",
-	))
+setup(ext_modules = cythonize(extension))
 
 
