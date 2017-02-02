@@ -114,9 +114,12 @@ add_compiler(
 find_package( Git              REQUIRED )
 find_package( PythonInterp 3.6 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
 find_package( PythonLibs   3.6 REQUIRED )
-find_package( PkgConfig        REQUIRED )
 find_package( Threads          REQUIRED )
-pkg_search_module( LIBWIRESHARK REQUIRED wireshark )
+find_package( Wireshark REQUIRED )
+
+message( STATUS "Wireshark version:     ${Wireshark_VERSION_STRING}" )
+message( STATUS "Wireshark install dir: ${Wireshark_INSTALL_DIR}" )
+message( "" )
 
 if( NOT DISABLE_TESTS )
   set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )
@@ -172,19 +175,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES epl_dissector_shared epl_edsParser_shared ${PYTHON_LIBRARIES} Threads::Threads
-)
-
-new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/dissector"
-  NAME     "epl_dissector"
-  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-)
-
-new_project_library(
-  PATH     "${PROJECT_SOURCE_DIR}/edsParser"
-  NAME     "epl_edsParser"
-  TEMPLATE "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY}
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
@@ -201,7 +192,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared epl_dissector_shared epl_edsParser_shared
+    DEPENDENCIES epl_DataCollect_shared
   )
 endif( NOT DISABLE_TESTS )
 
@@ -215,7 +206,7 @@ include_directories(
   ${FAKE_IT_INCLUDE_DIR}
   ${EPL_DC_INCLUDES_DIR}
   ${PYTHON_INCLUDE_DIRS}
-  ${LIBWIRESHARK_INCLUDE_DIRS}
+  ${Wireshark_INCLUDE_DIR}
   ${PLF_COLONY_DIR}
 )
 

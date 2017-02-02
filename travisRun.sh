@@ -61,7 +61,16 @@ msg "Versions:"
 print_version cmake
 print_version gcc
 print_version clang
+print_version qt5-base
 
+msg "Updating wireshark disector"
+testExec cd /opt/wireshark/build
+testExec git pull
+testExec git submodule update --init --recursive
+testExec make install
+testExec cd -
+
+msg "Setting up the build env"
 testExec lcov --directory . --zerocounters
 testExec ./checkFormat.sh --only-check
 testExec mkdir $BUILD_DIR
