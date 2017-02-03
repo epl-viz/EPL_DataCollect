@@ -115,7 +115,7 @@ find_package( Git              REQUIRED )
 find_package( PythonInterp 3.6 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
 find_package( PythonLibs   3.6 REQUIRED )
 find_package( Threads          REQUIRED )
-find_package( Wireshark REQUIRED )
+find_package( Wireshark        REQUIRED )
 
 message( STATUS "Wireshark version:     ${Wireshark_VERSION_STRING}" )
 message( STATUS "Wireshark install dir: ${Wireshark_INSTALL_DIR}" )
@@ -152,16 +152,32 @@ if( NOT DISABLE_TESTS )
   ExternalProject_Get_Property( FakeIt source_dir )
   set( FAKE_IT_INCLUDE_DIR "${source_dir}/single_header/standalone" )
 
-  if( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
-    string( APPEND CMAKE_CXX_FLAGS " -isystem ${FAKE_IT_INCLUDE_DIR} " )
-  endif( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
-
   set( CM_ENABLE_MOCKING 1 )
 endif( NOT DISABLE_TESTS )
 
-if( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
-  string( APPEND CMAKE_CXX_FLAGS " -isystem ${PLF_COLONY_DIR} " )
-endif( CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU )
+set( LIBLIBW_PREFIX "${PROJECT_BINARY_DIR}/liblibwireshark" )
+set( LIBLIBW_INSTALL_DIR "${LIBLIBW_PREFIX}/install_dir" )
+set( LIBLIBW_LIB_DIR     "${LIBLIBW_INSTALL_DIR}/lib" )
+
+set( LIBLIBW_INCLUDE_DIRS "${LIBLIBW_INSTALL_DIR}/include" )
+
+ExternalProject_Add( liblibwireshark
+  SOURCE_DIR        "${PROJECT_SOURCE_DIR}/external/liblibwireshark"
+  PREFIX            "${LIBLIBW_PREFIX}"
+  CMAKE_ARGS
+#    "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}"
+#    "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}"
+#    "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+#    "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
+   "-DCMAKE_INSTALL_PREFIX=${LIBLIBW_INSTALL_DIR}"
+#    -DDISABLE_TESTS=ON
+#    -DENABLE_CODE_COVERAGE=OFF
+)
+
+add_library( libwireshark        SHARED IMPORTED )
+add_library( libwireshark_static STATIC IMPORTED )
+set_target_properties( libwireshark        PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}libwireshark${CMAKE_SHARED_LIBRARY_SUFFIX}" )
+set_target_properties( libwireshark_static PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark_static${CMAKE_STATIC_LIBRARY_SUFFIX}" )
 
 ####################
 # Generate subdirs #
@@ -175,7 +191,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY}
+  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
@@ -200,14 +216,18 @@ endif( NOT DISABLE_TESTS )
 # Update include directories #
 ##############################
 
-include_directories(
-  ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES}
+include_directories( SYSTEM
   ${CATCH_INCLUDE_DIR}
   ${FAKE_IT_INCLUDE_DIR}
-  ${EPL_DC_INCLUDES_DIR}
   ${PYTHON_INCLUDE_DIRS}
   ${Wireshark_INCLUDE_DIR}
+  ${LIBLIBW_INCLUDE_DIRS}
   ${PLF_COLONY_DIR}
+)
+
+include_directories(
+  ${EPL_DataCollect_LIB_INCLUDE_DIRECTORIES}
+  ${EPL_DC_INCLUDES_DIR}
 )
 
 if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )

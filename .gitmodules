@@ -4,3 +4,6 @@
 [submodule "external/plf_colony"]
 	path = external/plf_colony
 	url = https://github.com/mattreecebentley/plf_colony
+[submodule "external/liblibwireshark"]
+	path = external/liblibwireshark
+	url = https://github.com/epl-viz/liblibwireshark.git
