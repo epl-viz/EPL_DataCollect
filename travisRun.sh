@@ -69,6 +69,7 @@ testExec git pull
 testExec git submodule update --init --recursive
 testExec make install
 testExec pushd ..
+testExec mkdir -p "/usr/include/wireshark"
 testExec find . -name "*.h" ! -path "*build*" -exec cp --parents {} "/usr/include/wireshark" \;
 testExec popd
 testExec popd
