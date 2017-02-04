@@ -43,7 +43,7 @@ CycleBuilder::~CycleBuilder() {
   }
 }
 
-void CycleBuilder::buildNextCycle() noexcept {}
+void CycleBuilder::buildNextCycle() noexcept { (void)handlerPTR; }
 
 
 /*!
