@@ -26,30 +26,33 @@
 /*!
  * \file CycleContainer.cpp
  * \brief Contains class CycleContainer
- * \todo IMPLEMENT
  */
 
 
 #include "CycleContainer.hpp"
+#include "CaptureInstance.hpp"
+
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-CycleContainer::CycleContainer() {}
+CycleContainer::CycleContainer(CaptureInstance *ci) { captureInstance = ci; }
 
 CycleContainer::~CycleContainer() {}
 
-//
-// Methods
-//
+/*!
+   * \brief Returns the specified cycle
+   * \throws When the cycle does not exist
+   * \return The cycle with the given number
+   * \param  cycleNum The ID of the cycle to get
+   */
+Cycle CycleContainer::getCycle(unsigned int cycleNum) const {
+  return captureInstance->getSnapshotManager()->getClosestCycle(cycleNum);
+}
 
 
-// Accessor methods
-//
-
-
-// Other methods
-//
+/*!
+ * \brief Returns the current cycle
+ * \return The current Cycle
+ */
+Cycle CycleContainer::pollCycle() const noexcept { return captureInstance->getCycleBuilder()->getCurrentCycle(); }
 }

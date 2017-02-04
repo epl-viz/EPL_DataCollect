@@ -38,6 +38,7 @@
 #include "EventLog.hpp"
 #include "InputHandler.hpp"
 #include "PluginManager.hpp"
+#include "SnapshotManager.hpp"
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -67,9 +68,10 @@ class CaptureInstance {
   enum CIstate { SETUP, RUNNING, DONE, ERRORED };
 
  private:
-  PluginManager  pluginManager;
-  EventLog       eventLog;
-  CycleContainer cycleContainer;
+  SnapshotManager snapshotManager;
+  PluginManager   pluginManager;
+  EventLog        eventLog;
+  CycleContainer  cycleContainer;
 
   InputHandler iHandler;
   CycleBuilder builder;
@@ -85,7 +87,7 @@ class CaptureInstance {
   mockable int setupLoop();
 
  public:
-  CaptureInstance() : builder(&iHandler) {}
+  CaptureInstance() : cycleContainer(this), builder(&iHandler) {}
   virtual ~CaptureInstance();
 
   CaptureInstance(const CaptureInstance &) = delete;
@@ -107,8 +109,11 @@ class CaptureInstance {
   mockable std::vector<std::string> getDevices() noexcept;
 
   mockable EventLog *getEventLog() noexcept;
+  mockable SnapshotManager *getSnapshotManager() noexcept;
   mockable PluginManager *getPluginManager() noexcept;
   mockable CycleContainer *getCycleContainer() noexcept;
+
+  mockable CycleBuilder *getCycleBuilder() noexcept;
 
   mockable CIstate getState() noexcept;
 };

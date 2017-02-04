@@ -222,7 +222,7 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
 /*!
  * \brief Returns a pointer to the EventLog
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
- * \return EventLog
+ * \return The pointer to the EventLog
  */
 EventLog *CaptureInstance::getEventLog() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
@@ -233,7 +233,7 @@ EventLog *CaptureInstance::getEventLog() noexcept {
 /*!
  * \brief Returns a pointer to the PluginManager
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
- * \return PluginManager
+ * \return The pointer to the PluginManager
  */
 PluginManager *CaptureInstance::getPluginManager() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
@@ -244,7 +244,7 @@ PluginManager *CaptureInstance::getPluginManager() noexcept {
 /*!
  * \brief Returns a pointer to the CycleContainer
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
- * \return CycleContainer
+ * \return The pointer to the CycleContainer
  */
 CycleContainer *CaptureInstance::getCycleContainer() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
@@ -257,5 +257,25 @@ CycleContainer *CaptureInstance::getCycleContainer() noexcept {
 CaptureInstance::CIstate CaptureInstance::getState() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   return state;
+}
+
+/*!
+ * \brief Returns a pointer to the CycleBuilder
+ * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
+ * \return  The pointer to the CycleBuilder
+ */
+CycleBuilder *CaptureInstance::getCycleBuilder() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return &builder;
+}
+
+/*!
+ * \brief Returns a pointer to the SnapshotManager
+ * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
+ * \return The pointer to the SnapshotManager
+ */
+SnapshotManager *CaptureInstance::getSnapshotManager() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return &snapshotManager;
 }
 }

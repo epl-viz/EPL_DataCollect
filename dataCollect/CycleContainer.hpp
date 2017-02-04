@@ -26,7 +26,6 @@
 /*!
  * \file CycleContainer.hpp
  * \brief Contains class CycleContainer
- * \todo IMPLEMENT
  */
 
 #pragma once
@@ -34,97 +33,26 @@
 #include "defines.hpp"
 
 #include "Cycle.hpp"
-#include <vector>
 
 namespace EPL_DataCollect {
+
+class CaptureInstance;
 
 /*!
   * class CycleContainer
   * \brief Container interface for all cycles
   */
 class CycleContainer {
+ private:
+  CaptureInstance *captureInstance;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  CycleContainer();
-
-  /*!
-   * Empty Destructor
-   */
+  CycleContainer() = delete;
+  CycleContainer(CaptureInstance *ci);
   virtual ~CycleContainer();
 
-  // Static Public attributes
-  //
 
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns the specified cycle
-   * \throws When the cycle does not exist
-   * \return Cycle
-   * \param  cycleNum The ID of the cycle to get
-   */
-  Cycle getCycle(unsigned int cycleNum) {
-    (void)cycleNum;
-    return Cycle();
-  }
-
-
-  /*!
-   * \brief Returns the latest cycle
-   * \return Cycle
-   */
-  Cycle pollCycle() { return Cycle(); }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  mockable Cycle getCycle(unsigned int cycleNum) const;
+  mockable Cycle pollCycle() const noexcept;
 };
 }
