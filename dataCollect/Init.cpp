@@ -23,19 +23,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*!
+ * \file Init.cpp
+ * \brief Contains class Init
+ */
 
-#define CATCH_CONFIG_RUNNER
 #include "Init.hpp"
-#include <CycleBuilder.hpp>
-#include <catch.hpp>
+#include <iostream>
+#include <ws_capture.h>
+#include <ws_dissect.h>
 
-int main(int argc, char *argv[]) {
-  EPL_DataCollect::Init init;
-  Catch::Session        session;
+namespace EPL_DataCollect {
 
-  int returnCode = session.applyCommandLine(argc, argv);
-  if (returnCode != 0) // Indicates a command line error
-    return returnCode;
+Init::Init() {
+  auto ret1 = ws_capture_init();
+  auto ret2 = ws_dissect_init();
+  std::cout << "[Init] ws_capture_init returned " << ret1 << std::endl;
+  std::cout << "[Init] ws_dissect_init returned " << ret2 << std::endl;
 
-  return session.run();
+  if (ret1 == 0 && ret2 == 0) {
+    isOK = true;
+  }
+}
+
+Init::~Init() {
+  std::cout << "[Init] finalizing wireshark" << std::endl;
+  ws_capture_finalize();
+  ws_dissect_finalize();
+}
 }

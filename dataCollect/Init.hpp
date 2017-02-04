@@ -23,19 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*!
+ * \file Init.hpp
+ * \brief Contains class Init
+ */
 
-#define CATCH_CONFIG_RUNNER
-#include "Init.hpp"
-#include <CycleBuilder.hpp>
-#include <catch.hpp>
+#pragma once
 
-int main(int argc, char *argv[]) {
-  EPL_DataCollect::Init init;
-  Catch::Session        session;
+#include "defines.hpp"
 
-  int returnCode = session.applyCommandLine(argc, argv);
-  if (returnCode != 0) // Indicates a command line error
-    return returnCode;
+namespace EPL_DataCollect {
 
-  return session.run();
+/*!
+ * \brief Initializes wireshark
+ * This class must be created before all other classes
+ */
+class Init {
+ private:
+  bool isOK = false;
+
+ public:
+  Init();
+  ~Init();
+};
 }

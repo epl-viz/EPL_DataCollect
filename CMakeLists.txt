@@ -60,6 +60,7 @@ set( EPL_DC_INCLUDES_DIR  "${PROJECT_SOURCE_DIR}/include" )
 set( PLF_COLONY_DIR       "${PROJECT_SOURCE_DIR}/external/plf_colony/" )
 
 set( CM_ENABLE_MOCKING 0 )
+set( CM_BUILD_DIR_ROOT "${PROJECT_SOURCE_DIR}" )
 
 ################################
 # Set up the build environment #
@@ -159,7 +160,7 @@ set( LIBLIBW_PREFIX "${PROJECT_BINARY_DIR}/liblibwireshark" )
 set( LIBLIBW_INSTALL_DIR "${LIBLIBW_PREFIX}/install_dir" )
 set( LIBLIBW_LIB_DIR     "${LIBLIBW_INSTALL_DIR}/lib" )
 
-set( LIBLIBW_INCLUDE_DIRS "${LIBLIBW_INSTALL_DIR}/include" )
+set( LIBLIBW_INCLUDE_DIRS "${LIBLIBW_INSTALL_DIR}/include/libwireshark" )
 
 ExternalProject_Add( liblibwireshark
   SOURCE_DIR        "${PROJECT_SOURCE_DIR}/external/liblibwireshark"
@@ -191,7 +192,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark
+  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark stdc++fs
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
@@ -199,7 +200,7 @@ foreach( I IN ITEMS protocolValidator python timeSeries )
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-    DEPENDENCIES epl_DataCollect_shared
+    DEPENDENCIES epl_DataCollect_shared stdc++fs
   )
 endforeach( I IN ITEMS protocolValidator python timeSeries )
 
@@ -208,7 +209,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared
+    DEPENDENCIES epl_DataCollect_shared stdc++fs
   )
 endif( NOT DISABLE_TESTS )
 

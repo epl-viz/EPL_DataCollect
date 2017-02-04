@@ -26,7 +26,6 @@
 /*!
  * \file InputHandler.hpp
  * \brief Contains class InputHandler
- * \todo IMPLEMENT
  */
 
 #pragma once
@@ -35,6 +34,11 @@
 
 #include "Packet.hpp"
 #include <vector>
+
+extern "C" {
+typedef struct ws_capture_t ws_capture_t;
+typedef struct ws_dissect_t ws_dissect_t;
+}
 
 namespace EPL_DataCollect {
 
@@ -50,101 +54,22 @@ namespace EPL_DataCollect {
   * The ODDescription is also copied (\sa ODDescription).
   */
 class InputHandler {
+ private:
+  ws_dissect_t *dissect = nullptr;
+
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  InputHandler();
-
-  /*!
-   * Empty Destructor
-   */
+  InputHandler() = default;
   virtual ~InputHandler();
 
-  // Static Public attributes
-  //
+  InputHandler(const InputHandler &) = delete;
+  InputHandler(InputHandler &&)      = delete;
 
-  // Public attributes
-  //
+  InputHandler &operator=(const InputHandler &) = delete;
+  InputHandler &operator=(InputHandler &&) = delete;
 
+  std::vector<Packet> getCyclePackets(uint32_t cycleNum) noexcept;
+  bool waitForCycle(uint32_t num, uint32_t timeout = 0) noexcept;
 
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief Returns all packets within a complete cycle.
-   * \note Always call waitForCycle first
-   * Throws if the cycle does not exist.
-   *
-   * \return std::vector<Packet>
-   * \param  cycleNum The number of the cycle
-   */
-  std::vector<Packet> getCyclePackets(unsigned int cycleNum) {
-    (void)cycleNum;
-    return std::vector<Packet>();
-  }
-
-
-  /*!
-   * \brief Waits until the specified cycle is available
-   * \note This function should always be called before getCyclePackets
-   * Returns false on timeout.
-   * \return bool
-   * \param  num The number of the cycle to wait for
-   * \param  timeout The timeout in milliseconds (0 for no timeout)
-   */
-  bool waitForCycle(unsigned int num, unsigned long int timeout = 0) {
-    (void)num;
-    (void)timeout;
-    return false;
-  }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  std::vector<Packet> packets;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
- private:
+  void setDissector(ws_dissect_t *dissPTR);
 };
 }

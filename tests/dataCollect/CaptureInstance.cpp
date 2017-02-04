@@ -116,7 +116,9 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
 
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
-    REQUIRE(ci.loadPCAP("") == 0);
+    REQUIRE(ci.loadPCAP("") == 10);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_INSTALL_PREFIX) == 11);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
     REQUIRE(ci.loadPCAP("") == -1);
     REQUIRE(ci.getState() == CaptureInstance::RUNNING);
     REQUIRE(ci.stopRecording() == 0);

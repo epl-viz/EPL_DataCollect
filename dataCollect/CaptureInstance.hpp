@@ -36,10 +36,16 @@
 #include "CycleBuilder.hpp"
 #include "CycleContainer.hpp"
 #include "EventLog.hpp"
+#include "InputHandler.hpp"
 #include "PluginManager.hpp"
 #include <memory>
 #include <mutex>
 #include <vector>
+
+extern "C" {
+typedef struct ws_capture_t ws_capture_t;
+typedef struct ws_dissect_t ws_dissect_t;
+}
 
 namespace EPL_DataCollect {
 
@@ -65,17 +71,21 @@ class CaptureInstance {
   EventLog       eventLog;
   CycleContainer cycleContainer;
 
+  InputHandler iHandler;
   CycleBuilder builder;
 
   std::recursive_mutex accessMutex;
   CIstate              state = SETUP;
+
+  ws_capture_t *capture = nullptr;
+  ws_dissect_t *dissect = nullptr;
 
   Cycle startCycle;
 
   mockable int setupLoop();
 
  public:
-  CaptureInstance() = default;
+  CaptureInstance() : builder(&iHandler) {}
   virtual ~CaptureInstance();
 
   CaptureInstance(const CaptureInstance &) = delete;

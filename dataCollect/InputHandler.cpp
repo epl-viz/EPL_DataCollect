@@ -26,29 +26,43 @@
 /*!
  * \file InputHandler.cpp
  * \brief Contains class InputHandler
- * \todo IMPLEMENT
  */
 
 #include "InputHandler.hpp"
+#include <ws_dissect.h>
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
-InputHandler::InputHandler() {}
-
 InputHandler::~InputHandler() {}
 
-//
-// Methods
-//
+/*!
+ * \brief Returns all packets within a complete cycle.
+ * \note Always call waitForCycle first
+ * Throws if the cycle does not exist.
+ *
+ * \return a std::vector of Packet
+ * \todo IMPLEMENT
+ * \param  cycleNum The number of the cycle
+ */
+std::vector<Packet> InputHandler::getCyclePackets(uint32_t cycleNum) noexcept {
+  (void)cycleNum;
+  return std::vector<Packet>();
+}
 
+/*!
+ * \brief Waits until the specified cycle is available
+ * \note This function should always be called before getCyclePackets
+ * Returns false on timeout.
+ * \return bool
+ * \param  num The number of the cycle to wait for
+ * \param  timeout The timeout in milliseconds (0 for no timeout)
+ * \todo IMPLEMENT
+ */
+bool InputHandler::waitForCycle(uint32_t num, uint32_t timeout) noexcept {
+  (void)num;
+  (void)timeout;
+  return false;
+}
 
-// Accessor methods
-//
-
-
-// Other methods
-//
+void InputHandler::setDissector(ws_dissect_t *dissPTR) { dissect = dissPTR; }
 }

@@ -54,5 +54,6 @@ static const int         EPL_DC_VERSION_SUBMINOR  = @CM_VERSION_SUBMINOR@;
 static const int         EPL_DC_GIT_LAST_TAG_DIFF = @CM_TAG_DIFF@;
 static const std::string EPL_DC_VERSION_GIT       = "@CM_VERSION_GIT@";
 static const std::string EPL_DC_INSTALL_PREFIX    = "@CMAKE_INSTALL_PREFIX@";
+static const std::string EPL_DC_BUILD_DIR_ROOT    = "@CM_BUILD_DIR_ROOT@";
 }
 }

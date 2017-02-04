@@ -33,6 +33,16 @@
 #include "PluginBase.hpp"
 #include "PluginManager.hpp"
 #include <iostream>
+#include <ws_capture.h>
+#include <ws_dissect.h>
+
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 namespace EPL_DataCollect {
 
@@ -51,6 +61,8 @@ int CaptureInstance::setupLoop() {
     state = ERRORED;
     return 1;
   }
+
+  iHandler.setDissector(dissect);
 
   if (!builder.startLoop(startCycle)) {
     state = ERRORED;
@@ -110,6 +122,17 @@ int CaptureInstance::stopRecording() noexcept {
     return -1;
   }
 
+  if (capture) {
+    ws_capture_close(capture);
+    capture = nullptr;
+  }
+
+  if (dissect) {
+    ws_dissect_free(dissect);
+    iHandler.setDissector(nullptr);
+    capture = nullptr;
+  }
+
   if (!builder.stopLoop()) {
     state = ERRORED;
     return 2;
@@ -128,16 +151,39 @@ int CaptureInstance::stopRecording() noexcept {
 /*!
  * \brief loads a previously captured PCAP
  * \param  file The file to load
- * \todo IMPLEMENT
+ * \returns 0  on success
+ * \returns 10 if the file does not exists
+ * \returns 11 if the path is not a file
+ * \returns 12 if the wireshark failed to open the capture
+ * \returns 13 if the wireshark dissector failed to load the capture
  * \sa setupLoop for return values
  */
 int CaptureInstance::loadPCAP(std::string file) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  (void)file;
 
   if (state != SETUP) {
     std::cerr << "[CaptureInstance] (loadPCAP) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
+  }
+
+  fs::path filePath(file);
+
+  if (!fs::exists(filePath)) {
+    return 10;
+  }
+
+  if (!fs::is_regular_file(filePath)) {
+    return 11;
+  }
+
+  capture = ws_capture_open_offline(file.c_str(), 0);
+  if (capture == nullptr) {
+    return 12;
+  }
+
+  dissect = ws_dissect_capture(capture);
+  if (dissect == nullptr) {
+    return 13;
   }
 
   return setupLoop();
@@ -147,11 +193,29 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
 /*!
  * \brief Returns a list of available network devices
  * \return std::vector<std::string>
- * \todo IMPLEMENT
  */
 std::vector<std::string> CaptureInstance::getDevices() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return std::vector<std::string>();
+  std::vector<std::string>              devList;
+
+#if 0
+  ws_capture_interface *interf;
+  int                   numDev = ws_capture_list_interfaces(&interf);
+
+  if (numDev < 0) {
+    std::cerr << "[CaptureInstance] failed to get a list of interfaces. Did you create an Init object?" << std::endl;
+    return devList;
+  }
+
+  for (int i = 0; i < numDev; ++i) {
+    devList.emplace_back(interf->interface);
+    interf = interf->next;
+  }
+
+  ws_capture_free_interfaces(interf);
+#endif
+
+  return devList;
 }
 
 

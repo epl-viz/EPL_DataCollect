@@ -25,6 +25,7 @@
  */
 
 #include <CycleBuilder.hpp>
+#include <InputHandler.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
 
@@ -32,7 +33,9 @@ using namespace EPL_DataCollect;
 using namespace fakeit;
 
 TEST_CASE("Testing CycleBuilder", "[CycleBuilder]") {
-  CycleBuilder cb;
+  Mock<InputHandler> mock;
+
+  CycleBuilder cb(&mock.get());
   Cycle        c;
 
   SECTION("Test Start Stop") {
