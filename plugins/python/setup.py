@@ -14,11 +14,24 @@ setup(
 	cmdclass = {'build_ext': build_ext}
 )
 
+extension = [Extension('Cycle',
+			sources = [ 'Cycle.pyx' ],
+			extra_compile_args = [ '-std=c++14' ],
+			language = 'c++',)
+]
+
+#Wrapper for Cycle class
+setup(ext_modules = cythonize(extension))
+
 #Backend API
 setup(
   name = 'PluginAPI',
   ext_modules=[
-    Extension('PluginAPI', ['PluginAPI.pyx'])
+    Extension('PluginAPI', 
+		sources = ['PluginAPI.pyx'],
+		extra_compile_args = [ '-std=c++14' ],
+		include_dirs = ["../../include", "../../dataCollect/events", "../../external/plf_colony", "../../dataCollect/model"],
+		language = "c++")
     ],
   cmdclass = {'build_ext': build_ext}
 )
@@ -32,13 +45,6 @@ setup(
   cmdclass = {'build_ext': build_ext}
 )
 
-extension = [Extension('Cycle',
-			sources = [ 'Cycle.pyx' ],
-			extra_compile_args = [ '-std=c++14' ],
-			language = 'c++',)
-]
 
-#Wrapper for Cycle class
-setup(ext_modules = cythonize(extension))
 
 
