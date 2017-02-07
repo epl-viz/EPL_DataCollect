@@ -37,9 +37,10 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
   string( REGEX REPLACE "pyx$" "cxx" OUT_FILE "${I}" )
   add_custom_command(
     OUTPUT "${OUT_FILE}"
-    COMMAND cython3 -Wextra -3 --cplus -o ${OUT_FILE} ${I}
+    COMMAND cython -Wextra -3 --cplus -o ${OUT_FILE} ${I}
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMENT "cython: generating ${OUT_FILE}"
+    DEPENDS ${I}
   )
   list( APPEND OUT_FILES ${OUT_FILE} )
 endforeach( I IN LISTS PYTHON_FILES_LIST )
@@ -52,6 +53,11 @@ ${OUT_FILES}
 set( @CM_CURRENT_LIB_INC@
 @CM_CURRENT_SRC_HPP@
 )
+
+
+# Ignore some clang compiler warnings in the generated cython code
+string( REGEX REPLACE "-Weverything" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
+
 
 string( REGEX REPLACE "^[^:]+::" "" OUT_LIB_NAME "@CM_CURRENT_LIB_LC@" )
 string( REGEX REPLACE "^lib"     "" OUT_LIB_NAME "${OUT_LIB_NAME}" )

@@ -10,3 +10,7 @@ customPreCommit.sh
 EPLEnum2Str.*
 *.cxx
 /plugins/python/*.h
+/plugins/python/dataCollect
+/plugins/python/build
+/plugins/python/test
+/plugins/python/*.so
