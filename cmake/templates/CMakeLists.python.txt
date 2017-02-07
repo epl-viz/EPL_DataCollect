@@ -40,6 +40,7 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
     COMMAND cython3 -Wextra -3 --cplus -o ${OUT_FILE} ${I}
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMENT "cython: generating ${OUT_FILE}"
+    DEPENDS ${I}
   )
   list( APPEND OUT_FILES ${OUT_FILE} )
 endforeach( I IN LISTS PYTHON_FILES_LIST )

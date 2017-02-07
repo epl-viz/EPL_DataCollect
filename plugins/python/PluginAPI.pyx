@@ -68,7 +68,7 @@ def addFilter(filters):
 	pass
 
 ###import###
-cdef extern from "PythonPlugin.cpp" namespace "EPL_DataCollect::plugins":
+cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
 	cdef cppclass PythonPlugin:
 		@staticmethod
 		CCycle.Cycle* getCurrentCycle()
