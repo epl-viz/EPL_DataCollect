@@ -42,7 +42,7 @@ PythonPlugin::PythonPlugin() {}
 
 PythonPlugin::~PythonPlugin() {}
 
-PythonPlugin::getCurrentCycle() {
+Cycle* PythonPlugin::getCurrentCycle() {
     return new Cycle();
 }
 
