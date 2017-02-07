@@ -53,6 +53,11 @@ set( @CM_CURRENT_LIB_INC@
 @CM_CURRENT_SRC_HPP@
 )
 
+
+# Ignore some clang compiler warnings in the generated cython code
+string( REGEX REPLACE "-Weverything" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
+
+
 string( REGEX REPLACE "^[^:]+::" "" OUT_LIB_NAME "@CM_CURRENT_LIB_LC@" )
 string( REGEX REPLACE "^lib"     "" OUT_LIB_NAME "${OUT_LIB_NAME}" )
 
