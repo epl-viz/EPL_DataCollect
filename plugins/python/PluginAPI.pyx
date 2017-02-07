@@ -8,10 +8,6 @@ data.
 :author: Denis Megerle
 """
 
-
-from Cycle cimport Cycle
-from libcpp.vector cimport vector
-
 def getCycle(number):
 	"""
 	\brief This method gets a cycle at any given moment.
@@ -26,6 +22,7 @@ def getCycle(number):
 	@return Cycle :
 	@author
 	"""
+	## TODO: implement ##
 	return 0
 	
 def getAmountOfCN():
@@ -89,12 +86,3 @@ def addFilter(filters):
 	
 	## TODO: implement ##
 	pass
-
-
-##########################wrapping needed classes########################
-
-
-cdef extern from "../../dataCollect/CycleContainer.hpp" namespace "EPL_DataCollect":
-	cdef cppclass CycleContainer:
-		@staticmethod
-		Cycle getCycle(unsigned int)

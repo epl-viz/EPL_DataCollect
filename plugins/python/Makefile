@@ -1,6 +1,6 @@
 
 api:
-	python3 setup.py build_ext --inplace
+	python3 setup.py build_ext --inplace		#CURRENTLY RETURNS DEFINES.HPP NOT FOUND ERROR
 	#python3 TestAPI.py	#WITH TEST
 
 plugin:
