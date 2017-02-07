@@ -30,6 +30,7 @@
  */
 
 #include "PythonPlugin.hpp"
+#include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -40,6 +41,10 @@ namespace plugins {
 PythonPlugin::PythonPlugin() {}
 
 PythonPlugin::~PythonPlugin() {}
+
+PythonPlugin::getCurrentCycle() {
+    return new Cycle();
+}
 
 //
 // Methods

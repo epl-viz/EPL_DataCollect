@@ -62,6 +62,7 @@ class PythonPlugin : public PluginBase {
   // Static Public attributes
   //
 
+  static Cycle* getCurrentCycle();
   // Public attributes
   //
 

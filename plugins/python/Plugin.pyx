@@ -154,7 +154,7 @@ def main():
 	prefix = package.__name__ + "."
 	print(prefix)
 	for importer, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
-		print "Found submodule %s (is a package: %s)" % (modname, ispkg)
+		print("Found submodule %s (is a package: %s)" % (modname, ispkg))
 		module = __import__(modname, fromlist="dummy")
 		exec(modname + ".run()")
-		print "Imported", module
+		print("Imported", module)

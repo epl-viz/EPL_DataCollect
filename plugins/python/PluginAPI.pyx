@@ -1,4 +1,3 @@
-cimport
 """
 \brief The plugin api provides some basic functionality and convenience method
 for user plugins.
@@ -9,10 +8,6 @@ data.
 :author: Denis Megerle
 """
 
-cdef Cycle* currentCycle = getCurrentCycle()
-
-cdef getCurrentCycle():
-	return Cycle.
 def getCycle(number):
 	"""
 	\brief This method gets a cycle at any given moment.
