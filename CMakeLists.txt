@@ -113,8 +113,8 @@ add_compiler(
 ######################
 
 find_package( Git              REQUIRED )
-find_package( PythonInterp 3.6 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
-find_package( PythonLibs   3.6 REQUIRED )
+find_package( PythonInterp 3.5 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
+find_package( PythonLibs   3.5 REQUIRED )
 find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
 
