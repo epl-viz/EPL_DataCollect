@@ -33,11 +33,11 @@ setup(
 )
 
 #Wrapper for Cycle class
+src = [ 'Cycle.pyx', '../../dataCollect/model/Cycle.cpp', '../../dataCollect/model/Packet.cpp', '../../dataCollect/model/ODDescription.cpp', '../../dataCollect/model/PacketDiff.cpp', '../../dataCollect/model/ODEntry.cpp', '../../dataCollect/model/OD.cpp', '../../dataCollect/model/Node.cpp', '../../dataCollect/model/ODEntryContainer.cpp']
 extension = [Extension('Cycle',
-			sources = [ 'Cycle.pyx' ],
+			sources = src,
 			include_dirs = ['../../include', '../../dataCollect/events', '../../external/plf_colony', '../../dataCollect/model'],
 			extra_compile_args = [ '-std=c++14' ],
-			extra_link_args = ["-L../../dataCollect/model"],
 			language = 'c++',)
 ]
 

@@ -8,3 +8,9 @@
 *.pyc
 customPreCommit.sh
 EPLEnum2Str.*
+
+cmake/
+
+plugins/python/dataCollect/model/
+
+plugins/python/build/temp\.linux-x86_64-3\.5/
