@@ -37,7 +37,7 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
   string( REGEX REPLACE "pyx$" "cxx" OUT_FILE "${I}" )
   add_custom_command(
     OUTPUT "${OUT_FILE}"
-    COMMAND cython3 -Wextra -3 --cplus -o ${OUT_FILE} ${I}
+    COMMAND cython -Wextra -3 --cplus -o ${OUT_FILE} ${I}
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMENT "cython: generating ${OUT_FILE}"
     DEPENDS ${I}
