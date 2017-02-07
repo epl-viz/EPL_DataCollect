@@ -50,7 +50,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   }
 
   REQUIRE(p.getODDesc() == nullptr);
-  REQUIRE(p.getOtherData() == other);
+  REQUIRE(p.getMiscData() == other);
   REQUIRE(p.getWiresharkString() == wire);
   REQUIRE(p.getDestNode() == 20);
   REQUIRE(p.getSrcNode() == 10);
