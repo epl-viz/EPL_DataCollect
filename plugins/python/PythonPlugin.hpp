@@ -35,6 +35,7 @@
 #include "defines.hpp"
 #include "CSPythonPluginStorage.hpp"
 #include "PluginBase.hpp"
+#include "Cycle.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
