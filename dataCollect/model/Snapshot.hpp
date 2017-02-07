@@ -26,7 +26,6 @@
 /*!
  * \file Snapshot.hpp
  * \brief Contains class Snapshot
- * \todo IMPLEMENT
  */
 
 
@@ -40,77 +39,16 @@
 namespace EPL_DataCollect {
 
 /*!
-  * class Snapshot
+  * struct Snapshot
   * \brief Contains a full copy of a Cycle
   *
   * May contain additional information if necessary.
   */
-class Snapshot {
- public:
-  // Constructors/Destructors
-  //
+struct Snapshot final {
+  typedef std::chrono::system_clock::time_point TIME_POINT;
 
-
-  /*!
-   * Empty Constructor
-   */
-  Snapshot();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~Snapshot();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  Cycle cycle;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  Cycle      cycle;
+  uint32_t   cycleNum;
+  TIME_POINT creationTime;
 };
 }
