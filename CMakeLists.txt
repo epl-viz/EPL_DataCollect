@@ -196,10 +196,14 @@ new_project_library(
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
+  set( TEMPLATE_TYPE lib )
+  if( I STREQUAL "python" )
+    set( TEMPLATE_TYPE python )
+  endif( I STREQUAL "python" )
   new_project_library(
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
-    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.${TEMPLATE_TYPE}.txt"
     DEPENDENCIES epl_DataCollect_shared stdc++fs
   )
 endforeach( I IN ITEMS protocolValidator python timeSeries )
