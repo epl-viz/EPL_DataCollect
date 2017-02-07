@@ -55,7 +55,7 @@ class Packet {
   plf::colony<PacketDiff> diffs;
 
   std::string wiresharkSTR = "";
-  std::string otherData    = "<N/A>";
+  std::string miscData     = "<N/A>";
 
   uint32_t nodeSource;
   uint32_t nodeDest;
@@ -93,7 +93,7 @@ class Packet {
   mockable uint8_t getTransactionID() const noexcept;
   mockable uint32_t getNumSegments() const noexcept;
   mockable plf::colony<PacketDiff> *getDiffs() noexcept;
-  mockable std::string getOtherData() const noexcept;
+  mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;
   mockable ODDescription *getODDesc() noexcept;
   mockable uint32_t getSrcNode() const noexcept;

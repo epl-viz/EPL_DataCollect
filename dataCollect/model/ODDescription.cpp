@@ -104,6 +104,9 @@ void ODDescription::applyDesc(ODDescription &desc) noexcept {
   }
 }
 
-
+/*!
+ * \brief Returns a map of entries of the Object Dictionary Description
+ * \returns The entries of the OD Description as a map
+ */
 ODDescription::MAP &ODDescription::getEntries() noexcept { return entries; }
 }

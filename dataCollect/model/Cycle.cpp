@@ -106,8 +106,9 @@ Node Cycle::getNode(uint8_t node) { return nodes.at(node); }
 CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
   auto cs = cycleStorages.find(id);
 
+  // Check if an entry with id exists
   if (cs == cycleStorages.end()) {
-    return nullptr;
+    return nullptr; // No entry with id found
   } else {
     return cs->second.get();
   }

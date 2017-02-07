@@ -56,14 +56,14 @@ class CycleStorageBase {
   CycleStorageBase &operator=(CycleStorageBase &&) = default;
 
   /*!
-   * \brief Returns a numeric Representation of the stored information
-   * \return double
+   * \brief Returns a numeric representation of the stored information
+   * \return The numeric value of the stored information
    */
   virtual double getNumericValue() = 0;
 
   /*!
-   * \brief Returns whether the Entry can be represented as ONE numeric value
-   * \return bool
+   * \brief Returns whether the entry can be represented as ONE numeric value
+   * \return True if this entry can be represented as a numeric value, false if not
    */
   virtual bool isNumericValue() = 0;
 

@@ -57,10 +57,6 @@ class PacketDiff {
   PacketDiff &operator=(const PacketDiff &) = default;
   PacketDiff &operator=(PacketDiff &&) = default;
 
-  /*!
-   * \brief Get the Index of the OD
-   * \returns The Index
-   */
   uint16_t getIndex() const noexcept;
   ODEntry *getEntry() noexcept;
 };

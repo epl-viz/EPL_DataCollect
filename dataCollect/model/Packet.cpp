@@ -7,7 +7,7 @@
  *       notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
+ *       documentation and/or misc materials provided with the distribution.
  *     * Neither the name of the EPL-Vizards nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
@@ -35,13 +35,13 @@ namespace EPL_DataCollect {
 /*!
  * \brief The constructor
  * \param t         The type of the packet
- * \param cID       the command ID of the packet
- * \param oDesc     a pointer to the odDescription
+ * \param cID       The command ID of the packet
+ * \param oDesc     A pointer to the odDescription
  * \param wireSTR   The wireshark string representation of the packet
- * \param other     Other data
+ * \param misc     Miscellaneous data
  * \param src       The ID of the sending node
- * \param dest      The ID of the recieving node
- * \param ts        The timeStamp of the packet
+ * \param dest      The ID of the receiving node
+ * \param ts        The timestamp of the packet
  * \param tID       The Packet transaction ID
  * \param nSegments The number of segments this packet was split
  */
@@ -49,7 +49,7 @@ Packet::Packet(PacketType     t,
                CommandID      cID,
                ODDescription *oDesc,
                std::string    wireSTR,
-               std::string    other,
+               std::string    misc,
                uint32_t       src,
                uint32_t       dest,
                TIME_POINT     ts,
@@ -59,7 +59,7 @@ Packet::Packet(PacketType     t,
       commandID(cID),
       odDesc(oDesc),
       wiresharkSTR(wireSTR),
-      otherData(other),
+      miscData(misc),
       nodeSource(src),
       nodeDest(dest),
       timeStamp(ts),
@@ -70,80 +70,90 @@ Packet::~Packet() {}
 
 bool Packet::operator==(const Packet &r) const {
   return ((type == r.type) && (commandID == r.commandID) && (odDesc == r.odDesc) && (wiresharkSTR == r.wiresharkSTR) &&
-          (otherData == r.otherData) && (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp) &&
+          (miscData == r.miscData) && (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp) &&
           (transactionID == r.transactionID) && (numOfSegments == r.numOfSegments));
 }
 
 /*!
  * \brief Returns the packet type
- * \return PacketType
+ * \return The packet type as a PacketType
  */
 PacketType Packet::getType() const noexcept { return type; }
 
 
 /*!
  * \brief Returns the Command ID of the packet
+ * \returns The Command ID of this packet as a CommandID
  */
 CommandID Packet::getCommandID() const noexcept { return commandID; }
 
 
 /*!
- * \brief Returns the transaction id of the packet
+ * \brief Returns the transaction ID of the packet
+ * \returns The transaction ID of this packet as an unsigned char
  */
 uint8_t Packet::getTransactionID() const noexcept { return transactionID; }
 
 
 /*!
- * \brief Returns the number of segments this packet was split
+ * \brief Returns the number of segments this packet is split into
+ * \returns The number of segments this packet is split into as an unsigned integer
  */
 uint32_t Packet::getNumSegments() const noexcept { return numOfSegments; }
 
 
 /*!
  * \brief Returns the changes of the packet in the OD
- * \returns the diffs as a pointer to a plf::colony
+ * \returns The created diffs as a pointer to a plf::colony
  */
 plf::colony<PacketDiff> *Packet::getDiffs() noexcept { return &diffs; }
 
 
 /*!
- * \brief Returns other data as a std::string
- * \return std::string
+ * \brief Returns miscellaneous data
+ * \return The miscellaneous data of this packet as a std::string
  */
-std::string Packet::getOtherData() const noexcept { return otherData; }
+std::string Packet::getMiscData() const noexcept { return miscData; }
 
 
 /*!
- * \brief Returns the wireshark data parsed and formated
- * \return std::string
+ * \brief Returns the data that was parsed and formatted by Wireshark
+ * \return The packet data as given by Wireshark as a std::string
  */
 std::string Packet::getWiresharkString() const noexcept { return wiresharkSTR; }
 
 
 /*!
- * \brief Returns a pointer to the parsed OD information
- * \return ODDescription *
+ * \brief Returns a pointer to the parsed OD information (The OD Description)
+ * \return The pointer to the ODDescription of this packet
  */
 ODDescription *Packet::getODDesc() noexcept { return odDesc; }
 
 
 /*!
- * \brief Returns the ID of the sending node
+ * \brief Returns the ID of the source (sending) node
+ * \returns The ID of the source node as an unsigned integer
  */
 uint32_t Packet::getSrcNode() const noexcept { return nodeSource; }
 
 
 /*!
- * \brief Returns the ID of the recieving node
+ * \brief Returns the ID of the destination (receiving) node
+ * \returns The ID of the destination node as an unsigned integer
  */
 uint32_t Packet::getDestNode() const noexcept { return nodeDest; }
 
 
 /*!
- * \brief Returns the time Stamp
+ * \brief Returns the timestamp of this packet
+ * \returns The timestamp of this packet as a TIME_POINT
  */
 Packet::TIME_POINT Packet::getTimeStamp() const noexcept { return timeStamp; }
 
-
+/*!
+ * \brief Creates a new diff of data stored in 'entry' for the OD entry with given 'index' and adds it to the colony
+ * \param index The index in the OD of the data that has been changed by the diff
+ * \param entry The container of the data to create the diff for
+ */
 void Packet::addDiff(uint16_t index, ODEntryContainer entry) noexcept { diffs.emplace(index, std::move(entry)); }
 }

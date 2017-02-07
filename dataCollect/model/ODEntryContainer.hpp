@@ -106,7 +106,7 @@ class ODEntryContainer final {
 template <class C>
 C *ODEntryContainer::getData() noexcept {
   static_assert(sizeof(C) <= internal::calcSize(), "Invalid data type");
-  static_assert(std::is_base_of<ODEntry, C>::value, "C is not drived from ODEntry");
+  static_assert(std::is_base_of<ODEntry, C>::value, "C is not derived from ODEntry");
   return reinterpret_cast<C *>(data);
 }
 
@@ -116,7 +116,7 @@ C *ODEntryContainer::getData() noexcept {
 template <class C>
 C *ODEntryContainer::init(ObjectDataType type) noexcept {
   static_assert(sizeof(C) <= internal::calcSize(), "Invalid data type");
-  static_assert(std::is_base_of<ODEntry, C>::value, "C is not drived from ODEntry");
+  static_assert(std::is_base_of<ODEntry, C>::value, "C is not derived from ODEntry");
 
   return new (data) C(type); // This created C on top of the already allocated memory data
 }

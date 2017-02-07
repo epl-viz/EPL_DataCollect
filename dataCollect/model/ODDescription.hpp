@@ -42,7 +42,7 @@ namespace EPL_DataCollect {
   *
   * This structure is generated and managed by the Wireshark backend.
   * For each node one object is created.
-  * Each disected packet in the Wireshark backend and C++ backend Packet class has a
+  * Each dissected packet in the Wireshark backend and C++ backend Packet class has a
   * pointer to its corresponding ODDescription.
   * It is the responsibility of the CycleBuilder to interpret the Packet data with
   * the information of this struct.

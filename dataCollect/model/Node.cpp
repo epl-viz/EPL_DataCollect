@@ -48,7 +48,7 @@ OD *Node::getOD() noexcept { return &od; }
 
 /*!
  * \brief Returns a pointer to the Object Dictionary Description of the Node
- * \return The pointer to the OD
+ * \return The pointer to the OD Description
  */
 ODDescription *Node::getODDesc() noexcept { return od.getODDesc(); }
 
