@@ -9,17 +9,17 @@ src_api = [ 'PluginAPI.pyx', '../../dataCollect/PluginBase.cpp', '../../dataColl
 ## OPTIONS
 # Cycle.pyx options
 CYC_EXT = [Extension('Cycle',
-			sources = src_cycle,
-			include_dirs = INCL_DIRS,
-			extra_compile_args = [ '-std=c++14' ],
-			language = 'c++',)
+      sources = src_cycle,
+      include_dirs = INCL_DIRS,
+      extra_compile_args = [ '-std=c++14' ],
+      language = 'c++',)
 ]
 
 API_EXT = [Extension('PluginAPI',
-			sources = src_api,
-			include_dirs = INCL_DIRS,
-			extra_compile_args = [ '-std=c++14' ],
-			language = 'c++',)
+      sources = src_api,
+      include_dirs = INCL_DIRS,
+      extra_compile_args = [ '-std=c++14' ],
+      language = 'c++',)
 ]
 
 
@@ -37,13 +37,13 @@ setup(
 
 #Plugin Wrapper
 setup(
-	name = 'Plugin',
-	ext_modules = [ 
-		Extension("Plugin",
-           		sources=["Plugin.pyx"],  # additional source file(s)
-           		language="c++"),             # generate C++ code
-      	],
-	cmdclass = {'build_ext': build_ext}
+  name = 'Plugin',
+  ext_modules = [
+    Extension("Plugin",
+              sources=["Plugin.pyx"],  # additional source file(s)
+              language="c++"),             # generate C++ code
+        ],
+  cmdclass = {'build_ext': build_ext}
 )
 
 ## SETUPS

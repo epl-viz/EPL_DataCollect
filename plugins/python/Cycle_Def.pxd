@@ -5,19 +5,19 @@ from libcpp cimport bool
 # DEFINITION FILE!
 
 cdef cppclass Cycle:
-	Cycle() except +
-	int getNumNodes()
-	int getCycleNum()
-	vector[EventBase *] getActiveEvents()
-	Node getNode(int)
-	bool registerCycleStorage(string, CycleStorageBase)
-	CycleStorageBase* getCycleStorage(string)
-		
+  Cycle() except +
+  int getNumNodes()
+  int getCycleNum()
+  vector[EventBase *] getActiveEvents()
+  Node getNode(int)
+  bool registerCycleStorage(string, CycleStorageBase)
+  CycleStorageBase* getCycleStorage(string)
+
 cdef cppclass EventBase:
-	EventBase() except +
-		
+  EventBase() except +
+
 cdef cppclass Node:
-	Node() except +
-		
+  Node() except +
+
 cdef cppclass CycleStorageBase:
-	CycleStorageBase() except +
+  CycleStorageBase() except +

@@ -3,7 +3,7 @@ import Cycle
 import PluginAPI
 # just a quick test method to check whether calls to all parties work, TODO delete
 class PyCycle(Cycle.Cycle):
-	pass
+  pass
 
 #Plugin.main()
 pc = PyCycle()
