@@ -100,7 +100,7 @@ testExec testCheckFail
 if [[ "$CXX" == "g++" ]]; then
   msg "Parsing coverage data"
   testExec lcov --directory . --capture --output-file coverage.info
-  testExec lcov --remove coverage.info '/usr/*' '*catch*.h*' '*/FakeIt/*' '*/external/*' '*/EPLEnum2Str*' '*/tests/*' --output-file coverage.info
+  testExec lcov --remove coverage.info '/usr/*' '*catch*.h*' '*/FakeIt/*' '*/external/*' '*/EPLEnum2Str*' '*/tests/*' '*.cxx' '*.h' --output-file coverage.info
   testExec lcov --list coverage.info
   testExec cp coverage.info /
 else
