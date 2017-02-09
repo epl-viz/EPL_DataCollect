@@ -156,7 +156,7 @@ if( NOT DISABLE_TESTS )
   set( CM_ENABLE_MOCKING 1 )
 endif( NOT DISABLE_TESTS )
 
-set( LIBLIBW_PREFIX "${PROJECT_BINARY_DIR}/liblibwireshark" )
+set( LIBLIBW_PREFIX      "${PROJECT_BINARY_DIR}/liblibwireshark" )
 set( LIBLIBW_INSTALL_DIR "${LIBLIBW_PREFIX}/install_dir" )
 set( LIBLIBW_LIB_DIR     "${LIBLIBW_INSTALL_DIR}/lib" )
 
@@ -178,7 +178,7 @@ ExternalProject_Add( liblibwireshark
 add_library( libwireshark        SHARED IMPORTED )
 add_library( libwireshark_static STATIC IMPORTED )
 set_target_properties( libwireshark        PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}libwireshark${CMAKE_SHARED_LIBRARY_SUFFIX}" )
-set_target_properties( libwireshark_static PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark_static${CMAKE_STATIC_LIBRARY_SUFFIX}" )
+set_target_properties( libwireshark_static PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark${CMAKE_STATIC_LIBRARY_SUFFIX}" )
 
 ####################
 # Generate subdirs #
@@ -192,7 +192,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark stdc++fs
+  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark_static stdc++fs
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
