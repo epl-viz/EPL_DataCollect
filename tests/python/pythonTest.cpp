@@ -24,9 +24,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+
 #include <Plugin_api.h>
 #include <catch.hpp>
 #include <fakeit.hpp>
+
+#pragma clang diagnostic pop
 
 using namespace fakeit;
 
