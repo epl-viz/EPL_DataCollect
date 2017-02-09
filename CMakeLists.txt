@@ -213,7 +213,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared stdc++fs
+    DEPENDENCIES epl_DataCollect_shared stdc++fs eplp_python_shared
   )
 endif( NOT DISABLE_TESTS )
 

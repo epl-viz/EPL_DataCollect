@@ -14,23 +14,23 @@ import pkgutil
 
 
 # test code to run from c++ ---------
-cdef public double cy_fct(double val):
+cdef api double cy_fct(double val):
   return val
 
 ######### 1. create class to use from c++, 2. write constructor function,
 ######### 3. write wrapper function to use those from c++...
-cdef public class PyPlug[object PyPlug, type PyType]:
+cdef api class PyPlug[object PyPlug, type PyType]:
   def __cinit__(self):
     pass
-  cdef public int run(self):
+  cdef api int run(self):
     return 52
 
 ## constructor function for c++
-cdef public PyPlug buildPyPlug():
+cdef api PyPlug buildPyPlug():
   return PyPlug()
 
 ## wrapper functions for c
-cdef public int run_wrapper(PyPlug obj):
+cdef api int run_wrapper(PyPlug obj):
   return obj.run()
 # -------------------------------end
 
