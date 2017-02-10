@@ -1,60 +1,71 @@
-from libcpp cimport bool
-from libcpp.string cimport string
-from libcpp.map cimport map
-from libcpp.pair cimport pair
-from libcpp.vector cimport vector
-import time
-import pyPlugins
-from pyPlugins import *
-import pkgutil
 cimport CPlugin
-## PyInit -> initmodule -> run function from c++ for test use ##
+import importlib
+from libcpp.string cimport string
+
+###########----TESTMETHODS----#############
+def main():
+  pluggerino = Plugin("pyPlugins.PluginA")
+  pluggerino.initialize()
+  pluggerino.run()
+  print(pluggerino.getDependencies())
+  print(pluggerino.getID())
+###########----TESTMETHODS----#############
+
+cdef api class Plugin[object PyPlug, type PyType]:
+  # TODO: declare cdef Cycle.Cycle() (cython cycle)
+  cdef object pyObject  # python object -> either module and run/init or create an object from the class in this module
+  
+  def __cinit__(self, modname):
+    importedModule = importlib.import_module(modname)    
+    self.pyObject = importedModule
+
+  cpdef api initialize(self):
+    try:
+      self.pyObject.initialize()
+    except:
+      print("Warning: " + self.pyObject.__name__ + " initialize method is missing!\n" \
+              + "Skipping...")      # no init has to be given since there might be applications that don't need it
+
+  cpdef api int run(self):
+    return 52   ##TODO: update cycle* of declared and start run method of pyObject.
+
+  cpdef api getDependencies(self):
+    try:
+      return self.pyObject.getDependencies()
+    except:
+      print("Warning: " + self.pyObject.__name__ + " getDependencies method is missing!\n" \
+             +"Will be treated as no dependencies...")
+      return ""
+
+  cpdef api getID(self):
+    try:
+      return self.pyObject.getID()
+    except:
+      print("Error: " + self.pyObject.__name__ + " getID method is missing!\n" \
+             +"A plugin needs an ID!")
 
 
 
 
-# test code to run from c++ ---------
-cdef api double cy_fct(double val):
-  return val
 
-######### 1. create class to use from c++, 2. write constructor function,
-######### 3. write wrapper function to use those from c++...
-cdef api class PyPlug[object PyPlug, type PyType]:
-  def __cinit__(self):
-    pass
-  cdef api int run(self):
-    return 52
 
-## constructor function for c++
-cdef api PyPlug buildPyPlug():
-  return PyPlug()
 
-## wrapper functions for c
-cdef api int run_wrapper(PyPlug obj):
+## Constructor function for C++ TODO: test in c++ for string conversion
+cdef api Plugin buildPlugin(name):
+  return Plugin(name)
+
+## Wrapper functions for C++
+cdef api int run(Plugin obj):
   return obj.run()
 # -------------------------------end
 
-cdef class PyPlugin:
-  cdef int a
-  cdef bla(self):
-    print("bla function running")
-
-
-# --> TODO: create cdef class that can be inited from C++ !
-# --> TODO: in this cdef class create a constructor, the cdef class needs to have a python
-      #class as attribute. in the constructor instanciate this pyclass with the
-      #given Plugin.
-# --> TODO: add glue methods, redirect the run method of cdef class to the attribute pyclass.run 				#class!
-
-
-
 
 # THIS IS THE ACCORDING PYTHON CLASS
-class Plugin (object):
+class PyPlugin (object):
 
   #TEST CONSTR
   def __init__(self):
-    self.ident = time.time()
+    self.ident = "--PyPlugin--"
 
   """
   \brief This class represents a custom user plugin base.
@@ -141,20 +152,7 @@ class Plugin (object):
     """
     pass
 
-#Testmethod
-def main():
-  print("main running...")
-  plug = PyPlugin()
-  plug.bla()
-  plug2 = Plugin()
-  plug2.run(0)
-  PluginA.run()
-  PluginB.run()
-  package = pyPlugins
-  prefix = package.__name__ + "."
-  print(prefix)
-  for importer, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
-    print("Found submodule %s (is a package: %s)" % (modname, ispkg))
-    module = __import__(modname, fromlist="dummy")
-    exec(modname + ".run()")
-    print("Imported", module)
+
+# test code to run from c++ ---------TODO: Delete
+cdef api double cy_fct(double val):
+  return val

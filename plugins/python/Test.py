@@ -12,5 +12,5 @@ print(pc.getActiveEvents())
 print(pc.getODEntry(0,0x1000))
 
 PluginAPI.getAmountOfCN()
-
+print("------------PLUGIN TEST-------------")
 Plugin.main()
