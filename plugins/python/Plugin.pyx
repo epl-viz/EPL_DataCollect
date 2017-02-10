@@ -19,7 +19,7 @@ cdef api class Plugin[object PyPlug, type PyType]:
     importedModule = importlib.import_module(modname)    
     self.pyObject = importedModule
 
-  cpdef api initialize(self):
+  cpdef api void initialize(self):
     try:
       self.pyObject.initialize()
     except:
@@ -55,12 +55,18 @@ cdef api Plugin buildPlugin(name):
   return Plugin(name)
 
 ## Wrapper functions for C++
-cdef api int run(Plugin obj):
+cdef api void initialize_wrapper(Plugin obj):
+  obj.initialize()
+cdef api int run_wrapper(Plugin obj): #TODO: add cycle* to params
   return obj.run()
+cdef api string getDependencies_wrapper(Plugin obj):
+  return obj.getDependencies()
+cdef api string getID_wrapper(Plugin obj):
+  return obj.getID()
 # -------------------------------end
 
 
-# THIS IS THE ACCORDING PYTHON CLASS
+# THIS IS THE ACCORDING PYTHON CLASS (TODO: delete since unnecessary)
 class PyPlugin (object):
 
   #TEST CONSTR
