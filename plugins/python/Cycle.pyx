@@ -20,6 +20,10 @@ cdef class Cycle:
   cpdef int getCycleNum(self):
     return self._C_Cycle.getCycleNum()
 
+  cdef void updateCycle(self, CCycle.Cycle* newCycle):
+    if newCycle != NULL:
+      self._C_Cycle = newCycle
+
   cpdef bool registerCycleStorage(self):
     pass  ##TODO
 
