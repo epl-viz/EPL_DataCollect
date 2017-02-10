@@ -5,7 +5,7 @@ from Cython.Build import cythonize
 
 INCL_DIRS = [ '../../include', '../../dataCollect/events', '../../external/plf_colony', '../../dataCollect/model', '../../dataCollect']
 src_cycle = [ 'Cycle.pyx', '../../dataCollect/model/Cycle.cpp', '../../dataCollect/model/Packet.cpp', '../../dataCollect/model/ODDescription.cpp', '../../dataCollect/model/PacketDiff.cpp', '../../dataCollect/model/ODEntry.cpp', '../../dataCollect/model/OD.cpp', '../../dataCollect/model/Node.cpp', '../../dataCollect/model/ODEntryContainer.cpp']
-src_api = [ 'PluginAPI.pyx', '../../dataCollect/PluginBase.cpp', '../../dataCollect/events/EventBase.cpp', '../../dataCollect/model/Cycle.cpp', '../../dataCollect/model/Packet.cpp', '../../dataCollect/model/ODDescription.cpp', '../../dataCollect/model/PacketDiff.cpp', '../../dataCollect/model/ODEntry.cpp', '../../dataCollect/model/OD.cpp', '../../dataCollect/model/Node.cpp', '../../dataCollect/model/ODEntryContainer.cpp', '../../dataCollect/EPLEnum2Str.cpp', 'CSPythonPluginStorage.cpp', '../../dataCollect/model/CycleStorageBase.cpp' ]
+src_api = [ 'PluginAPI.pyx', 'PythonPlugin.cpp', '../../dataCollect/PluginBase.cpp', '../../dataCollect/events/EventBase.cpp', '../../dataCollect/model/Cycle.cpp', '../../dataCollect/model/Packet.cpp', '../../dataCollect/model/ODDescription.cpp', '../../dataCollect/model/PacketDiff.cpp', '../../dataCollect/model/ODEntry.cpp', '../../dataCollect/model/OD.cpp', '../../dataCollect/model/Node.cpp', '../../dataCollect/model/ODEntryContainer.cpp', '../../dataCollect/EPLEnum2Str.cpp', 'CSPythonPluginStorage.cpp', '../../dataCollect/model/CycleStorageBase.cpp' ]
 ## OPTIONS
 # Cycle.pyx options
 CYC_EXT = [Extension('Cycle',

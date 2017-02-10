@@ -14,7 +14,12 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
 
 cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass EventBase:
-    EventBase() except +
+    EventBase(EvType, string, string, string, string, int, Cycle*, INDEX_MAP) except +
+    string getTypeAsString()
+    string getName()
+    string getDescription()
+    string getPluginID()
+    int getEventFlags()
 
 cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
   cdef cppclass Node:
@@ -23,3 +28,14 @@ cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
 cdef extern from "../../dataCollect/model/CycleStorageBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass CycleStorageBase:
     CycleStorageBase() except +
+
+cdef extern from "../../include/EPLEnums.h":
+  ctypedef enum EvType:
+    EVT_PROTO_ERROR,EVT_ERROR,
+    EVT_WARNING,
+    EVT_INFO,
+    EVT_DEBUG,
+    EVT_PLUGIN_EV_TEXT,
+    EVT_PLUGIN_OTHER = 0x1000,
+    EVT_FRONTEND_OTHER = 0x2000,
+    EVT_UNKNOWN
