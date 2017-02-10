@@ -9,5 +9,6 @@ class PyCycle(Cycle.Cycle):
 pc = PyCycle()
 print(pc.getCycleNum())
 print(pc.getActiveEvents())
+print(pc.getODEntry(0,0x1000))
 
 PluginAPI.getAmountOfCN()

@@ -1,6 +1,8 @@
 cimport CCycle
 from libcpp.vector cimport vector
 
+cdef int ERRVAL = -1
+
 cdef class Cycle:
   cdef CCycle.Cycle* _C_Cycle
 
@@ -22,3 +24,12 @@ cdef class Cycle:
       pyEvent = (event.getTypeAsString(), event.getName(), event.getDescription(), event.getEventFlags())
       listOfEvents.append(pyEvent)
     return listOfEvents
+
+  def getODEntry(self, nodeNumber, odnumber):
+    if not (isinstance(nodeNumber, int) and isinstance(odnumber, int)):   # numbers have to be integer
+      return ERRVAL
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return ERRVAL
+    if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
+      return ERRVAL
+    return 42 ##TODO Implement with cycle.getODEntry(...)
