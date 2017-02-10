@@ -8,5 +8,6 @@ class PyCycle(Cycle.Cycle):
 #Plugin.main()
 pc = PyCycle()
 print(pc.getCycleNum())
+print(pc.getActiveEvents())
 
 PluginAPI.getAmountOfCN()

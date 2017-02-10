@@ -67,7 +67,6 @@ class PythonPlugin : public PluginBase {
   // Public attributes
   //
 
-
   // Public attribute accessor methods
   //
 

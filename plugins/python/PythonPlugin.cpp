@@ -43,7 +43,11 @@ PythonPlugin::PythonPlugin() {}
 PythonPlugin::~PythonPlugin() {}
 
 Cycle* PythonPlugin::getCurrentCycle() {
-    return new Cycle();
+    static Cycle* curCycle;
+    if (curCycle == NULL) {
+      curCycle = new Cycle();
+    }
+    return curCycle;
 }
 
 //
