@@ -60,6 +60,7 @@ class EventBase {
 
  protected:
   EventBase(EvType      evType,
+            std::string evTypeSTR,
             std::string evPluginID,
             std::string evName,
             std::string evDesc,
@@ -68,7 +69,6 @@ class EventBase {
             INDEX_MAP   evIndices);
 
   EventBase(EvType      evType,
-            std::string evTypeSTR,
             std::string evPluginID,
             std::string evName,
             std::string evDesc,

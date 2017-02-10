@@ -1,6 +1,7 @@
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
+from libcpp.unordered_map cimport unordered_map
 
 cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect":
   cdef cppclass Cycle:
@@ -14,7 +15,7 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
 
 cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass EventBase:
-    EventBase(EvType, string, string, string, string, int, Cycle*, INDEX_MAP) except +
+    EventBase(EvType, string, string, string, string, int, Cycle*, unordered_map[int, string]) except +
     string getTypeAsString()
     string getName()
     string getDescription()
@@ -31,7 +32,8 @@ cdef extern from "../../dataCollect/model/CycleStorageBase.hpp" namespace "EPL_D
 
 cdef extern from "../../include/EPLEnums.h":
   ctypedef enum EvType:
-    EVT_PROTO_ERROR,EVT_ERROR,
+    EVT_PROTO_ERROR,
+    EVT_ERROR,
     EVT_WARNING,
     EVT_INFO,
     EVT_DEBUG,

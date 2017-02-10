@@ -7,7 +7,7 @@ import time
 import pyPlugins
 from pyPlugins import *
 import pkgutil
-
+cimport CPlugin
 ## PyInit -> initmodule -> run function from c++ for test use ##
 
 

@@ -1,5 +1,8 @@
 cimport CCycle
 from libcpp.vector cimport vector
+from libcpp.string cimport string
+from libcpp cimport bool
+from libcpp.unordered_map cimport unordered_map
 
 cdef int ERRVAL = -1
 
@@ -17,6 +20,9 @@ cdef class Cycle:
   cpdef int getCycleNum(self):
     return self._C_Cycle.getCycleNum()
 
+  cpdef bool registerCycleStorage(self):
+    pass  ##TODO
+
   def getActiveEvents(self):
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
@@ -33,3 +39,10 @@ cdef class Cycle:
     if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
       return ERRVAL
     return 42 ##TODO Implement with cycle.getODEntry(...)
+
+  def getNodeStatus(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return ERRVAL
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return ERRVAL
+    return 42 ##TODO Implement with cycle.getNodeStatus(...)

@@ -1,4 +1,6 @@
 cimport CCycle
+from libcpp.unordered_map cimport unordered_map
+from libcpp.string cimport string
 """
 \brief The plugin api provides some basic functionality and convenience method
 for user plugins.
@@ -38,7 +40,8 @@ def addEvent(key, value):
 
   \returns a bool stating whether the event has been added
   """
-
+  #cdef unordered_map[int, string] testMap
+  #cdef CCycle.EventBase* evt = new CCycle.EventBase(CCycle.EVT_PROTO_ERROR, "n", "n", "n", "n", 0, currentCycle, testMap)
   ## TODO: implement ##
   pass
 
