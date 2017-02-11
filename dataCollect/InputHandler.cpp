@@ -29,17 +29,19 @@
  */
 
 #include "InputHandler.hpp"
+#include <epan/address_types.h>
 #include <epan/print.h>
 #include <epan/proto.h>
 #include <ws_capture.h>
 #include <ws_dissect.h>
-
 
 namespace EPL_DataCollect {
 
 InputHandler::~InputHandler() {}
 
 struct parserData {
+  std::string const *eplFrameName = nullptr;
+
   PacketType         pType       = PT_UNDEF;
   CommandID          cID         = CMD_ID_NIL;
   ODDescription *    descPTR     = nullptr;
@@ -53,27 +55,82 @@ struct parserData {
 };
 
 void foreachFunc(proto_tree *node, gpointer data);
+void foreachEPLFunc(proto_tree *node, gpointer data);
+
+constexpr size_t jenkinsHash(char const *data, size_t n) {
+  size_t hash = 0;
+  for (size_t i = 0; i < n; i++) {
+    hash += static_cast<size_t>(data[i++]);
+    hash += hash << 10;
+    hash ^= hash >> 6;
+  }
+  hash += hash << 3;
+  hash ^= hash >> 11;
+  hash += hash << 15;
+  return hash;
+}
+
+constexpr size_t operator"" _h(char const *data, size_t n) { return jenkinsHash(data, n); }
+
+void foreachEPLFunc(proto_tree *node, gpointer data) {
+  parserData *d  = reinterpret_cast<parserData *>(data);
+  field_info *fi = node->finfo;
+  gchar       label_str[ITEM_LABEL_LENGTH];
+
+  if (!fi || !fi->hfinfo)
+    return;
+
+  header_field_info *hi = fi->hfinfo;
+
+  if (!hi->name)
+    return;
+
+  switch (jenkinsHash(hi->name, strlen(hi->name))) {
+    case "Destination"_h: d->wsOther += "\x1b[35m D \x1b[m\n"; break;
+    case "Source"_h: d->wsOther += "\x1b[35m S \x1b[m\n"; break;
+    case "MessageType"_h: d->wsOther += "\x1b[35m MT \x1b[m\n"; break;
+    case "NMTStatus"_h: d->wsOther += "\x1b[35m MNTS \x1b[m\n"; break;
+    case "AN (Global)"_h: d->wsOther += "\x1b[35m AN \x1b[m\n"; break;
+    case "EA (Exception Acknowledge)"_h: d->wsOther += "\x1b[35m EA \x1b[m\n"; break;
+    case "ER (Exception Reset)"_h: d->wsOther += "\x1b[35m ER \x1b[m\n"; break;
+    case "AN (Local)"_h: d->wsOther += "\x1b[35m AN \x1b[m\n"; break;
+    case "RequestedServiceID"_h: d->wsOther += "\x1b[35m RS_ID \x1b[m\n"; break;
+    case "RequestedServiceTarget"_h: d->wsOther += "\x1b[35m RS_T \x1b[m\n"; break;
+    case "EPLVersion"_h:
+      d->wsOther += "\x1b[35m VER \x1b[m\n";
+      break;
+
+    // Ignore
+    case "Node"_h: break;
+    default:
+      proto_item_fill_label(fi, label_str);
+      d->wsString += std::to_string(hi->type);
+      d->wsString += " -- ";
+      d->wsString += label_str;
+      d->wsString += "\n";
+  }
+
+  if (node->first_child != nullptr) {
+    proto_tree_children_foreach(node, foreachEPLFunc, data);
+  }
+}
+
 void foreachFunc(proto_tree *node, gpointer data) {
   parserData *d  = reinterpret_cast<parserData *>(data);
   field_info *fi = node->finfo;
 
-  if (!fi)
+  if (!fi || !fi->hfinfo)
     return;
 
-  d->wsString += std::to_string(fi->start);
-  d->wsString += " for ";
-  d->wsString += std::to_string(fi->length);
+  header_field_info *hi = fi->hfinfo;
 
-  if (fi->rep) {
-    d->wsString += " ";
-    d->wsString += fi->rep->representation;
-  }
+  if (!hi->name)
+    return;
 
-  d->wsString += "\n";
-
-  // Traverse children
-  if (node->first_child != nullptr) {
-    proto_tree_children_foreach(node, foreachFunc, data);
+  if (*d->eplFrameName == hi->name) {
+    if (node->first_child != nullptr) {
+      proto_tree_children_foreach(node, foreachEPLFunc, data);
+    }
   }
 }
 
@@ -81,8 +138,9 @@ Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
   std::lock_guard<std::recursive_mutex> lock(parserLocker);
 
   parserData d;
+  d.eplFrameName = &eplFrameName;
 
-  proto_tree_children_foreach(diss->tree, foreachFunc, reinterpret_cast<gpointer>(&d));
+  proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&d));
 
   Packet packet(d.pType, d.cID, d.descPTR, d.wsString, d.wsOther, d.src, d.dst, d.tp, d.transactID, d.numSegments);
   return packet;
@@ -118,4 +176,26 @@ bool InputHandler::waitForCycle(uint32_t num, uint32_t timeout) noexcept {
 }
 
 void InputHandler::setDissector(ws_dissect_t *dissPTR) { dissect = dissPTR; }
+
+/*!
+ * \brief Sets the frame name of the dissected wireshark packet
+ * \param name The new name
+ */
+void InputHandler::setEPLFrameName(std::string name) noexcept { eplFrameName = name; }
+
+/*!
+ * \brief Returns the current name of the EPL Frame (used for parsing the wireshark packet)
+ */
+std::string InputHandler::getEPLFrameName() const noexcept { return eplFrameName; }
+
+/*!
+ * \brief Sets the frame name of the dissected wireshark packet
+ * \param name The new name
+ */
+void InputHandler::setEthernetFrameName(std::string name) noexcept { ethernetFrameName = name; }
+
+/*!
+ * \brief Returns the current name of the EPL Frame (used for parsing the wireshark packet)
+ */
+std::string InputHandler::getEthernetFrameName() const noexcept { return ethernetFrameName; }
 }

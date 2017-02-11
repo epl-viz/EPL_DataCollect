@@ -60,6 +60,8 @@ class InputHandler {
   ws_dissect_t *dissect = nullptr;
 
   std::recursive_mutex parserLocker;
+  std::string          eplFrameName      = "Ethernet POWERLINK";
+  std::string          ethernetFrameName = "Ethernet";
 
  public:
   InputHandler() = default;
@@ -77,5 +79,11 @@ class InputHandler {
   mockable bool waitForCycle(uint32_t num, uint32_t timeout = 0) noexcept;
 
   mockable void setDissector(ws_dissect_t *dissPTR);
+
+  mockable void setEPLFrameName(std::string name) noexcept;
+  mockable std::string getEPLFrameName() const noexcept;
+
+  mockable void setEthernetFrameName(std::string name) noexcept;
+  mockable std::string getEthernetFrameName() const noexcept;
 };
 }
