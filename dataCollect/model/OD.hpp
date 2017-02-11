@@ -68,5 +68,8 @@ class OD {
 
   mockable ODDescription *getODDesc() noexcept;
   mockable ODEntry *getEntry(uint16_t index) noexcept;
+
+ private:
+  mockable ODEntryContainer constructODEntry(ODEntryDescription *entryDesc) const noexcept;
 };
 }

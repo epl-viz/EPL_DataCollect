@@ -36,7 +36,7 @@ OD::~OD() {}
 
 /*!
  * \brief Checks if there is an entry with the given index
- * \return true if there is an entry with given index, false if not
+ * \returns true if there is an entry with given index, false if not
  * \param index The index to check for
  */
 bool OD::hasEntry(uint16_t index) const noexcept {
@@ -46,21 +46,45 @@ bool OD::hasEntry(uint16_t index) const noexcept {
 
 /*!
  * \brief Returns a pointer to the entry with the given index
- * \return The pointer to the requested ODEntry
+ *
+ * This function will insert values which are not yet written into the entry map, provided that there is an
+ * ODEntryDescription for the requested Entry.
+ *
+ * \returns The pointer to the requested ODEntry or a nullptr if the value cannot be loaded
  * \param  index The ID of the ODEntry
- * \todo Implement inserting new entries
  */
 ODEntry *OD::getEntry(uint16_t index) noexcept {
   if (hasEntry(index)) {
     return *entries.at(index);
   } else {
-    return nullptr;
+    // Check if the OD Description contains the value
+    if (!odDesc.exists(index))
+      return nullptr; // The value does not exist
+
+    ODEntryDescription *entryDesc = odDesc.getEntry(index);      // Retrieve description for the entry
+    ODEntryContainer    entry     = constructODEntry(entryDesc); // Construct requested ODEntryContainer
+
+    entries.emplace(index, entry); // Write the ODEntry into the map
+    return *entry;
   }
 }
 
 /*!
  * \brief Returns a pointer to the OD Description
- * \return The pointer to the OD Description
+ * \returns The pointer to the OD Description
  */
 ODDescription *OD::getODDesc() noexcept { return &odDesc; }
+
+/*!
+ * \brief Constructs an ODEntry wrapped into an ODEntryContainer from the given ODEntryDescription
+ * \param entryDesc The ODEntryDescription to base the ODEntry on
+ * \returns The ODEntryContainer of the constructed ODEntry
+ */
+ODEntryContainer OD::constructODEntry(ODEntryDescription *entryDesc) const noexcept {
+  ObjectType      ot  = entryDesc->type;                        // Retrieve the type of the entry
+  ObjectDataType  odt = entryDesc->dataType;                    // Retrieve the data type of the entry
+  ObjectClassType oct = ODEntryContainer::getOCTbyODT(ot, odt); // Convert data type to class type
+
+  return ODEntryContainer(oct, odt);
+}
 }
