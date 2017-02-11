@@ -78,6 +78,11 @@ TEST_CASE("Fetching non existant values fails", "[Cycle]") {
   SECTION("Test getCycleStorage() returning a nullptr") {
     REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
   }
+  SECTION("Test getODEntry() returning nullptr on non existant indices") {
+    REQUIRE(c.getODEntry(200, 0) == nullptr);
+    // TODO: Add stub node 200 to check if false entries are refused
+    REQUIRE(c.getODEntry(200, 1) == nullptr);
+  }
 }
 
 TEST_CASE("Packets are updated correctly") {
