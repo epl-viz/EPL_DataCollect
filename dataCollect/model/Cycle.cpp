@@ -107,16 +107,26 @@ Node *Cycle::getNode(uint8_t node) noexcept {
  * \brief Returns the specified OD entry of the node with the given index
  * \param  node The ID / index of the node
  * \param entry The ID / index of the OD entry
- * \return The pointer to the requested OD entry of the specified node or nullptr if the node does not exist
+ * \return The pointer to the requested OD entry of the specified node or nullptr if the node or entry does not exist
  */
 ODEntry *Cycle::getODEntry(uint8_t node, uint16_t entry) noexcept {
-  Node n = getNode(node);
+  Node n;
+  OD & od;
+
+
+  n = getNode(node);
 
   // Check if node was found
   if (n == nullptr)
     return nullptr;
 
-  return n.getOD()->getEntry(entry);
+  od = n.getOD();
+
+  // Check if OD contains requested entry
+  if (!od->hasEntry(entry))
+    return nullptr;
+
+  return od->getEntry(entry);
 }
 
 
