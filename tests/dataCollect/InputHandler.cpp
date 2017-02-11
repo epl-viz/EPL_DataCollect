@@ -24,15 +24,67 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "defines.hpp"
 #include <InputHandler.hpp>
 #include <catch.hpp>
+#include <epan/print.h>
+#include <epan/proto.h>
+#include <iostream>
+#include <ws_capture.h>
+#include <ws_dissect.h>
 
-TEST_CASE("InputHandler add functions works", "[InputHandler]") {
-  EPL_DataCollect::InputHandler handler;
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
-  SECTION("adding positiv values") { REQUIRE(1 + 2 == 3); }
+using namespace EPL_DataCollect;
 
-  SECTION("adding negative values") { REQUIRE(-1 + -2 == -3); }
+TEST_CASE("InputHandler parsing", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
 
-  SECTION("adding positive and negative values") { REQUIRE(-1 + 2 == 1); }
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+
+  print_args_t    print_args;
+  print_stream_t *print_stream = print_stream_text_stdio_new(stdout);
+
+  memset(&print_args, 0, sizeof(print_args_t));
+  print_args.print_hex         = FALSE;
+  print_args.print_dissections = print_dissections_expanded;
+
+  uint32_t      counter = 0;
+  ws_dissection diss;
+  while (ws_dissect_next(dissect, &diss)) {
+    Packet packet = handler.parsePacket(&diss);
+    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl
+              << packet.getWiresharkString() << std::endl
+              << std::endl;
+
+    epan_dissect_t *edt = ws_dissect_epan_get_np(dissect);
+    proto_tree_print(&print_args, edt, NULL, print_stream);
+
+    std::cout << std::endl << std::endl;
+
+    counter++;
+    if (counter >= 10)
+      break;
+  }
+
+  ws_dissect_free(dissect);
+  handler.setDissector(nullptr);
+  ws_capture_close(capture);
 }

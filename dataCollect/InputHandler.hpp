@@ -33,11 +33,13 @@
 #include "defines.hpp"
 
 #include "Packet.hpp"
+#include <mutex>
 #include <vector>
 
 extern "C" {
 typedef struct ws_capture_t ws_capture_t;
 typedef struct ws_dissect_t ws_dissect_t;
+struct ws_dissection;
 }
 
 namespace EPL_DataCollect {
@@ -57,6 +59,8 @@ class InputHandler {
  private:
   ws_dissect_t *dissect = nullptr;
 
+  std::recursive_mutex parserLocker;
+
  public:
   InputHandler() = default;
   virtual ~InputHandler();
@@ -67,9 +71,11 @@ class InputHandler {
   InputHandler &operator=(const InputHandler &) = delete;
   InputHandler &operator=(InputHandler &&) = delete;
 
-  std::vector<Packet> getCyclePackets(uint32_t cycleNum) noexcept;
-  bool waitForCycle(uint32_t num, uint32_t timeout = 0) noexcept;
+  mockable Packet parsePacket(ws_dissection *diss) noexcept;
 
-  void setDissector(ws_dissect_t *dissPTR);
+  mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum) noexcept;
+  mockable bool waitForCycle(uint32_t num, uint32_t timeout = 0) noexcept;
+
+  mockable void setDissector(ws_dissect_t *dissPTR);
 };
 }

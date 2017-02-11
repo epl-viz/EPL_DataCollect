@@ -108,6 +108,8 @@ add_compiler(
   SANITIZE "-fsanitize=${SANITIZERS}"
 )
 
+add_definitions(-DWS_NORETURN=_Noreturn) # For some reason wireshark needs this
+
 ######################
 # Check Dependencies #
 ######################
@@ -117,6 +119,8 @@ find_package( PythonInterp 3.5 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
 find_package( PythonLibs   3.5 REQUIRED )
 find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
+find_package( PkgConfig        REQUIRED )
+pkg_search_module(GLIB REQUIRED glib-2.0)
 
 message( STATUS "Wireshark version:     ${Wireshark_VERSION_STRING}" )
 message( STATUS "Wireshark install dir: ${Wireshark_INSTALL_DIR}" )
@@ -192,7 +196,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} libwireshark_static stdc++fs
+  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static stdc++fs
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
@@ -227,6 +231,7 @@ include_directories( SYSTEM
   ${PYTHON_INCLUDE_DIRS}
   ${Wireshark_INCLUDE_DIR}
   ${LIBLIBW_INCLUDE_DIRS}
+  ${GLIB_INCLUDE_DIRS}
   ${PLF_COLONY_DIR}
 )
 

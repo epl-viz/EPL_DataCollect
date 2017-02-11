@@ -46,7 +46,10 @@ namespace fs = std::filesystem;
 
 namespace EPL_DataCollect {
 
-CaptureInstance::~CaptureInstance() {}
+CaptureInstance::~CaptureInstance() {
+  if (state == RUNNING)
+    stopRecording();
+}
 
 /*!
  * \brief Sets up Plugins, Cycle Builder, etc
@@ -122,14 +125,14 @@ int CaptureInstance::stopRecording() noexcept {
     return -1;
   }
 
-  if (capture) {
-    ws_capture_close(capture);
-    capture = nullptr;
-  }
-
   if (dissect) {
     ws_dissect_free(dissect);
     iHandler.setDissector(nullptr);
+    dissect = nullptr;
+  }
+
+  if (capture) {
+    ws_capture_close(capture);
     capture = nullptr;
   }
 
