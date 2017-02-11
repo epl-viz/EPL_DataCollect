@@ -113,11 +113,10 @@ CycleStorageBase *Cycle::getCycleStorage(std::string id) noexcept {
   auto cs = cycleStorages.find(id);
 
   // Check if an entry with id exists
-  if (cs == cycleStorages.end()) {
+  if (cs == cycleStorages.end())
     return nullptr; // No entry with id found
-  } else {
-    return cs->second.get();
-  }
+
+  return cs->second.get();
 }
 
 
