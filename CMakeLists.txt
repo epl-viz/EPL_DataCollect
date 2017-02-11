@@ -108,7 +108,7 @@ add_compiler(
   SANITIZE "-fsanitize=${SANITIZERS}"
 )
 
-add_definitions(-DWS_NORETURN=_Noreturn) # For some reason wireshark needs this
+add_definitions(-DWS_NORETURN=) # For some reason wireshark needs this
 
 ######################
 # Check Dependencies #
