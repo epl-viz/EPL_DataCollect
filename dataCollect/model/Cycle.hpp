@@ -84,7 +84,7 @@ class Cycle {
   mockable uint32_t getCycleNum() const noexcept;
   mockable uint8_t getNumNodes() const noexcept;
 
-  mockable Node getNode(uint8_t node);
+  mockable Node *getNode(uint8_t node) noexcept;
   mockable CycleStorageBase *getCycleStorage(std::string id) noexcept;
   mockable bool registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept;
 

@@ -74,7 +74,7 @@ TEST_CASE("Standard return values work", "[Cycle]") {
 TEST_CASE("Fetching non existant values fails", "[Cycle]") {
   Cycle c;
 
-  SECTION("Test getNode() throwing an exception") { REQUIRE_THROWS(c.getNode(200)); }
+  SECTION("Test getNode() returning a nullptr") { REQUIRE(c.getNode(200) == nullptr); }
   SECTION("Test getCycleStorage() returning a nullptr") {
     REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
   }

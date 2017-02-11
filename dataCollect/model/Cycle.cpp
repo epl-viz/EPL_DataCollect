@@ -89,12 +89,18 @@ uint32_t Cycle::getCycleNum() const noexcept { return cycleNum; }
 
 
 /*!
- * \brief Returns the specified node
+ * \brief Returns a pointer to the specified node
  * \param  node The ID / index of the node
- * \throws std::out_of_range if no node with the given ID exists
- * \return The node given by the ID as type Node
+ * \return The node given by the ID as type Node or nullptr if the node does not exist
  */
-Node Cycle::getNode(uint8_t node) { return nodes.at(node); }
+Node *Cycle::getNode(uint8_t node) noexcept {
+  auto n = nodes.find(node);
+
+  if (n == nodes.end())
+    return nullptr;
+
+  return &n->second;
+}
 
 
 /*!
