@@ -34,8 +34,8 @@
 
 #include "defines.hpp"
 #include "CSPythonPluginStorage.hpp"
-#include "PluginBase.hpp"
 #include "Cycle.hpp"
+#include "PluginBase.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -63,7 +63,7 @@ class PythonPlugin : public PluginBase {
   // Static Public attributes
   //
 
-  static Cycle* getCurrentCycle();
+  static Cycle *getCurrentCycle();
   // Public attributes
   //
 

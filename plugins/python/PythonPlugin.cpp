@@ -42,12 +42,12 @@ PythonPlugin::PythonPlugin() {}
 
 PythonPlugin::~PythonPlugin() {}
 
-Cycle* PythonPlugin::getCurrentCycle() {
-    static Cycle* curCycle;
-    if (curCycle == NULL) {
-      curCycle = new Cycle();
-    }
-    return curCycle;
+Cycle *PythonPlugin::getCurrentCycle() {
+  static Cycle *curCycle;
+  if (curCycle == NULL) {
+    curCycle = new Cycle();
+  }
+  return curCycle;
 }
 
 //

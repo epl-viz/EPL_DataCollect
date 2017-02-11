@@ -14,9 +14,9 @@ def main():
 cdef api class Plugin[object PyPlug, type PyType]:
   # TODO: declare cdef Cycle.Cycle() (cython cycle)
   cdef object pyObject  # python object -> either module and run/init or create an object from the class in this module
-  
+
   def __cinit__(self, modname):
-    importedModule = importlib.import_module(modname)    
+    importedModule = importlib.import_module(modname)
     self.pyObject = importedModule
 
   cpdef api void initialize(self):
@@ -59,10 +59,10 @@ cdef api void initialize_wrapper(Plugin obj):
   obj.initialize()
 cdef api int run_wrapper(Plugin obj): #TODO: add cycle* to params
   return obj.run()
-cdef api string getDependencies_wrapper(Plugin obj):
-  return obj.getDependencies()
-cdef api string getID_wrapper(Plugin obj):
-  return obj.getID()
+#cdef api string getDependencies_wrapper(Plugin obj):
+  #return obj.getDependencies()
+#cdef api string getID_wrapper(Plugin obj):
+  #return obj.getID()
 # -------------------------------end
 
 

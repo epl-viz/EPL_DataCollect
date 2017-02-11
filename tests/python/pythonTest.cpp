@@ -39,9 +39,9 @@ TEST_CASE("Testing calling cython", "[python]") {
   Py_Initialize();
   PyInit_Plugin();
   REQUIRE(import_Plugin() == 0);
-  PyPlug *obj = buildPyPlug();
-
-  REQUIRE(static_cast<int>(cy_fct(5)) == static_cast<int>(5));
-  REQUIRE(run_wrapper(obj) == 52);
+  //   PyPlug *obj = buildPyPlug();
+  //
+  //   REQUIRE(static_cast<int>(cy_fct(5)) == static_cast<int>(5));
+  //   REQUIRE(run_wrapper(obj) == 52);
   Py_Finalize();
 }
