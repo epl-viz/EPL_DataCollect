@@ -26,7 +26,9 @@
 
 #include <Cycle.hpp>
 #include <catch.hpp>
+#include <cmath>
 #include <fakeit.hpp>
+#include <limits>
 
 using namespace EPL_DataCollect;
 using namespace fakeit;
@@ -80,8 +82,34 @@ TEST_CASE("Fetching non existant values fails", "[Cycle]") {
   }
   SECTION("Test getODEntry() returning nullptr on non existant indices") {
     REQUIRE(c.getODEntry(200, 0) == nullptr);
-    // TODO: Add stub node 200 to check if false entries are refused
+    c.addNode(200);
     REQUIRE(c.getODEntry(200, 1) == nullptr);
+  }
+}
+
+TEST_CASE("OD Entries are fetched correctly") {
+  Cycle c;
+  SECTION("Test getODEntry() returning nullptr on non existant node") { REQUIRE(c.getODEntry(200, 0) == nullptr); }
+  c.addNode(200);
+  SECTION("Test getODEntry() returning nullptr on non existant values") { REQUIRE(c.getODEntry(200, 0) == nullptr); }
+
+  Node *         n      = c.getNode(200);
+  OD *           od     = n->getOD();
+  ODDescription *odDesc = od->getODDesc();
+
+  ODEntryDescription entryDesc(OT_VAR, ODT_INTEGER16);
+
+  odDesc->setEntry(0, entryDesc);
+
+  ODEntry *entry = c.getODEntry(200, 0);
+
+  SECTION("Test getODEntry() correctly retrieving valid values") {
+    REQUIRE(entry != nullptr);
+    REQUIRE(entry->getType() == OCT_INTEGER);
+    REQUIRE(entry->getDataType() == ODT_INTEGER16);
+    REQUIRE(entry->isNumericValue() == true);
+    REQUIRE(std::fabs(entry->getNumericValue() - entryDesc.defaultValue->getNumericValue()) <
+            std::numeric_limits<double>::epsilon());
   }
 }
 
