@@ -41,6 +41,12 @@ Node::~Node() {}
 NodeStatus Node::getStatus() const noexcept { return status; }
 
 /*!
+ * \brief Returns the ID of the node
+ * \return The node ID
+ */
+uint8_t Node::getID() const noexcept { return id; }
+
+/*!
  * \brief Returns a pointer to the Object Dictionary of the node
  * \return The pointer to the OD
  */

@@ -31,8 +31,9 @@
 using namespace EPL_DataCollect;
 
 TEST_CASE("Initialization succeeds", "[Node]") {
-  Node n;
+  Node n(1);
 
+  SECTION("Check for correct node ID") { REQUIRE(n.getID() == 1); }
   SECTION("Test node status initialized to unknown") { REQUIRE(n.getStatus() == NS_UNKNOWN); }
   SECTION("Test OD Initialization") {
     REQUIRE(n.getOD() != nullptr);
@@ -41,7 +42,7 @@ TEST_CASE("Initialization succeeds", "[Node]") {
 }
 
 TEST_CASE("Changing Status works") {
-  Node n;
+  Node n(1);
 
   SECTION("Test setting to starting") {
     n.setStatus(NS_STARTING);

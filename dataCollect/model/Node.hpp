@@ -50,9 +50,11 @@ class Node {
  private:
   OD         od;                  //!< \brief The Object dictionary of the Node
   NodeStatus status = NS_UNKNOWN; //!< \brief Current status of the Node
+  uint8_t    id;                  //!< \brief The ID of this node
 
  public:
-  Node() = default;
+  Node() = delete;
+  Node(uint8_t nodeID) : id(nodeID) {}
   virtual ~Node();
 
   Node(const Node &) = default;
@@ -66,6 +68,7 @@ class Node {
   mockable OD *getOD() noexcept;
   mockable ODDescription *getODDesc() noexcept;
   mockable NodeStatus getStatus() const noexcept;
+  mockable uint8_t getID() const noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
