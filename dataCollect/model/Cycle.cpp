@@ -169,6 +169,15 @@ void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
   cycleNum++;
 }
 
+/*!
+   * \brief Adds the node with the given index to the cycles nodemap
+   * \param  nodeID The ID of the node to add
+   */
+void Cycle::addNode(uint8_t nodeID) {
+  if (getNode(nodeID) == nullptr) // TODO: Check if an error should be thrown
+    nodes.emplace(nodeID, Node(nodeID));
+}
+
 bool Cycle::operator==(const Cycle &b) const {
   return events == b.events && /*packets == b.packets && nodes == b.nodes &&*/ nodeCount == b.nodeCount &&
          cycleNum == b.cycleNum;
