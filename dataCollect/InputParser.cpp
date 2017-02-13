@@ -147,8 +147,8 @@ void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val) {
     return;
   }
 
-  val.resize(fi->length);
-  memcpy(val.data(), fi->value.value.bytes, fi->length);
+  val.resize(static_cast<size_t>(fi->length));
+  memcpy(val.data(), fi->value.value.bytes, static_cast<size_t>(fi->length));
   DPRINT(d, fi, std::to_string(fi->length) + " Bytes", "");
 }
 
@@ -164,7 +164,7 @@ void bindIPV4(parserData *d, field_info *fi, std::string &val) {
   address             addr;
   char *              addr_str;
 
-  ipv4   = (ipv4_addr_and_mask *)fvalue_get(&fi->value);
+  ipv4   = reinterpret_cast<ipv4_addr_and_mask *>(fvalue_get(&fi->value));
   n_addr = ipv4_get_net_order_addr(ipv4);
 
   addr.type = AT_IPv4;
@@ -172,9 +172,9 @@ void bindIPV4(parserData *d, field_info *fi, std::string &val) {
   addr.data = &n_addr;
 
   if (fi->hfinfo->display == BASE_NETMASK) {
-    addr_str = (char *)address_to_str(NULL, &addr);
+    addr_str = static_cast<char *>(address_to_str(NULL, &addr));
   } else {
-    addr_str = (char *)address_with_resolution_to_str(NULL, &addr);
+    addr_str = static_cast<char *>(address_with_resolution_to_str(NULL, &addr));
   }
 
   val = addr_str;
