@@ -248,16 +248,72 @@ enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
 /*!
  * \brief The type of a packet
  */
-enum PacketType {
-  PT_UNDEF,
-  PT_SDO_REQ,
-  PT_SDO_RESP,
-  PT_PDO_REQ,
-  PT_PDO_RESP,
-  PT_START_OF_CYCLE,
-  PT_START_OF_ASYNC,
-  PT_UPLOAD,
-  PT_DOWNLOAD
+enum MessageType {
+  PT_UNDEF          = 0x00,
+  PT_START_OF_CYCLE = 0x01,
+  PT_POLL_REQUEST   = 0x03,
+  PT_POLL_RESPONSE  = 0x04,
+  PT_START_OF_ASYNC = 0x05,
+  PT_ASYNC_SEND     = 0x06,
+  PT_AMNI           = 0x07,
+  PT_AINV           = 0x0D
+};
+
+/*!
+ * \brief ASnd Service ID
+ */
+enum ASndServiceID {
+  ASND_RESERVED_0                  = 0x00,
+  ASND_IDENT_RESPONSE              = 0x01,
+  ASND_STATUS_RESPONSE             = 0x02,
+  ASND_NMT_REQUEST                 = 0x03,
+  ASND_NMT_COMMAND                 = 0x04,
+  ASND_BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
+  ASND_END_MANUFACTURER_SPECIFIC   = 0xFE,
+};
+
+/*!
+ * \brief ASnd Service ID
+ */
+enum SoARequestServiceID {
+  SOAR_NO_SERVICE                  = 0x00,
+  SOAR_IDENT_REQUEST               = 0x01,
+  SOAR_STATUS_REQUEST              = 0x02,
+  SOAR_NMT_REQUEST_INVITE          = 0x03,
+  SOAR_BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
+  SOAR_END_MANUFACTURER_SPECIFIC   = 0xFE,
+};
+
+/*!
+ * \brief NMT Status
+ */
+enum NMTState {
+  NMT_OFF                 = 0b00000000,
+  NMT_INITIALISING        = 0b00011001,
+  NMT_RESET_APPLICATION   = 0b00101001,
+  NMT_RESET_COMMUNICATION = 0b00111001,
+  NMT_RESET_CONFIGURATION = 0b01111001,
+  NMT_NOT_ACTIVE          = 0b00011100,
+  NMT_PRE_OPERATIONAL_1   = 0b00011101,
+  NMT_PRE_OPERATIONAL_2   = 0b01011101,
+  NMT_READY_TO_OPERATE    = 0b01101101,
+  NMT_OPERATIONAL         = 0b11111101,
+  NMT_STOPPED             = 0b01001101,
+  NMT_BASIC_ETHERNET      = 0b00011110
+};
+
+/*!
+ * \brief AsyncSend Request Prioities
+ */
+enum AsyncSendPriority {
+  ASSP_HIGHEST = 0b111,
+  ASSP_HIGHER3 = 0b110,
+  ASSP_HIGHER2 = 0b101,
+  ASSP_HIGHER1 = 0b100,
+  ASSP_MEDIUM  = 0b011,
+  ASSP_LOWER2  = 0b010,
+  ASSP_LOWER1  = 0b001,
+  ASSP_LOWEST  = 0b000
 };
 
 /*!

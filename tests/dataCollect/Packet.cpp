@@ -43,7 +43,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
 
   auto tp = std::chrono::system_clock::now();
 
-  Packet p(PT_PDO_REQ, CMD_ID_WRITE_BY_NAME, nullptr, wire, other, 10, 20, tp, 1, 2);
+  Packet p(PT_POLL_REQUEST, CMD_ID_WRITE_BY_NAME, nullptr, wire, other, 10, 20, tp, 1, 2);
 
   for (auto &i : ods) {
     p.addDiff(1, i);
@@ -57,7 +57,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   REQUIRE(p.getTimeStamp() == tp);
   REQUIRE(p.getTransactionID() == 1);
   REQUIRE(p.getNumSegments() == 2);
-  REQUIRE(p.getType() == PT_PDO_REQ);
+  REQUIRE(p.getType() == PT_POLL_REQUEST);
   REQUIRE(p.getCommandID() == CMD_ID_WRITE_BY_NAME);
 
   auto diffs = p.getDiffs();
