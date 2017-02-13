@@ -45,7 +45,7 @@ namespace EPL_DataCollect {
  * \param tID       The Packet transaction ID
  * \param nSegments The number of segments this packet was split
  */
-Packet::Packet(PacketType     t,
+Packet::Packet(MessageType    t,
                CommandID      cID,
                ODDescription *oDesc,
                std::string    wireSTR,
@@ -76,9 +76,9 @@ bool Packet::operator==(const Packet &r) const {
 
 /*!
  * \brief Returns the packet type
- * \return The packet type as a PacketType
+ * \return The packet type as a MessageType
  */
-PacketType Packet::getType() const noexcept { return type; }
+MessageType Packet::getType() const noexcept { return type; }
 
 
 /*!

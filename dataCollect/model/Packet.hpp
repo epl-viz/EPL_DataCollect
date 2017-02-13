@@ -49,7 +49,7 @@ class Packet {
   typedef std::chrono::system_clock::time_point TIME_POINT;
 
  private:
-  PacketType              type      = PT_UNDEF;
+  MessageType             type      = PT_UNDEF;
   CommandID               commandID = CMD_ID_NIL;
   ODDescription *         odDesc    = nullptr;
   plf::colony<PacketDiff> diffs;
@@ -69,7 +69,7 @@ class Packet {
   Packet() = delete;
   virtual ~Packet();
 
-  Packet(PacketType     t,
+  Packet(MessageType    t,
          CommandID      cID,
          ODDescription *oDesc,
          std::string    wireSTR,
@@ -88,7 +88,7 @@ class Packet {
 
   bool operator==(const Packet &r) const;
 
-  mockable PacketType getType() const noexcept;
+  mockable MessageType getType() const noexcept;
   mockable CommandID getCommandID() const noexcept;
   mockable uint8_t getTransactionID() const noexcept;
   mockable uint32_t getNumSegments() const noexcept;

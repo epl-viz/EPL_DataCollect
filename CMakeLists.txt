@@ -287,13 +287,15 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp"
+  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "epan/ftypes/ftypes.h"
   NAMESPACE  "EPL_DataCollect"
   ENUMS
     "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
-    "PacketType" "CommandID" "ObjectClassType"
+    "MessageType" "CommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
 
     "CaptureInstance::CIstate"
+
+    "ftenum"
   BLACKLIST
 )
 

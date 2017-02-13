@@ -70,7 +70,7 @@ TEST_CASE("InputHandler parsing", "[InputHandler]") {
   ws_dissection diss;
   while (ws_dissect_next(dissect, &diss)) {
     Packet packet = handler.parsePacket(&diss);
-    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getWiresharkString();
+    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
 
     //     epan_dissect_t *edt = ws_dissect_epan_get_np(dissect);
     //     proto_tree_print(&print_args, edt, NULL, print_stream);
