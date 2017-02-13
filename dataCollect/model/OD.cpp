@@ -54,19 +54,20 @@ bool OD::hasEntry(uint16_t index) const noexcept {
  * \param  index The ID of the ODEntry
  */
 ODEntry *OD::getEntry(uint16_t index) noexcept {
-  if (hasEntry(index)) {
-    return *entries.at(index);
-  } else {
-    // Check if the OD Description contains the value
+  // Check if entry has to be loaded in first
+  if (!hasEntry(index)) {
+    // Check if the OD Description contains the missing entry
     if (!odDesc.exists(index))
       return nullptr; // The value does not exist
 
     ODEntryDescription *entryDesc = odDesc.getEntry(index);      // Retrieve description for the entry
     ODEntryContainer    entry     = constructODEntry(entryDesc); // Construct requested ODEntryContainer
 
-    entries.emplace(index, entry); // Write the ODEntry into the map
-    return *entry;
+    entries.insert({index, entry}); // Write the ODEntry into the map
   }
+
+  // At this point, the entry is guaranteed to be in the OD
+  return *entries.at(index);
 }
 
 /*!
