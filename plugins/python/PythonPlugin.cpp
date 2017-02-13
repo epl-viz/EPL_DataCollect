@@ -57,14 +57,14 @@ PythonPlugin::~PythonPlugin() {}
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
   initialize_wrapper((PyPlug *)cythonPlugin);
-  (void) ci;
+  (void)ci;
   return false;
 };
 
 void PythonPlugin::run(Cycle *cycle) { run_wrapper((PyPlug *)cythonPlugin, reinterpret_cast<void *>(cycle)); };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
-  (void) ci;
+  (void)ci;
   return false;
 };
 
