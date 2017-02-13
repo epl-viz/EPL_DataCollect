@@ -63,8 +63,8 @@ class PythonPlugin : public PluginBase {
   bool reset(CaptureInstance *ci);
 
  private:
-  std::string plugName;
-  _object* cythonPlugin;
+  std::string           plugName;
+  _object *             cythonPlugin;
   CSPythonPluginStorage state;
 
  public:

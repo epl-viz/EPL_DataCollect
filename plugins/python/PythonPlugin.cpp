@@ -46,24 +46,25 @@ PythonPlugin::PythonPlugin(std::string pluginName) {
   plugName = pluginName;
 
   // IMPORTANT: make sure that PyInterpreter is running and the Plugin.pyx is PyInited !
-//   PyInit_Plugin();
+  //   PyInit_Plugin();
   import_Plugin();
 
-  cythonPlugin = (_object*) buildPlugin("PluginName");
+  cythonPlugin = (_object *)buildPlugin("PluginName");
   initialize(new CaptureInstance());
 };
 
 PythonPlugin::~PythonPlugin() {}
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
-  initialize_wrapper((PyPlug*) cythonPlugin);
+  initialize_wrapper((PyPlug *)cythonPlugin);
+  (void) ci;
+  return false;
 };
 
-void PythonPlugin::run(Cycle* cycle) {
-  run_wrapper((PyPlug*) cythonPlugin, reinterpret_cast<void*>(cycle));
-};
+void PythonPlugin::run(Cycle *cycle) { run_wrapper((PyPlug *)cythonPlugin, reinterpret_cast<void *>(cycle)); };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
+  (void) ci;
   return false;
 };
 
@@ -75,13 +76,8 @@ Cycle *PythonPlugin::getCurrentCycle() {
   return curCycle;
 }
 
-std::string PythonPlugin::getDependencies() {
-  return getDependencies_wrapper((PyPlug*) cythonPlugin);
-};
+std::string PythonPlugin::getDependencies() { return getDependencies_wrapper((PyPlug *)cythonPlugin); };
 
-std::string PythonPlugin::getID() {
-  return getID_wrapper(((PyPlug*) cythonPlugin));
-};
-
+std::string PythonPlugin::getID() { return getID_wrapper(((PyPlug *)cythonPlugin)); };
 }
 }
