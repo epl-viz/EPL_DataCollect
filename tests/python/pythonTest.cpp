@@ -28,13 +28,13 @@
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
 // #include <Test_api.h>
+#include <CaptureInstance.hpp>
+#include <Cycle.hpp>
+#include <PythonPlugin.hpp>
 #include <Plugin_api.h>
 #include <catch.hpp>
 #include <fakeit.hpp>
 #include <iostream>
-#include <PythonPlugin.hpp>
-#include <Cycle.hpp>
-#include <CaptureInstance.hpp>
 
 #pragma clang diagnostic pop
 
@@ -52,14 +52,15 @@ TEST_CASE("Testing calling cython", "[python]") {
   // IMPORTING
   import_Plugin();
 
-  EPL_DataCollect::plugins::PythonPlugin* pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("pyPlugins.PluginA");
+  EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("pyPlugins.PluginA");
   std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
   std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
-  std::cout << "plugin.run()..." << "\n";
+  std::cout << "plugin.run()..."
+            << "\n";
   pyPlugin->run(new EPL_DataCollect::Cycle());
 
 
-//   REQUIRE(runAllTests() == false);
+  //   REQUIRE(runAllTests() == false);
   //   PyPlug *obj = buildPyPlug();
   //
   //   REQUIRE(static_cast<int>(cy_fct(5)) == static_cast<int>(5));
