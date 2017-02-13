@@ -119,7 +119,7 @@ void bindABSOLUTE_TIME(parserData *d, field_info *fi, nstime_t &val) {
 }
 
 void bindBOOL(parserData *d, field_info *fi, bool &val) {
-  if (fi->hfinfo->type != FT_BOOLEAN) {
+  if (fi->hfinfo->type != FT_BOOLEAN && fi->hfinfo->type != FT_UINT8) {
     std::cerr << "[WS Parser] bindBOOL: '" << fi->hfinfo->name << "' is not FT_BOOLEAN but "
               << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
     return;
@@ -231,6 +231,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     case EPL_PREFIX ".node"_h:               // == FT_UINT8 -- BASE_DEC_HEX ("Node")
     case "text"_h: break;
 
+    case EPL_PREFIX ".asnd.sres.stat"_h:
     case EPL_PREFIX ".asnd.ires.state"_h:
     case EPL_PREFIX ".soa.stat"_h:
     case EPL_PREFIX ".pres.stat"_h:
@@ -513,77 +514,76 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
 
     /* ASnd-->StatusResponse */
     case EPL_PREFIX ".asnd.sres.en"_h:
-      DPRINT(d, fi, "TODO", "EN (Exception New)");
-      break; // == FT_BOOLEAN -- 8
+      bindBOOL(d, fi, d->ASndSR_exceptionNew);
+      break; // == FT_BOOLEAN -- 8 ("EN (Exception New)")
     case EPL_PREFIX ".asnd.sres.ec"_h:
-      DPRINT(d, fi, "TODO", "EC (Exception Clear)");
-      break; // == FT_BOOLEAN -- 8
+      bindBOOL(d, fi, d->ASndSR_exceptionClear);
+      break; // == FT_BOOLEAN -- 8 ("EC (Exception Clear)")
     case EPL_PREFIX ".asnd.sres.pr"_h:
-      DPRINT(d, fi, "TODO", "PR (Priority)");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindEnum(d, fi, d->ASndSR_priority);
+      break; // == FT_UINT8 -- BASE_DEC ("PR (Priority)")
     case EPL_PREFIX ".asnd.sres.rs"_h:
-      DPRINT(d, fi, "TODO", "RS (RequestToSend)");
-      break; // == FT_UINT8 -- BASE_DEC
-    case EPL_PREFIX ".asnd.sres.stat"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
+      bindUINT8(d, fi, d->ASndRS_requestToSend);
+      break; // == FT_UINT8 -- BASE_DEC ("RS (RequestToSend)")
+
     /* ASnd-->SyncResponse */
     case EPL_PREFIX ".asnd.syncresponse.sync"_h:
-      DPRINT(d, fi, "TODO", "SyncResponse");
-      break; // == FT_UINT8 -- BASE_HEX
+      bindUINT8(d, fi, d->ASndSyR_SyncResponse);
+      break; // == FT_UINT8 -- BASE_HEX ("SyncResponse")
     case EPL_PREFIX ".asnd.syncresponse.fst.val"_h:
-      DPRINT(d, fi, "TODO", "PResTimeFirstValid");
-      break; // == FT_BOOLEAN -- 8
+      bindBOOL(d, fi, d->ASndSyR_PResTimeFirstValid);
+      break; // == FT_BOOLEAN -- 8 ("PResTimeFirstValid")
     case EPL_PREFIX ".asnd.syncresponse.sec.val"_h:
-      DPRINT(d, fi, "TODO", "PResTimeSecondValid");
-      break; // == FT_BOOLEAN -- 8
+      bindBOOL(d, fi, d->ASndSyR_PResTimeSecondValid);
+      break; // == FT_BOOLEAN -- 8 ("PResTimeSecondValid")
     case EPL_PREFIX ".asnd.syncresponse.mode"_h:
-      DPRINT(d, fi, "TODO", "PResModeStatus");
-      break; // == FT_BOOLEAN -- 8
+      bindBOOL(d, fi, d->ASndSyR_PResModeStatus);
+      break; // == FT_BOOLEAN -- 8 ("PResModeStatus")
     case EPL_PREFIX ".asnd.syncresponse.latency"_h:
-      DPRINT(d, fi, "TODO", "Latency");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindUINT8(d, fi, d->ASndSyR_Latency);
+      break; // == FT_UINT8 -- BASE_DEC ("Latency")
     case EPL_PREFIX ".asnd.syncresponse.delay.station"_h:
-      DPRINT(d, fi, "TODO", "SyncDelayStation");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindUINT8(d, fi, d->ASndSyR_SyncDelayStation);
+      break; // == FT_UINT8 -- BASE_DEC ("SyncDelayStation")
     case EPL_PREFIX ".asnd.syncresponse.delay"_h:
-      DPRINT(d, fi, "TODO", "SyncDelay");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindUINT8(d, fi, d->ASndSyR_SyncDelay);
+      break; // == FT_UINT8 -- BASE_DEC ("SyncDelay")
     case EPL_PREFIX ".asnd.syncresponse.pres.fst"_h:
-      DPRINT(d, fi, "TODO", "PResTimeFirst");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindUINT8(d, fi, d->ASndSyR_PResTimeFirst);
+      break; // == FT_UINT8 -- BASE_DEC ("PResTimeFirst")
     case EPL_PREFIX ".asnd.syncresponse.pres.sec"_h:
-      DPRINT(d, fi, "TODO", "PResTimeSecond");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindUINT8(d, fi, d->ASndSyR_PResTimeSecond);
+      break; // == FT_UINT8 -- BASE_DEC ("PResTimeSecond")
     case EPL_PREFIX ".asnd.sres.seb"_h:
-      DPRINT(d, fi, "TODO", "StaticErrorBitField");
-      break; // == FT_BYTES -- BASE_NONE
+      bindUINT8(d, fi, d->ASndSyR_StaticErrorBitField);
+      break; // == FT_BYTES -- BASE_NONE ("StaticErrorBitField")
 
     /*StaticErrorBitField */
     case EPL_PREFIX ".asnd.res.seb.bit0"_h:
-      DPRINT(d, fi, "TODO", "Generic error");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_genericError);
+      break; // == FT_UINT8 -- BASE_DEC ("Generic error")
     case EPL_PREFIX ".asnd.res.seb.bit1"_h:
-      DPRINT(d, fi, "TODO", "Current");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_current);
+      break; // == FT_UINT8 -- BASE_DEC ("Current")
     case EPL_PREFIX ".asnd.res.seb.bit2"_h:
-      DPRINT(d, fi, "TODO", "Voltage");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_Voltage);
+      break; // == FT_UINT8 -- BASE_DEC ("Voltage")
     case EPL_PREFIX ".asnd.res.seb.bit3"_h:
+      bindBOOL(d, fi, d->SEBF_Temperature);
       DPRINT(d, fi, "TODO", "Temperature");
-      break; // == FT_UINT8 -- BASE_DEC
+      break; // == FT_UINT8 -- BASE_DEC ("Temperature")
     case EPL_PREFIX ".asnd.res.seb.bit4"_h:
-      DPRINT(d, fi, "TODO", "Communication error");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_CommunicationError);
+      break; // == FT_UINT8 -- BASE_DEC ("Communication error")
     case EPL_PREFIX ".asnd.res.seb.bit5"_h:
-      DPRINT(d, fi, "TODO", "Device Profile Spec");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_DeviceProfileSpecB);
+      break; // == FT_UINT8 -- BASE_DEC ("Device Profile Spec")
     case EPL_PREFIX ".asnd.res.seb.bit7"_h:
-      DPRINT(d, fi, "TODO", "Manufacturer Spec");
-      break; // == FT_UINT8 -- BASE_DEC
+      bindBOOL(d, fi, d->SEBF_ManufacturerSpec);
+      break; // == FT_UINT8 -- BASE_DEC ("Manufacturer Spec")
     case EPL_PREFIX ".asnd.res.seb.devicespecific_err"_h:
-      DPRINT(d, fi, "TODO", "Device Profile Spec");
-      break; // == FT_BYTES -- BASE_NONE
+      bindBYTES(d, fi, d->SEBF_DeviceProfileSpec);
+      break; // == FT_BYTES -- BASE_NONE ("Device Profile Spec")
 
     case EPL_PREFIX ".asnd.sres.el"_h:
       DPRINT(d, fi, "TODO", "ErrorCodesList");

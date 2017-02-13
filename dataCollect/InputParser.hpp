@@ -162,6 +162,35 @@ struct parserData {
   std::string          ASndID_HostName                 = "";
   std::vector<uint8_t> ASndID_VendorSpecificExtension2;
 
+
+  /* ASnd-->StatusResponse */
+  bool              ASndSR_exceptionNew   = false;
+  bool              ASndSR_exceptionClear = false;
+  AsyncSendPriority ASndSR_priority       = ASSP_LOWEST;
+  uint8_t           ASndRS_requestToSend  = UINT8_MAX;
+
+  /* ASnd-->SyncResponse */
+  uint8_t ASndSyR_SyncResponse        = UINT8_MAX;
+  bool    ASndSyR_PResTimeFirstValid  = false;
+  bool    ASndSyR_PResTimeSecondValid = false;
+  bool    ASndSyR_PResModeStatus      = false;
+  uint8_t ASndSyR_Latency             = UINT8_MAX;
+  uint8_t ASndSyR_SyncDelayStation    = UINT8_MAX;
+  uint8_t ASndSyR_SyncDelay           = UINT8_MAX;
+  uint8_t ASndSyR_PResTimeFirst       = UINT8_MAX;
+  uint8_t ASndSyR_PResTimeSecond      = UINT8_MAX;
+  uint8_t ASndSyR_StaticErrorBitField = UINT8_MAX;
+
+  /*StaticErrorBitField */
+  bool                 SEBF_genericError       = false;
+  bool                 SEBF_current            = false;
+  bool                 SEBF_Voltage            = false;
+  bool                 SEBF_Temperature        = false;
+  bool                 SEBF_CommunicationError = false;
+  bool                 SEBF_DeviceProfileSpecB = false;
+  bool                 SEBF_ManufacturerSpec   = false;
+  std::vector<uint8_t> SEBF_DeviceProfileSpec;
+
   // (mostly) PReq and PRes
   bool multiplexedSlot = false;
 
