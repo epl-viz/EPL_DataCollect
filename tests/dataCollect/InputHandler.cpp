@@ -76,7 +76,7 @@ TEST_CASE("InputHandler parsing", "[InputHandler]") {
     //     proto_tree_print(&print_args, edt, NULL, print_stream);
 
     counter++;
-    if (counter >= 20)
+    if (counter >= 50)
       break;
   }
 

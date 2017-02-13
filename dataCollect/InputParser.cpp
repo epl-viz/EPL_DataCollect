@@ -32,9 +32,12 @@
 #include <epan/address_types.h>
 #include <epan/print.h>
 #include <epan/proto.h>
+#include <epan/to_str.h>
 #include <iomanip> //! \todo Remove debug code
 #include <iostream>
 #include <sstream> //! \todo Remove debug code
+
+#define EPL_PREFIX "epl"
 
 namespace EPL_DataCollect {
 namespace WiresharkParser {
@@ -71,9 +74,53 @@ void bindUINT8(parserData *d, field_info *fi, uint8_t &val) {
   DPRINT(d, fi, std::to_string(val), "");
 }
 
+void bindUINT16(parserData *d, field_info *fi, uint16_t &val) {
+  if (fi->hfinfo->type != FT_UINT16) {
+    std::cerr << "[WS Parser] bindUINT16: '" << fi->hfinfo->name << "' is not FT_UINT16 but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val = static_cast<uint16_t>(fi->value.value.uinteger64);
+  DPRINT(d, fi, std::to_string(val), "");
+}
+
+void bindUINT32(parserData *d, field_info *fi, uint32_t &val) {
+  if (fi->hfinfo->type != FT_UINT32) {
+    std::cerr << "[WS Parser] bindUINT32: '" << fi->hfinfo->name << "' is not FT_UINT32 but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val = static_cast<uint32_t>(fi->value.value.uinteger64);
+  DPRINT(d, fi, std::to_string(val), "");
+}
+
+void bindUINT64(parserData *d, field_info *fi, uint64_t &val) {
+  if (fi->hfinfo->type != FT_UINT64) {
+    std::cerr << "[WS Parser] bindUINT64: '" << fi->hfinfo->name << "' is not FT_UINT64 but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val = static_cast<uint64_t>(fi->value.value.uinteger64);
+  DPRINT(d, fi, std::to_string(val), "");
+}
+
+void bindABSOLUTE_TIME(parserData *d, field_info *fi, nstime_t &val) {
+  if (fi->hfinfo->type != FT_ABSOLUTE_TIME) {
+    std::cerr << "[WS Parser] bindABSOLUTE_TIME: '" << fi->hfinfo->name << "' is not FT_ABSOLUTE_TIME but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val = fi->value.value.time;
+  DPRINT(d, fi, std::to_string(val.secs) + std::string("s ,") + std::to_string(val.nsecs) + "ns", "");
+}
+
 void bindBOOL(parserData *d, field_info *fi, bool &val) {
   if (fi->hfinfo->type != FT_BOOLEAN) {
-    std::cerr << "[WS Parser] bindBOOL: '" << fi->hfinfo->name << "' is not field_info but "
+    std::cerr << "[WS Parser] bindBOOL: '" << fi->hfinfo->name << "' is not FT_BOOLEAN but "
               << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
     return;
   }
@@ -82,11 +129,66 @@ void bindBOOL(parserData *d, field_info *fi, bool &val) {
   DPRINT(d, fi, val ? "True" : "False", "");
 }
 
+void bindSTRING(parserData *d, field_info *fi, std::string &val) {
+  if (fi->hfinfo->type != FT_STRING) {
+    std::cerr << "[WS Parser] bindSTRING: '" << fi->hfinfo->name << "' is not FT_STRING but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val = fi->value.value.string;
+  DPRINT(d, fi, val, "");
+}
+
+void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val) {
+  if (fi->hfinfo->type != FT_BYTES) {
+    std::cerr << "[WS Parser] bindBYTES: '" << fi->hfinfo->name << "' is not FT_BYTES but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  val.resize(fi->length);
+  memcpy(val.data(), fi->value.value.bytes, fi->length);
+  DPRINT(d, fi, std::to_string(fi->length) + " Bytes", "");
+}
+
+void bindIPV4(parserData *d, field_info *fi, std::string &val) {
+  if (fi->hfinfo->type != FT_IPv4) {
+    std::cerr << "[WS Parser] bindIPV4: '" << fi->hfinfo->name << "' is not FT_IPv4 but "
+              << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+    return;
+  }
+
+  ipv4_addr_and_mask *ipv4;
+  guint32             n_addr; /* network-order IPv4 address */
+  address             addr;
+  char *              addr_str;
+
+  ipv4   = (ipv4_addr_and_mask *)fvalue_get(&fi->value);
+  n_addr = ipv4_get_net_order_addr(ipv4);
+
+  addr.type = AT_IPv4;
+  addr.len  = 4;
+  addr.data = &n_addr;
+
+  if (fi->hfinfo->display == BASE_NETMASK) {
+    addr_str = (char *)address_to_str(NULL, &addr);
+  } else {
+    addr_str = (char *)address_with_resolution_to_str(NULL, &addr);
+  }
+
+  val = addr_str;
+  wmem_free(NULL, addr_str);
+  DPRINT(d, fi, val, "");
+}
+
 
 void foreachEPLFunc(proto_tree *node, gpointer data) {
   parserData *d  = reinterpret_cast<parserData *>(data);
   field_info *fi = node->finfo;
 
+  auto test = node->tree_data->interesting_hfids;
+  (void)test;
 
   if (!fi || !fi->hfinfo)
     return;
@@ -97,542 +199,6 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     return;
 
   switch (jenkinsHash(hi->abbrev)) {
-#if 0
-    case "MessageType"_h: bindEnum(d, fi, d->pType); break;
-    case "Destination"_h: bindUINT8(d, fi, d->dst); break;
-    case "Source"_h: bindUINT8(d, fi, d->src); break;
-    case "Captured Size"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.payload.capture_size" == FT_UINT16 -- BASE_DEC
-
-
-    // IGNORE
-    case "Node"_h: // "epl-xdd.node" == FT_UINT8 -- BASE_DEC_HEX
-      break;
-
-    /* SoC data fields*/
-    case "Flags"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.soc" == FT_UINT8 -- BASE_HEX
-    case "MC (Multiplexed Cycle Completed)"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.soc.mc" == FT_BOOLEAN -- 8
-    case "PS (Prescaled Slot)"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.soc.ps" == FT_BOOLEAN -- 8
-    case "NetTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.soc.nettime" == FT_ABSOLUTE_TIME -- ABSOLUTE_TIME_LOCAL
-    case "RelativeTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.soc.relativetime" == FT_UINT64 -- BASE_DEC
-
-    /* PReq data fields*/
-    // case "Flags"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.preq" == FT_UINT8 -- BASE_HEX
-    case "MS (Multiplexed Slot)"_h: bindBOOL(d, fi, d->multiplexedSlot); break;
-    case "EA (Exception Acknowledge)"_h: bindBOOL(d, fi, d->exceptionAcknoledged); break;
-    case "RD (Ready)"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.preq.rd" == FT_BOOLEAN -- 8
-    case "PDOVersion"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.preq.pdov" == FT_UINT8 -- BASE_CUSTOM
-    case "Size"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.preq.size" == FT_UINT16 -- BASE_DEC
-
-    /* PRes data fields*/
-    case "NMTStatus"_h:
-      bindEnum(d, fi, d->nmtState);
-      break;
-    // case "Flags"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.pres" == FT_UINT8 -- BASE_HEX
-    // case "MS (Multiplexed Slot)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.pres.ms" == FT_BOOLEAN -- 8
-    case "EN (Exception New)"_h:
-      bindBOOL(d, fi, d->exceptionNew);
-      break;
-    // case "RD (Ready)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.pres.rd" == FT_BOOLEAN -- 8
-    case "PR (Priority)"_h: bindEnum(d, fi, d->sendPriority); break;
-    case "RS (RequestToSend)"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.pres.rs" == FT_UINT8 -- BASE_DEC
-    // case "PDOVersion"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.pres.pdov" == FT_STRING -- BASE_NONE
-    // case "Size"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.pres.size" == FT_UINT16 -- BASE_DEC
-
-    /* SoA data fields*/
-    // case "NMTStatus"_h: break; // "epl-xdd.soa.stat" == FT_UINT8 -- BASE_HEX
-    // case "EA (Exception Acknowledge)"_h: break; // "epl-xdd.soa.ea" == FT_BOOLEAN -- 8
-    case "ER (Exception Reset)"_h: bindBOOL(d, fi, d->exceptionReset); break;
-    case "RequestedServiceID"_h: bindEnum(d, fi, d->soaID); break;
-    case "RequestedServiceTarget"_h: bindUINT8(d, fi, d->requestedServiceTarget); break;
-    case "EPLVersion"_h: bindUINT8(d, fi, d->eplVersion); break;
-    case "SyncControl"_h: bindUINT8(d, fi, d->syncControl); break;
-    case "DestMacAddressValid"_h: bindBOOL(d, fi, d->destMacAddressValid); break;
-    case "PResFallBackTimeoutValid"_h: bindBOOL(d, fi, d->PResFallBackTimeoutValid); break;
-    case "SyncMNDelaySecondValid"_h: bindBOOL(d, fi, d->SyncMNDelaySecondValid); break;
-    case "SyncMNDelayFirstValid"_h: bindBOOL(d, fi, d->SyncMNDelayFirstValid); break;
-    case "PResTimeSecondValid"_h: bindBOOL(d, fi, d->PResTimeSecondValid); break;
-    case "PResTimeFirstValid"_h: bindBOOL(d, fi, d->PResTimeFirstValid); break;
-    case "PResModeSet"_h: bindBOOL(d, fi, d->PResModeSet); break;
-    case "PResModeReset"_h: bindBOOL(d, fi, d->PResModeReset); break;
-    case "DestMacAddress"_h:
-      bindBOOL(d, fi, d->destMacAddress);
-      break;
-    // case "PResFallBackTimeoutValid"_h: break; // "epl-xdd.soa.tm.end" == FT_UINT8 -- BASE_DEC
-    // case "SyncMNDelaySecondValid"_h: break; // "epl-xdd.soa.mnsc.end" == FT_UINT8 -- BASE_DEC
-    // case "SyncMNDelayFirstValid"_h: break; // "epl-xdd.soa.mnft.end" == FT_UINT8 -- BASE_DEC
-    // case "PResTimeSecondValid"_h: break; // "epl-xdd.soa.prsc.end" == FT_UINT8 -- BASE_DEC
-    // case "PResTimeFirstValid"_h: break; // "epl-xdd.soa.prft.end" == FT_UINT8 -- BASE_DEC
-    case "AN (Global)"_h: bindBOOL(d, fi, d->ANGlobal); break;
-    case "AN (Local)"_h:
-      bindBOOL(d, fi, d->ANLocal);
-      break;
-
-    /* ASnd header */
-    case "Requested Service ID"_h: bindEnum(d, fi, d->sID); break;
-    case "Requested Service Target"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.svtg" == FT_UINT8 -- BASE_DEC
-    case "Data"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.data" == FT_BYTES -- BASE_NONE
-
-    /* ASnd-->IdentResponse */
-    // case "EN (Exception New)"_h: break; // "epl-xdd.asnd.ires.en" == FT_BOOLEAN -- 8
-    case "EC (Exception Clear)"_h:
-      bindBOOL(d, fi, d->exceptionClear);
-      break;
-    // case "PR (Priority)"_h: break; // "epl-xdd.asnd.ires.pr" == FT_UINT8 -- BASE_DEC
-    // case "RS (RequestToSend)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.ires.rs" == FT_UINT8 -- BASE_DEC
-    // case "NMTStatus"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.ires.state" == FT_UINT8 -- BASE_HEX
-    // case "EPLVersion"_h: break; // "epl-xdd.asnd.ires.eplver" == FT_UINT8 -- BASE_CUSTOM
-    case "FeatureFlags"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features" == FT_UINT32 -- BASE_HEX
-    case "Isochronous"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit0" == FT_BOOLEAN -- 32
-    case "SDO by UDP/IP"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit1" == FT_BOOLEAN -- 32
-    case "SDO by ASnd"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit2" == FT_BOOLEAN -- 32
-    case "SDO by PDO"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit3" == FT_BOOLEAN -- 32
-    case "NMT Info Services"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit4" == FT_BOOLEAN -- 32
-    case "Ext. NMT State Commands"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit5" == FT_BOOLEAN -- 32
-    case "Dynamic PDO Mapping"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit6" == FT_BOOLEAN -- 32
-    case "NMT Service by UDP/IP"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit7" == FT_BOOLEAN -- 32
-    case "Configuration Manager"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit8" == FT_BOOLEAN -- 32
-    case "Multiplexed Access"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit9" == FT_BOOLEAN -- 32
-    case "NodeID setup by SW"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitA" == FT_BOOLEAN -- 32
-    case "MN Basic Ethernet Mode"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitB" == FT_BOOLEAN -- 32
-    case "Routing Type 1 Support"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitC" == FT_BOOLEAN -- 32
-    case "Routing Type 2 Support"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitD" == FT_BOOLEAN -- 32
-    case "SDO Read/Write All"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitE" == FT_BOOLEAN -- 32
-    case "SDO Read/Write Multiple"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bitF" == FT_BOOLEAN -- 32
-    case "Multiple-ASend Support"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit10" == FT_BOOLEAN -- 32
-    case "Ring Redundancy"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit11" == FT_BOOLEAN -- 32
-    case "PResChaining"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit12" == FT_BOOLEAN -- 32
-    case "Multiple PReq/PRes"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit13" == FT_BOOLEAN -- 32
-    case "Dynamic Node Allocation"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.features.bit14" == FT_BOOLEAN -- 32
-    case "MTU"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.mtu" == FT_UINT16 -- BASE_DEC
-    case "PollInSize"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.pollinsize" == FT_UINT16 -- BASE_DEC
-    case "PollOutSize"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.polloutsizes" == FT_UINT16 -- BASE_DEC
-    case "ResponseTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.resptime" == FT_UINT32 -- BASE_DEC
-    case "DeviceType"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.devicetype" == FT_STRING -- BASE_NONE
-    case "Profile"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.profile" == FT_UINT16 -- BASE_DEC
-    case "VendorId"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.vendorid" == FT_UINT32 -- BASE_DEC_HEX
-    case "ProductCode"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.productcode" == FT_UINT32 -- BASE_DEC_HEX
-    case "RevisionNumber"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.revisionno" == FT_UINT32 -- BASE_DEC_HEX
-    case "SerialNumber"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.serialno" == FT_UINT32 -- BASE_DEC_HEX
-    case "VendorSpecificExtension1"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.vendorext1" == FT_UINT64 -- BASE_DEC_HEX
-    case "VerifyConfigurationDate"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.confdate" == FT_UINT32 -- BASE_DEC_HEX
-    case "VerifyConfigurationTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.conftime" == FT_UINT32 -- BASE_DEC_HEX
-    case "ApplicationSwDate"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.appswdate" == FT_UINT32 -- BASE_DEC_HEX
-    case "ApplicationSwTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.appswtime" == FT_UINT32 -- BASE_DEC_HEX
-    case "IPAddress"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.ip" == FT_IPv4 -- BASE_NONE
-    case "SubnetMask"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.subnet" == FT_IPv4 -- BASE_NETMASK
-    case "DefaultGateway"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.gateway" == FT_IPv4 -- BASE_NONE
-    case "HostName"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.hostname" == FT_STRING -- BASE_NONE
-    case "VendorSpecificExtension2"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.ires.vendorext2" == FT_BYTES -- BASE_NONE
-
-    /* ASnd-->StatusResponse */
-    // case "EN (Exception New)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.en" == FT_BOOLEAN -- 8
-    // case "EC (Exception Clear)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.ec" == FT_BOOLEAN -- 8
-    // case "PR (Priority)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.pr" == FT_UINT8 -- BASE_DEC
-    // case "RS (RequestToSend)"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.rs" == FT_UINT8 -- BASE_DEC
-    // case "NMTStatus"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.stat" == FT_UINT8 -- BASE_HEX
-
-    /* ASnd-->SyncResponse */
-    case "SyncResponse"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.sync" == FT_UINT8 -- BASE_HEX
-    // case "PResTimeFirstValid"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.syncresponse.fst.val" == FT_BOOLEAN -- 8
-    // case "PResTimeSecondValid"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.syncresponse.sec.val" == FT_BOOLEAN -- 8
-    case "PResModeStatus"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.mode" == FT_BOOLEAN -- 8
-    case "Latency"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.latency" == FT_UINT8 -- BASE_DEC
-    case "SyncDelayStation"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.delay.station" == FT_UINT8 -- BASE_DEC
-    case "SyncDelay"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.delay.station" == FT_UINT8 -- BASE_DEC
-    case "PResTimeFirst"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.pres.fst" == FT_UINT8 -- BASE_DEC
-    case "PResTimeSecond"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.syncresponse.pres.sec" == FT_UINT8 -- BASE_DEC
-    case "StaticErrorBitField"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.seb" == FT_BYTES -- BASE_NONE
-
-    /*StaticErrorBitField */
-    case "Generic error"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit0" == FT_UINT8 -- BASE_DEC
-    case "Current"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit1" == FT_UINT8 -- BASE_DEC
-    case "Voltage"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit2" == FT_UINT8 -- BASE_DEC
-    case "Temperature"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit3" == FT_UINT8 -- BASE_DEC
-    case "Communication error"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit4" == FT_UINT8 -- BASE_DEC
-    case "Device Profile Spec"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit5" == FT_UINT8 -- BASE_DEC
-    case "Manufacturer Spec"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.res.seb.bit7" == FT_UINT8 -- BASE_DEC
-    // case "Device Profile Spec"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.res.seb.devicespecific_err" == FT_BYTES -- BASE_NONE
-
-    case "ErrorCodesList"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el" == FT_BYTES -- BASE_NONE
-    case "Entry"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry" == FT_BYTES -- BASE_NONE
-
-    /*List of Errors/Events*/
-    case "Entry Type"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.type" == FT_UINT16 -- BASE_HEX
-    // case "Profile"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.sres.el.entry.type.profile" == FT_UINT16 -- BASE_DEC
-    case "Mode"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.type.mode" == FT_UINT16 -- BASE_DEC
-    case "Bit14"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.type.bit14" == FT_UINT16 -- BASE_DEC
-    case "Bit15"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.type.bit15" == FT_UINT16 -- BASE_DEC
-    case "Error Code"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.code" == FT_UINT16 -- BASE_DEC
-    case "Time Stamp"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.time" == FT_UINT64 -- BASE_DEC
-    case "Additional Information"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sres.el.entry.add" == FT_UINT64 -- BASE_DEC
-
-
-    /* ASnd-->NMTRequest */
-    case "NMTRequestedCommandID"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtrequest.rcid" == FT_UINT8 -- BASE_HEX_DEC
-    case "NMTRequestedCommandTarget"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtrequest.rct" == FT_UINT8 -- BASE_DEC_HEX
-    case "NMTRequestedCommandData"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtrequest.rcd" == FT_BYTES -- BASE_NONE
-
-    /* ASnd-->NMTCommand */
-    case "NMTCommandId"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.cid" == FT_UINT8 -- BASE_HEX_DEC | BASE_EXT_STRING
-    case "Reset Reason"_h:
-      DPRINT(d, fi, "TODO");
-      break; //"epl-xdd.asnd.nmtcommand.resetnode_reason" == FT_UINT16 -- BASE_HEX | BASE_EXT_STRING
-    case "NMTCommandData"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.cdat" == FT_BYTES -- BASE_NONE
-
-    // case "HostName"_h:
-    //   DPRINT(d, fi, "TODO");
-    //   break; // "epl-xdd.asnd.nmtcommand.nmtnethostnameset.hn" == FT_BYTES -- BASE_NONE
-    case "NodeID"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.nmtflusharpentry.nid" == FT_UINT8 -- BASE_DEC_HEX
-    case "DateTime"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.nmtpublishtime.dt" == FT_BYTES -- BASE_NONE
-    case "DNA"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna" == FT_BYTES -- BASE_NONE
-    case "Valid flags"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.flags" == FT_UINT8 -- BASE_HEX
-    case "Lease time valid"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.ltv" == FT_BOOLEAN -- 8
-    case "Hub port enable mask valid"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.hpm" == FT_BOOLEAN -- 8
-    case "Set new node number"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.nnn" == FT_BOOLEAN -- 8
-    case "Compare current MAC ID"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.mac" == FT_BOOLEAN -- 8
-    case "Compare current node number"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.cnn" == FT_BOOLEAN -- 8
-    case "Current MAC ID"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.currmac" == FT_ETHER -- BASE_NONE
-    case "Hub port enable mask"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.hubenmsk" == FT_UINT64 -- BASE_HEX
-    case "Current node number"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.currnn" == FT_UINT32 -- BASE_DEC
-    case "New node number"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.newnn" == FT_UINT32 -- BASE_DEC
-    case "Lease Time"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.nmtcommand.dna.leasetime" == FT_RELATIVE_TIME -- BASE_NONE
-
-    /* ASnd-->SDO */
-    case "Sequence Layer"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.seq" == FT_NONE -- BASE_NONE
-    case "ReceiveSequenceNumber"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.seq.receive.sequence.number" == FT_UINT8 -- BASE_DEC
-    case "ReceiveCon"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.seq.receive.con" == FT_UINT8 -- BASE_DEC
-    case "SendSequenceNumber"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.seq.send.sequence.number" == FT_UINT8 -- BASE_DEC
-    case "SendCon"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.seq.send.con" == FT_UINT8 -- BASE_DEC
-    case "Command Layer"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd" == FT_NONE -- BASE_NONE
-    case "SDO Transaction ID"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.transaction.id" == FT_UINT8 -- BASE_DEC
-    case "SDO Response"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.response" == FT_UINT8 -- BASE_DEC
-    case "SDO Abort"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.abort" == FT_UINT8 -- BASE_DEC
-    case "SDO Sub Transfer"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.sub.abort" == FT_UINT8 -- BASE_DEC
-    case "SDO Segmentation"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.segmentation" == FT_UINT8 -- BASE_DEC
-    case "SDO Command ID"_h:
-      DPRINT(d, fi, "TODO");
-      break; //"epl-xdd.asnd.sdo.cmd.command.id" == FT_UINT8 == BASE_DEC | BASE_EXT_STRING
-    case "SDO Segment size"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.segment.size" == FT_UINT8 -- BASE_DEC
-    case "SDO Data size"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.size" == FT_UINT8 -- BASE_DEC
-    case "SDO Data Padding"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.padding" == FT_UINT8 -- BASE_DEC
-    case "SDO Transfer Abort"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.abort.code" == FT_UINT8 -- BASE_HEX
-    case "OD Index"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.index" == FT_UINT16 -- BASE_HEX
-    case "OD SubIndex"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.subindex" == FT_UINT8 -- BASE_HEX
-    case "Mapping"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.mapping" == FT_NONE -- BASE_NONE
-    case "Index"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.mapping.index" == FT_UINT16 -- BASE_HEX
-    case "SubIndex"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.mapping.subindex" == FT_UINT8 -- BASE_HEX
-    case "Offset"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.mapping.offset" == FT_UINT16 -- BASE_HEX
-    case "Length"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.data.mapping.length" == FT_UINT16 -- BASE_DEC
-    case "Message fragments"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragments" == FT_NONE -- BASE_NONE
-    case "Message fragment"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment" == FT_FRAMENUM -- BASE_NONE
-    case "Message fragment overlap"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.overlap" == FT_BOOLEAN -- 0
-    case "Message fragment overlapping with conflicting data"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.overlap.conflicts" == FT_BOOLEAN -- 0
-    case "Message has multiple tail fragments"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.multiple_tails" == FT_BOOLEAN -- 0
-    case "Message fragment too long"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.too_long_fragment" == FT_BOOLEAN -- 0
-    case "Message defragmentation error"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.error" == FT_FRAMENUM -- BASE_NONE
-    case "Message fragment count"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.fragment.count" == FT_UINT32 -- BASE_DEC
-    case "Reassembled"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.reassembled" == FT_UINT8 -- BASE_DEC
-    case "Reassembled in"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.reassembled.in" == FT_FRAMENUM -- BASE_NONE
-    case "Reassembled length"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.reassembled.length" == FT_UINT32 -- BASE_DEC
-    case "Reassembled Data"_h:
-      DPRINT(d, fi, "TODO");
-      break; // "epl-xdd.asnd.sdo.cmd.reassembled.data" == FT_BYTES -- BASE_NONE
-#endif
-
     /*
      * Replace regex
      * 1. '[\t]+\{[\t ]*&[^,]+,\n'                                    ==> ''
@@ -643,610 +209,588 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
      * // '
      */
 
-
     /* Common data fields (same for all message types) */
-    case "epl-xdd.mtyp"_h:
-      DPRINT(d, fi, "TODO", "MessageType");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.node"_h:
-      DPRINT(d, fi, "TODO", "Node");
-      break; // == FT_UINT8 -- BASE_DEC_HEX
-    case "epl-xdd.dest"_h:
-      DPRINT(d, fi, "TODO", "Destination");
-      break; // == FT_UINT8 -- BASE_DEC_HEX
-    case "epl-xdd.src"_h:
-      DPRINT(d, fi, "TODO", "Source");
-      break; // == FT_UINT8 -- BASE_DEC_HEX
-    case "epl-xdd.payload.capture_size"_h:
-      DPRINT(d, fi, "TODO", "Captured Size");
-      break; // == FT_UINT16 -- BASE_DEC
+    case EPL_PREFIX ".mtyp"_h:
+      bindEnum(d, fi, d->pType);
+      break; // == FT_UINT8 -- BASE_DEC ("MessageType")
+    case EPL_PREFIX ".dest"_h:
+      bindUINT8(d, fi, d->dst);
+      break; // == FT_UINT8 -- BASE_DEC_HEX ("Destination")
+    case EPL_PREFIX ".src"_h:
+      bindUINT8(d, fi, d->src);
+      break; // == FT_UINT8 -- BASE_DEC_HEX ("Source")
+    case EPL_PREFIX ".payload.capture_size"_h:
+      bindUINT16(d, fi, d->captureSize);
+      break; // == FT_UINT16 -- BASE_DEC ("Captured Size")
+
+    // IGONRE:
+    case EPL_PREFIX ".asnd.ires.features"_h: // == FT_UINT32 -- BASE_HEX ("FeatureFlags")
+    case EPL_PREFIX ".soc"_h:                // == FT_UINT8 -- BASE_HEX ("Flags")
+    case EPL_PREFIX ".preq"_h:               // == FT_UINT8 -- BASE_HEX ("Flags")
+    case EPL_PREFIX ".pres"_h:               // == FT_UINT8 -- BASE_HEX ("Flags")
+    case EPL_PREFIX ".node"_h:               // == FT_UINT8 -- BASE_DEC_HEX ("Node")
+    case "text"_h: break;
+
+    case EPL_PREFIX ".asnd.ires.state"_h:
+    case EPL_PREFIX ".soa.stat"_h:
+    case EPL_PREFIX ".pres.stat"_h:
+      bindEnum(d, fi, d->nmtState);
+      break; // == FT_UINT8 -- BASE_HEX ("NMTStatus")
 
     /* SoC data fields*/
-    case "epl-xdd.soc"_h:
-      DPRINT(d, fi, "TODO", "Flags");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.soc.mc"_h:
-      DPRINT(d, fi, "TODO", "MC (Multiplexed Cycle Completed)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soc.ps"_h:
-      DPRINT(d, fi, "TODO", "PS (Prescaled Slot)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soc.nettime"_h:
-      DPRINT(d, fi, "TODO", "NetTime");
-      break; // == FT_ABSOLUTE_TIME -- ABSOLUTE_TIME_LOCAL
-    case "epl-xdd.soc.relativetime"_h:
-      DPRINT(d, fi, "TODO", "RelativeTime");
-      break; // == FT_UINT64 -- BASE_DEC
+    case EPL_PREFIX ".soc.mc"_h:
+      bindBOOL(d, fi, d->SoC_multiplexedCycleCompleted);
+      break; // == FT_BOOLEAN -- 8 ("MC (Multiplexed Cycle Completed)")
+    case EPL_PREFIX ".soc.ps"_h:
+      bindBOOL(d, fi, d->SoC_prescaledSlot);
+      break; // == FT_BOOLEAN -- 8 ("PS (Prescaled Slot)")
+    case EPL_PREFIX ".soc.nettime"_h:
+      bindABSOLUTE_TIME(d, fi, d->SoC_netTime);
+      break; // == FT_ABSOLUTE_TIME -- ABSOLUTE_TIME_LOCAL ("NetTime")
+    case EPL_PREFIX ".soc.relativetime"_h:
+      bindUINT64(d, fi, d->SoC_relativeTime);
+      break; // == FT_UINT64 -- BASE_DEC ("RelativeTime")
 
     /* PReq data fields*/
-    case "epl-xdd.preq"_h:
-      DPRINT(d, fi, "TODO", "Flags");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.preq.ms"_h:
-      DPRINT(d, fi, "TODO", "MS (Multiplexed Slot)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.preq.ea"_h:
-      DPRINT(d, fi, "TODO", "EA (Exception Acknowledge)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.preq.rd"_h:
-      DPRINT(d, fi, "TODO", "RD (Ready)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.preq.pdov"_h:
-      DPRINT(d, fi, "TODO", "PDOVersion");
-      break; // == FT_UINT8 -- BASE_CUSTOM
-    case "epl-xdd.preq.size"_h:
-      DPRINT(d, fi, "TODO", "Size");
-      break; // == FT_UINT16 -- BASE_DEC
+    case EPL_PREFIX ".preq.ms"_h:
+      bindBOOL(d, fi, d->PReq_multiplexedSlot);
+      break; // == FT_BOOLEAN -- 8 ("MS (Multiplexed Slot)")
+    case EPL_PREFIX ".preq.ea"_h:
+      bindBOOL(d, fi, d->PReq_exceptionAcknoledged);
+      break; // == FT_BOOLEAN -- 8 ("EA (Exception Acknowledge)")
+    case EPL_PREFIX ".preq.rd"_h:
+      bindBOOL(d, fi, d->PReq_Ready);
+      break; // == FT_BOOLEAN -- 8 ("RD (Ready)")
+    case EPL_PREFIX ".preq.pdov"_h:
+      bindUINT8(d, fi, d->PReq_PDOVersion);
+      break; // == FT_UINT8 -- BASE_CUSTOM ("PDOVersion")
+    case EPL_PREFIX ".preq.size"_h:
+      bindUINT16(d, fi, d->PReq_size);
+      break; // == FT_UINT16 -- BASE_DEC ("Size")
 
     /* PRes data fields*/
-    case "epl-xdd.pres.stat.ms"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.pres.stat.cs"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.pres"_h:
-      DPRINT(d, fi, "TODO", "Flags");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.pres.ms"_h:
-      DPRINT(d, fi, "TODO", "MS (Multiplexed Slot)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.pres.en"_h:
-      DPRINT(d, fi, "TODO", "EN (Exception New)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.pres.rd"_h:
-      DPRINT(d, fi, "TODO", "RD (Ready)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.pres.pr"_h:
-      DPRINT(d, fi, "TODO", "PR (Priority)");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.pres.rs"_h:
-      DPRINT(d, fi, "TODO", "RS (RequestToSend)");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.pres.pdov"_h:
-      DPRINT(d, fi, "TODO", "PDOVersion");
-      break; // == FT_STRING -- BASE_NONE
-    case "epl-xdd.pres.size"_h:
-      DPRINT(d, fi, "TODO", "Size");
-      break; // == FT_UINT16 -- BASE_DEC
+    case EPL_PREFIX ".pres.ms"_h:
+      bindBOOL(d, fi, d->PRes_multiplexedSlot);
+      break; // == FT_BOOLEAN -- 8 ("MS (Multiplexed Slot)")
+    case EPL_PREFIX ".pres.en"_h:
+      bindBOOL(d, fi, d->PRes_exceptionNew);
+      break; // == FT_BOOLEAN -- 8 ( "EN (Exception New)")
+    case EPL_PREFIX ".pres.rd"_h:
+      bindBOOL(d, fi, d->PRes_ready);
+      break; // == FT_BOOLEAN -- 8 ("RD (Ready)")
+    case EPL_PREFIX ".pres.pr"_h:
+      bindEnum(d, fi, d->PRes_priority);
+      break; // == FT_UINT8 -- BASE_DEC ("PR (Priority)")
+    case EPL_PREFIX ".pres.rs"_h:
+      bindUINT8(d, fi, d->PRes_requestToSend);
+      break; // == FT_UINT8 -- BASE_DEC ("RS (RequestToSend)")
+    case EPL_PREFIX ".pres.pdov"_h:
+      bindSTRING(d, fi, d->PRes_PDOVersion);
+      break; // == FT_STRING -- BASE_NONE ("PDOVersion")
+    case EPL_PREFIX ".pres.size"_h:
+      bindUINT16(d, fi, d->PRes_size);
+      break; // == FT_UINT16 -- BASE_DEC ("Size")
 
     /* SoA data fields*/
-    case "epl-xdd.soa.stat.ms"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.soa.stat.cs"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.soa.ea"_h:
-      DPRINT(d, fi, "TODO", "EA (Exception Acknowledge)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.er"_h:
-      DPRINT(d, fi, "TODO", "ER (Exception Reset)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.svid"_h:
-      DPRINT(d, fi, "TODO", "RequestedServiceID");
-      break; // == FT_UINT8 -- BASE_DEC|BASE_RANGE_STRING
-    case "epl-xdd.soa.svtg"_h:
-      DPRINT(d, fi, "TODO", "RequestedServiceTarget");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.eplv"_h:
-      DPRINT(d, fi, "TODO", "EPLVersion");
-      break; // == FT_UINT8 -- BASE_CUSTOM
-    case "epl-xdd.soa.sync"_h:
-      DPRINT(d, fi, "TODO", "SyncControl");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.soa.adva"_h:
-      DPRINT(d, fi, "TODO", "DestMacAddressValid");
-      break; // == FT_BOOLEAN -- 8
+    case EPL_PREFIX ".soa.ea"_h:
+      bindBOOL(d, fi, d->SoA_exceptionAcknowledge);
+      break; // == FT_BOOLEAN -- 8 ("EA (Exception Acknowledge)")
+    case EPL_PREFIX ".soa.er"_h:
+      bindBOOL(d, fi, d->SoA_exceptionReset);
+      break; // == FT_BOOLEAN -- 8 ("ER (Exception Reset)")
+    case EPL_PREFIX ".soa.svid"_h:
+      bindEnum(d, fi, d->SoA_requestedServiceID);
+      break; // == FT_UINT8 -- BASE_DEC|BASE_RANGE_STRING ("RequestedServiceID")
+    case EPL_PREFIX ".soa.svtg"_h:
+      bindUINT8(d, fi, d->SoA_requestedServiceTarget);
+      break; // == FT_UINT8 -- BASE_DEC ("RequestedServiceTarget")
+    case EPL_PREFIX ".soa.eplv"_h:
+      bindUINT8(d, fi, d->SoA_EPLVersion);
+      break; // == FT_UINT8 -- BASE_CUSTOM ("EPLVersion")
+    case EPL_PREFIX ".soa.sync"_h:
+      bindUINT8(d, fi, d->SoA_syncControl);
+      break; // == FT_UINT8 -- BASE_HEX ("SyncControl")
+    case EPL_PREFIX ".soa.adva"_h:
+      bindBOOL(d, fi, d->SoA_destMacAddressValid);
+      break; // == FT_BOOLEAN -- 8 ("DestMacAddressValid")
 
-    case "epl-xdd.soa.tm"_h:
-      DPRINT(d, fi, "TODO", "PResFallBackTimeoutValid");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.mnsc"_h:
-      DPRINT(d, fi, "TODO", "SyncMNDelaySecondValid");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.mnft"_h:
-      DPRINT(d, fi, "TODO", "SyncMNDelayFirstValid");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.prsc"_h:
-      DPRINT(d, fi, "TODO", "PResTimeSecondValid");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.prft"_h:
-      DPRINT(d, fi, "TODO", "PResTimeFirstValid");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.mst"_h:
-      DPRINT(d, fi, "TODO", "PResModeSet");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.mrst"_h:
-      DPRINT(d, fi, "TODO", "PResModeReset");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.adva.end"_h:
+    case EPL_PREFIX ".soa.tm"_h:
+      bindBOOL(d, fi, d->SoA_PResFallBackTimeoutValid);
+      break; // == FT_BOOLEAN -- 8 ("PResFallBackTimeoutValid")
+    case EPL_PREFIX ".soa.mnsc"_h:
+      bindBOOL(d, fi, d->SoA_SyncMNDelaySecondValid);
+      break; // == FT_BOOLEAN -- 8 ("SyncMNDelaySecondValid")
+    case EPL_PREFIX ".soa.mnft"_h:
+      bindBOOL(d, fi, d->SoA_SyncMNDelayFirstValid);
+      break; // == FT_BOOLEAN -- 8 ("SyncMNDelayFirstValid")
+    case EPL_PREFIX ".soa.prsc"_h:
+      bindBOOL(d, fi, d->SoA_PResTimeSecondValid);
+      break; // == FT_BOOLEAN -- 8 ("PResTimeSecondValid")
+    case EPL_PREFIX ".soa.prft"_h:
+      bindBOOL(d, fi, d->SoA_PResTimeFirstValid);
+      break; // == FT_BOOLEAN -- 8 ("PResTimeFirstValid")
+    case EPL_PREFIX ".soa.prmst"_h:
+      bindBOOL(d, fi, d->SoA_PResModeSet);
+      break; // == FT_BOOLEAN -- 8 ("PResModeSet")
+    case EPL_PREFIX ".soa.prmrst"_h:
+      bindBOOL(d, fi, d->SoA_PResModeReset);
+      break; // == FT_BOOLEAN -- 8 ("PResModeReset")
+    case EPL_PREFIX ".soa.adva.end"_h:
       DPRINT(d, fi, "TODO", "DestMacAddress");
       break; // == FT_ETHER -- BASE_NONE
-    case "epl-xdd.soa.tm.end"_h:
+    case EPL_PREFIX ".soa.tm.end"_h:
       DPRINT(d, fi, "TODO", "PResFallBackTimeoutValid");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.mnsc.end"_h:
+    case EPL_PREFIX ".soa.mnsc.end"_h:
       DPRINT(d, fi, "TODO", "SyncMNDelaySecondValid");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.mnft.end"_h:
+    case EPL_PREFIX ".soa.mnft.end"_h:
       DPRINT(d, fi, "TODO", "SyncMNDelayFirstValid");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.prsc.end"_h:
+    case EPL_PREFIX ".soa.prsc.end"_h:
       DPRINT(d, fi, "TODO", "PResTimeSecondValid");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.prft.end"_h:
+    case EPL_PREFIX ".soa.prft.end"_h:
       DPRINT(d, fi, "TODO", "PResTimeFirstValid");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.soa.an.global"_h:
-      DPRINT(d, fi, "TODO", "AN (Global)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.soa.an.local"_h:
-      DPRINT(d, fi, "TODO", "AN (Local)");
-      break; // == FT_BOOLEAN -- 8
+    case EPL_PREFIX ".soa.an.global"_h:
+      bindBOOL(d, fi, d->SoA_ANGlobal);
+      break; // == FT_BOOLEAN -- 8 ("AN (Global)")
+    case EPL_PREFIX ".soa.an.local"_h:
+      bindBOOL(d, fi, d->SoA_ANLocal);
+      break; // == FT_BOOLEAN -- 8 ("AN (Local)")
+
     /* ASnd header */
-    case "epl-xdd.asnd.svid"_h:
-      DPRINT(d, fi, "TODO", "Requested Service ID");
-      break; // == FT_UINT8 -- BASE_HEX|BASE_RANGE_STRING
-    case "epl-xdd.asnd.svtg"_h:
-      DPRINT(d, fi, "TODO", "Requested Service Target");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.data"_h:
-      DPRINT(d, fi, "TODO", "Data");
-      break; // == FT_BYTES -- BASE_NONE
+    case EPL_PREFIX ".asnd.svid"_h:
+      bindEnum(d, fi, d->ASnd_requestedServiceID);
+      break; // == FT_UINT8 -- BASE_HEX|BASE_RANGE_STRING ("Requested Service ID")
+    case EPL_PREFIX ".asnd.svtg"_h:
+      bindUINT8(d, fi, d->ASnd_requestedServiceTarget);
+      break; // == FT_UINT8 -- BASE_DEC ("Requested Service Target")
+    case EPL_PREFIX ".asnd.data"_h:
+      bindBYTES(d, fi, d->ASnd_data);
+      break; // == FT_BYTES -- BASE_NONE ("Data")
 
     /* ASnd-->IdentResponse */
-    case "epl-xdd.asnd.ires.en"_h:
-      DPRINT(d, fi, "TODO", "EN (Exception New)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.ires.ec"_h:
-      DPRINT(d, fi, "TODO", "EC (Exception Clear)");
-      break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.ires.pr"_h:
-      DPRINT(d, fi, "TODO", "PR (Priority)");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.ires.rs"_h:
-      DPRINT(d, fi, "TODO", "RS (RequestToSend)");
-      break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.ires.state.ms"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.ires.state.cs"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.ires.eplver"_h:
-      DPRINT(d, fi, "TODO", "EPLVersion");
-      break; // == FT_UINT8 -- BASE_CUSTOM
-    case "epl-xdd.asnd.ires.features"_h:
-      DPRINT(d, fi, "TODO", "FeatureFlags");
-      break; // == FT_UINT32 -- BASE_HEX
-    case "epl-xdd.asnd.ires.features.bit0"_h:
-      DPRINT(d, fi, "TODO", "Isochronous");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit1"_h:
-      DPRINT(d, fi, "TODO", "SDO by UDP/IP");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit2"_h:
-      DPRINT(d, fi, "TODO", "SDO by ASnd");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit3"_h:
-      DPRINT(d, fi, "TODO", "SDO by PDO");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit4"_h:
-      DPRINT(d, fi, "TODO", "NMT Info Services");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit5"_h:
-      DPRINT(d, fi, "TODO", "Ext. NMT State Commands");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit6"_h:
-      DPRINT(d, fi, "TODO", "Dynamic PDO Mapping");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit7"_h:
-      DPRINT(d, fi, "TODO", "NMT Service by UDP/IP");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit8"_h:
-      DPRINT(d, fi, "TODO", "Configuration Manager");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit9"_h:
-      DPRINT(d, fi, "TODO", "Multiplexed Access");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitA"_h:
-      DPRINT(d, fi, "TODO", "NodeID setup by SW");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitB"_h:
-      DPRINT(d, fi, "TODO", "MN Basic Ethernet Mode");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitC"_h:
-      DPRINT(d, fi, "TODO", "Routing Type 1 Support");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitD"_h:
-      DPRINT(d, fi, "TODO", "Routing Type 2 Support");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitE"_h:
-      DPRINT(d, fi, "TODO", "SDO Read/Write All");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bitF"_h:
-      DPRINT(d, fi, "TODO", "SDO Read/Write Multiple");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit10"_h:
-      DPRINT(d, fi, "TODO", "Multiple-ASend Support");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit11"_h:
-      DPRINT(d, fi, "TODO", "Ring Redundancy");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit12"_h:
-      DPRINT(d, fi, "TODO", "PResChaining");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit13"_h:
-      DPRINT(d, fi, "TODO", "Multiple PReq/PRes");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.features.bit14"_h:
-      DPRINT(d, fi, "TODO", "Dynamic Node Allocation");
-      break; // == FT_BOOLEAN -- 32
-    case "epl-xdd.asnd.ires.mtu"_h:
-      DPRINT(d, fi, "TODO", "MTU");
-      break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.ires.pollinsize"_h:
-      DPRINT(d, fi, "TODO", "PollInSize");
-      break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.ires.polloutsizes"_h:
-      DPRINT(d, fi, "TODO", "PollOutSize");
-      break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.ires.resptime"_h:
-      DPRINT(d, fi, "TODO", "ResponseTime");
-      break; // == FT_UINT32 -- BASE_DEC
-    case "epl-xdd.asnd.ires.devicetype"_h:
-      DPRINT(d, fi, "TODO", "DeviceType");
-      break; // == FT_STRING -- BASE_NONE
-    case "epl-xdd.asnd.ires.profile"_h:
-      DPRINT(d, fi, "TODO", "Profile");
-      break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.ires.vendorid"_h:
-      DPRINT(d, fi, "TODO", "VendorId");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.productcode"_h:
-      DPRINT(d, fi, "TODO", "ProductCode");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.revisionno"_h:
-      DPRINT(d, fi, "TODO", "RevisionNumber");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.serialno"_h:
-      DPRINT(d, fi, "TODO", "SerialNumber");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.vendorext1"_h:
-      DPRINT(d, fi, "TODO", "VendorSpecificExtension1");
-      break; // == FT_UINT64 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.confdate"_h:
-      DPRINT(d, fi, "TODO", "VerifyConfigurationDate");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.conftime"_h:
-      DPRINT(d, fi, "TODO", "VerifyConfigurationTime");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.appswdate"_h:
-      DPRINT(d, fi, "TODO", "ApplicationSwDate");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.appswtime"_h:
-      DPRINT(d, fi, "TODO", "ApplicationSwTime");
-      break; // == FT_UINT32 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.ires.ip"_h:
-      DPRINT(d, fi, "TODO", "IPAddress");
-      break; // == FT_IPv4 -- BASE_NONE
-    case "epl-xdd.asnd.ires.subnet"_h:
-      DPRINT(d, fi, "TODO", "SubnetMask");
-      break; // == FT_IPv4 -- BASE_NETMASK
-    case "epl-xdd.asnd.ires.gateway"_h:
-      DPRINT(d, fi, "TODO", "DefaultGateway");
-      break; // == FT_IPv4 -- BASE_NONE
-    case "epl-xdd.asnd.ires.hostname"_h:
-      DPRINT(d, fi, "TODO", "HostName");
-      break; // == FT_STRING -- BASE_NONE
-    case "epl-xdd.asnd.ires.vendorext2"_h:
-      DPRINT(d, fi, "TODO", "VendorSpecificExtension2");
-      break; // == FT_BYTES -- BASE_NONE
+    case EPL_PREFIX ".asnd.ires.en"_h:
+      bindBOOL(d, fi, d->ASndID_exceptionNew);
+      break; // == FT_BOOLEAN -- 8 ("EN (Exception New)")
+    case EPL_PREFIX ".asnd.ires.ec"_h:
+      bindBOOL(d, fi, d->ASndID_exceptionClear);
+      break; // == FT_BOOLEAN -- 8 ("EC (Exception Clear)")
+    case EPL_PREFIX ".asnd.ires.pr"_h:
+      bindEnum(d, fi, d->ASndID_priority);
+      break; // == FT_UINT8 -- BASE_DEC ("PR (Priority)")
+    case EPL_PREFIX ".asnd.ires.rs"_h:
+      bindUINT8(d, fi, d->ASndID_RequestToSend);
+      break; // == FT_UINT8 -- BASE_DEC ("RS (RequestToSend)")
+    case EPL_PREFIX ".asnd.ires.eplver"_h:
+      bindUINT8(d, fi, d->ASndID_EPLVersion);
+      break; // == FT_UINT8 -- BASE_CUSTOM ("EPLVersion")
+    case EPL_PREFIX ".asnd.ires.features.bit0"_h:
+      bindBOOL(d, fi, d->ASndID_Isochronous);
+      break; // == FT_BOOLEAN -- 32 ("Isochronous")
+    case EPL_PREFIX ".asnd.ires.features.bit1"_h:
+      bindBOOL(d, fi, d->ASndID_SDOByUDP_IP);
+      break; // == FT_BOOLEAN -- 32 ("SDO by UDP/IP")
+    case EPL_PREFIX ".asnd.ires.features.bit2"_h:
+      bindBOOL(d, fi, d->ASndID_SDOByASnd);
+      break; // == FT_BOOLEAN -- 32 ("SDO by ASnd")
+    case EPL_PREFIX ".asnd.ires.features.bit3"_h:
+      bindBOOL(d, fi, d->ASndID_SDOByPDO);
+      break; // == FT_BOOLEAN -- 32 ("SDO by PDO")
+    case EPL_PREFIX ".asnd.ires.features.bit4"_h:
+      bindBOOL(d, fi, d->ASndID_NMTInfoServices);
+      break; // == FT_BOOLEAN -- 32 ("NMT Info Services")
+    case EPL_PREFIX ".asnd.ires.features.bit5"_h:
+      bindBOOL(d, fi, d->ASndID_ExtNMTStateCommands);
+      break; // == FT_BOOLEAN -- 32 ("Ext. NMT State Commands")
+    case EPL_PREFIX ".asnd.ires.features.bit6"_h:
+      bindBOOL(d, fi, d->ASndID_DynamicPDOMapping);
+      break; // == FT_BOOLEAN -- 32 ("Dynamic PDO Mapping")
+    case EPL_PREFIX ".asnd.ires.features.bit7"_h:
+      bindBOOL(d, fi, d->ASndID_NMTServiceByUDP_IP);
+      break; // == FT_BOOLEAN -- 32 ("NMT Service by UDP/IP")
+    case EPL_PREFIX ".asnd.ires.features.bit8"_h:
+      bindBOOL(d, fi, d->ASndID_ConfigurationManager);
+      break; // == FT_BOOLEAN -- 32 ("Configuration Manager")
+    case EPL_PREFIX ".asnd.ires.features.bit9"_h:
+      bindBOOL(d, fi, d->ASndID_MultiplexedAccess);
+      break; // == FT_BOOLEAN -- 32 ("Multiplexed Access")
+    case EPL_PREFIX ".asnd.ires.features.bitA"_h:
+      bindBOOL(d, fi, d->ASndID_NodeIDSetupBySW);
+      break; // == FT_BOOLEAN -- 32 ("NodeID setup by SW")
+    case EPL_PREFIX ".asnd.ires.features.bitB"_h:
+      bindBOOL(d, fi, d->ASndID_NMBasicEthernetMode);
+      break; // == FT_BOOLEAN -- 32 ("MN Basic Ethernet Mode")
+    case EPL_PREFIX ".asnd.ires.features.bitC"_h:
+      bindBOOL(d, fi, d->ASndID_RoutingType1Support);
+      break; // == FT_BOOLEAN -- 32 ("Routing Type 1 Support")
+    case EPL_PREFIX ".asnd.ires.features.bitD"_h:
+      bindBOOL(d, fi, d->ASndID_RoutingType2Support);
+      break; // == FT_BOOLEAN -- 32 ("Routing Type 2 Support")
+    case EPL_PREFIX ".asnd.ires.features.bitE"_h:
+      bindBOOL(d, fi, d->ASndID_SDOReadWriteAll);
+      break; // == FT_BOOLEAN -- 32 ("SDO Read/Write All")
+    case EPL_PREFIX ".asnd.ires.features.bitF"_h:
+      bindBOOL(d, fi, d->ASndID_SDOReadWriteMultiple);
+      break; // == FT_BOOLEAN -- 32 ("SDO Read/Write Multiple")
+    case EPL_PREFIX ".asnd.ires.features.bit10"_h:
+      bindBOOL(d, fi, d->ASndID_MultipleASendSupport);
+      break; // == FT_BOOLEAN -- 32 ("Multiple-ASend Support")
+    case EPL_PREFIX ".asnd.ires.features.bit11"_h:
+      bindBOOL(d, fi, d->ASndID_RingRedundancy);
+      break; // == FT_BOOLEAN -- 32 ("Ring Redundancy")
+    case EPL_PREFIX ".asnd.ires.features.bit12"_h:
+      bindBOOL(d, fi, d->ASndID_PResChaining);
+      break; // == FT_BOOLEAN -- 32 ("PResChaining")
+    case EPL_PREFIX ".asnd.ires.features.bit13"_h:
+      bindBOOL(d, fi, d->ASndID_MultiplePReqPRes);
+      break; // == FT_BOOLEAN -- 32 ("Multiple PReq/PRes")
+    case EPL_PREFIX ".asnd.ires.features.bit14"_h:
+      bindBOOL(d, fi, d->ASndID_DynamicNodeAllocation);
+      break; // == FT_BOOLEAN -- 32 ("Dynamic Node Allocation")
+    case EPL_PREFIX ".asnd.ires.mtu"_h:
+      bindUINT16(d, fi, d->ASndID_MTU);
+      break; // == FT_UINT16 -- BASE_DEC ("MTU")
+    case EPL_PREFIX ".asnd.ires.pollinsize"_h:
+      bindUINT16(d, fi, d->ASndID_PollInSize);
+      break; // == FT_UINT16 -- BASE_DEC ("PollInSize")
+    case EPL_PREFIX ".asnd.ires.polloutsizes"_h:
+      bindUINT16(d, fi, d->ASndID_PollOutSize);
+      break; // == FT_UINT16 -- BASE_DEC ("PollOutSize")
+    case EPL_PREFIX ".asnd.ires.resptime"_h:
+      bindUINT32(d, fi, d->ASndID_ResponseTime);
+      break; // == FT_UINT32 -- BASE_DEC ("ResponseTime")
+    case EPL_PREFIX ".asnd.ires.devicetype"_h:
+      bindSTRING(d, fi, d->ASndID_DeviceType);
+      break; // == FT_STRING -- BASE_NONE ("DeviceType")
+    case EPL_PREFIX ".asnd.ires.profile"_h:
+      bindUINT16(d, fi, d->ASndID_Profile);
+      break; // == FT_UINT16 -- BASE_DEC ("Profile")
+    case EPL_PREFIX ".asnd.ires.vendorid"_h:
+      bindUINT32(d, fi, d->ASndID_VendorId);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("VendorId")
+    case EPL_PREFIX ".asnd.ires.productcode"_h:
+      bindUINT32(d, fi, d->ASndID_ProductCode);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("ProductCode")
+    case EPL_PREFIX ".asnd.ires.revisionno"_h:
+      bindUINT32(d, fi, d->ASndID_RevisionNumber);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("RevisionNumber")
+    case EPL_PREFIX ".asnd.ires.serialno"_h:
+      bindUINT32(d, fi, d->ASndID_SerialNumber);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("SerialNumber")
+    case EPL_PREFIX ".asnd.ires.vendorext1"_h:
+      bindUINT64(d, fi, d->ASndID_VendorSpecificExtension1);
+      break; // == FT_UINT64 -- BASE_DEC_HEX ("VendorSpecificExtension1")
+    case EPL_PREFIX ".asnd.ires.confdate"_h:
+      bindUINT32(d, fi, d->ASndID_VerifyConfigurationDate);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("VerifyConfigurationDate")
+    case EPL_PREFIX ".asnd.ires.conftime"_h:
+      bindUINT32(d, fi, d->ASndID_VerifyConfigurationTime);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("VerifyConfigurationTime")
+    case EPL_PREFIX ".asnd.ires.appswdate"_h:
+      bindUINT32(d, fi, d->ASndID_ApplicationSwDate);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("ApplicationSwDate")
+    case EPL_PREFIX ".asnd.ires.appswtime"_h:
+      bindUINT32(d, fi, d->ASndID_ApplicationSwTime);
+      break; // == FT_UINT32 -- BASE_DEC_HEX ("ApplicationSwTime")
+    case EPL_PREFIX ".asnd.ires.ip"_h:
+      bindIPV4(d, fi, d->ASndID_IPAddress);
+      break; // == FT_IPv4 -- BASE_NONE ("IPAddress")
+    case EPL_PREFIX ".asnd.ires.subnet"_h:
+      bindIPV4(d, fi, d->ASndID_SubnetMask);
+      break; // == FT_IPv4 -- BASE_NETMASK ("SubnetMask")
+    case EPL_PREFIX ".asnd.ires.gateway"_h:
+      bindIPV4(d, fi, d->ASndID_DefaultGateway);
+      break; // == FT_IPv4 -- BASE_NONE ("DefaultGateway")
+    case EPL_PREFIX ".asnd.ires.hostname"_h:
+      bindSTRING(d, fi, d->ASndID_HostName);
+      break; // == FT_STRING -- BASE_NONE ("HostName")
+    case EPL_PREFIX ".asnd.ires.vendorext2"_h:
+      bindBYTES(d, fi, d->ASndID_VendorSpecificExtension2);
+      break; // == FT_BYTES -- BASE_NONE ("VendorSpecificExtension2")
 
     /* ASnd-->StatusResponse */
-    case "epl-xdd.asnd.sres.en"_h:
+    case EPL_PREFIX ".asnd.sres.en"_h:
       DPRINT(d, fi, "TODO", "EN (Exception New)");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.sres.ec"_h:
+    case EPL_PREFIX ".asnd.sres.ec"_h:
       DPRINT(d, fi, "TODO", "EC (Exception Clear)");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.sres.pr"_h:
+    case EPL_PREFIX ".asnd.sres.pr"_h:
       DPRINT(d, fi, "TODO", "PR (Priority)");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sres.rs"_h:
+    case EPL_PREFIX ".asnd.sres.rs"_h:
       DPRINT(d, fi, "TODO", "RS (RequestToSend)");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sres.stat.ms"_h:
-      DPRINT(d, fi, "TODO", "NMTStatus");
-      break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.sres.stat.cs"_h:
+    case EPL_PREFIX ".asnd.sres.stat"_h:
       DPRINT(d, fi, "TODO", "NMTStatus");
       break; // == FT_UINT8 -- BASE_HEX
     /* ASnd-->SyncResponse */
-    case "epl-xdd.asnd.syncresponse.sync"_h:
+    case EPL_PREFIX ".asnd.syncresponse.sync"_h:
       DPRINT(d, fi, "TODO", "SyncResponse");
       break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.syncresponse.fst.val"_h:
+    case EPL_PREFIX ".asnd.syncresponse.fst.val"_h:
       DPRINT(d, fi, "TODO", "PResTimeFirstValid");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.syncresponse.sec.val"_h:
+    case EPL_PREFIX ".asnd.syncresponse.sec.val"_h:
       DPRINT(d, fi, "TODO", "PResTimeSecondValid");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.syncresponse.mode"_h:
+    case EPL_PREFIX ".asnd.syncresponse.mode"_h:
       DPRINT(d, fi, "TODO", "PResModeStatus");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.syncresponse.latency"_h:
+    case EPL_PREFIX ".asnd.syncresponse.latency"_h:
       DPRINT(d, fi, "TODO", "Latency");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.syncresponse.delay.station"_h:
+    case EPL_PREFIX ".asnd.syncresponse.delay.station"_h:
       DPRINT(d, fi, "TODO", "SyncDelayStation");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.syncresponse.delay"_h:
+    case EPL_PREFIX ".asnd.syncresponse.delay"_h:
       DPRINT(d, fi, "TODO", "SyncDelay");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.syncresponse.pres.fst"_h:
+    case EPL_PREFIX ".asnd.syncresponse.pres.fst"_h:
       DPRINT(d, fi, "TODO", "PResTimeFirst");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.syncresponse.pres.sec"_h:
+    case EPL_PREFIX ".asnd.syncresponse.pres.sec"_h:
       DPRINT(d, fi, "TODO", "PResTimeSecond");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sres.seb"_h:
+    case EPL_PREFIX ".asnd.sres.seb"_h:
       DPRINT(d, fi, "TODO", "StaticErrorBitField");
       break; // == FT_BYTES -- BASE_NONE
 
     /*StaticErrorBitField */
-    case "epl-xdd.asnd.res.seb.bit0"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit0"_h:
       DPRINT(d, fi, "TODO", "Generic error");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit1"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit1"_h:
       DPRINT(d, fi, "TODO", "Current");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit2"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit2"_h:
       DPRINT(d, fi, "TODO", "Voltage");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit3"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit3"_h:
       DPRINT(d, fi, "TODO", "Temperature");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit4"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit4"_h:
       DPRINT(d, fi, "TODO", "Communication error");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit5"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit5"_h:
       DPRINT(d, fi, "TODO", "Device Profile Spec");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.bit7"_h:
+    case EPL_PREFIX ".asnd.res.seb.bit7"_h:
       DPRINT(d, fi, "TODO", "Manufacturer Spec");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.res.seb.devicespecific_err"_h:
+    case EPL_PREFIX ".asnd.res.seb.devicespecific_err"_h:
       DPRINT(d, fi, "TODO", "Device Profile Spec");
       break; // == FT_BYTES -- BASE_NONE
 
-    case "epl-xdd.asnd.sres.el"_h:
+    case EPL_PREFIX ".asnd.sres.el"_h:
       DPRINT(d, fi, "TODO", "ErrorCodesList");
       break; // == FT_BYTES -- BASE_NONE
-    case "epl-xdd.asnd.sres.el.entry"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry"_h:
       DPRINT(d, fi, "TODO", "Entry");
       break; // == FT_BYTES -- BASE_NONE
 
     /*List of Errors/Events*/
-    case "epl-xdd.asnd.sres.el.entry.type"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.type"_h:
       DPRINT(d, fi, "TODO", "Entry Type");
       break; // == FT_UINT16 -- BASE_HEX
-    case "epl-xdd.asnd.sres.el.entry.type.profile"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.type.profile"_h:
       DPRINT(d, fi, "TODO", "Profile");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.type.mode"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.type.mode"_h:
       DPRINT(d, fi, "TODO", "Mode");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.type.bit14"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.type.bit14"_h:
       DPRINT(d, fi, "TODO", "Bit14");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.type.bit15"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.type.bit15"_h:
       DPRINT(d, fi, "TODO", "Bit15");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.code"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.code"_h:
       DPRINT(d, fi, "TODO", "Error Code");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.time"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.time"_h:
       DPRINT(d, fi, "TODO", "Time Stamp");
       break; // == FT_UINT64 -- BASE_DEC
-    case "epl-xdd.asnd.sres.el.entry.add"_h:
+    case EPL_PREFIX ".asnd.sres.el.entry.add"_h:
       DPRINT(d, fi, "TODO", "Additional Information");
       break; // == FT_UINT64 -- BASE_DEC
 
 
     /* ASnd-->NMTRequest */
-    case "epl-xdd.asnd.nmtrequest.rcid"_h:
+    case EPL_PREFIX ".asnd.nmtrequest.rcid"_h:
       DPRINT(d, fi, "TODO", "NMTRequestedCommandID");
       break; // == FT_UINT8 -- BASE_HEX_DEC
-    case "epl-xdd.asnd.nmtrequest.rct"_h:
+    case EPL_PREFIX ".asnd.nmtrequest.rct"_h:
       DPRINT(d, fi, "TODO", "NMTRequestedCommandTarget");
       break; // == FT_UINT8 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.nmtrequest.rcd"_h:
+    case EPL_PREFIX ".asnd.nmtrequest.rcd"_h:
       DPRINT(d, fi, "TODO", "NMTRequestedCommandData");
       break; // == FT_BYTES -- BASE_NONE
 
     /* ASnd-->NMTCommand */
-    case "epl-xdd.asnd.nmtcommand.cid"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.cid"_h:
       DPRINT(d, fi, "TODO", "NMTCommandId");
       break; // == FT_UINT8 -- BASE_HEX_DEC | BASE_EXT_STRING
-    case "epl-xdd.asnd.nmtcommand.resetnode_reason"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.resetnode_reason"_h:
       DPRINT(d, fi, "TODO", "Reset Reason");
       break; // == FT_UINT16 -- BASE_HEX | BASE_EXT_STRING
-    case "epl-xdd.asnd.nmtcommand.cdat"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.cdat"_h:
       DPRINT(d, fi, "TODO", "NMTCommandData");
       break; // == FT_BYTES -- BASE_NONE
 
-    case "epl-xdd.asnd.nmtcommand.nmtnethostnameset.hn"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.nmtnethostnameset.hn"_h:
       DPRINT(d, fi, "TODO", "HostName");
       break; // == FT_BYTES -- BASE_NONE
-    case "epl-xdd.asnd.nmtcommand.nmtflusharpentry.nid"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.nmtflusharpentry.nid"_h:
       DPRINT(d, fi, "TODO", "NodeID");
       break; // == FT_UINT8 -- BASE_DEC_HEX
-    case "epl-xdd.asnd.nmtcommand.nmtpublishtime.dt"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.nmtpublishtime.dt"_h:
       DPRINT(d, fi, "TODO", "DateTime");
       break; // == FT_BYTES -- BASE_NONE
-    case "epl-xdd.asnd.nmtcommand.dna"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna"_h:
       DPRINT(d, fi, "TODO", "DNA");
       break; // == FT_BYTES -- BASE_NONE
-    case "epl-xdd.asnd.nmtcommand.dna.flags"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.flags"_h:
       DPRINT(d, fi, "TODO", "Valid flags");
       break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.nmtcommand.dna.ltv"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.ltv"_h:
       DPRINT(d, fi, "TODO", "Lease time valid");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.nmtcommand.dna.hpm"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.hpm"_h:
       DPRINT(d, fi, "TODO", "Hub port enable mask valid");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.nmtcommand.dna.nnn"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.nnn"_h:
       DPRINT(d, fi, "TODO", "Set new node number");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.nmtcommand.dna.mac"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.mac"_h:
       DPRINT(d, fi, "TODO", "Compare current MAC ID");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.nmtcommand.dna.cnn"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.cnn"_h:
       DPRINT(d, fi, "TODO", "Compare current node number");
       break; // == FT_BOOLEAN -- 8
-    case "epl-xdd.asnd.nmtcommand.dna.currmac"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.currmac"_h:
       DPRINT(d, fi, "TODO", "Current MAC ID");
       break; // == FT_ETHER -- BASE_NONE
-    case "epl-xdd.asnd.nmtcommand.dna.hubenmsk"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.hubenmsk"_h:
       DPRINT(d, fi, "TODO", "Hub port enable mask");
       break; // == FT_UINT64 -- BASE_HEX
-    case "epl-xdd.asnd.nmtcommand.dna.currnn"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.currnn"_h:
       DPRINT(d, fi, "TODO", "Current node number");
       break; // == FT_UINT32 -- BASE_DEC
-    case "epl-xdd.asnd.nmtcommand.dna.newnn"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.newnn"_h:
       DPRINT(d, fi, "TODO", "New node number");
       break; // == FT_UINT32 -- BASE_DEC
-    case "epl-xdd.asnd.nmtcommand.dna.leasetime"_h:
+    case EPL_PREFIX ".asnd.nmtcommand.dna.leasetime"_h:
       DPRINT(d, fi, "TODO", "Lease Time");
       break; // == FT_RELATIVE_TIME -- BASE_NONE
 
     /* ASnd-->SDO */
-    case "epl-xdd.asnd.sdo.seq"_h:
+    case EPL_PREFIX ".asnd.sdo.seq"_h:
       DPRINT(d, fi, "TODO", "Sequence Layer");
       break; // == FT_NONE -- BASE_NONE
-    case "epl-xdd.asnd.sdo.seq.receive.sequence.number"_h:
+    case EPL_PREFIX ".asnd.sdo.seq.receive.sequence.number"_h:
       DPRINT(d, fi, "TODO", "ReceiveSequenceNumber");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.seq.receive.con"_h:
+    case EPL_PREFIX ".asnd.sdo.seq.receive.con"_h:
       DPRINT(d, fi, "TODO", "ReceiveCon");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.seq.send.sequence.number"_h:
+    case EPL_PREFIX ".asnd.sdo.seq.send.sequence.number"_h:
       DPRINT(d, fi, "TODO", "SendSequenceNumber");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.seq.send.con"_h:
+    case EPL_PREFIX ".asnd.sdo.seq.send.con"_h:
       DPRINT(d, fi, "TODO", "SendCon");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd"_h:
       DPRINT(d, fi, "TODO", "Command Layer");
       break; // == FT_NONE -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.transaction.id"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.transaction.id"_h:
       DPRINT(d, fi, "TODO", "SDO Transaction ID");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.response"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.response"_h:
       DPRINT(d, fi, "TODO", "SDO Response");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.abort"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.abort"_h:
       DPRINT(d, fi, "TODO", "SDO Abort");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.sub.abort"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.sub.abort"_h:
       DPRINT(d, fi, "TODO", "SDO Sub Transfer");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.segmentation"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.segmentation"_h:
       DPRINT(d, fi, "TODO", "SDO Segmentation");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.command.id"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.command.id"_h:
       DPRINT(d, fi, "TODO", "SDO Command ID");
       break; // == FT_UINT8 -- BASE_DEC | BASE_EXT_STRING
-    case "epl-xdd.asnd.sdo.cmd.segment.size"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.segment.size"_h:
       DPRINT(d, fi, "TODO", "SDO Segment size");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.data.size"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.size"_h:
       DPRINT(d, fi, "TODO", "SDO Data size");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.data.padding"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.padding"_h:
       DPRINT(d, fi, "TODO", "SDO Data Padding");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.abort.code"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.abort.code"_h:
       DPRINT(d, fi, "TODO", "SDO Transfer Abort");
       break; // == FT_UINT8 -- BASE_HEX | BASE_EXT_STRING
-    case "epl-xdd.asnd.sdo.cmd.data.index"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.index"_h:
       DPRINT(d, fi, "TODO", "OD Index");
       break; // == FT_UINT16 -- BASE_HEX
-    case "epl-xdd.asnd.sdo.cmd.data.subindex"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.subindex"_h:
       DPRINT(d, fi, "TODO", "OD SubIndex");
       break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.sdo.cmd.data.mapping"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.mapping"_h:
       DPRINT(d, fi, "TODO", "Mapping");
       break; // == FT_NONE -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.data.mapping.index"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.mapping.index"_h:
       DPRINT(d, fi, "TODO", "Index");
       break; // == FT_UINT16 -- BASE_HEX
-    case "epl-xdd.asnd.sdo.cmd.data.mapping.subindex"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.mapping.subindex"_h:
       DPRINT(d, fi, "TODO", "SubIndex");
       break; // == FT_UINT8 -- BASE_HEX
-    case "epl-xdd.asnd.sdo.cmd.data.mapping.offset"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.mapping.offset"_h:
       DPRINT(d, fi, "TODO", "Offset");
       break; // == FT_UINT16 -- BASE_HEX
-    case "epl-xdd.asnd.sdo.cmd.data.mapping.length"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.data.mapping.length"_h:
       DPRINT(d, fi, "TODO", "Length");
       break; // == FT_UINT16 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.fragments"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragments"_h:
       DPRINT(d, fi, "TODO", "Message fragments");
       break; // == FT_NONE -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.fragment"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment"_h:
       DPRINT(d, fi, "TODO", "Message fragment");
       break; // == FT_FRAMENUM -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.fragment.overlap"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.overlap"_h:
       DPRINT(d, fi, "TODO", "Message fragment overlap");
       break; // == FT_BOOLEAN -- 0
-    case "epl-xdd.asnd.sdo.cmd.fragment.overlap.conflicts"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.overlap.conflicts"_h:
       DPRINT(d, fi, "TODO", "Message fragment overlapping with conflicting data");
       break; // == FT_BOOLEAN -- 0
-    case "epl-xdd.asnd.sdo.cmd.fragment.multiple_tails"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.multiple_tails"_h:
       DPRINT(d, fi, "TODO", "Message has multiple tail fragments");
       break; // == FT_BOOLEAN -- 0
-    case "epl-xdd.asnd.sdo.cmd.fragment.too_long_fragment"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.too_long_fragment"_h:
       DPRINT(d, fi, "TODO", "Message fragment too long");
       break; // == FT_BOOLEAN -- 0
-    case "epl-xdd.asnd.sdo.cmd.fragment.error"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.error"_h:
       DPRINT(d, fi, "TODO", "Message defragmentation error");
       break; // == FT_FRAMENUM -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.fragment.count"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.fragment.count"_h:
       DPRINT(d, fi, "TODO", "Message fragment count");
       break; // == FT_UINT32 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.reassembled"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.reassembled"_h:
       DPRINT(d, fi, "TODO", "Reassembled");
       break; // == FT_UINT8 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.reassembled.in"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.reassembled.in"_h:
       DPRINT(d, fi, "TODO", "Reassembled in");
       break; // == FT_FRAMENUM -- BASE_NONE
-    case "epl-xdd.asnd.sdo.cmd.reassembled.length"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.reassembled.length"_h:
       DPRINT(d, fi, "TODO", "Reassembled length");
       break; // == FT_UINT32 -- BASE_DEC
-    case "epl-xdd.asnd.sdo.cmd.reassembled.data"_h:
+    case EPL_PREFIX ".asnd.sdo.cmd.reassembled.data"_h:
       DPRINT(d, fi, "TODO", "Reassembled Data");
       break; // == FT_BYTES -- BASE_NONE
 
