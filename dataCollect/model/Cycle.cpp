@@ -116,9 +116,7 @@ ODEntry *Cycle::getODEntry(uint8_t node, uint16_t entry) noexcept {
   if (n == nullptr)
     return nullptr;
 
-  OD *od = n->getOD();
-
-  return od->getEntry(entry);
+  return n->getOD()->getEntry(entry);
 }
 
 
@@ -175,7 +173,7 @@ void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
    */
 void Cycle::addNode(uint8_t nodeID) {
   if (getNode(nodeID) == nullptr) // TODO: Check if an error should be thrown
-    nodes.emplace(nodeID, Node(nodeID));
+    nodes.insert({nodeID, Node(nodeID)});
 }
 
 bool Cycle::operator==(const Cycle &b) const {
