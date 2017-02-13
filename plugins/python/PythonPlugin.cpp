@@ -31,6 +31,9 @@
 
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
+#include "Plugin_api.h"
+#include "iostream"
+#include <string>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -40,7 +43,31 @@ namespace plugins {
 
 PythonPlugin::PythonPlugin() {}
 
+PythonPlugin::PythonPlugin(std::string pluginName) {
+  plugName = pluginName;
+
+  // IMPORTANT: make sure that PyInterpreter is running and the Plugin.pyx is PyInited !
+  //   PyInit_Plugin();
+  import_Plugin();
+
+  cythonPlugin = (_object *)buildPlugin("PluginName");
+  initialize(new CaptureInstance());
+};
+
 PythonPlugin::~PythonPlugin() {}
+
+bool PythonPlugin::initialize(CaptureInstance *ci) {
+  initialize_wrapper((PyPlug *)cythonPlugin);
+  (void)ci;
+  return false;
+};
+
+void PythonPlugin::run(Cycle *cycle) { run_wrapper((PyPlug *)cythonPlugin, reinterpret_cast<void *>(cycle)); };
+
+bool PythonPlugin::reset(CaptureInstance *ci) {
+  (void)ci;
+  return false;
+};
 
 Cycle *PythonPlugin::getCurrentCycle() {
   static Cycle *curCycle;
@@ -50,16 +77,8 @@ Cycle *PythonPlugin::getCurrentCycle() {
   return curCycle;
 }
 
-//
-// Methods
-//
+std::string PythonPlugin::getDependencies() { return getDependencies_wrapper((PyPlug *)cythonPlugin); };
 
-
-// Accessor methods
-//
-
-
-// Other methods
-//
+std::string PythonPlugin::getID() { return getID_wrapper(((PyPlug *)cythonPlugin)); };
 }
 }

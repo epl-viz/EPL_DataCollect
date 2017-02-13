@@ -24,9 +24,6 @@ cdef class Cycle:
     if newCycle != NULL:
       self._C_Cycle = newCycle
 
-  cpdef bool registerCycleStorage(self):
-    pass  ##TODO
-
   def getActiveEvents(self):
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
