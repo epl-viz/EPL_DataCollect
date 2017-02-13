@@ -1,35 +1,43 @@
+cimport CCycle
 cimport CPlugin
+import Cycle
 import importlib
+import sys
 from libcpp.string cimport string
 
+
 ###########----TESTMETHODS----#############
-def main():
-  pluggerino = Plugin("pyPlugins.PluginA")
-  pluggerino.initialize()
-  pluggerino.run()
-  print(pluggerino.getDependencies())
-  print(pluggerino.getID())
+#def main():
+  #pluggerino = Plugin("pyPlugins.PluginA")
+  #pluggerino.initialize()
+  #pluggerino.run()
+  #print(pluggerino.getDependencies())
+  #print(pluggerino.getID())
+  #py = Cycle.Cycle()
 ###########----TESTMETHODS----#############
 
-cdef api class Plugin[object PyPlug, type PyType]:
-  # TODO: declare cdef Cycle.Cycle() (cython cycle)
-  cdef object pyObject  # python object -> either module and run/init or create an object from the class in this module
+cdef api class Plugin[object PyPlug, type PyPluginType]:
+  #cyCycle - Cython representation of cycle
+  # python object -> either module and run/init or create an object from the class in this module
 
   def __cinit__(self, modname):
-    importedModule = importlib.import_module(modname)
-    self.pyObject = importedModule
+    #importedModule = importlib.import_module(modname)
+    #self.pyObject = importedModule
+    #self.cyCycle = Cycle.Cycle()
+    pass
 
-  cpdef api void initialize(self):
+  cdef api void initialize(self):
     try:
       self.pyObject.initialize()
     except:
       print("Warning: " + self.pyObject.__name__ + " initialize method is missing!\n" \
               + "Skipping...")      # no init has to be given since there might be applications that don't need it
 
-  cpdef api int run(self):
-    return 52   ##TODO: update cycle* of declared and start run method of pyObject.
+  cdef api void run(self, CCycle.Cycle* newCycle):
+    print("running plugin!!!")  ##TODO: update cycle* of declared and start run method of pyObject.
+    print("num of nodes in this cycle: ", newCycle.getNumNodes())
 
-  cpdef api getDependencies(self):
+  cdef api getDependencies(self):
     try:
       return self.pyObject.getDependencies()
     except:
@@ -37,32 +45,35 @@ cdef api class Plugin[object PyPlug, type PyType]:
              +"Will be treated as no dependencies...")
       return ""
 
-  cpdef api getID(self):
+  cdef api getID(self):
     try:
       return self.pyObject.getID()
     except:
       print("Error: " + self.pyObject.__name__ + " getID method is missing!\n" \
              +"A plugin needs an ID!")
 
+  cdef api char* getFoo(self):
+    return "hey"
+##################################################################################
 
 
 
-
-
-
-## Constructor function for C++ TODO: test in c++ for string conversion
-cdef api Plugin buildPlugin(name):
-  return Plugin(name)
+## Constructor function for C++
+cdef api Plugin buildPlugin(const char* name):
+  return Plugin("pyPlugins.PluginA")
 
 ## Wrapper functions for C++
 cdef api void initialize_wrapper(Plugin obj):
+  print("initing...")
+  print(sys.path)
   obj.initialize()
-cdef api int run_wrapper(Plugin obj): #TODO: add cycle* to params
-  return obj.run()
-#cdef api string getDependencies_wrapper(Plugin obj):
-  #return obj.getDependencies()
-#cdef api string getID_wrapper(Plugin obj):
-  #return obj.getID()
+cdef api void run_wrapper(Plugin obj, void* newCycle): #TODO: add cycle* to params
+  print("running")
+  obj.run(<CCycle.Cycle*> newCycle)
+cdef api char* getDependencies_wrapper(Plugin obj): #TODO change to getDep / getID
+  return obj.getFoo()
+cdef api char* getID_wrapper(Plugin obj):
+  return obj.getFoo()
 # -------------------------------end
 
 
@@ -133,7 +144,7 @@ class PyPlugin (object):
     @return string :
     @author
     """
-    pass
+    return "testDependencies"
 
   def getID(self):
     """
@@ -144,7 +155,7 @@ class PyPlugin (object):
     @return string :
     @author
     """
-    pass
+    return "testID"
 
   def unload(self):
     """

@@ -2,10 +2,10 @@ def initialize():
 	print("initing PluginA...")
 
 def run():
-	print("PluginA running")
-
-def getMeAString():
-	return "running PluginA"
+	print("PluginA running!!")
 
 def getID():
-	return "Plugin TimeSeries"
+	return "PluginA ID"
+
+def getDependencies():
+	return "PluginA Deps"

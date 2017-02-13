@@ -36,6 +36,7 @@
 #include "CSPythonPluginStorage.hpp"
 #include "Cycle.hpp"
 #include "PluginBase.hpp"
+#include "Plugin_api.h"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -46,79 +47,32 @@ namespace plugins {
   */
 class PythonPlugin : public PluginBase {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
   PythonPlugin();
-
-  /*!
-   * Empty Destructor
-   */
+  PythonPlugin(std::string pluginName);
   virtual ~PythonPlugin();
 
-  // Static Public attributes
-  //
-
   static Cycle *getCurrentCycle();
-  // Public attributes
-  //
 
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
+  void run(Cycle *cycle);
+  std::string getDependencies();
+  std::string getID();
 
 
  protected:
-  // Static Protected attributes
-  //
+  bool initialize(CaptureInstance *ci);
+  bool reset(CaptureInstance *ci);
 
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
  private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
+  std::string plugName;
+  _object* cythonPlugin;
   CSPythonPluginStorage state;
 
  public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
-
   /*!
    * Get the value of state
    * \return the value of state
    */
   CSPythonPluginStorage *getState() { return &state; }
-
- private:
 };
 }
 }
