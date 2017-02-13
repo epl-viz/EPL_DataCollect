@@ -74,8 +74,6 @@ ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
     case OCT_ARRAY_REAL: init<ODEntryArrayReal>(dt); return;
     case OCT_COMPLEX: init<ODEntryComplex>(dt); return;
   }
-
-  init<ODEntryComplex>(dt);
 }
 
 ODEntryContainer::ODEntryContainer(ObjectDataType type, ObjectType ot)
