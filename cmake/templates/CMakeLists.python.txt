@@ -33,8 +33,14 @@ set( PYTHON_FILES_LIST
 @CM_PYTHON_FILES@
 )
 
+# Ignore some clang compiler warnings in the generated cython code
+string( REGEX REPLACE "-Weverything" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
+
 foreach( I IN LISTS PYTHON_FILES_LIST )
-  string( REGEX REPLACE "pyx$" "cxx" OUT_FILE "${I}" )
+  string( REGEX REPLACE "pyx$"    "cxx" OUT_FILE "${I}"        )
+  string( REGEX REPLACE "/cython/" "/"  OUT_FILE "${OUT_FILE}" )
+  string( REGEX REPLACE "[^/]*/"  ""    OUT_NAME "${I}"        )
+  string( REGEX REPLACE "\\.pyx$" ""    OUT_NAME "${OUT_NAME}" )
   add_custom_command(
     OUTPUT "${OUT_FILE}"
     COMMAND cython -Wextra -3 --cplus -o ${OUT_FILE} ${I}
@@ -42,49 +48,36 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
     COMMENT "cython: generating ${OUT_FILE}"
     DEPENDS ${I}
   )
-  list( APPEND OUT_FILES ${OUT_FILE} )
+  list( APPEND PLUGIN_LIBS "${OUT_NAME}_cythonLib" )
+
+  add_library( ${OUT_NAME}_cythonLib SHARED ${OUT_FILE} )
+  target_link_libraries( ${OUT_NAME}_cythonLib @CM_CURRENT_LIB_DEP@ )
+
+  set_target_properties(
+    ${OUT_NAME}_cythonLib
+    PROPERTIES
+      VERSION        @CM_VERSION_MAJOR@.@CM_VERSION_MINOR@.@CM_VERSION_SUBMINOR@
+      SOVERSION      @CM_VERSION_MAJOR@
+      PUBLIC_HEADER  "${@CM_CURRENT_LIB_INC@}"
+      OUTPUT_NAME    "${OUT_NAME}"
+      INSTALL_RPATH  ${CMAKE_INSTALL_PREFIX}/lib/eplViz
+      INSTALL_RPATH_USE_LINK_PATH TRUE
+  )
 endforeach( I IN LISTS PYTHON_FILES_LIST )
 
 set( @CM_CURRENT_LIB_SRC@
 @CM_CURRENT_SRC_CPP@
-${OUT_FILES}
 )
 
 set( @CM_CURRENT_LIB_INC@
 @CM_CURRENT_SRC_HPP@
 )
 
-
-# Ignore some clang compiler warnings in the generated cython code
-string( REGEX REPLACE "-Weverything" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
-
-
-string( REGEX REPLACE "^[^:]+::" "" OUT_LIB_NAME "@CM_CURRENT_LIB_LC@" )
-string( REGEX REPLACE "^lib"     "" OUT_LIB_NAME "${OUT_LIB_NAME}" )
-
-add_library( @CM_CURRENT_LIB_LC@_obj    OBJECT ${@CM_CURRENT_LIB_SRC@} ${@CM_CURRENT_LIB_INC@} )
-add_library( @CM_CURRENT_LIB_LC@_shared SHARED $<TARGET_OBJECTS:@CM_CURRENT_LIB_LC@_obj> )
-add_library( @CM_CURRENT_LIB_LC@_static STATIC $<TARGET_OBJECTS:@CM_CURRENT_LIB_LC@_obj> )
-
-target_link_libraries( @CM_CURRENT_LIB_LC@_shared @CM_CURRENT_LIB_DEP@ )
-target_link_libraries( @CM_CURRENT_LIB_LC@_static @CM_CURRENT_LIB_DEP@ )
-
-set_target_properties(
-  @CM_CURRENT_LIB_LC@_shared @CM_CURRENT_LIB_LC@_static
-  PROPERTIES
-    VERSION        @CM_VERSION_MAJOR@.@CM_VERSION_MINOR@.@CM_VERSION_SUBMINOR@
-    SOVERSION      @CM_VERSION_MAJOR@
-    PUBLIC_HEADER  "${@CM_CURRENT_LIB_INC@}"
-    OUTPUT_NAME    "${OUT_LIB_NAME}"
-    INSTALL_RPATH  ${CMAKE_INSTALL_PREFIX}/lib
-    INSTALL_RPATH_USE_LINK_PATH TRUE
-)
-
 install(
-  TARGETS       @CM_CURRENT_LIB_LC@_shared @CM_CURRENT_LIB_LC@_static
+  TARGETS       ${PLUGIN_LIBS}
   EXPORT        @PROJECT_NAME@Targets
   RUNTIME       DESTINATION bin
-  LIBRARY       DESTINATION lib
-  ARCHIVE       DESTINATION lib
+  LIBRARY       DESTINATION lib/eplViz
+  ARCHIVE       DESTINATION lib/eplViz
   PUBLIC_HEADER DESTINATION include/eplViz
 )

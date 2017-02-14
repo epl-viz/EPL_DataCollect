@@ -201,17 +201,20 @@ new_project_library(
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )
-  set( TEMPLATE_TYPE lib )
-  if( I STREQUAL "python" )
-    set( TEMPLATE_TYPE python )
-  endif( I STREQUAL "python" )
   new_project_library(
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
-    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.${TEMPLATE_TYPE}.txt"
-    DEPENDENCIES epl_DataCollect_shared stdc++fs
+    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
+    DEPENDENCIES epl_DataCollect_shared stdc++fs Plugin_cythonLib
   )
 endforeach( I IN ITEMS protocolValidator python timeSeries )
+
+new_project_library(
+  PATH         "${PROJECT_SOURCE_DIR}/python"
+  NAME         "eplp_pythonLibs"
+  TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.python.txt"
+  DEPENDENCIES epl_DataCollect_shared stdc++fs ${PYTHON_LIBRARIES}
+)
 
 if( NOT DISABLE_TESTS )
   new_project_executable(
@@ -241,6 +244,9 @@ include_directories(
   ${EPL_DC_INCLUDES_DIR}
 )
 
+# Fix some compiler warnings
+include_directories( SYSTEM ${PROJECT_SOURCE_DIR}/python )
+
 if( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
   file( MAKE_DIRECTORY "${EPL_DC_INCLUDES_DIR}" )
 endif( NOT EXISTS "${EPL_DC_INCLUDES_DIR}" )
@@ -256,6 +262,8 @@ endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 if( NOT DISABLE_TESTS )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
+
+add_dependencies( eplp_python_obj Plugin_cythonLib Test_cythonLib )
 
 ##################
 # Generate Files #

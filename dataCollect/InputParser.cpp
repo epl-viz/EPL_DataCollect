@@ -570,7 +570,6 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       break; // == FT_UINT8 -- BASE_DEC ("Voltage")
     case EPL_PREFIX ".asnd.res.seb.bit3"_h:
       bindBOOL(d, fi, d->SEBF_Temperature);
-      DPRINT(d, fi, "TODO", "Temperature");
       break; // == FT_UINT8 -- BASE_DEC ("Temperature")
     case EPL_PREFIX ".asnd.res.seb.bit4"_h:
       bindBOOL(d, fi, d->SEBF_CommunicationError);
