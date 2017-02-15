@@ -175,8 +175,8 @@ void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
    * \param  nodeID The ID of the node to add
    * \returns False if the node already exists in the cycle
    */
-void Cycle::addNode(uint8_t nodeID) {
-  if (!getNode(nodeID) == nullptr)
+bool Cycle::addNode(uint8_t nodeID) {
+  if (getNode(nodeID) != nullptr)
     return false;
 
   nodes.insert({nodeID, Node(nodeID)});
