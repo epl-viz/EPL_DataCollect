@@ -168,12 +168,19 @@ void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
 }
 
 /*!
-   * \brief Adds the node with the given index to the cycles nodemap
+   * \brief Adds the node with the given index to the cycles node map
+   *
+   * Duplicate registration attempts will be ignored
+   *
    * \param  nodeID The ID of the node to add
+   * \returns False if the node already exists in the cycle
    */
-void Cycle::addNode(uint8_t nodeID) {
-  if (getNode(nodeID) == nullptr) // TODO: Check if an error should be thrown
-    nodes.insert({nodeID, Node(nodeID)});
+bool Cycle::addNode(uint8_t nodeID) {
+  if (getNode(nodeID) != nullptr)
+    return false;
+
+  nodes.insert({nodeID, Node(nodeID)});
+  return true;
 }
 
 bool Cycle::operator==(const Cycle &b) const {

@@ -91,7 +91,7 @@ class Cycle {
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif
-  mockable void addNode(uint8_t node);
+  mockable bool addNode(uint8_t node);
   mockable void updatePackets(std::vector<Packet> newPackets) noexcept;
 };
 }
