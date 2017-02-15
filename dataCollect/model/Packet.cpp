@@ -34,44 +34,23 @@ namespace EPL_DataCollect {
 
 /*!
  * \brief The constructor
- * \param t         The type of the packet
- * \param cID       The command ID of the packet
- * \param oDesc     A pointer to the odDescription
- * \param wireSTR   The wireshark string representation of the packet
- * \param misc     Miscellaneous data
- * \param src       The ID of the sending node
- * \param dest      The ID of the receiving node
- * \param ts        The timestamp of the packet
- * \param tID       The Packet transaction ID
- * \param nSegments The number of segments this packet was split
+ * \param data Pointer to the paresed wireshark data
+ * \warning data must not be nullptr
  */
-Packet::Packet(MessageType    t,
-               CommandID      cID,
-               ODDescription *oDesc,
-               std::string    wireSTR,
-               std::string    misc,
-               uint32_t       src,
-               uint32_t       dest,
-               TIME_POINT     ts,
-               uint8_t        tID,
-               uint32_t       nSegments)
-    : type(t),
-      commandID(cID),
-      odDesc(oDesc),
-      wiresharkSTR(wireSTR),
-      miscData(misc),
-      nodeSource(src),
-      nodeDest(dest),
-      timeStamp(ts),
-      transactionID(tID),
-      numOfSegments(nSegments) {}
+Packet::Packet(const WiresharkParser::parserData *const data) {
+  type         = data->pType;
+  nodeSource   = data->src;
+  nodeDest     = data->dst;
+  wiresharkSTR = data->wsString;
+  miscData     = data->wsOther;
+  timeStamp    = data->tp;
+}
 
 Packet::~Packet() {}
 
 bool Packet::operator==(const Packet &r) const {
-  return ((type == r.type) && (commandID == r.commandID) && (odDesc == r.odDesc) && (wiresharkSTR == r.wiresharkSTR) &&
-          (miscData == r.miscData) && (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp) &&
-          (transactionID == r.transactionID) && (numOfSegments == r.numOfSegments));
+  return ((type == r.type) && (wiresharkSTR == r.wiresharkSTR) && (miscData == r.miscData) &&
+          (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp));
 }
 
 /*!
@@ -79,27 +58,6 @@ bool Packet::operator==(const Packet &r) const {
  * \return The packet type as a MessageType
  */
 MessageType Packet::getType() const noexcept { return type; }
-
-
-/*!
- * \brief Returns the Command ID of the packet
- * \returns The Command ID of this packet as a CommandID
- */
-CommandID Packet::getCommandID() const noexcept { return commandID; }
-
-
-/*!
- * \brief Returns the transaction ID of the packet
- * \returns The transaction ID of this packet as an unsigned char
- */
-uint8_t Packet::getTransactionID() const noexcept { return transactionID; }
-
-
-/*!
- * \brief Returns the number of segments this packet is split into
- * \returns The number of segments this packet is split into as an unsigned integer
- */
-uint32_t Packet::getNumSegments() const noexcept { return numOfSegments; }
 
 
 /*!
@@ -121,13 +79,6 @@ std::string Packet::getMiscData() const noexcept { return miscData; }
  * \return The packet data as given by Wireshark as a std::string
  */
 std::string Packet::getWiresharkString() const noexcept { return wiresharkSTR; }
-
-
-/*!
- * \brief Returns a pointer to the parsed OD information (The OD Description)
- * \return The pointer to the ODDescription of this packet
- */
-ODDescription *Packet::getODDesc() noexcept { return odDesc; }
 
 
 /*!

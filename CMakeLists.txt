@@ -299,7 +299,8 @@ enum2str_generate(
   NAMESPACE  "EPL_DataCollect"
   ENUMS
     "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
-    "MessageType" "CommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
+    "MessageType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
+    "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
     "CaptureInstance::CIstate"
 

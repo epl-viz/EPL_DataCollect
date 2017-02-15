@@ -31,6 +31,7 @@
 #pragma once
 
 #include "defines.hpp"
+#include "InputParser.hpp"
 #include "ODDescription.hpp"
 #include "PacketDiff.hpp"
 #include "EPLEnums.h"
@@ -49,9 +50,7 @@ class Packet {
   typedef std::chrono::system_clock::time_point TIME_POINT;
 
  private:
-  MessageType             type      = PT_UNDEF;
-  CommandID               commandID = CMD_ID_NIL;
-  ODDescription *         odDesc    = nullptr;
+  MessageType             type = PT_UNDEF;
   plf::colony<PacketDiff> diffs;
 
   std::string wiresharkSTR = "";
@@ -62,23 +61,11 @@ class Packet {
 
   TIME_POINT timeStamp;
 
-  uint8_t  transactionID = 0;
-  uint32_t numOfSegments = 0;
-
  public:
   Packet() = delete;
   virtual ~Packet();
 
-  Packet(MessageType    t,
-         CommandID      cID,
-         ODDescription *oDesc,
-         std::string    wireSTR,
-         std::string    other,
-         uint32_t       src,
-         uint32_t       dest,
-         TIME_POINT     ts,
-         uint8_t        tID       = 0,
-         uint32_t       nSegments = 0);
+  Packet(const WiresharkParser::parserData *const data);
 
   Packet(const Packet &) = default;
   Packet(Packet &&)      = default;
@@ -89,13 +76,9 @@ class Packet {
   bool operator==(const Packet &r) const;
 
   mockable MessageType getType() const noexcept;
-  mockable CommandID getCommandID() const noexcept;
-  mockable uint8_t getTransactionID() const noexcept;
-  mockable uint32_t getNumSegments() const noexcept;
   mockable plf::colony<PacketDiff> *getDiffs() noexcept;
   mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;
-  mockable ODDescription *getODDesc() noexcept;
   mockable uint32_t getSrcNode() const noexcept;
   mockable uint32_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;

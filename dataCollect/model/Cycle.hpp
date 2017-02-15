@@ -28,10 +28,7 @@
  * \brief Contains class Cycle
  */
 
-
 #pragma once
-
-
 
 #include "defines.hpp"
 #include "CycleStorageBase.hpp"

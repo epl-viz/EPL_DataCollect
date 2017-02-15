@@ -31,10 +31,11 @@
 #pragma once
 
 #include "defines.hpp"
-#include "EPLEnum2Str.hpp"
-#include "Packet.hpp"
+#include "EPLEnums.h"
+#include <chrono>
 #include <epan/proto.h>
 #include <type_traits>
+#include <vector>
 
 namespace EPL_DataCollect {
 namespace WiresharkParser {
@@ -51,157 +52,238 @@ namespace WiresharkParser {
 
 // END DEBUG CONFOG
 
-struct parserData {
+struct parserData final {
   std::string const *eplFrameName = nullptr;
-  int                currentLevel = 0;
 
-  MessageType         pType       = PT_UNDEF;
-  SoARequestServiceID soaID       = SOAR_NO_SERVICE;
-  NMTState            nmtState    = NMT_OFF;
-  CommandID           cID         = CMD_ID_NIL;
-  ODDescription *     descPTR     = nullptr;
-  std::string         wsString    = "";
-  std::string         wsOther     = "<UNDEFINED>";
-  uint8_t             src         = UINT8_MAX;
-  uint8_t             dst         = UINT8_MAX;
-  uint16_t            captureSize = UINT16_MAX;
-  Packet::TIME_POINT  tp          = std::chrono::system_clock::now();
-  uint8_t             transactID  = 0;
-  uint32_t            numSegments = 0;
+  MessageType                           pType       = PT_UNDEF;
+  NMTState                              nmtState    = NMT_OFF;
+  std::string                           wsString    = "";
+  std::string                           wsOther     = "<UNDEFINED>";
+  uint8_t                               src         = UINT8_MAX;
+  uint8_t                               dst         = UINT8_MAX;
+  uint16_t                              captureSize = UINT16_MAX;
+  std::chrono::system_clock::time_point tp          = std::chrono::system_clock::now();
 
   /* SoC data fields*/
-  bool     SoC_multiplexedCycleCompleted = false;
-  bool     SoC_prescaledSlot             = false;
-  nstime_t SoC_netTime                   = {0, 0};
-  uint64_t SoC_relativeTime              = UINT64_MAX;
+  struct SoC final {
+    bool     MultiplexedCycleCompleted = false;
+    bool     PrescaledSlot             = false;
+    nstime_t NetTime                   = {0, 0};
+    uint64_t RelativeTime              = UINT64_MAX;
+  } SoC;
 
   /* PReq data fields*/
-  bool     PReq_multiplexedSlot      = false;
-  bool     PReq_exceptionAcknoledged = false;
-  bool     PReq_Ready                = false;
-  uint8_t  PReq_PDOVersion           = UINT8_MAX;
-  uint16_t PReq_size                 = UINT16_MAX;
+  struct PReq final {
+    bool     MultiplexedSlot      = false;
+    bool     ExceptionAcknoledged = false;
+    bool     Ready                = false;
+    uint8_t  PDOVersion           = UINT8_MAX;
+    uint16_t Size                 = UINT16_MAX;
+  } PReq;
 
   /* PRes data fields*/
-  bool              PRes_multiplexedSlot = false;
-  bool              PRes_exceptionNew    = false;
-  bool              PRes_ready           = false;
-  AsyncSendPriority PRes_priority        = ASSP_LOWEST;
-  uint8_t           PRes_requestToSend   = UINT8_MAX;
-  std::string       PRes_PDOVersion      = "";
-  uint16_t          PRes_size            = UINT16_MAX;
+  struct PRes final {
+    bool              MultiplexedSlot = false;
+    bool              ExceptionNew    = false;
+    bool              Ready           = false;
+    AsyncSendPriority Priority        = ASSP_LOWEST;
+    uint8_t           RequestToSend   = UINT8_MAX;
+    std::string       PDOVersion      = "";
+    uint16_t          Size            = UINT16_MAX;
+  } PRes;
 
   /* SoA data fields*/
-  bool                SoA_exceptionAcknowledge     = false;
-  bool                SoA_exceptionReset           = false;
-  SoARequestServiceID SoA_requestedServiceID       = SOAR_NO_SERVICE;
-  uint8_t             SoA_requestedServiceTarget   = UINT8_MAX;
-  uint8_t             SoA_EPLVersion               = UINT8_MAX;
-  uint8_t             SoA_syncControl              = UINT8_MAX;
-  bool                SoA_destMacAddressValid      = false;
-  bool                SoA_PResFallBackTimeoutValid = false;
-  bool                SoA_SyncMNDelaySecondValid   = false;
-  bool                SoA_SyncMNDelayFirstValid    = false;
-  bool                SoA_PResTimeSecondValid      = false;
-  bool                SoA_PResTimeFirstValid       = false;
-  bool                SoA_PResModeSet              = false;
-  bool                SoA_PResModeReset            = false;
-  bool                SoA_ANGlobal                 = false;
-  bool                SoA_ANLocal                  = false;
+  struct SoA final {
+    bool                ExceptionAcknowledge     = false;
+    bool                ExceptionReset           = false;
+    SoARequestServiceID RequestedServiceID       = SOAR_NO_SERVICE;
+    uint8_t             RequestedServiceTarget   = UINT8_MAX;
+    uint8_t             EPLVersion               = UINT8_MAX;
+    uint8_t             SyncControl              = UINT8_MAX;
+    bool                DestMacAddressValid      = false;
+    bool                PResFallBackTimeoutValid = false;
+    bool                SyncMNDelaySecondValid   = false;
+    bool                SyncMNDelayFirstValid    = false;
+    bool                PResTimeSecondValid      = false;
+    bool                PResTimeFirstValid       = false;
+    bool                PResModeSet              = false;
+    bool                PResModeReset            = false;
+    std::string         DestMacAddress           = "";
+    bool                ANGlobal                 = false;
+    bool                ANLocal                  = false;
+  } SoA;
 
   /* ASnd header */
-  ASndServiceID        ASnd_requestedServiceID     = ASND_RESERVED_0;
-  uint8_t              ASnd_requestedServiceTarget = UINT8_MAX;
-  std::vector<uint8_t> ASnd_data;
+  struct ASnd final {
+    ASndServiceID        RequestedServiceID     = ASND_RESERVED_0;
+    uint8_t              RequestedServiceTarget = UINT8_MAX;
+    std::vector<uint8_t> Data;
 
-  /* ASnd-->IdentResponse */
-  bool                 ASndID_exceptionNew             = false;
-  bool                 ASndID_exceptionClear           = false;
-  AsyncSendPriority    ASndID_priority                 = ASSP_LOWEST;
-  uint8_t              ASndID_RequestToSend            = UINT8_MAX;
-  uint8_t              ASndID_EPLVersion               = UINT8_MAX;
-  bool                 ASndID_Isochronous              = false;
-  bool                 ASndID_SDOByUDP_IP              = false;
-  bool                 ASndID_SDOByASnd                = false;
-  bool                 ASndID_SDOByPDO                 = false;
-  bool                 ASndID_NMTInfoServices          = false;
-  bool                 ASndID_ExtNMTStateCommands      = false;
-  bool                 ASndID_DynamicPDOMapping        = false;
-  bool                 ASndID_NMTServiceByUDP_IP       = false;
-  bool                 ASndID_ConfigurationManager     = false;
-  bool                 ASndID_MultiplexedAccess        = false;
-  bool                 ASndID_NodeIDSetupBySW          = false;
-  bool                 ASndID_NMBasicEthernetMode      = false;
-  bool                 ASndID_RoutingType1Support      = false;
-  bool                 ASndID_RoutingType2Support      = false;
-  bool                 ASndID_SDOReadWriteAll          = false;
-  bool                 ASndID_SDOReadWriteMultiple     = false;
-  bool                 ASndID_MultipleASendSupport     = false;
-  bool                 ASndID_RingRedundancy           = false;
-  bool                 ASndID_PResChaining             = false;
-  bool                 ASndID_MultiplePReqPRes         = false;
-  bool                 ASndID_DynamicNodeAllocation    = false;
-  uint16_t             ASndID_MTU                      = UINT16_MAX;
-  uint16_t             ASndID_PollInSize               = UINT16_MAX;
-  uint16_t             ASndID_PollOutSize              = UINT16_MAX;
-  uint32_t             ASndID_ResponseTime             = UINT32_MAX;
-  std::string          ASndID_DeviceType               = "";
-  uint16_t             ASndID_Profile                  = UINT16_MAX;
-  uint32_t             ASndID_VendorId                 = UINT32_MAX;
-  uint32_t             ASndID_ProductCode              = UINT32_MAX;
-  uint32_t             ASndID_RevisionNumber           = UINT32_MAX;
-  uint32_t             ASndID_SerialNumber             = UINT32_MAX;
-  uint64_t             ASndID_VendorSpecificExtension1 = UINT64_MAX;
-  uint32_t             ASndID_VerifyConfigurationDate  = UINT32_MAX;
-  uint32_t             ASndID_VerifyConfigurationTime  = UINT32_MAX;
-  uint32_t             ASndID_ApplicationSwDate        = UINT32_MAX;
-  uint32_t             ASndID_ApplicationSwTime        = UINT32_MAX;
-  std::string          ASndID_IPAddress                = "";
-  std::string          ASndID_SubnetMask               = "";
-  std::string          ASndID_DefaultGateway           = "";
-  std::string          ASndID_HostName                 = "";
-  std::vector<uint8_t> ASndID_VendorSpecificExtension2;
+    /* ASnd-->IdentResponse */
+    struct IdentResponse final {
+      bool                 ExceptionNew             = false;
+      bool                 ExceptionClear           = false;
+      AsyncSendPriority    Priority                 = ASSP_LOWEST;
+      uint8_t              RequestToSend            = UINT8_MAX;
+      uint8_t              EPLVersion               = UINT8_MAX;
+      bool                 Isochronous              = false;
+      bool                 SDOByUDP_IP              = false;
+      bool                 SDOByASnd                = false;
+      bool                 SDOByPDO                 = false;
+      bool                 NMTInfoServices          = false;
+      bool                 ExtNMTStateCommands      = false;
+      bool                 DynamicPDOMapping        = false;
+      bool                 NMTServiceByUDP_IP       = false;
+      bool                 ConfigurationManager     = false;
+      bool                 MultiplexedAccess        = false;
+      bool                 NodeIDSetupBySW          = false;
+      bool                 NMBasicEthernetMode      = false;
+      bool                 RoutingType1Support      = false;
+      bool                 RoutingType2Support      = false;
+      bool                 SDOReadWriteAll          = false;
+      bool                 SDOReadWriteMultiple     = false;
+      bool                 MultipleASendSupport     = false;
+      bool                 RingRedundancy           = false;
+      bool                 PResChaining             = false;
+      bool                 MultiplePReqPRes         = false;
+      bool                 DynamicNodeAllocation    = false;
+      uint16_t             MTU                      = UINT16_MAX;
+      uint16_t             PollInSize               = UINT16_MAX;
+      uint16_t             PollOutSize              = UINT16_MAX;
+      uint32_t             ResponseTime             = UINT32_MAX;
+      std::string          DeviceType               = "";
+      uint16_t             Profile                  = UINT16_MAX;
+      uint32_t             VendorId                 = UINT32_MAX;
+      uint32_t             ProductCode              = UINT32_MAX;
+      uint32_t             RevisionNumber           = UINT32_MAX;
+      uint32_t             SerialNumber             = UINT32_MAX;
+      uint64_t             VendorSpecificExtension1 = UINT64_MAX;
+      uint32_t             VerifyConfigurationDate  = UINT32_MAX;
+      uint32_t             VerifyConfigurationTime  = UINT32_MAX;
+      uint32_t             ApplicationSwDate        = UINT32_MAX;
+      uint32_t             ApplicationSwTime        = UINT32_MAX;
+      std::string          IPAddress                = "";
+      std::string          SubnetMask               = "";
+      std::string          DefaultGateway           = "";
+      std::string          HostName                 = "";
+      std::vector<uint8_t> VendorSpecificExtension2;
+    } IdentResponse;
 
 
-  /* ASnd-->StatusResponse */
-  bool              ASndSR_exceptionNew   = false;
-  bool              ASndSR_exceptionClear = false;
-  AsyncSendPriority ASndSR_priority       = ASSP_LOWEST;
-  uint8_t           ASndRS_requestToSend  = UINT8_MAX;
+    /* ASnd-->NMTRequest */
+    struct NMTRequest final {
+      NMTCommand           NMTRequestedCommandID     = NMT_CMD_INVALID_SERVICE;
+      uint8_t              NMTRequestedCommandTarget = UINT8_MAX;
+      std::vector<uint8_t> NMTRequestedCommandData;
+    } NMTRequest;
 
-  /* ASnd-->SyncResponse */
-  uint8_t ASndSyR_SyncResponse        = UINT8_MAX;
-  bool    ASndSyR_PResTimeFirstValid  = false;
-  bool    ASndSyR_PResTimeSecondValid = false;
-  bool    ASndSyR_PResModeStatus      = false;
-  uint8_t ASndSyR_Latency             = UINT8_MAX;
-  uint8_t ASndSyR_SyncDelayStation    = UINT8_MAX;
-  uint8_t ASndSyR_SyncDelay           = UINT8_MAX;
-  uint8_t ASndSyR_PResTimeFirst       = UINT8_MAX;
-  uint8_t ASndSyR_PResTimeSecond      = UINT8_MAX;
-  uint8_t ASndSyR_StaticErrorBitField = UINT8_MAX;
 
-  /*StaticErrorBitField */
-  bool                 SEBF_genericError       = false;
-  bool                 SEBF_current            = false;
-  bool                 SEBF_Voltage            = false;
-  bool                 SEBF_Temperature        = false;
-  bool                 SEBF_CommunicationError = false;
-  bool                 SEBF_DeviceProfileSpecB = false;
-  bool                 SEBF_ManufacturerSpec   = false;
-  std::vector<uint8_t> SEBF_DeviceProfileSpec;
+    /* ASnd-->NMTCommand */
+    struct NMTCmd final {
+      NMTCommand           NMTCommandId = NMT_CMD_INVALID_SERVICE;
+      uint16_t             ResetReason  = UINT16_MAX;
+      std::vector<uint8_t> CommandData;
+      std::vector<uint8_t> HostName;
+      uint8_t              NodeID = UINT8_MAX;
+      std::vector<uint8_t> DateTime;
+      std::vector<uint8_t> DNA;
+      uint8_t              ValidFlags               = UINT8_MAX;
+      bool                 LeaseTimeValid           = false;
+      bool                 HubPortEnableMaskValid   = false;
+      bool                 SetNewNodeNumber         = false;
+      bool                 CompareCurrentMacID      = false;
+      bool                 CompareCurrentNodeNumber = false;
+      std::string          CurrentMacID             = "";
+      uint64_t             HubPortEnableMask        = UINT64_MAX;
+      uint32_t             CurrentNodeNumber        = UINT32_MAX;
+      uint32_t             NewNodeNumber            = UINT32_MAX;
+      nstime_t             LeaseTime                = {0, 0};
+    } NMTCmd;
 
-  // (mostly) PReq and PRes
-  bool multiplexedSlot = false;
 
-  // (mostly) PRes data
-  bool              exceptionNew = false;
-  AsyncSendPriority sendPriority = ASSP_LOWEST; // also ASnd-->IdentResponse
+    /* ASnd-->StatusResponse */
+    struct StatusResponse final {
+      bool              ExceptionNew   = false;
+      bool              ExceptionClear = false;
+      AsyncSendPriority Priority       = ASSP_LOWEST;
+      uint8_t           RequestToSend  = UINT8_MAX;
 
-  // ASnd header
+      /* StaticErrorBitField */
+      bool                 GenericError       = false;
+      bool                 Current            = false;
+      bool                 Voltage            = false;
+      bool                 Temperature        = false;
+      bool                 CommunicationError = false;
+      bool                 DeviceProfileSpecB = false;
+      bool                 ManufacturerSpec   = false;
+      std::vector<uint8_t> DeviceProfileSpec;
+    } StatusResponse;
 
-  // ASnd-->IdentResponse
-  bool exceptionClear = false;
+    /* ASnd-->SyncResponse */
+    struct SyncResponse final {
+      uint8_t SyncResponse        = UINT8_MAX;
+      bool    PResTimeFirstValid  = false;
+      bool    PResTimeSecondValid = false;
+      bool    PResModeStatus      = false;
+      uint8_t Latency             = UINT8_MAX;
+      uint8_t SyncDelayStation    = UINT8_MAX;
+      uint8_t SyncDelay           = UINT8_MAX;
+      uint8_t PResTimeFirst       = UINT8_MAX;
+      uint8_t PResTimeSecond      = UINT8_MAX;
+      uint8_t StaticErrorBitField = UINT8_MAX;
+    } SyncResponse;
+
+    /* ASnd-->SDO */
+    struct SDO final {
+      struct SEQ final {
+        uint8_t              ReceiveSequenceNumber = UINT8_MAX;
+        SDOResConnectionType ReceiveCon            = SDORCT_NO_CONNECTION;
+        uint8_t              SendSequenceNumber    = UINT8_MAX;
+        SDOSndConnectionType SendCon               = SDOSCT_NO_CONNECTION;
+      } SEQ;
+
+      struct CMD final {
+        uint8_t         SDOTransactionID  = UINT8_MAX;
+        bool            IsResponse        = false;
+        bool            AbortTransfer     = false;
+        uint8_t         SubTransfer       = UINT8_MAX;
+        SDOSegmentation Segmentation      = SDOSGE_EXPEDITED_TRANSFER;
+        SDOCommandID    CommandID         = CMD_ID_NIL;
+        uint8_t         SegmentSize       = UINT8_MAX;
+        uint8_t         DataSize          = UINT8_MAX;
+        uint8_t         DataPadding       = UINT8_MAX;
+        uint8_t         TransferAbortCode = UINT8_MAX;
+        uint16_t        ODIndex           = UINT16_MAX;
+        uint8_t         ODSubIndex        = UINT8_MAX;
+        uint16_t        MappingIndex      = UINT16_MAX;
+        uint8_t         MappingSubIndex   = UINT8_MAX;
+        uint16_t        MappingOffset     = UINT16_MAX;
+        uint16_t        MappingLength     = UINT16_MAX;
+
+        bool                 FragmentOverlap          = false;
+        bool                 FragmentOverlapConflicts = false;
+        bool                 FragmentTailFragments    = false;
+        bool                 FragmentTooLong          = false;
+        uint32_t             FragmentCount            = UINT32_MAX;
+        uint8_t              Reassembled              = UINT8_MAX;
+        uint32_t             ReassembledLength        = UINT32_MAX;
+        std::vector<uint8_t> ReassembledData;
+      } CMD;
+    } SDO;
+
+  } ASnd;
+
+  int currentLevel = 0;
+
+
+  parserData()  = default;
+  ~parserData() = default;
+
+  parserData(const parserData &) = delete;
+  parserData(parserData &&)      = delete;
+
+  parserData &operator=(const parserData &) = delete;
+  parserData &operator=(parserData &&) = delete;
 };
 
 #if ENABLE_DEBUG_PRINT
@@ -210,23 +292,6 @@ void debugFN(parserData *d, field_info *fi, std::string str);
 
 void foreachFunc(proto_tree *node, gpointer data);
 void foreachEPLFunc(proto_tree *node, gpointer data);
-
-void bindUINT8(parserData *d, field_info *fi, uint8_t &val);
-void bindUINT16(parserData *d, field_info *fi, uint16_t &val);
-void bindUINT32(parserData *d, field_info *fi, uint32_t &val);
-void bindUINT64(parserData *d, field_info *fi, uint64_t &val);
-void bindABSOLUTE_TIME(parserData *d, field_info *fi, nstime_t &val);
-void bindBOOL(parserData *d, field_info *fi, bool &val);
-void bindSTRING(parserData *d, field_info *fi, std::string &val);
-void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val);
-void bindIPV4(parserData *d, field_info *fi, std::string &val);
-
-template <class E>
-inline void bindEnum(parserData *d, field_info *fi, E &val) {
-  static_assert(std::is_enum<E>::value == true, "E is not an enum");
-  val = static_cast<E>(fi->value.value.uinteger64);
-  DPRINT(d, fi, EPLEnum2Str::toStr(val), "");
-}
 
 inline size_t jenkinsHash(char const *data) {
   size_t hash = 0;

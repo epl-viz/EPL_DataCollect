@@ -268,6 +268,7 @@ enum ASndServiceID {
   ASND_STATUS_RESPONSE             = 0x02,
   ASND_NMT_REQUEST                 = 0x03,
   ASND_NMT_COMMAND                 = 0x04,
+  ASND_SDO                         = 0x05,
   ASND_BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
   ASND_END_MANUFACTURER_SPECIFIC   = 0xFE,
 };
@@ -303,6 +304,41 @@ enum NMTState {
   NMT_BASIC_ETHERNET      = 0b00011110
 };
 
+enum NMTCommand {
+  NMT_CMD_IDENT_REQUEST              = 0x1,
+  NMT_CMD_STATUS_REQUEST             = 0x2,
+  NMT_CMD_START_NODE                 = 0x21,
+  NMT_CMD_STOP_NODE                  = 0x22,
+  NMT_CMD_ENTER_PRE_OP2              = 0x23,
+  NMT_CMD_ENABLE_READY_TO_OPERATE    = 0x24,
+  NMT_CMD_RESET_NODE                 = 0x28,
+  NMT_CMD_RESET_COMMUNICATION        = 0x29,
+  NMT_CMD_RESET_CONFIGURATION        = 0x2A,
+  NMT_CMD_SW_RESET                   = 0x2B,
+  NMT_CMD_GO_TO_STANDBY              = 0x2C,
+  NMT_CMD_START_NODE_EX              = 0x41,
+  NMT_CMD_STOP_NODE_EX               = 0x42,
+  NMT_CMD_ENTER_PRE_OP2_EX           = 0x43,
+  NMT_CMD_ENABLE_READY_TO_OPERATE_EX = 0x44,
+  NMT_CMD_RESET_NODE_EX              = 0x48,
+  NMT_CMD_RESET_COMMUNICATION_EX     = 0x49,
+  NMT_CMD_RESET_CONFIGURATION_EX     = 0x4A,
+  NMT_CMD_SW_RESET_EX                = 0x4B,
+  NMT_CMD_NET_HOST_NAME_SET          = 0x62,
+  NMT_CMD_FLUSH_ARP_ENTRY            = 0x63,
+  NMT_CMD_PUBLISH_CONFIGURED_NODES   = 0x80,
+  NMT_CMD_PUBLISH_ACTIVE_NODES       = 0x90,
+  NMT_CMD_PUBLISH_PRE_OPERATIONAL1   = 0x91,
+  NMT_CMD_PUBLISH_PRE_OPERATIONAL2   = 0x92,
+  NMT_CMD_PUBLISH_READY_TO_OPERATE   = 0x93,
+  NMT_CMD_PUBLISH_OPERATIONAL        = 0x94,
+  NMT_CMD_PUBLISH_STOPPED            = 0x95,
+  NMT_CMD_PUBLISH_NODE_STATES        = 0x96,
+  NMT_CMD_PUBLISH_EMERGENCY_NEW      = 0xA0,
+  NMT_CMD_PUBLISH_PUBLISHED_TIME     = 0xB0,
+  NMT_CMD_INVALID_SERVICE            = 0xFF
+};
+
 /*!
  * \brief AsyncSend Request Prioities
  */
@@ -317,12 +353,34 @@ enum AsyncSendPriority {
   ASSP_LOWEST  = 0b000
 };
 
+enum SDOResConnectionType {
+  SDORCT_NO_CONNECTION    = 0,
+  SDORCT_INITIALISATION   = 1,
+  SDORCT_CONNECTION_VALID = 2,
+  SDORCT_ERROR_RESPONSE   = 3
+};
+
+
+enum SDOSndConnectionType {
+  SDOSCT_NO_CONNECTION        = 0,
+  SDOSCT_INITIALISATION       = 1,
+  SDOSCT_CONNECTION_VALID     = 2,
+  SDOSCT_CONNECTION_VALID_WAR = 3
+};
+
+enum SDOSegmentation {
+  SDOSGE_EXPEDITED_TRANSFER    = 0,
+  SDOSGE_INITIATE_SGE_TRANSFER = 1,
+  SDOSEG_SEGMENT               = 2,
+  SDOSEG_END_SEG_TRANSFER      = 3
+};
+
 /*!
  * \brief Command ID
  */
-enum CommandID {
+enum SDOCommandID {
   CMD_ID_NIL                            = 0x00,
-  CMD_ID_WRITE_BY_IDEX                  = 0x01,
+  CMD_ID_WRITE_BY_INDEX                 = 0x01,
   CMD_ID_READ_BY_INDEX                  = 0x02,
   CMD_ID_WRITE_ALL_BY_INDEX             = 0x03,
   CMD_ID_READ_ALL_BY_INDEX              = 0x04,

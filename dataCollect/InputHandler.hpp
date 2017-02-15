@@ -32,6 +32,7 @@
 
 #include "defines.hpp"
 
+#include "InputParser.hpp"
 #include "Packet.hpp"
 #include <mutex>
 #include <vector>
@@ -57,7 +58,8 @@ namespace EPL_DataCollect {
   */
 class InputHandler {
  private:
-  ws_dissect_t *dissect = nullptr;
+  ws_dissect_t *              dissect = nullptr;
+  WiresharkParser::parserData workingData;
 
   std::recursive_mutex parserLocker;
   std::string          eplFrameName      = "Ethernet POWERLINK";

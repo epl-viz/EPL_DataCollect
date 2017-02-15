@@ -29,7 +29,6 @@
  */
 
 #include "InputHandler.hpp"
-#include "InputParser.hpp"
 #include <ws_capture.h>
 #include <ws_dissect.h>
 
@@ -42,13 +41,15 @@ InputHandler::~InputHandler() {}
 Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
   std::lock_guard<std::recursive_mutex> lock(parserLocker);
 
-  parserData d;
-  d.eplFrameName = &eplFrameName;
-  d.wsOther      = "";
+  // Reset the pareser data
+  workingData.~parserData();
+  new (&workingData) parserData;
 
-  proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&d));
+  workingData.eplFrameName = &eplFrameName;
 
-  Packet packet(d.pType, d.cID, d.descPTR, d.wsString, d.wsOther, d.src, d.dst, d.tp, d.transactID, d.numSegments);
+  proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&workingData));
+
+  Packet packet(&workingData);
   return packet;
 }
 

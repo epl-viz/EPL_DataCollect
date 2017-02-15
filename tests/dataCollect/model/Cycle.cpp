@@ -24,6 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "InputParser.hpp"
 #include <Cycle.hpp>
 #include <catch.hpp>
 #include <cmath>
@@ -118,13 +119,13 @@ TEST_CASE("Packets are updated correctly") {
   std::vector<Packet> newPackets;
   uint32_t            oldCycleNum = c.getCycleNum();
 
-  // Create sample packets
-  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 1, 10, std::chrono::system_clock::now());
-  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 10, 1, std::chrono::system_clock::now());
-  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 100, 50, std::chrono::system_clock::now());
-  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 30, 80, std::chrono::system_clock::now());
-  newPackets.emplace_back(PT_UNDEF, CMD_ID_NIL, nullptr, "", "", 90, 10, std::chrono::system_clock::now());
+  WiresharkParser::parserData d;
 
+  // Create sample packets
+  newPackets.emplace_back(&d);
+  newPackets.emplace_back(&d);
+  newPackets.emplace_back(&d);
+  newPackets.emplace_back(&d);
 
   SECTION("Updating Packets") {
     c.updatePackets(newPackets);
