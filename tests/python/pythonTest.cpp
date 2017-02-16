@@ -44,26 +44,35 @@ TEST_CASE("Testing calling cython", "[python]") {
 
   std::cout << "\n\n";
 
-
-  Py_Initialize();
-
-  // INITING Python
-  PyInit_Plugin();
-  // IMPORTING
-  import_Plugin();
-
-  EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("pyPlugins.PluginA");
-  std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
-  std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
-  std::cout << "plugin.run()..."
-            << "\n";
-  pyPlugin->run(new EPL_DataCollect::Cycle());
-
-
-  //   REQUIRE(runAllTests() == false);
-  //   PyPlug *obj = buildPyPlug();
+  //   Py_Initialize();
   //
-  //   REQUIRE(static_cast<int>(cy_fct(5)) == static_cast<int>(5));
-  //   REQUIRE(run_wrapper(obj) == 52);
-  Py_Finalize();
+  //   PyRun_SimpleString("import
+  //   sys\nsys.path.append('/home/chippy/EPL_DataCollect/build/lib')\nprint(sys.path)\nimport os\nprint(os.getcwd())");
+  //
+  //   EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("PluginA");
+  //   std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
+  //   std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
+  //   std::cout << "plugin.run()..."
+  //             << "\n";
+  //   pyPlugin->run(new EPL_DataCollect::Cycle());
+  //
+  //   std::cout << "---PLUGIN B---\n";
+  //
+  //   EPL_DataCollect::plugins::PythonPlugin *pyPlugin2 = new EPL_DataCollect::plugins::PythonPlugin("PluginB");
+  //   std::cout << "plugin.getID returns \t" << pyPlugin2->getID() << "\n";
+  //   std::cout << "plugin.getDependencies returns \t" << pyPlugin2->getDependencies() << "\n";
+  //   std::cout << "plugin.run()..."
+  //             << "\n";
+  //   pyPlugin2->run(new EPL_DataCollect::Cycle());
+  //
+  //   std::cout << "\n----------------\n\n\t5 runs of Plugin A and B:";
+  //
+  //   for (int i = 0; i < 5; i++) {
+  //     EPL_DataCollect::Cycle* curCyc = new EPL_DataCollect::Cycle();
+  //     pyPlugin->run(curCyc);
+  //     pyPlugin2->run(curCyc);
+  //   }
+  //   Py_Finalize();
+
+  std::cout << "\n\n";
 }
