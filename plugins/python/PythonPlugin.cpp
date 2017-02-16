@@ -31,7 +31,6 @@
 
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
-#include "Plugin_api.h"
 #include "Python.h"
 #include "iostream"
 #include <string>
