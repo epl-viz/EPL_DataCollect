@@ -27,11 +27,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
-// #include <Test_api.h>
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
 #include <PythonPlugin.hpp>
-#include <Plugin_api.h>
 #include <catch.hpp>
 #include <fakeit.hpp>
 #include <iostream>
