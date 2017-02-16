@@ -268,7 +268,14 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       bindUINT16(d, fi, d->captureSize);
       break; // == FT_UINT16 -- BASE_DEC ("Captured Size")
 
+    // Unparsed data
+    case "data.data"_h:
+      bindBYTES(d, fi, d->data);
+      break;
+
     // IGONRE:
+    case "data"_h:
+    case "data.len"_h:
     case EPL_PREFIX ".asnd.ires.features"_h:              // == FT_UINT32 -- BASE_HEX ("FeatureFlags")
     case EPL_PREFIX ".soc"_h:                             // == FT_UINT8 -- BASE_HEX ("Flags")
     case EPL_PREFIX ".preq"_h:                            // == FT_UINT8 -- BASE_HEX ("Flags")

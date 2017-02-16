@@ -42,7 +42,7 @@ namespace WiresharkParser {
 
 // BEGIN DEBUG CONFIG
 
-#define ENABLE_DEBUG_PRINT 1
+#define ENABLE_DEBUG_PRINT 0
 
 #if ENABLE_DEBUG_PRINT
 #define DPRINT(a, b, c, d) debugFN(a, b, c)
@@ -55,10 +55,12 @@ namespace WiresharkParser {
 struct parserData final {
   std::string const *eplFrameName = nullptr;
 
+  std::vector<uint8_t> data;
+
   MessageType                           pType       = PT_UNDEF;
   NMTState                              nmtState    = NMT_OFF;
   std::string                           wsString    = "";
-  std::string                           wsOther     = "<UNDEFINED>";
+  std::string                           wsOther     = "";
   uint8_t                               src         = UINT8_MAX;
   uint8_t                               dst         = UINT8_MAX;
   uint16_t                              captureSize = UINT16_MAX;

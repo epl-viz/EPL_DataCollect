@@ -85,9 +85,13 @@ bool CycleBuilder::startLoop(Cycle startPoint) noexcept {
   keepLoopAlive = true;
   loopThread    = std::thread(&CycleBuilder::buildLoop, this);
 
-  while (!isLoopRunning) {
+  while (true) {
     std::unique_lock<std::mutex> lk(startLoopSignal);
-    startLoopWait.wait(lk);
+    if (!isLoopRunning) {
+      startLoopWait.wait(lk);
+    } else {
+      break;
+    }
   }
 
   return true;
@@ -107,9 +111,13 @@ bool CycleBuilder::stopLoop() noexcept {
 
   keepLoopAlive = false;
 
-  while (isLoopRunning) {
+  while (true) {
     std::unique_lock<std::mutex> lk(stopLoopSignal);
-    stopLoopWait.wait(lk);
+    if (isLoopRunning) {
+      stopLoopWait.wait(lk);
+    } else {
+      break;
+    }
   }
 
   return true;
