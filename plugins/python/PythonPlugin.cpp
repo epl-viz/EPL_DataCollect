@@ -32,6 +32,7 @@
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
 #include "Plugin_api.h"
+#include "Python.h"
 #include "iostream"
 #include <string>
 
@@ -40,30 +41,51 @@ namespace plugins {
 
 // Constructors/Destructors
 //
+std::unordered_map<std::string, PythonPlugin *> PythonPlugin::plugins;
+Cycle *PythonPlugin::currentCycle;
 
 PythonPlugin::PythonPlugin() {}
 
+
+// BEFORE CALLING MAKE SURE PYTHONPATH IS SET TO PLUGIN DIRECTIONARY !!!
 PythonPlugin::PythonPlugin(std::string pluginName) {
   plugName = pluginName;
 
-  // IMPORTANT: make sure that PyInterpreter is running and the Plugin.pyx is PyInited !
-  //   PyInit_Plugin();
-  import_Plugin();
+  plugins[plugName] = this;
 
-  cythonPlugin = reinterpret_cast<_object *>(buildPlugin("PluginName"));
-  initialize(new CaptureInstance());
+  // Python INIT
+  pName   = PyUnicode_DecodeFSDefault(plugName.c_str());
+  pModule = PyImport_Import(pName);
+  Py_DECREF(pName);
+
+  if (pModule != NULL) {
+    pDict  = PyModule_GetDict(pModule);
+    pClass = PyDict_GetItemString(pDict, plugName.c_str());
+
+    if (PyCallable_Check(pClass)) {
+      pInstance = PyObject_CallObject(pClass, NULL);
+    }
+  }
+
+  // initing
+  std::cout << "initing returns ...\t" << initialize(NULL) << "\n";
 };
 
 PythonPlugin::~PythonPlugin() {}
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
-  initialize_wrapper(reinterpret_cast<PyPlug *>(cythonPlugin));
   (void)ci;
+  pValue = PyObject_CallMethod(pInstance, (const char *)"initialize", NULL);
+  if (pValue != NULL) {
+    Py_DECREF(pValue);
+    return true;
+  }
   return false;
 };
 
 void PythonPlugin::run(Cycle *cycle) {
-  run_wrapper(reinterpret_cast<PyPlug *>(cythonPlugin), reinterpret_cast<void *>(cycle));
+  currentCycle = cycle;
+  PyObject_CallMethod(pInstance, (const char *)"run", NULL);
 };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
@@ -71,18 +93,49 @@ bool PythonPlugin::reset(CaptureInstance *ci) {
   return false;
 };
 
-Cycle *PythonPlugin::getCurrentCycle() {
-  static Cycle *curCycle;
-  if (curCycle == NULL) {
-    curCycle = new Cycle();
-  }
-  return curCycle;
-}
+Cycle *PythonPlugin::getCurrentCycle() { return currentCycle; }
+
+PythonPlugin *PythonPlugin::getPythonPlugin(const char *name) { return plugins[std::string(name)]; }
 
 std::string PythonPlugin::getDependencies() {
-  return getDependencies_wrapper(reinterpret_cast<PyPlug *>(cythonPlugin));
+  std::string ret_val = "";
+  pValue              = PyObject_CallMethod(pInstance, (const char *)"getDependencies", NULL);
+  if (pValue != NULL) {
+    pValue  = PyUnicode_AsUTF8String(pValue);
+    ret_val = PyBytes_AsString(pValue);
+    Py_DECREF(pValue);
+  }
+  return ret_val; // return empty if no function is given, this is OK !
 };
 
-std::string PythonPlugin::getID() { return getID_wrapper((reinterpret_cast<PyPlug *>(cythonPlugin))); };
+std::string PythonPlugin::getID() {
+  std::string ret_val = "";
+  pValue              = PyObject_CallMethod(pInstance, (const char *)"getID", NULL);
+  if (pValue != NULL) {
+    pValue  = PyUnicode_AsUTF8String(pValue);
+    ret_val = PyBytes_AsString(pValue);
+    Py_DECREF(pValue);
+  }
+  return ret_val;
+};
+
+bool PythonPlugin::addPyEvent(int key, const char *value) {
+  (void)value;
+  (void)key;
+
+  // TODO: IMPLEMENT THIS METHOD IS KEY
+
+  std::cout << "\nadd ev\t" + std::string(value);
+  return true;
+};
+
+bool PythonPlugin::registerPyCycleStorage(const char *index) {
+  (void)index;
+
+  // TODO: IMPLEMENT THIS METHOD IS KEY
+
+  std::cout << "\nregging\t" + std::string(index);
+  return true;
+};
 }
 }
