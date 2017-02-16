@@ -81,8 +81,8 @@ TEST_CASE("Test all event classes", "[Events]") {
   SECTION("Test EvProtoError") {
     uint32_t     first = 0xDEADBEAF, last = 0xDEADBEAF;
     EvProtoError ev(strings[0], strings[1], strings[2], 0, &c, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_PROTO_ERROR");
-    REQUIRE(ev.getType() == EVT_PROTO_ERROR);
+    REQUIRE(ev.getTypeAsString() == "EvType::PROTO_ERROR");
+    REQUIRE(ev.getType() == EvType::PROTO_ERROR);
     REQUIRE(ev.getPluginID() == strings[0]);
     REQUIRE(ev.getName() == strings[1]);
     REQUIRE(ev.getDescription() == strings[2]);
@@ -100,8 +100,8 @@ TEST_CASE("Test all event classes", "[Events]") {
   SECTION("Test EvError") {
     uint32_t first = 0xDEADBEAF, last = 0xDEADBEAF;
     EvError  ev(strings[6], strings[7], strings[8], 0, nullptr, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_ERROR");
-    REQUIRE(ev.getType() == EVT_ERROR);
+    REQUIRE(ev.getTypeAsString() == "EvType::ERROR");
+    REQUIRE(ev.getType() == EvType::ERROR);
     REQUIRE(ev.getPluginID() == strings[6]);
     REQUIRE(ev.getName() == strings[7]);
     REQUIRE(ev.getDescription() == strings[8]);
@@ -117,25 +117,25 @@ TEST_CASE("Test all event classes", "[Events]") {
 
   SECTION("Test EvWarning") {
     EvWarning ev(strings[0], strings[1], strings[2], 0, &c, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_WARNING");
-    REQUIRE(ev.getType() == EVT_WARNING);
+    REQUIRE(ev.getTypeAsString() == "EvType::WARNING");
+    REQUIRE(ev.getType() == EvType::WARNING);
   }
 
   SECTION("Test EvInfo") {
     EvInfo ev(strings[0], strings[1], strings[2], 0, &c, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_INFO");
-    REQUIRE(ev.getType() == EVT_INFO);
+    REQUIRE(ev.getTypeAsString() == "EvType::INFO");
+    REQUIRE(ev.getType() == EvType::INFO);
   }
 
   SECTION("Test EvDebug") {
     EvDebug ev(strings[0], strings[1], strings[2], 0, &c, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_DEBUG");
-    REQUIRE(ev.getType() == EVT_DEBUG);
+    REQUIRE(ev.getTypeAsString() == "EvType::DEBUG");
+    REQUIRE(ev.getType() == EvType::DEBUG);
   }
 
   SECTION("Test EvPluginText") {
     EvPluginText ev(strings[0], strings[1], strings[2], 0, &c, map);
-    REQUIRE(ev.getTypeAsString() == "EVT_PLUGIN_EV_TEXT");
-    REQUIRE(ev.getType() == EVT_PLUGIN_EV_TEXT);
+    REQUIRE(ev.getTypeAsString() == "EvType::PLUGIN_EV_TEXT");
+    REQUIRE(ev.getType() == EvType::PLUGIN_EV_TEXT);
   }
 }

@@ -38,71 +38,86 @@ bool checkDouble(double a, double b) {
 }
 
 TEST_CASE("Testing ODT 2 OCT", "[ODEntry]") {
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_BOOLEAN) == OCT_BOOL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::BOOLEAN) == ObjectClassType::BOOL);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER8) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER16) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER24) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER32) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER40) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER48) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER56) == OCT_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_INTEGER64) == OCT_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER8) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER16) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER24) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER32) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER40) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER48) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER56) == ObjectClassType::INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::INTEGER64) == ObjectClassType::INTEGER);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED8) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED16) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED24) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED32) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED40) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED48) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED56) == OCT_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNSIGNED64) == OCT_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED8) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED16) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED24) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED32) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED40) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED48) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED56) == ObjectClassType::UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNSIGNED64) == ObjectClassType::UNSIGNED);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_REAL32) == OCT_REAL);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_REAL64) == OCT_REAL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::REAL32) == ObjectClassType::REAL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::REAL64) == ObjectClassType::REAL);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_BOOLEAN) == OCT_ARRAY_BOOL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::BOOLEAN) == ObjectClassType::ARRAY_BOOL);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER8) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER16) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER24) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER32) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER40) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER48) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER56) == OCT_ARRAY_INTEGER);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_INTEGER64) == OCT_ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER8) == ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER16) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER24) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER32) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER40) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER48) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER56) ==
+          ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::INTEGER64) ==
+          ObjectClassType::ARRAY_INTEGER);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED8) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED16) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED24) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED32) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED40) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED48) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED56) == OCT_ARRAY_UNSIGNED);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_UNSIGNED64) == OCT_ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED8) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED16) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED24) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED32) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED40) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED48) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED56) ==
+          ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::UNSIGNED64) ==
+          ObjectClassType::ARRAY_UNSIGNED);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_REAL32) == OCT_ARRAY_REAL);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_ARRAY, ODT_REAL64) == OCT_ARRAY_REAL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::REAL32) == ObjectClassType::ARRAY_REAL);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::ARRAY, ObjectDataType::REAL64) == ObjectClassType::ARRAY_REAL);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_VISIBLE_STRING) == OCT_STRING);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_OCTET_STRING) == OCT_STRING);
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_UNICODE_STRING) == OCT_STRING);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::VISIBLE_STRING) == ObjectClassType::STRING);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::OCTET_STRING) == ObjectClassType::STRING);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::UNICODE_STRING) == ObjectClassType::STRING);
 
-  REQUIRE(ODEntryContainer::getOCTbyODT(OT_VAR, ODT_IDENTITY) == OCT_COMPLEX);
+  REQUIRE(ODEntryContainer::getOCTbyODT(ObjectType::VAR, ObjectDataType::IDENTITY) == ObjectClassType::COMPLEX);
 }
 
 TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
   std::cout << "ODEntry container size: \x1b[33;1m" << EPL_DataCollect::internal::calcSize() << "\x1b[0m Byte"
             << std::endl;
 
-  ODEntryContainer ct(ODT_INTEGER32);
+  ODEntryContainer ct(ObjectDataType::INTEGER32);
   auto             ptr   = *ct;
   ODEntryInt *     t     = ct.getData<ODEntryInt>();
   ODEntry *        entry = *ct;
   t->data                = 42;
-  REQUIRE(t->getType() == OCT_INTEGER);
+  REQUIRE(t->getType() == ObjectClassType::INTEGER);
   REQUIRE(t->getType() == ct->getType());
-  REQUIRE(t->getDataType() == ODT_INTEGER32);
+  REQUIRE(t->getDataType() == ObjectDataType::INTEGER32);
   REQUIRE(t->getDataType() == entry->getDataType());
   REQUIRE(t->isNumericValue() == true);
   REQUIRE(checkDouble(t->getNumericValue(), 42) == true);
@@ -116,11 +131,11 @@ TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
-  ODEntryContainer ct(ODT_UNSIGNED16);
+  ODEntryContainer ct(ObjectDataType::UNSIGNED16);
   ODEntryUInt &    t = *ct.getData<ODEntryUInt>();
   t.data             = 42;
-  REQUIRE(t.getType() == OCT_UNSIGNED);
-  REQUIRE(t.getDataType() == ODT_UNSIGNED16);
+  REQUIRE(t.getType() == ObjectClassType::UNSIGNED);
+  REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED16);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
 
@@ -133,11 +148,11 @@ TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
-  ODEntryContainer ct(ODT_BOOLEAN);
+  ODEntryContainer ct(ObjectDataType::BOOLEAN);
   ODEntryBool &    t = *ct.getData<ODEntryBool>();
   t.data             = true;
-  REQUIRE(t.getType() == OCT_BOOL);
-  REQUIRE(t.getDataType() == ODT_BOOLEAN);
+  REQUIRE(t.getType() == ObjectClassType::BOOL);
+  REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 1) == true);
 
@@ -150,11 +165,11 @@ TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
-  ODEntryContainer ct(ODT_REAL32);
+  ODEntryContainer ct(ObjectDataType::REAL32);
   ODEntryReal &    t = *ct.getData<ODEntryReal>();
   t.data             = 42;
-  REQUIRE(t.getType() == OCT_REAL);
-  REQUIRE(t.getDataType() == ODT_REAL32);
+  REQUIRE(t.getType() == ObjectClassType::REAL);
+  REQUIRE(t.getDataType() == ObjectDataType::REAL32);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
 
@@ -167,11 +182,11 @@ TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryString", "[ODEntry]") {
-  ODEntryContainer ct(ODT_VISIBLE_STRING);
+  ODEntryContainer ct(ObjectDataType::VISIBLE_STRING);
   ODEntryString &  t = *ct.getData<ODEntryString>();
   t.data             = "Hello world";
-  REQUIRE(t.getType() == OCT_STRING);
-  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.getType() == ObjectClassType::STRING);
+  REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
@@ -192,10 +207,10 @@ TEST_CASE("Testing ODEntryString", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
-  ODEntryContainer ct(ODT_INTEGER40, OT_ARRAY);
+  ODEntryContainer ct(ObjectDataType::INTEGER40, ObjectType::ARRAY);
   ODEntryArrayInt &t = *ct.getData<ODEntryArrayInt>();
-  REQUIRE(t.getType() == OCT_ARRAY_INTEGER);
-  REQUIRE(t.getDataType() == ODT_INTEGER40);
+  REQUIRE(t.getType() == ObjectClassType::ARRAY_INTEGER);
+  REQUIRE(t.getDataType() == ObjectDataType::INTEGER40);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
@@ -208,10 +223,10 @@ TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
-  ODEntryContainer  ct(ODT_UNSIGNED56, OT_ARRAY);
+  ODEntryContainer  ct(ObjectDataType::UNSIGNED56, ObjectType::ARRAY);
   ODEntryArrayUInt &t = *ct.getData<ODEntryArrayUInt>();
-  REQUIRE(t.getType() == OCT_ARRAY_UNSIGNED);
-  REQUIRE(t.getDataType() == ODT_UNSIGNED56);
+  REQUIRE(t.getType() == ObjectClassType::ARRAY_UNSIGNED);
+  REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED56);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
@@ -224,10 +239,10 @@ TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
-  ODEntryContainer  ct(ODT_BOOLEAN, OT_ARRAY);
+  ODEntryContainer  ct(ObjectDataType::BOOLEAN, ObjectType::ARRAY);
   ODEntryArrayBool &t = *ct.getData<ODEntryArrayBool>();
-  REQUIRE(t.getType() == OCT_ARRAY_BOOL);
-  REQUIRE(t.getDataType() == ODT_BOOLEAN);
+  REQUIRE(t.getType() == ObjectClassType::ARRAY_BOOL);
+  REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
@@ -240,10 +255,10 @@ TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
-  ODEntryContainer  ct(OCT_ARRAY_REAL, ODT_VISIBLE_STRING);
+  ODEntryContainer  ct(ObjectClassType::ARRAY_REAL, ObjectDataType::VISIBLE_STRING);
   ODEntryArrayReal &t = *ct.getData<ODEntryArrayReal>();
-  REQUIRE(t.getType() == OCT_ARRAY_REAL);
-  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.getType() == ObjectClassType::ARRAY_REAL);
+  REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 
@@ -256,10 +271,10 @@ TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryComplex", "[ODEntry]") {
-  ODEntryContainer ct(OCT_COMPLEX, ODT_VISIBLE_STRING);
+  ODEntryContainer ct(ObjectClassType::COMPLEX, ObjectDataType::VISIBLE_STRING);
   ODEntryComplex & t = *ct.getData<ODEntryComplex>();
-  REQUIRE(t.getType() == OCT_COMPLEX);
-  REQUIRE(t.getDataType() == ODT_VISIBLE_STRING);
+  REQUIRE(t.getType() == ObjectClassType::COMPLEX);
+  REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
 

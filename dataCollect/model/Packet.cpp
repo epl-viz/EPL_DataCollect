@@ -57,7 +57,7 @@ bool Packet::operator==(const Packet &r) const {
  * \brief Returns the packet type
  * \return The packet type as a MessageType
  */
-MessageType Packet::getType() const noexcept { return type; }
+PacketType Packet::getType() const noexcept { return type; }
 
 
 /*!

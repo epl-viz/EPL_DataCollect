@@ -44,6 +44,10 @@
 #endif
 #endif
 
+#ifndef SLEEP
+#define SLEEP(unit, amount) std::this_thread::sleep_for(std::chrono::unit(amount));
+#endif
+
 namespace EPL_DataCollect {
 
 namespace constants {

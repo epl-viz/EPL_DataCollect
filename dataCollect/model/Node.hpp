@@ -48,9 +48,9 @@ class CycleBuilder;
 class Node {
 
  private:
-  OD         od;                  //!< \brief The Object dictionary of the Node
-  NodeStatus status = NS_UNKNOWN; //!< \brief Current status of the Node
-  uint8_t    id;                  //!< \brief The ID of this node
+  OD         od;                           //!< \brief The Object dictionary of the Node
+  NodeStatus status = NodeStatus::UNKNOWN; //!< \brief Current status of the Node
+  uint8_t    id;                           //!< \brief The ID of this node
 
  public:
   Node() = delete;

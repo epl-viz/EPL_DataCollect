@@ -63,16 +63,16 @@ ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
   memset(data, 0, internal::calcSize());
 
   switch (type) {
-    case OCT_INTEGER: init<ODEntryInt>(dt); return;
-    case OCT_UNSIGNED: init<ODEntryUInt>(dt); return;
-    case OCT_BOOL: init<ODEntryBool>(dt); return;
-    case OCT_REAL: init<ODEntryReal>(dt); return;
-    case OCT_STRING: init<ODEntryString>(dt); return;
-    case OCT_ARRAY_INTEGER: init<ODEntryArrayInt>(dt); return;
-    case OCT_ARRAY_UNSIGNED: init<ODEntryArrayUInt>(dt); return;
-    case OCT_ARRAY_BOOL: init<ODEntryArrayBool>(dt); return;
-    case OCT_ARRAY_REAL: init<ODEntryArrayReal>(dt); return;
-    case OCT_COMPLEX: init<ODEntryComplex>(dt); return;
+    case ObjectClassType::INTEGER: init<ODEntryInt>(dt); return;
+    case ObjectClassType::UNSIGNED: init<ODEntryUInt>(dt); return;
+    case ObjectClassType::BOOL: init<ODEntryBool>(dt); return;
+    case ObjectClassType::REAL: init<ODEntryReal>(dt); return;
+    case ObjectClassType::STRING: init<ODEntryString>(dt); return;
+    case ObjectClassType::ARRAY_INTEGER: init<ODEntryArrayInt>(dt); return;
+    case ObjectClassType::ARRAY_UNSIGNED: init<ODEntryArrayUInt>(dt); return;
+    case ObjectClassType::ARRAY_BOOL: init<ODEntryArrayBool>(dt); return;
+    case ObjectClassType::ARRAY_REAL: init<ODEntryArrayReal>(dt); return;
+    case ObjectClassType::COMPLEX: init<ODEntryComplex>(dt); return;
   }
 }
 

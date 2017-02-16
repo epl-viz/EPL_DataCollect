@@ -296,10 +296,11 @@ enum2str_generate(
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
   INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "epan/ftypes/ftypes.h"
+  INDENT_STR "  "
   NAMESPACE  "EPL_DataCollect"
   ENUMS
     "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
-    "MessageType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
+    "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
     "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
     "CaptureInstance::CIstate"

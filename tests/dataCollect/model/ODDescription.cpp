@@ -32,7 +32,7 @@ using namespace EPL_DataCollect;
 TEST_CASE("Test ODDescription", "[Model]") {
   std::vector<ODEntryDescription> entries;
   for (size_t i = 0; i < 16; i++) {
-    entries.emplace_back(OT_VAR, ODT_BOOLEAN);
+    entries.emplace_back(ObjectType::VAR, ObjectDataType::BOOLEAN);
     entries[i].name = "Entry " + std::to_string(i);
   }
 

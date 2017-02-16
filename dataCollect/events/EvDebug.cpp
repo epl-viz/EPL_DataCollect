@@ -49,5 +49,5 @@ EvDebug::EvDebug(std::string          evPluginID,
                  uint64_t             evFlags,
                  Cycle *              cycle,
                  EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_DEBUG, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::DEBUG, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

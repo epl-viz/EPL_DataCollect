@@ -98,7 +98,7 @@ TEST_CASE("OD Entries are fetched correctly") {
   OD *           od     = n->getOD();
   ODDescription *odDesc = od->getODDesc();
 
-  ODEntryDescription entryDesc(OT_VAR, ODT_INTEGER16);
+  ODEntryDescription entryDesc(ObjectType::VAR, ObjectDataType::INTEGER16);
 
   odDesc->setEntry(0, entryDesc);
 
@@ -106,8 +106,8 @@ TEST_CASE("OD Entries are fetched correctly") {
 
   SECTION("Test getODEntry() correctly retrieving valid values") {
     REQUIRE(entry != nullptr);
-    REQUIRE(entry->getType() == OCT_INTEGER);
-    REQUIRE(entry->getDataType() == ODT_INTEGER16);
+    REQUIRE(entry->getType() == ObjectClassType::INTEGER);
+    REQUIRE(entry->getDataType() == ObjectDataType::INTEGER16);
     REQUIRE(entry->isNumericValue() == true);
     REQUIRE(std::fabs(entry->getNumericValue() - entryDesc.defaultValue->getNumericValue()) <
             std::numeric_limits<double>::epsilon());

@@ -33,10 +33,10 @@ using namespace fakeit;
 
 TEST_CASE("Testing Packet", "[Packet]") {
   plf::colony<ODEntryContainer> ods;
-  ods.emplace(ODEntryContainer(ODT_INTEGER24));
-  ods.emplace(ODEntryContainer(ODT_BOOLEAN));
-  ods.emplace(ODEntryContainer(ODT_VISIBLE_STRING));
-  ods.emplace(ODEntryContainer(ODT_REAL64));
+  ods.emplace(ODEntryContainer(ObjectDataType::INTEGER24));
+  ods.emplace(ODEntryContainer(ObjectDataType::BOOLEAN));
+  ods.emplace(ODEntryContainer(ObjectDataType::VISIBLE_STRING));
+  ods.emplace(ODEntryContainer(ObjectDataType::REAL64));
 
   std::string wire  = "assdagagdagaerg";
   std::string other = "affbytsysrtharthathaeheeh";
@@ -49,7 +49,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   d.wsString = wire;
   d.wsOther  = other;
   d.tp       = tp;
-  d.pType    = PT_POLL_REQUEST;
+  d.pType    = PacketType::POLL_REQUEST;
   Packet p(&d);
 
   for (auto &i : ods) {
@@ -61,7 +61,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   REQUIRE(p.getDestNode() == 20);
   REQUIRE(p.getSrcNode() == 10);
   REQUIRE(p.getTimeStamp() == tp);
-  REQUIRE(p.getType() == PT_POLL_REQUEST);
+  REQUIRE(p.getType() == PacketType::POLL_REQUEST);
 
   auto diffs = p.getDiffs();
   for (auto &it : ods) {

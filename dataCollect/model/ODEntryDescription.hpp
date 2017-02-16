@@ -41,12 +41,12 @@ namespace EPL_DataCollect {
   * \brief Description of a specific OD entry
   */
 struct ODEntryDescription final {
-  uint16_t         index    = 0;       //!< \brief The 16bit Index of the OD Entry
-  ObjectType       type     = OT_NULL; //!< \brief The Object type (see EPSG DS 301 v1.3.0 Section 6.2.1)
+  uint16_t         index    = 0;                   //!< \brief The 16bit Index of the OD Entry
+  ObjectType       type     = ObjectType::NULL_OT; //!< \brief The Object type (see EPSG DS 301 v1.3.0 Section 6.2.1)
   std::string      name     = "<UNDEFINED>";
-  ObjectDataType   dataType = ODT_BOOLEAN;
-  ObjectCategory   category = OC_NOT_RELEVANT;
-  ObjectAccess     access   = OACS_CONST;
+  ObjectDataType   dataType = ObjectDataType::BOOLEAN;
+  ObjectCategory   category = ObjectCategory::NOT_RELEVANT;
+  ObjectAccess     access   = ObjectAccess::CONST;
   ODEntryContainer valueMin;
   ODEntryContainer valueMax;
   ODEntryContainer defaultValue;

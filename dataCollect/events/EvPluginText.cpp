@@ -49,5 +49,5 @@ EvPluginText::EvPluginText(std::string          evPluginID,
                            uint64_t             evFlags,
                            Cycle *              cycle,
                            EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_PLUGIN_EV_TEXT, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::PLUGIN_EV_TEXT, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

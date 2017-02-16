@@ -49,5 +49,5 @@ EvInfo::EvInfo(std::string          evPluginID,
                uint64_t             evFlags,
                Cycle *              cycle,
                EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_INFO, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::INFO, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

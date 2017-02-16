@@ -49,5 +49,5 @@ EvProtoError::EvProtoError(std::string          evPluginID,
                            uint64_t             evFlags,
                            Cycle *              cycle,
                            EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_PROTO_ERROR, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::PROTO_ERROR, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

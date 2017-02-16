@@ -49,5 +49,5 @@ EvError::EvError(std::string          evPluginID,
                  uint64_t             evFlags,
                  Cycle *              cycle,
                  EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_ERROR, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::ERROR, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

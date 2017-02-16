@@ -50,7 +50,7 @@ class Packet {
   typedef std::chrono::system_clock::time_point TIME_POINT;
 
  private:
-  MessageType             type = PT_UNDEF;
+  PacketType              type = PacketType::UNDEF;
   plf::colony<PacketDiff> diffs;
 
   std::string wiresharkSTR = "";
@@ -75,7 +75,7 @@ class Packet {
 
   bool operator==(const Packet &r) const;
 
-  mockable MessageType getType() const noexcept;
+  mockable PacketType getType() const noexcept;
   mockable plf::colony<PacketDiff> *getDiffs() noexcept;
   mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;

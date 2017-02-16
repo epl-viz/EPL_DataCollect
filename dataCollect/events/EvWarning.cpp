@@ -49,5 +49,5 @@ EvWarning::EvWarning(std::string          evPluginID,
                      uint64_t             evFlags,
                      Cycle *              cycle,
                      EventBase::INDEX_MAP evIndices)
-    : EventBase(EVT_WARNING, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
+    : EventBase(EvType::WARNING, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }

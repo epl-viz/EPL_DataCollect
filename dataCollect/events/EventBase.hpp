@@ -48,7 +48,7 @@ class EventBase {
   typedef std::unordered_map<std::string, std::string> MDATA_MAP;
 
  private:
-  EvType      type        = EVT_UNKNOWN;
+  EvType      type        = EvType::UNKNOWN;
   std::string typeSTR     = "<NOT SET>";
   uint64_t    flags       = 0;
   std::string pluginID    = "<NOT SET>";

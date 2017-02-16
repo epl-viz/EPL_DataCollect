@@ -32,19 +32,17 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace EPL_DataCollect {
 
 /*!
  * \brief The type of an OD entry
  * \note This is NOT the data type (\sa ObjectDataType)
  */
-enum ObjectType {
-  OT_NULL      = 0, //!< \brief A dictionary entry with no data fields
-  OT_DEFTYPE   = 5, //!< \brief Denotes a static data type definition such as a Boolean, UNSIGNED16, float and so on
-  OT_DEFSTRUCT = 6, //!< \brief Defines a record type
-  OT_VAR       = 7, //!< \brief A single value such as an UNSIGNED8, Boolean, float, Integer16, visible string etc.
+enum class ObjectType {
+  NULL_OT   = 0, //!< \brief A dictionary entry with no data fields
+  DEFTYPE   = 5, //!< \brief Denotes a static data type definition such as a Boolean, UNSIGNED16, float and so on
+  DEFSTRUCT = 6, //!< \brief Defines a record type
+  VAR       = 7, //!< \brief A single value such as an UNSIGNED8, Boolean, float, Integer16, visible string etc.
 
   /*
    * A multiple data field object where each data field is a simple
@@ -52,171 +50,171 @@ enum ObjectType {
    * UNSIGNED16 etc. Sub-index 0 is of UNSIGNED8 and therefore
    * not part of the ARRAY data
    */
-  OT_ARRAY = 8,
+  ARRAY = 8,
 
   /*!
    * A multiple data field object where the data fields may be any
    * combination of simple variables. Sub-index 0 is of UNSIGNED8
    * and therefore not part of the RECORD data
    */
-  OT_RECORD = 9
+  RECORD = 9
 };
 
 /*!
  * \brief The category of an OD entry
  */
-enum ObjectCategory {
-  OC_MANDATORY,   //!< \brief The device MUST implement this entry
-  OC_OPTIONAL,    //!< \brief The device MAY implement this entry
-  OC_CONDITIONAL, //!< \brief The device MUST implement this entry based on some condition
-  OC_NOT_RELEVANT //!< \brief The entry is not relevant for the MN AND the CN
+enum class ObjectCategory {
+  MANDATORY,   //!< \brief The device MUST implement this entry
+  OPTIONAL,    //!< \brief The device MAY implement this entry
+  CONDITIONAL, //!< \brief The device MUST implement this entry based on some condition
+  NOT_RELEVANT //!< \brief The entry is not relevant for the MN AND the CN
 };
 
 /*!
  * \brief The DATA type of the entry
  */
-enum ObjectDataType {
-  ODT_BOOLEAN = 0x0001,
-  ODT_INTEGER8,
-  ODT_INTEGER16,
-  ODT_INTEGER32,
-  ODT_UNSIGNED8,
-  ODT_UNSIGNED16,
-  ODT_UNSIGNED32,
-  ODT_REAL32,
-  ODT_VISIBLE_STRING,
-  ODT_OCTET_STRING,
-  ODT_UNICODE_STRING,
-  ODT_TIME_OF_DAY,
-  ODT_TIME_DIFFERENCE,
+enum class ObjectDataType {
+  BOOLEAN = 0x0001,
+  INTEGER8,
+  INTEGER16,
+  INTEGER32,
+  UNSIGNED8,
+  UNSIGNED16,
+  UNSIGNED32,
+  REAL32,
+  VISIBLE_STRING,
+  OCTET_STRING,
+  UNICODE_STRING,
+  TIME_OF_DAY,
+  TIME_DIFFERENCE,
 
-  ODT_DOMAIN = 0x000F,
-  ODT_INTEGER24,
-  ODT_REAL64,
-  ODT_INTEGER40,
-  ODT_INTEGER48,
-  ODT_INTEGER56,
-  ODT_INTEGER64,
-  ODT_UNSIGNED24,
-  ODT_UNSIGNED40 = 0x0018,
-  ODT_UNSIGNED48,
-  ODT_UNSIGNED56,
-  ODT_UNSIGNED64,
+  DOMAIN_ODT = 0x000F,
+  INTEGER24,
+  REAL64,
+  INTEGER40,
+  INTEGER48,
+  INTEGER56,
+  INTEGER64,
+  UNSIGNED24,
+  UNSIGNED40 = 0x0018,
+  UNSIGNED48,
+  UNSIGNED56,
+  UNSIGNED64,
 
-  ODT_IDENTITY                                       = 0x0023,
-  ODT_BEGIN_MANUFACTURER_SPECIFIC_COMPLEX_DATA_TYPES = 0x0040,
-  ODT_END_MANUFACTURER_SPECIFIC_COMPLEX_DATA_TYPES   = 0x005F,
+  IDENTITY                                       = 0x0023,
+  BEGIN_MANUFACTURER_SPECIFIC_COMPLEX_DATA_TYPES = 0x0040,
+  END_MANUFACTURER_SPECIFIC_COMPLEX_DATA_TYPES   = 0x005F,
 
-  ODT_BEGIN_DEVICE_PROFILE_0_SPECIFIC_STANDARD_DATA_TYPES = 0x0060,
-  ODT_END_DEVICE_PROFILE_0_SPECIFIC_STANDARD_DATA_TYPES   = 0x007F,
-  ODT_BEGIN_DEVICE_PROFILE_0_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0080,
-  ODT_END_DEVICE_PROFILE_0_SPECIFIC_COMPLEX_DATA_TYPES    = 0x009F,
+  BEGIN_DEVICE_PROFILE_0_SPECIFIC_STANDARD_DATA_TYPES = 0x0060,
+  END_DEVICE_PROFILE_0_SPECIFIC_STANDARD_DATA_TYPES   = 0x007F,
+  BEGIN_DEVICE_PROFILE_0_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0080,
+  END_DEVICE_PROFILE_0_SPECIFIC_COMPLEX_DATA_TYPES    = 0x009F,
 
-  ODT_BEGIN_DEVICE_PROFILE_1_SPECIFIC_STANDARD_DATA_TYPES = 0x00A0,
-  ODT_END_DEVICE_PROFILE_1_SPECIFIC_STANDARD_DATA_TYPES   = 0x00BF,
-  ODT_BEGIN_DEVICE_PROFILE_1_SPECIFIC_COMPLEX_DATA_TYPES  = 0x00C0,
-  ODT_END_DEVICE_PROFILE_1_SPECIFIC_COMPLEX_DATA_TYPES    = 0x00DF,
+  BEGIN_DEVICE_PROFILE_1_SPECIFIC_STANDARD_DATA_TYPES = 0x00A0,
+  END_DEVICE_PROFILE_1_SPECIFIC_STANDARD_DATA_TYPES   = 0x00BF,
+  BEGIN_DEVICE_PROFILE_1_SPECIFIC_COMPLEX_DATA_TYPES  = 0x00C0,
+  END_DEVICE_PROFILE_1_SPECIFIC_COMPLEX_DATA_TYPES    = 0x00DF,
 
-  ODT_BEGIN_DEVICE_PROFILE_2_SPECIFIC_STANDARD_DATA_TYPES = 0x00E0,
-  ODT_END_DEVICE_PROFILE_2_SPECIFIC_STANDARD_DATA_TYPES   = 0x00FF,
-  ODT_BEGIN_DEVICE_PROFILE_2_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0100,
-  ODT_END_DEVICE_PROFILE_2_SPECIFIC_COMPLEX_DATA_TYPES    = 0x011F,
+  BEGIN_DEVICE_PROFILE_2_SPECIFIC_STANDARD_DATA_TYPES = 0x00E0,
+  END_DEVICE_PROFILE_2_SPECIFIC_STANDARD_DATA_TYPES   = 0x00FF,
+  BEGIN_DEVICE_PROFILE_2_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0100,
+  END_DEVICE_PROFILE_2_SPECIFIC_COMPLEX_DATA_TYPES    = 0x011F,
 
-  ODT_BEGIN_DEVICE_PROFILE_3_SPECIFIC_STANDARD_DATA_TYPES = 0x0120,
-  ODT_END_DEVICE_PROFILE_3_SPECIFIC_STANDARD_DATA_TYPES   = 0x013F,
-  ODT_BEGIN_DEVICE_PROFILE_3_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0140,
-  ODT_END_DEVICE_PROFILE_3_SPECIFIC_COMPLEX_DATA_TYPES    = 0x015F,
+  BEGIN_DEVICE_PROFILE_3_SPECIFIC_STANDARD_DATA_TYPES = 0x0120,
+  END_DEVICE_PROFILE_3_SPECIFIC_STANDARD_DATA_TYPES   = 0x013F,
+  BEGIN_DEVICE_PROFILE_3_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0140,
+  END_DEVICE_PROFILE_3_SPECIFIC_COMPLEX_DATA_TYPES    = 0x015F,
 
-  ODT_BEGIN_DEVICE_PROFILE_4_SPECIFIC_STANDARD_DATA_TYPES = 0x0160,
-  ODT_END_DEVICE_PROFILE_4_SPECIFIC_STANDARD_DATA_TYPES   = 0x017F,
-  ODT_BEGIN_DEVICE_PROFILE_4_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0180,
-  ODT_END_DEVICE_PROFILE_4_SPECIFIC_COMPLEX_DATA_TYPES    = 0x019F,
+  BEGIN_DEVICE_PROFILE_4_SPECIFIC_STANDARD_DATA_TYPES = 0x0160,
+  END_DEVICE_PROFILE_4_SPECIFIC_STANDARD_DATA_TYPES   = 0x017F,
+  BEGIN_DEVICE_PROFILE_4_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0180,
+  END_DEVICE_PROFILE_4_SPECIFIC_COMPLEX_DATA_TYPES    = 0x019F,
 
-  ODT_BEGIN_DEVICE_PROFILE_5_SPECIFIC_STANDARD_DATA_TYPES = 0x01A0,
-  ODT_END_DEVICE_PROFILE_5_SPECIFIC_STANDARD_DATA_TYPES   = 0x01BF,
-  ODT_BEGIN_DEVICE_PROFILE_5_SPECIFIC_COMPLEX_DATA_TYPES  = 0x01C0,
-  ODT_END_DEVICE_PROFILE_5_SPECIFIC_COMPLEX_DATA_TYPES    = 0x01DF,
+  BEGIN_DEVICE_PROFILE_5_SPECIFIC_STANDARD_DATA_TYPES = 0x01A0,
+  END_DEVICE_PROFILE_5_SPECIFIC_STANDARD_DATA_TYPES   = 0x01BF,
+  BEGIN_DEVICE_PROFILE_5_SPECIFIC_COMPLEX_DATA_TYPES  = 0x01C0,
+  END_DEVICE_PROFILE_5_SPECIFIC_COMPLEX_DATA_TYPES    = 0x01DF,
 
-  ODT_BEGIN_DEVICE_PROFILE_6_SPECIFIC_STANDARD_DATA_TYPES = 0x01E0,
-  ODT_END_DEVICE_PROFILE_6_SPECIFIC_STANDARD_DATA_TYPES   = 0x01FF,
-  ODT_BEGIN_DEVICE_PROFILE_6_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0200,
-  ODT_END_DEVICE_PROFILE_6_SPECIFIC_COMPLEX_DATA_TYPES    = 0x021F,
+  BEGIN_DEVICE_PROFILE_6_SPECIFIC_STANDARD_DATA_TYPES = 0x01E0,
+  END_DEVICE_PROFILE_6_SPECIFIC_STANDARD_DATA_TYPES   = 0x01FF,
+  BEGIN_DEVICE_PROFILE_6_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0200,
+  END_DEVICE_PROFILE_6_SPECIFIC_COMPLEX_DATA_TYPES    = 0x021F,
 
-  ODT_BEGIN_DEVICE_PROFILE_7_SPECIFIC_STANDARD_DATA_TYPES = 0x0220,
-  ODT_END_DEVICE_PROFILE_7_SPECIFIC_STANDARD_DATA_TYPES   = 0x023F,
-  ODT_BEGIN_DEVICE_PROFILE_7_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0240,
-  ODT_END_DEVICE_PROFILE_7_SPECIFIC_COMPLEX_DATA_TYPES    = 0x025F,
+  BEGIN_DEVICE_PROFILE_7_SPECIFIC_STANDARD_DATA_TYPES = 0x0220,
+  END_DEVICE_PROFILE_7_SPECIFIC_STANDARD_DATA_TYPES   = 0x023F,
+  BEGIN_DEVICE_PROFILE_7_SPECIFIC_COMPLEX_DATA_TYPES  = 0x0240,
+  END_DEVICE_PROFILE_7_SPECIFIC_COMPLEX_DATA_TYPES    = 0x025F,
 
-  ODT_MAC_ADDRESS = 0x0401,
-  ODT_IP_ADDRESS,
-  ODT_NETTIME,
+  MAC_ADDRESS = 0x0401,
+  IP_ADDRESS,
+  NETTIME,
 
-  ODT_PDO_CommParamRecord_TYPE = 0x0420,
+  PDO_CommParamRecord_TYPE = 0x0420,
   // SKIP
-  ODT_SDO_ParameterRecord_TYPE = 0x0422,
+  SDO_ParameterRecord_TYPE = 0x0422,
   // SKIP
-  ODT_DLL_ErrorCntRec_TYPE      = 0x0424,
-  ODT_NWL_IpGroup_TYPE          = 0x0425,
-  ODT_NWL_IpAddrTable_TYPE      = 0x0426,
-  ODT_PDL_LocVerApplSw_TYPE     = 0x0427,
-  ODT_INP_ProcessImage_TYPE     = 0x0428,
-  ODT_NMT_ParameterStorage_TYPE = 0x0429,
+  DLL_ErrorCntRec_TYPE      = 0x0424,
+  NWL_IpGroup_TYPE          = 0x0425,
+  NWL_IpAddrTable_TYPE      = 0x0426,
+  PDL_LocVerApplSw_TYPE     = 0x0427,
+  INP_ProcessImage_TYPE     = 0x0428,
+  NMT_ParameterStorage_TYPE = 0x0429,
   // SKIP
-  ODT_NMT_InterfaceGroup_Xh_TYPE = 0x042B,
-  ODT_NMT_CycleTiming_TYPE       = 0x042C,
+  NMT_InterfaceGroup_Xh_TYPE = 0x042B,
+  NMT_CycleTiming_TYPE       = 0x042C,
   // SKIP
-  ODT_NMT_BootTime_TYPE            = 0x042E,
-  ODT_NMT_MNCycleTiming_TYPE       = 0x042F,
-  ODT_RT1_EplRouter_TYPE           = 0x0430,
-  ODT_RT1_IpRoutingTable_TYPE      = 0x0431,
-  ODT_RT1_NatTable_TYPE            = 0x0432,
-  ODT_RT1_SecurityGroup_TYPE       = 0x0433,
-  ODT_RT1_AclTable_TYPE            = 0x0434,
-  ODT_CFM_VerifyConfiguration_TYPE = 0x0435,
+  NMT_BootTime_TYPE            = 0x042E,
+  NMT_MNCycleTiming_TYPE       = 0x042F,
+  RT1_EplRouter_TYPE           = 0x0430,
+  RT1_IpRoutingTable_TYPE      = 0x0431,
+  RT1_NatTable_TYPE            = 0x0432,
+  RT1_SecurityGroup_TYPE       = 0x0433,
+  RT1_AclTable_TYPE            = 0x0434,
+  CFM_VerifyConfiguration_TYPE = 0x0435,
   // SKIP
-  ODT_DIA_NMTTelegrCount_TYPE   = 0x0437,
-  ODT_DIA_ERRStatistics_TYPE    = 0x0438,
-  ODT_NMT_EPLNodeID_TYPE        = 0x0439,
-  ODT_NMT_RequestCmd_TYPE       = 0x043A,
-  ODT_DLL_MNRingRedundancy_TYPE = 0x043B,
+  DIA_NMTTelegrCount_TYPE   = 0x0437,
+  DIA_ERRStatistics_TYPE    = 0x0438,
+  NMT_EPLNodeID_TYPE        = 0x0439,
+  NMT_RequestCmd_TYPE       = 0x043A,
+  DLL_MNRingRedundancy_TYPE = 0x043B,
 };
 
 /*!
  * \brief Describes which class to use
  */
-enum ObjectClassType {
-  OCT_INTEGER,
-  OCT_UNSIGNED,
-  OCT_BOOL,
-  OCT_REAL,
-  OCT_STRING,
-  OCT_ARRAY_INTEGER,
-  OCT_ARRAY_UNSIGNED,
-  OCT_ARRAY_BOOL,
-  OCT_ARRAY_REAL,
-  OCT_COMPLEX
+enum class ObjectClassType {
+  INTEGER,
+  UNSIGNED,
+  BOOL,
+  REAL,
+  STRING,
+  ARRAY_INTEGER,
+  ARRAY_UNSIGNED,
+  ARRAY_BOOL,
+  ARRAY_REAL,
+  COMPLEX
 };
 
 /*!
  * \brief Describes how the Entry can be accessed
  */
-enum ObjectAccess {
-  OACS_RW,    //!< \brief read, write access, value shall not be stored on writing sub-indices of NMT_StoreParam_REC
-  OACS_RWS,   //!< \brief read, write access, value shall be stored on writing sub-indices of NMT_StoreParam_REC
-  OACS_WO,    //!< \brief write only access, value shall not be stored on writing sub-indices of NMT_StoreParam_REC
-  OACS_WOS,   //!< \brief write only access, value shall be stored on writing sub-indices of NMT_StoreParam_REC
-  OACS_RO,    //!< \brief read only access
-  OACS_CONST, //!< \brief read only access, value is constant
-  OACS_COND   //!< \brief variable access controlled by the device. Further information is provided by the description
+enum class ObjectAccess {
+  RW,    //!< \brief read, write access, value shall not be stored on writing sub-indices of NMT_StoreParam_REC
+  RWS,   //!< \brief read, write access, value shall be stored on writing sub-indices of NMT_StoreParam_REC
+  WO,    //!< \brief write only access, value shall not be stored on writing sub-indices of NMT_StoreParam_REC
+  WOS,   //!< \brief write only access, value shall be stored on writing sub-indices of NMT_StoreParam_REC
+  RO,    //!< \brief read only access
+  CONST, //!< \brief read only access, value is constant
+  COND   //!< \brief variable access controlled by the device. Further information is provided by the description
 };
 
 /*!
  * \brief Describes how the Entry can be mapped
  */
-enum ObjectPDOMapping {
-  OPDO_OPT, //!< \brief Object shall be mappable into a PDO
-  OPDO_DEF, //!< \brief Object is part of the default mapping (see device profile)
-  OPDO_NO   //!< \brief Object shall not be mappable into a PDO
+enum class ObjectPDOMapping {
+  OPT, //!< \brief Object shall be mappable into a PDO
+  DEF, //!< \brief Object is part of the default mapping (see device profile)
+  NO   //!< \brief Object shall not be mappable into a PDO
 };
 
 
@@ -224,177 +222,175 @@ enum ObjectPDOMapping {
 /*!
  * \brief The type of an event
  */
-enum EvType {
-  EVT_PROTO_ERROR,
-  EVT_ERROR,
-  EVT_WARNING,
-  EVT_INFO,
-  EVT_DEBUG,
-  EVT_PLUGIN_EV_TEXT,
+enum class EvType {
+  PROTO_ERROR,
+  ERROR,
+  WARNING,
+  INFO,
+  DEBUG,
+  PLUGIN_EV_TEXT,
 
-  EVT_PLUGIN_OTHER = 0x1000,
+  PLUGIN_OTHER = 0x1000,
 
-  EVT_FRONTEND_OTHER = 0x2000,
+  FRONTEND_OTHER = 0x2000,
 
-  EVT_UNKNOWN = INT32_MAX
+  UNKNOWN = INT32_MAX
 };
 
 /*!
  * \brief The status of the node
  * \todo Check if more values are needed
  */
-enum NodeStatus { NS_OK, NS_ERROR, NS_STARTING, NS_UNKNOWN };
+enum class NodeStatus { OK, ERROR, STARTING, UNKNOWN };
 
 /*!
  * \brief The type of a packet
  */
-enum MessageType {
-  PT_UNDEF          = 0x00,
-  PT_START_OF_CYCLE = 0x01,
-  PT_POLL_REQUEST   = 0x03,
-  PT_POLL_RESPONSE  = 0x04,
-  PT_START_OF_ASYNC = 0x05,
-  PT_ASYNC_SEND     = 0x06,
-  PT_AMNI           = 0x07,
-  PT_AINV           = 0x0D
+enum class PacketType {
+  UNDEF          = 0x00,
+  START_OF_CYCLE = 0x01,
+  POLL_REQUEST   = 0x03,
+  POLL_RESPONSE  = 0x04,
+  START_OF_ASYNC = 0x05,
+  ASYNC_SEND     = 0x06,
+  AMNI           = 0x07,
+  AINV           = 0x0D
 };
 
 /*!
  * \brief ASnd Service ID
  */
-enum ASndServiceID {
-  ASND_RESERVED_0                  = 0x00,
-  ASND_IDENT_RESPONSE              = 0x01,
-  ASND_STATUS_RESPONSE             = 0x02,
-  ASND_NMT_REQUEST                 = 0x03,
-  ASND_NMT_COMMAND                 = 0x04,
-  ASND_SDO                         = 0x05,
-  ASND_BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
-  ASND_END_MANUFACTURER_SPECIFIC   = 0xFE,
+enum class ASndServiceID {
+  RESERVED_0                  = 0x00,
+  IDENT_RESPONSE              = 0x01,
+  STATUS_RESPONSE             = 0x02,
+  NMT_REQUEST                 = 0x03,
+  NMT_COMMAND                 = 0x04,
+  SDO                         = 0x05,
+  BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
+  END_MANUFACTURER_SPECIFIC   = 0xFE,
 };
 
 /*!
  * \brief ASnd Service ID
  */
-enum SoARequestServiceID {
-  SOAR_NO_SERVICE                  = 0x00,
-  SOAR_IDENT_REQUEST               = 0x01,
-  SOAR_STATUS_REQUEST              = 0x02,
-  SOAR_NMT_REQUEST_INVITE          = 0x03,
-  SOAR_BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
-  SOAR_END_MANUFACTURER_SPECIFIC   = 0xFE,
-  SOAR_UNSPECIVIED_INVITE          = 0xFF
+enum class SoARequestServiceID {
+  NO_SERVICE                  = 0x00,
+  IDENT_REQUEST               = 0x01,
+  STATUS_REQUEST              = 0x02,
+  NMT_REQUEST_INVITE          = 0x03,
+  BEGIN_MANUFACTURER_SPECIFIC = 0xA0,
+  END_MANUFACTURER_SPECIFIC   = 0xFE,
+  UNSPECIVIED_INVITE          = 0xFF
 };
 
 /*!
  * \brief NMT Status
  */
-enum NMTState {
-  NMT_OFF                 = 0b00000000,
-  NMT_INITIALISING        = 0b00011001,
-  NMT_RESET_APPLICATION   = 0b00101001,
-  NMT_RESET_COMMUNICATION = 0b00111001,
-  NMT_RESET_CONFIGURATION = 0b01111001,
-  NMT_NOT_ACTIVE          = 0b00011100,
-  NMT_PRE_OPERATIONAL_1   = 0b00011101,
-  NMT_PRE_OPERATIONAL_2   = 0b01011101,
-  NMT_READY_TO_OPERATE    = 0b01101101,
-  NMT_OPERATIONAL         = 0b11111101,
-  NMT_STOPPED             = 0b01001101,
-  NMT_BASIC_ETHERNET      = 0b00011110
+enum class NMTState {
+  OFF                 = 0b00000000,
+  INITIALISING        = 0b00011001,
+  RESET_APPLICATION   = 0b00101001,
+  RESET_COMMUNICATION = 0b00111001,
+  RESET_CONFIGURATION = 0b01111001,
+  NOT_ACTIVE          = 0b00011100,
+  PRE_OPERATIONAL_1   = 0b00011101,
+  PRE_OPERATIONAL_2   = 0b01011101,
+  READY_TO_OPERATE    = 0b01101101,
+  OPERATIONAL         = 0b11111101,
+  STOPPED             = 0b01001101,
+  BASIC_ETHERNET      = 0b00011110
 };
 
-enum NMTCommand {
-  NMT_CMD_IDENT_REQUEST              = 0x1,
-  NMT_CMD_STATUS_REQUEST             = 0x2,
-  NMT_CMD_START_NODE                 = 0x21,
-  NMT_CMD_STOP_NODE                  = 0x22,
-  NMT_CMD_ENTER_PRE_OP2              = 0x23,
-  NMT_CMD_ENABLE_READY_TO_OPERATE    = 0x24,
-  NMT_CMD_RESET_NODE                 = 0x28,
-  NMT_CMD_RESET_COMMUNICATION        = 0x29,
-  NMT_CMD_RESET_CONFIGURATION        = 0x2A,
-  NMT_CMD_SW_RESET                   = 0x2B,
-  NMT_CMD_GO_TO_STANDBY              = 0x2C,
-  NMT_CMD_START_NODE_EX              = 0x41,
-  NMT_CMD_STOP_NODE_EX               = 0x42,
-  NMT_CMD_ENTER_PRE_OP2_EX           = 0x43,
-  NMT_CMD_ENABLE_READY_TO_OPERATE_EX = 0x44,
-  NMT_CMD_RESET_NODE_EX              = 0x48,
-  NMT_CMD_RESET_COMMUNICATION_EX     = 0x49,
-  NMT_CMD_RESET_CONFIGURATION_EX     = 0x4A,
-  NMT_CMD_SW_RESET_EX                = 0x4B,
-  NMT_CMD_NET_HOST_NAME_SET          = 0x62,
-  NMT_CMD_FLUSH_ARP_ENTRY            = 0x63,
-  NMT_CMD_PUBLISH_CONFIGURED_NODES   = 0x80,
-  NMT_CMD_PUBLISH_ACTIVE_NODES       = 0x90,
-  NMT_CMD_PUBLISH_PRE_OPERATIONAL1   = 0x91,
-  NMT_CMD_PUBLISH_PRE_OPERATIONAL2   = 0x92,
-  NMT_CMD_PUBLISH_READY_TO_OPERATE   = 0x93,
-  NMT_CMD_PUBLISH_OPERATIONAL        = 0x94,
-  NMT_CMD_PUBLISH_STOPPED            = 0x95,
-  NMT_CMD_PUBLISH_NODE_STATES        = 0x96,
-  NMT_CMD_PUBLISH_EMERGENCY_NEW      = 0xA0,
-  NMT_CMD_PUBLISH_PUBLISHED_TIME     = 0xB0,
-  NMT_CMD_INVALID_SERVICE            = 0xFF
+enum class NMTCommand {
+  IDENT_REQUEST              = 0x1,
+  STATUS_REQUEST             = 0x2,
+  START_NODE                 = 0x21,
+  STOP_NODE                  = 0x22,
+  ENTER_PRE_OP2              = 0x23,
+  ENABLE_READY_TO_OPERATE    = 0x24,
+  RESET_NODE                 = 0x28,
+  RESET_COMMUNICATION        = 0x29,
+  RESET_CONFIGURATION        = 0x2A,
+  SW_RESET                   = 0x2B,
+  GO_TO_STANDBY              = 0x2C,
+  START_NODE_EX              = 0x41,
+  STOP_NODE_EX               = 0x42,
+  ENTER_PRE_OP2_EX           = 0x43,
+  ENABLE_READY_TO_OPERATE_EX = 0x44,
+  RESET_NODE_EX              = 0x48,
+  RESET_COMMUNICATION_EX     = 0x49,
+  RESET_CONFIGURATION_EX     = 0x4A,
+  SW_RESET_EX                = 0x4B,
+  NET_HOST_NAME_SET          = 0x62,
+  FLUSH_ARP_ENTRY            = 0x63,
+  PUBLISH_CONFIGURED_NODES   = 0x80,
+  PUBLISH_ACTIVE_NODES       = 0x90,
+  PUBLISH_PRE_OPERATIONAL1   = 0x91,
+  PUBLISH_PRE_OPERATIONAL2   = 0x92,
+  PUBLISH_READY_TO_OPERATE   = 0x93,
+  PUBLISH_OPERATIONAL        = 0x94,
+  PUBLISH_STOPPED            = 0x95,
+  PUBLISH_NODE_STATES        = 0x96,
+  PUBLISH_EMERGENCY_NEW      = 0xA0,
+  PUBLISH_PUBLISHED_TIME     = 0xB0,
+  INVALID_SERVICE            = 0xFF
 };
 
 /*!
  * \brief AsyncSend Request Prioities
  */
-enum AsyncSendPriority {
-  ASSP_HIGHEST = 0b111,
-  ASSP_HIGHER3 = 0b110,
-  ASSP_HIGHER2 = 0b101,
-  ASSP_HIGHER1 = 0b100,
-  ASSP_MEDIUM  = 0b011,
-  ASSP_LOWER2  = 0b010,
-  ASSP_LOWER1  = 0b001,
-  ASSP_LOWEST  = 0b000
+enum class AsyncSendPriority {
+  HIGHEST = 0b111,
+  HIGHER3 = 0b110,
+  HIGHER2 = 0b101,
+  HIGHER1 = 0b100,
+  MEDIUM  = 0b011,
+  LOWER2  = 0b010,
+  LOWER1  = 0b001,
+  LOWEST  = 0b000
 };
 
-enum SDOResConnectionType {
-  SDORCT_NO_CONNECTION    = 0,
-  SDORCT_INITIALISATION   = 1,
-  SDORCT_CONNECTION_VALID = 2,
-  SDORCT_ERROR_RESPONSE   = 3
+enum class SDOResConnectionType {
+  NO_CONNECTION    = 0,
+  INITIALISATION   = 1,
+  CONNECTION_VALID = 2,
+  ERROR_RESPONSE   = 3
 };
 
 
-enum SDOSndConnectionType {
-  SDOSCT_NO_CONNECTION        = 0,
-  SDOSCT_INITIALISATION       = 1,
-  SDOSCT_CONNECTION_VALID     = 2,
-  SDOSCT_CONNECTION_VALID_WAR = 3
+enum class SDOSndConnectionType {
+  NO_CONNECTION        = 0,
+  INITIALISATION       = 1,
+  CONNECTION_VALID     = 2,
+  CONNECTION_VALID_WAR = 3
 };
 
-enum SDOSegmentation {
-  SDOSGE_EXPEDITED_TRANSFER    = 0,
-  SDOSGE_INITIATE_SGE_TRANSFER = 1,
-  SDOSEG_SEGMENT               = 2,
-  SDOSEG_END_SEG_TRANSFER      = 3
+enum class SDOSegmentation {
+  EXPEDITED_TRANSFER    = 0,
+  INITIATE_SGE_TRANSFER = 1,
+  SEGMENT               = 2,
+  END_SEG_TRANSFER      = 3
 };
 
 /*!
  * \brief Command ID
  */
-enum SDOCommandID {
-  CMD_ID_NIL                            = 0x00,
-  CMD_ID_WRITE_BY_INDEX                 = 0x01,
-  CMD_ID_READ_BY_INDEX                  = 0x02,
-  CMD_ID_WRITE_ALL_BY_INDEX             = 0x03,
-  CMD_ID_READ_ALL_BY_INDEX              = 0x04,
-  CMD_ID_WRITE_BY_NAME                  = 0x05,
-  CMD_ID_READ_BY_NAME                   = 0x06,
-  CMD_ID_FILE_WRITE                     = 0x20,
-  CMD_ID_FILE_READ                      = 0x21,
-  CMD_ID_WRITE_MULTIPLE_PARAMETER_INDEX = 0x31,
-  CMD_ID_READ_MULTIPLE_PARAMETER_INDEX  = 0x32,
-  CMD_ID_MAXIMUM_SEGMENT_SIZE           = 0x70,
-  CMD_ID_BEGIN_MANUFACTURER_SPECIFIC    = 0x80,
-  CMD_ID_END_MANUFACTURER_SPECIFIC      = 0xFF
+enum class SDOCommandID {
+  NIL                            = 0x00,
+  WRITE_BY_INDEX                 = 0x01,
+  READ_BY_INDEX                  = 0x02,
+  WRITE_ALL_BY_INDEX             = 0x03,
+  READ_ALL_BY_INDEX              = 0x04,
+  WRITE_BY_NAME                  = 0x05,
+  READ_BY_NAME                   = 0x06,
+  FILE_WRITE                     = 0x20,
+  FILE_READ                      = 0x21,
+  WRITE_MULTIPLE_PARAMETER_INDEX = 0x31,
+  READ_MULTIPLE_PARAMETER_INDEX  = 0x32,
+  MAXIMUM_SEGMENT_SIZE           = 0x70,
+  BEGIN_MANUFACTURER_SPECIFIC    = 0x80,
+  END_MANUFACTURER_SPECIFIC      = 0xFF
 };
 
-#ifdef __cplusplus
 }
-#endif

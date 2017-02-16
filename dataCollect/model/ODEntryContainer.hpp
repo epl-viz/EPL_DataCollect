@@ -83,7 +83,7 @@ class ODEntryContainer final {
   ~ODEntryContainer();
 
   ODEntryContainer(ObjectClassType type, ObjectDataType dt);
-  ODEntryContainer(ObjectDataType type, ObjectType ot = OT_VAR);
+  ODEntryContainer(ObjectDataType type, ObjectType ot = ObjectType::VAR);
 
   ODEntryContainer(const ODEntryContainer &);
   ODEntryContainer(ODEntryContainer &&);
@@ -122,61 +122,61 @@ C *ODEntryContainer::init(ObjectDataType type) noexcept {
 }
 
 constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept {
-  if (ot == OT_ARRAY) {
+  if (ot == ObjectType::ARRAY) {
     switch (dt) {
-      case ODT_BOOLEAN: return OCT_ARRAY_BOOL;
-      case ODT_INTEGER8:
-      case ODT_INTEGER16:
-      case ODT_INTEGER24:
-      case ODT_INTEGER32:
-      case ODT_INTEGER40:
-      case ODT_INTEGER48:
-      case ODT_INTEGER56:
-      case ODT_INTEGER64: return OCT_ARRAY_INTEGER;
+      case ObjectDataType::BOOLEAN: return ObjectClassType::ARRAY_BOOL;
+      case ObjectDataType::INTEGER8:
+      case ObjectDataType::INTEGER16:
+      case ObjectDataType::INTEGER24:
+      case ObjectDataType::INTEGER32:
+      case ObjectDataType::INTEGER40:
+      case ObjectDataType::INTEGER48:
+      case ObjectDataType::INTEGER56:
+      case ObjectDataType::INTEGER64: return ObjectClassType::ARRAY_INTEGER;
 
-      case ODT_UNSIGNED8:
-      case ODT_UNSIGNED16:
-      case ODT_UNSIGNED24:
-      case ODT_UNSIGNED32:
-      case ODT_UNSIGNED40:
-      case ODT_UNSIGNED48:
-      case ODT_UNSIGNED56:
-      case ODT_UNSIGNED64: return OCT_ARRAY_UNSIGNED;
+      case ObjectDataType::UNSIGNED8:
+      case ObjectDataType::UNSIGNED16:
+      case ObjectDataType::UNSIGNED24:
+      case ObjectDataType::UNSIGNED32:
+      case ObjectDataType::UNSIGNED40:
+      case ObjectDataType::UNSIGNED48:
+      case ObjectDataType::UNSIGNED56:
+      case ObjectDataType::UNSIGNED64: return ObjectClassType::ARRAY_UNSIGNED;
 
-      case ODT_REAL32:
-      case ODT_REAL64: return OCT_ARRAY_REAL;
+      case ObjectDataType::REAL32:
+      case ObjectDataType::REAL64: return ObjectClassType::ARRAY_REAL;
       default: break;
     }
   }
 
   switch (dt) {
-    case ODT_BOOLEAN: return OCT_BOOL;
-    case ODT_INTEGER8:
-    case ODT_INTEGER16:
-    case ODT_INTEGER24:
-    case ODT_INTEGER32:
-    case ODT_INTEGER40:
-    case ODT_INTEGER48:
-    case ODT_INTEGER56:
-    case ODT_INTEGER64: return OCT_INTEGER;
+    case ObjectDataType::BOOLEAN: return ObjectClassType::BOOL;
+    case ObjectDataType::INTEGER8:
+    case ObjectDataType::INTEGER16:
+    case ObjectDataType::INTEGER24:
+    case ObjectDataType::INTEGER32:
+    case ObjectDataType::INTEGER40:
+    case ObjectDataType::INTEGER48:
+    case ObjectDataType::INTEGER56:
+    case ObjectDataType::INTEGER64: return ObjectClassType::INTEGER;
 
-    case ODT_UNSIGNED8:
-    case ODT_UNSIGNED16:
-    case ODT_UNSIGNED24:
-    case ODT_UNSIGNED32:
-    case ODT_UNSIGNED40:
-    case ODT_UNSIGNED48:
-    case ODT_UNSIGNED56:
-    case ODT_UNSIGNED64: return OCT_UNSIGNED;
+    case ObjectDataType::UNSIGNED8:
+    case ObjectDataType::UNSIGNED16:
+    case ObjectDataType::UNSIGNED24:
+    case ObjectDataType::UNSIGNED32:
+    case ObjectDataType::UNSIGNED40:
+    case ObjectDataType::UNSIGNED48:
+    case ObjectDataType::UNSIGNED56:
+    case ObjectDataType::UNSIGNED64: return ObjectClassType::UNSIGNED;
 
-    case ODT_REAL32:
-    case ODT_REAL64: return OCT_REAL;
+    case ObjectDataType::REAL32:
+    case ObjectDataType::REAL64: return ObjectClassType::REAL;
 
-    case ODT_VISIBLE_STRING:
-    case ODT_OCTET_STRING:
-    case ODT_UNICODE_STRING: return OCT_STRING;
+    case ObjectDataType::VISIBLE_STRING:
+    case ObjectDataType::OCTET_STRING:
+    case ObjectDataType::UNICODE_STRING: return ObjectClassType::STRING;
 
-    default: return OCT_COMPLEX;
+    default: return ObjectClassType::COMPLEX;
   }
 }
 }

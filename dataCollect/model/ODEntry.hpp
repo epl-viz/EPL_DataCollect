@@ -81,7 +81,7 @@ class ODEntryInt final : public ODEntry {
  public:
   int64_t data = 0;
 
-  ODEntryInt(ObjectDataType dt) : ODEntry(OCT_INTEGER, dt, true) {}
+  ODEntryInt(ObjectDataType dt) : ODEntry(ObjectClassType::INTEGER, dt, true) {}
   REAL_TYPE                 getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -94,7 +94,7 @@ class ODEntryUInt final : public ODEntry {
  public:
   uint64_t data = 0;
 
-  ODEntryUInt(ObjectDataType dt) : ODEntry(OCT_UNSIGNED, dt, true) {}
+  ODEntryUInt(ObjectDataType dt) : ODEntry(ObjectClassType::UNSIGNED, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -107,7 +107,7 @@ class ODEntryBool final : public ODEntry {
  public:
   bool data = false;
 
-  ODEntryBool(ObjectDataType dt) : ODEntry(OCT_BOOL, dt, true) {}
+  ODEntryBool(ObjectDataType dt) : ODEntry(ObjectClassType::BOOL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -120,7 +120,7 @@ class ODEntryReal final : public ODEntry {
  public:
   REAL_TYPE data = 0;
 
-  ODEntryReal(ObjectDataType dt) : ODEntry(OCT_REAL, dt, true) {}
+  ODEntryReal(ObjectDataType dt) : ODEntry(ObjectClassType::REAL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -133,7 +133,7 @@ class ODEntryString final : public ODEntry {
  public:
   std::string data = "";
 
-  ODEntryString(ObjectDataType dt) : ODEntry(OCT_STRING, dt, false) {}
+  ODEntryString(ObjectDataType dt) : ODEntry(ObjectClassType::STRING, dt, false) {}
   REAL_TYPE                    getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -146,7 +146,7 @@ class ODEntryArrayInt final : public ODEntry {
  public:
   std::vector<int64_t> data;
 
-  ODEntryArrayInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_INTEGER, dt, false) {}
+  ODEntryArrayInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_INTEGER, dt, false) {}
   REAL_TYPE                      getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -159,7 +159,7 @@ class ODEntryArrayUInt final : public ODEntry {
  public:
   std::vector<uint64_t> data;
 
-  ODEntryArrayUInt(ObjectDataType dt) : ODEntry(OCT_ARRAY_UNSIGNED, dt, false) {}
+  ODEntryArrayUInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_UNSIGNED, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -172,7 +172,7 @@ class ODEntryArrayBool final : public ODEntry {
  public:
   std::vector<uint8_t> data;
 
-  ODEntryArrayBool(ObjectDataType dt) : ODEntry(OCT_ARRAY_BOOL, dt, false) {}
+  ODEntryArrayBool(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_BOOL, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -185,7 +185,7 @@ class ODEntryArrayReal final : public ODEntry {
  public:
   std::vector<REAL_TYPE> data;
 
-  ODEntryArrayReal(ObjectDataType dt) : ODEntry(OCT_ARRAY_REAL, dt, false) {}
+  ODEntryArrayReal(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_REAL, dt, false) {}
   REAL_TYPE                       getNumericValue() override;
 
   friend class ODEntryContainer;
@@ -198,7 +198,7 @@ class ODEntryComplex final : public ODEntry {
  public:
   std::vector<ODEntry *> data;
 
-  ODEntryComplex(ObjectDataType dt) : ODEntry(OCT_COMPLEX, dt, false) {}
+  ODEntryComplex(ObjectDataType dt) : ODEntry(ObjectClassType::COMPLEX, dt, false) {}
   REAL_TYPE                     getNumericValue() override;
 
   friend class ODEntryContainer;

@@ -57,8 +57,8 @@ struct parserData final {
 
   std::vector<uint8_t> data;
 
-  MessageType                           pType       = PT_UNDEF;
-  NMTState                              nmtState    = NMT_OFF;
+  PacketType                            pType       = PacketType::UNDEF;
+  NMTState                              nmtState    = NMTState::OFF;
   std::string                           wsString    = "";
   std::string                           wsOther     = "";
   uint8_t                               src         = UINT8_MAX;
@@ -88,7 +88,7 @@ struct parserData final {
     bool              MultiplexedSlot = false;
     bool              ExceptionNew    = false;
     bool              Ready           = false;
-    AsyncSendPriority Priority        = ASSP_LOWEST;
+    AsyncSendPriority Priority        = AsyncSendPriority::LOWEST;
     uint8_t           RequestToSend   = UINT8_MAX;
     std::string       PDOVersion      = "";
     uint16_t          Size            = UINT16_MAX;
@@ -98,7 +98,7 @@ struct parserData final {
   struct SoA final {
     bool                ExceptionAcknowledge     = false;
     bool                ExceptionReset           = false;
-    SoARequestServiceID RequestedServiceID       = SOAR_NO_SERVICE;
+    SoARequestServiceID RequestedServiceID       = SoARequestServiceID::NO_SERVICE;
     uint8_t             RequestedServiceTarget   = UINT8_MAX;
     uint8_t             EPLVersion               = UINT8_MAX;
     uint8_t             SyncControl              = UINT8_MAX;
@@ -117,7 +117,7 @@ struct parserData final {
 
   /* ASnd header */
   struct ASnd final {
-    ASndServiceID        RequestedServiceID     = ASND_RESERVED_0;
+    ASndServiceID        RequestedServiceID     = ASndServiceID::RESERVED_0;
     uint8_t              RequestedServiceTarget = UINT8_MAX;
     std::vector<uint8_t> Data;
 
@@ -125,7 +125,7 @@ struct parserData final {
     struct IdentResponse final {
       bool                 ExceptionNew             = false;
       bool                 ExceptionClear           = false;
-      AsyncSendPriority    Priority                 = ASSP_LOWEST;
+      AsyncSendPriority    Priority                 = AsyncSendPriority::LOWEST;
       uint8_t              RequestToSend            = UINT8_MAX;
       uint8_t              EPLVersion               = UINT8_MAX;
       bool                 Isochronous              = false;
@@ -174,7 +174,7 @@ struct parserData final {
 
     /* ASnd-->NMTRequest */
     struct NMTRequest final {
-      NMTCommand           NMTRequestedCommandID     = NMT_CMD_INVALID_SERVICE;
+      NMTCommand           NMTRequestedCommandID     = NMTCommand::INVALID_SERVICE;
       uint8_t              NMTRequestedCommandTarget = UINT8_MAX;
       std::vector<uint8_t> NMTRequestedCommandData;
     } NMTRequest;
@@ -182,7 +182,7 @@ struct parserData final {
 
     /* ASnd-->NMTCommand */
     struct NMTCmd final {
-      NMTCommand           NMTCommandId = NMT_CMD_INVALID_SERVICE;
+      NMTCommand           NMTCommandId = NMTCommand::INVALID_SERVICE;
       uint16_t             ResetReason  = UINT16_MAX;
       std::vector<uint8_t> CommandData;
       std::vector<uint8_t> HostName;
@@ -207,7 +207,7 @@ struct parserData final {
     struct StatusResponse final {
       bool              ExceptionNew   = false;
       bool              ExceptionClear = false;
-      AsyncSendPriority Priority       = ASSP_LOWEST;
+      AsyncSendPriority Priority       = AsyncSendPriority::LOWEST;
       uint8_t           RequestToSend  = UINT8_MAX;
 
       /* StaticErrorBitField */
@@ -239,9 +239,9 @@ struct parserData final {
     struct SDO final {
       struct SEQ final {
         uint8_t              ReceiveSequenceNumber = UINT8_MAX;
-        SDOResConnectionType ReceiveCon            = SDORCT_NO_CONNECTION;
+        SDOResConnectionType ReceiveCon            = SDOResConnectionType::NO_CONNECTION;
         uint8_t              SendSequenceNumber    = UINT8_MAX;
-        SDOSndConnectionType SendCon               = SDOSCT_NO_CONNECTION;
+        SDOSndConnectionType SendCon               = SDOSndConnectionType::NO_CONNECTION;
       } SEQ;
 
       struct CMD final {
@@ -249,8 +249,8 @@ struct parserData final {
         bool            IsResponse        = false;
         bool            AbortTransfer     = false;
         uint8_t         SubTransfer       = UINT8_MAX;
-        SDOSegmentation Segmentation      = SDOSGE_EXPEDITED_TRANSFER;
-        SDOCommandID    CommandID         = CMD_ID_NIL;
+        SDOSegmentation Segmentation      = SDOSegmentation::EXPEDITED_TRANSFER;
+        SDOCommandID    CommandID         = SDOCommandID::NIL;
         uint8_t         SegmentSize       = UINT8_MAX;
         uint8_t         DataSize          = UINT8_MAX;
         uint8_t         DataPadding       = UINT8_MAX;
