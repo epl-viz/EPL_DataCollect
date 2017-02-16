@@ -9,9 +9,32 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
     int getNumNodes()
     int getCycleNum()
     vector[EventBase *] getActiveEvents()
-    Node getNode(int)
+    Node* getNode(int)
     bool registerCycleStorage(string, CycleStorageBase)
     CycleStorageBase* getCycleStorage(string)
+
+cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
+  cdef cppclass Node:
+    Node() except+
+    OD* getOD()
+    int getID()
+    #TODO: string getStatus() !!!!!!!!!!!!!
+
+cdef extern from "../../dataCollect/model/OD.hpp" namespace "EPL_DataCollect":
+  cdef cppclass OD:
+    OD() except+
+    ODEntry* getEntry(int)
+
+cdef extern from "../../dataCollect/model/ODEntry.hpp" namespace "EPL_DataCollect":
+  cdef cppclass ODEntry:
+    ODEntry() except+
+    #TODO: Methods
+    #       string getEntry_AsString(int)
+    #       int getEntry_AsInt(int)
+    #       int getEntry_AsUInt(int)
+    #       bool getEntry_AsBool(int)
+    #       int getEntry_AsComplex(int)
+
 
 cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass EventBase:
@@ -22,9 +45,7 @@ cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCol
     string getPluginID()
     int getEventFlags()
 
-cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
-  cdef cppclass Node:
-    Node() except +
+
 
 cdef extern from "../../dataCollect/model/CycleStorageBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass CycleStorageBase:

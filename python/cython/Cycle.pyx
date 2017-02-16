@@ -21,7 +21,7 @@ cdef class Cycle:
   cpdef int getCycleNum(self):
     return self._C_Cycle.getCycleNum()
 
-  cdef void updateCycle(self, CCycle.Cycle* newCycle):
+  cdef void updateCycle(self, CCycle.Cycle* newCycle):  ## maybe implement this since it increases speed
     if newCycle != NULL:
       self._C_Cycle = newCycle
 
