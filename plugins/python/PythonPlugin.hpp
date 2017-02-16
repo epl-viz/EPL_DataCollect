@@ -70,10 +70,9 @@ class PythonPlugin : public PluginBase {
  private:
   std::string plugName;
   std::string plugInstanceName;
-  PyObject *  pName, *pModule, *pDict, *pClass, *pInstance, *pRunFunc;
-  PyObject *  pArgs, *pValue;
+  PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
+  PyObject *  pValue;
   static std::unordered_map<std::string, PythonPlugin *> plugins;
-  _object *             cythonPlugin;
   CSPythonPluginStorage state;
   static Cycle *        currentCycle;
 

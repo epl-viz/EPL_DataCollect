@@ -74,7 +74,7 @@ PythonPlugin::~PythonPlugin() {}
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
   (void)ci;
-  pValue = PyObject_CallMethod(pInstance, (const char *)"initialize", NULL);
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL);
   if (pValue != NULL) {
     Py_DECREF(pValue);
     return true;
@@ -84,7 +84,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
 
 void PythonPlugin::run(Cycle *cycle) {
   currentCycle = cycle;
-  PyObject_CallMethod(pInstance, (const char *)"run", NULL);
+  PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("run"), NULL);
 };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
@@ -98,7 +98,7 @@ PythonPlugin *PythonPlugin::getPythonPlugin(const char *name) { return plugins[s
 
 std::string PythonPlugin::getDependencies() {
   std::string ret_val = "";
-  pValue              = PyObject_CallMethod(pInstance, (const char *)"getDependencies", NULL);
+  pValue              = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getDependencies"), NULL);
   if (pValue != NULL) {
     pValue  = PyUnicode_AsUTF8String(pValue);
     ret_val = PyBytes_AsString(pValue);
@@ -109,7 +109,7 @@ std::string PythonPlugin::getDependencies() {
 
 std::string PythonPlugin::getID() {
   std::string ret_val = "";
-  pValue              = PyObject_CallMethod(pInstance, (const char *)"getID", NULL);
+  pValue              = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
   if (pValue != NULL) {
     pValue  = PyUnicode_AsUTF8String(pValue);
     ret_val = PyBytes_AsString(pValue);
