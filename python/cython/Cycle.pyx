@@ -1,4 +1,5 @@
 cimport CCycle
+cimport CPlugin
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
@@ -10,7 +11,7 @@ cdef class Cycle:
   cdef CCycle.Cycle* _C_Cycle
 
   def __cinit__(self):
-    self._C_Cycle = new CCycle.Cycle()
+    self._C_Cycle = CPlugin.PythonPlugin.getCurrentCycle()
     if self._C_Cycle is NULL:
       raise MemoryError()
 
