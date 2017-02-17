@@ -61,7 +61,7 @@ class PythonPlugin : public PluginBase {
   std::string getID();
 
   bool addPyEvent(int key, const char *value);
-  bool registerPyCycleStorage(const char *index);
+  bool registerPyCycleStorage(const char *index, const char *typeAsStr);
 
  protected:
   bool initialize(CaptureInstance *ci);

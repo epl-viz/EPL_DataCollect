@@ -31,6 +31,8 @@
 
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
+#include "EventBase.hpp"
+#include "EPLEnums.h"
 #include "Python.h"
 #include "iostream"
 #include <string>
@@ -123,17 +125,22 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   (void)key;
 
   // TODO: IMPLEMENT THIS METHOD IS KEY
+  //
+  // addEvent(ev);
 
   std::cout << "\nadd ev\t" + std::string(value);
   return true;
 };
 
-bool PythonPlugin::registerPyCycleStorage(const char *index) {
+bool PythonPlugin::registerPyCycleStorage(const char *index, const char *typeAsStr) {
   (void)index;
+  (void)typeAsStr;
 
   // TODO: IMPLEMENT THIS METHOD IS KEY
-
-  std::cout << "\nregging\t" + std::string(index);
+  // create IntStorage / str storage / boolStorage class and then call registerCycleStorage<IntStorage>("stringindex!")
+  // !!!
+  // typeAsStr is either "bool", "int", or "str" -> register appropriately
+  std::cout << "\nregging\t" + std::string(index) + ":" + std::string(typeAsStr);
   return true;
 };
 }

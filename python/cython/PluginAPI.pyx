@@ -31,20 +31,6 @@ def getAmountOfCN():
   """
   return currentCycle.getNumNodes()
 
-def addEvent(key, value):
-  """
-  \brief This method adds an event to the current cycle. The event to be added is coded as a key (event type) and a string (additional event information). Events can be anything and will be added to the cycle.
-
-  \param key Key of Events, using the EventEnum class for further information
-  \param value String of additional information, formation depends on specific event. Formatted as pythondict.
-
-  \returns a bool stating whether the event has been added
-  """
-  #cdef unordered_map[int, string] testMap
-  #cdef CCycle.EventBase* evt = new CCycle.EventBase(CCycle.EVT_PROTO_ERROR, "n", "n", "n", "n", 0, currentCycle, testMap)
-  ## TODO: implement ##
-  pass
-
 def addData(key, data):
   """
   \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.

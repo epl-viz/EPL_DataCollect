@@ -18,7 +18,7 @@ cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
     Node() except+
     OD* getOD()
     int getID()
-    #TODO: string getStatus() !!!!!!!!!!!!!
+    string getStatusStr()
 
 cdef extern from "../../dataCollect/model/OD.hpp" namespace "EPL_DataCollect":
   cdef cppclass OD:

@@ -10,7 +10,7 @@ cdef extern from "../../dataCollect/PluginBase.hpp" namespace "EPL_DataCollect":
 cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
   cdef cppclass PythonPlugin(PluginBase):
     bool addPyEvent(int, const char*)
-    bool registerPyCycleStorage(const char*)
+    bool registerPyCycleStorage(const char*, const char*)
 
     @staticmethod
     CCycle.Cycle* getCurrentCycle()

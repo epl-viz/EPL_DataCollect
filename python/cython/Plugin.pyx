@@ -97,21 +97,24 @@ cdef class Plugin:
 
   cpdef addEvent(self, key, value):
     """
-    \brief Method adds an event given by key and value
+    \brief This method adds an event to the current cycle. The event to be added is coded as a key (event type) and a string (additional event information). Events can be anything and will be added to the cycle.
 
-    \returns a bool whether the event has been added or not
+    \param key Key of Events, using the EventEnum class for further information
+    \param value String of additional information, formation depends on specific event. Formatted as pythondict.
+
+    \returns a bool stating whether the event has been added
 
     \version 0.5.0
     \author Denis Megerle
     """
     cdef char* c_value
-    if isinstance(key, int) and isinstance(value, str):               #<- code copy since creating a method to convert strings appropriately was not possible
+    if isinstance(key, int) and isinstance(value, str):
       py_byte_string = value.encode('UTF-8')
       c_value = py_byte_string
       return self.getPythonPlugin().addPyEvent(key, c_value)
     return False;
 
-  cpdef registerCycleStorage(self, index):
+  cdef registerCycleStorage(self, index, type):
     """
     \brief Registering a cycle storage to be used as storage container for each cycle
 
@@ -120,13 +123,30 @@ cdef class Plugin:
     \version 0.5.0
     \author Denis Megerle
     """
+    cdef const char* c_type
     cdef char* c_index
+
+    if (type == bool):
+      c_type = "bool"
+    elif (type == str):
+      c_type = "str"
+    elif (type == int):
+      c_type = "int"
+
     if isinstance(index, str):
       py_byte_string = index.encode('UTF-8')
       c_index = py_byte_string
-      return self.getPythonPlugin().registerPyCycleStorage(c_index)
+      return self.getPythonPlugin().registerPyCycleStorage(c_index, c_type)
     return False;
 
+  cpdef registerInt(self, index):
+    return self.registerCycleStorage(index, int)
+
+  cpdef registerString(self, index):
+    return self.registerCycleStorage(index, str)
+
+  cpdef registerBool(self, index):
+    return self.registerCycleStorage(index, bool)
   ########################################################################################
 
   #Private elper method getting the corresponding pythonplugin############################

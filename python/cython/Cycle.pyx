@@ -33,6 +33,16 @@ cdef class Cycle:
       listOfEvents.append(pyEvent)
     return listOfEvents
 
+  def getNodeStatus(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return ERRVAL
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return ERRVAL
+    return _C_Cycle.getNode(nodeNumber).getStatusStr()
+
+
+
+  ############''TODO''###############
   def getODEntry(self, nodeNumber, odnumber):
     if not (isinstance(nodeNumber, int) and isinstance(odnumber, int)):   # numbers have to be integer
       return ERRVAL
@@ -40,11 +50,6 @@ cdef class Cycle:
       return ERRVAL
     if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
       return ERRVAL
+    _C_Cycle.getODEntry()
     return 42 ##TODO Implement with cycle.getODEntry(...)
 
-  def getNodeStatus(self, nodeNumber):
-    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
-      return ERRVAL
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
-      return ERRVAL
-    return 42 ##TODO Implement with cycle.getNodeStatus(...)
