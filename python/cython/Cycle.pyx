@@ -1,4 +1,5 @@
 cimport CCycle
+cimport CPlugin
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
@@ -10,7 +11,7 @@ cdef class Cycle:
   cdef CCycle.Cycle* _C_Cycle
 
   def __cinit__(self):
-    self._C_Cycle = new CCycle.Cycle()
+    self._C_Cycle = CPlugin.PythonPlugin.getCurrentCycle()
     if self._C_Cycle is NULL:
       raise MemoryError()
 
@@ -20,7 +21,7 @@ cdef class Cycle:
   cpdef int getCycleNum(self):
     return self._C_Cycle.getCycleNum()
 
-  cdef void updateCycle(self, CCycle.Cycle* newCycle):
+  cdef void updateCycle(self, CCycle.Cycle* newCycle):  ## maybe implement this since it increases speed
     if newCycle != NULL:
       self._C_Cycle = newCycle
 
@@ -32,6 +33,16 @@ cdef class Cycle:
       listOfEvents.append(pyEvent)
     return listOfEvents
 
+  def getNodeStatus(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return ERRVAL
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return ERRVAL
+    return _C_Cycle.getNode(nodeNumber).getStatusStr()
+
+
+
+  ############''TODO''###############
   def getODEntry(self, nodeNumber, odnumber):
     if not (isinstance(nodeNumber, int) and isinstance(odnumber, int)):   # numbers have to be integer
       return ERRVAL
@@ -39,11 +50,6 @@ cdef class Cycle:
       return ERRVAL
     if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
       return ERRVAL
+    _C_Cycle.getODEntry()
     return 42 ##TODO Implement with cycle.getODEntry(...)
 
-  def getNodeStatus(self, nodeNumber):
-    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
-      return ERRVAL
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
-      return ERRVAL
-    return 42 ##TODO Implement with cycle.getNodeStatus(...)

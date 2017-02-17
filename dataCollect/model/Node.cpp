@@ -29,6 +29,7 @@
  */
 
 #include "Node.hpp"
+#include "EPLEnum2Str.hpp"
 
 namespace EPL_DataCollect {
 
@@ -39,6 +40,8 @@ Node::~Node() {}
  * \return The current NodeStatus
  */
 NodeStatus Node::getStatus() const noexcept { return status; }
+
+std::string Node::getStatusStr() noexcept { return EPLEnum2Str::toStr(status); };
 
 /*!
  * \brief Returns the ID of the node

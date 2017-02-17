@@ -36,6 +36,8 @@
 #include "CSPythonPluginStorage.hpp"
 #include "Cycle.hpp"
 #include "PluginBase.hpp"
+#include "Python.h"
+
 struct _object;
 
 namespace EPL_DataCollect {
@@ -51,21 +53,28 @@ class PythonPlugin : public PluginBase {
   PythonPlugin(std::string pluginName);
   virtual ~PythonPlugin();
 
-  static Cycle *getCurrentCycle();
+  static Cycle *       getCurrentCycle();
+  static PythonPlugin *getPythonPlugin(const char *name);
 
   void run(Cycle *cycle);
   std::string getDependencies();
   std::string getID();
 
+  bool addPyEvent(int key, const char *value);
+  bool registerPyCycleStorage(const char *index, const char *typeAsStr);
 
  protected:
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
 
  private:
-  std::string           plugName;
-  _object *             cythonPlugin;
+  std::string plugName;
+  std::string plugInstanceName;
+  PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
+  PyObject *  pValue;
+  static std::unordered_map<std::string, PythonPlugin *> plugins;
   CSPythonPluginStorage state;
+  static Cycle *        currentCycle;
 
  public:
   /*!

@@ -5,135 +5,47 @@ import importlib
 import sys
 from libcpp.string cimport string
 
-
-###########----TESTMETHODS----#############
-#def main():
-  #pluggerino = Plugin("pyPlugins.PluginA")
-  #pluggerino.initialize()
-  #pluggerino.run()
-  #print(pluggerino.getDependencies())
-  #print(pluggerino.getID())
-  #py = Cycle.Cycle()
-###########----TESTMETHODS----#############
-
-cdef api class Plugin[object PyPlug, type PyPluginType]:
-  #cyCycle - Cython representation of cycle
-  # python object -> either module and run/init or create an object from the class in this module
-
-  def __cinit__(self, modname):
-    #importedModule = importlib.import_module(modname)
-    #self.pyObject = importedModule
-    #self.cyCycle = Cycle.Cycle()
-    pass
-
-  cdef api void initialize(self):
-    try:
-      self.pyObject.initialize()
-    except:
-      print("Warning: " + self.pyObject.__name__ + " initialize method is missing!\n" \
-              + "Skipping...")      # no init has to be given since there might be applications that don't need it
-
-  cdef api void run(self, CCycle.Cycle* newCycle):
-    print("running plugin!!!")  ##TODO: update cycle* of declared and start run method of pyObject.
-    print("num of nodes in this cycle: ", newCycle.getNumNodes())
-
-  cdef api getDependencies(self):
-    try:
-      return self.pyObject.getDependencies()
-    except:
-      print("Warning: " + self.pyObject.__name__ + " getDependencies method is missing!\n" \
-             +"Will be treated as no dependencies...")
-      return ""
-
-  cdef api getID(self):
-    try:
-      return self.pyObject.getID()
-    except:
-      print("Error: " + self.pyObject.__name__ + " getID method is missing!\n" \
-             +"A plugin needs an ID!")
-
-  cdef api char* getFoo(self):
-    return "hey"
-##################################################################################
-
-
-
-## Constructor function for C++
-cdef api Plugin buildPlugin(const char* name):
-  return Plugin("pyPlugins.PluginA")
-
-## Wrapper functions for C++
-cdef api void initialize_wrapper(Plugin obj):
-  print("initing...")
-  print(sys.path)
-  obj.initialize()
-cdef api void run_wrapper(Plugin obj, void* newCycle): #TODO: add cycle* to params
-  print("running")
-  obj.run(<CCycle.Cycle*> newCycle)
-cdef api char* getDependencies_wrapper(Plugin obj): #TODO change to getDep / getID
-  return obj.getFoo()
-cdef api char* getID_wrapper(Plugin obj):
-  return obj.getFoo()
-# -------------------------------end
-
-
-# THIS IS THE ACCORDING PYTHON CLASS (TODO: delete since unnecessary)
-class PyPlugin (object):
-
-  #TEST CONSTR
-  def __init__(self):
-    self.ident = "--PyPlugin--"
-
+cdef class Plugin:
   """
   \brief This class represents a custom user plugin base.
   Users can inherit from this class and therefore create their own plugins.
   Plugins use the run method, which run each cycle allowing the user to check for
   data each cycle.
 
-  :version:
-  :author:
+  \version 0.5.0
+  \author Denis Megerle
   """
 
-  """ ATTRIBUTES
+  def __cinit__(self):
+    pass
 
-  A unique(!) ID to represent the plugin in the system.
-
-  id  (private)
-
-  The dependencies of this plugin as a string
-
-  dependencies  (private)
-
-  """
-
-  def initialize(self):
+  ###########################Template Methods#############################################
+  cpdef initialize(self):
     """
     \brief The initialize method will only be called once, at the moment the plugin
     gets bound.
     It therefore is used to create datastructures / prepare the plugin for running
     at each cycle and for adding the ID and dependencies.
+    By default this will return nothing, since not initializing a plugin is legit.
 
-    @return  :
-    @author
+    \version 0.5.0
+    \author Denis Megerle
     """
-    pass
+    pass  #initialize can be empty
 
-  def run(self, currentCycle):
+  cpdef run(self):
     """
     \brief This method runs each cycle, here is the user plugins main.
     Users code will be executed each cycle thus this method should be kept quick. If
     this method runs to slow it will be stopped and rerun to prevent slowing down of
     the program.
 
-    @param Cycle currentCycle : The cycle to be worked with, usually the newest cycle in the 			system.
-    @return  :
-    @author
+    \version 0.5.0
+    \author Denis Megerle
     """
+    pass
 
-
-    print("RUN FUNCTION OF ", self.ident)
-
-  def getDependencies(self):
+  cpdef getDependencies(self):
     """
     \brief This method returns the dependencies of the plugin as a string.
     Dependencies are splitted by whitespace and the plugin will only be started if
@@ -141,35 +53,105 @@ class PyPlugin (object):
 
     \returns a string of dependencies
 
-    @return string :
-    @author
+    \version 0.5.0
+    \author Denis Megerle
     """
-    return "testDependencies"
+    return "" #Dependencies can be empty if needed
 
-  def getID(self):
+  cpdef getID(self):
     """
     \brief This method returns the unique ID of this plugin.
 
     \returns the string of the ID
 
-    @return string :
-    @author
+    \version 0.5.0
+    \author Denis Megerle
     """
-    return "testID"
+    return "" #Having no ID is not allowed. However this will be handled in C++.
 
-  def unload(self):
+  cpdef unload(self):
     """
     \brief This method releases the current plugin.
     Essentially it overrides the run method to stop the plugin from running each
     cycle.
 
-
-    @return  :
-    @author
+    \version 0.5.0
+    \author Denis Megerle
     """
-    pass
+    pass  ##TODO: implement
 
+  ########################################################################################
 
-# test code to run from c++ ---------TODO: Delete
-cdef api double cy_fct(double val):
-  return val
+  ##################################Acessor Methods#######################################
+
+  cpdef getCycle(self):
+    """
+    \brief Method gives the current cycle to work on.
+
+    \returns the python cycle representation
+
+    \version 0.5.0
+    \author Denis Megerle
+    """
+    return Cycle.Cycle()
+
+  cpdef addEvent(self, key, value):
+    """
+    \brief This method adds an event to the current cycle. The event to be added is coded as a key (event type) and a string (additional event information). Events can be anything and will be added to the cycle.
+
+    \param key Key of Events, using the EventEnum class for further information
+    \param value String of additional information, formation depends on specific event. Formatted as pythondict.
+
+    \returns a bool stating whether the event has been added
+
+    \version 0.5.0
+    \author Denis Megerle
+    """
+    cdef char* c_value
+    if isinstance(key, int) and isinstance(value, str):
+      py_byte_string = value.encode('UTF-8')
+      c_value = py_byte_string
+      return self.getPythonPlugin().addPyEvent(key, c_value)
+    return False;
+
+  cdef registerCycleStorage(self, index, type):
+    """
+    \brief Registering a cycle storage to be used as storage container for each cycle
+
+    \returns a bool whether the storage has been added or not
+
+    \version 0.5.0
+    \author Denis Megerle
+    """
+    cdef const char* c_type
+    cdef char* c_index
+
+    if (type == bool):
+      c_type = "bool"
+    elif (type == str):
+      c_type = "str"
+    elif (type == int):
+      c_type = "int"
+
+    if isinstance(index, str):
+      py_byte_string = index.encode('UTF-8')
+      c_index = py_byte_string
+      return self.getPythonPlugin().registerPyCycleStorage(c_index, c_type)
+    return False;
+
+  cpdef registerInt(self, index):
+    return self.registerCycleStorage(index, int)
+
+  cpdef registerString(self, index):
+    return self.registerCycleStorage(index, str)
+
+  cpdef registerBool(self, index):
+    return self.registerCycleStorage(index, bool)
+  ########################################################################################
+
+  #Private elper method getting the corresponding pythonplugin############################
+  cdef CPlugin.PythonPlugin* getPythonPlugin(self):
+    py_byte_string = self.getID().encode('UTF-8')
+    cdef char* c_string = py_byte_string
+    return CPlugin.PythonPlugin.getPythonPlugin(c_string)
+  #####################################################################################END
