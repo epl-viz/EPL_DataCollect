@@ -68,6 +68,7 @@ class Node {
   mockable OD *getOD() noexcept;
   mockable ODDescription *getODDesc() noexcept;
   mockable NodeStatus getStatus() const noexcept;
+  mockable std::string getStatusStr() noexcept;
   mockable uint8_t getID() const noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
