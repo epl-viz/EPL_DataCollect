@@ -25,6 +25,7 @@
  */
 
 #include "defines.hpp"
+#include "EPLEnum2Str.hpp"
 #include <InputHandler.hpp>
 #include <catch.hpp>
 #include <epan/print.h>
@@ -43,6 +44,7 @@ namespace fs = std::filesystem;
 
 using namespace EPL_DataCollect;
 
+
 TEST_CASE("InputHandler parsing", "[InputHandler]") {
   InputHandler handler;
   std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
@@ -59,13 +61,6 @@ TEST_CASE("InputHandler parsing", "[InputHandler]") {
 
   handler.setDissector(dissect);
 
-  print_args_t    print_args;
-  print_stream_t *print_stream = print_stream_text_stdio_new(stdout);
-
-  memset(&print_args, 0, sizeof(print_args_t));
-  print_args.print_hex         = FALSE;
-  print_args.print_dissections = print_dissections_expanded;
-
   uint32_t      counter = 0;
   ws_dissection diss;
   while (ws_dissect_next(dissect, &diss)) {
@@ -80,5 +75,142 @@ TEST_CASE("InputHandler parsing", "[InputHandler]") {
 
   ws_dissect_free(dissect);
   handler.setDissector(nullptr);
+  ws_capture_close(capture);
+}
+
+
+TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+
+  InputHandler::CompletedCycle cd(0);
+  cd.num = 0;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 11);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_ASYNC);
+  REQUIRE(cd.packets[5].getType() == PacketType::ASYNC_SEND);
+
+  cd.flags = 0;
+  cd.num   = 1;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 2);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+
+  cd.flags = 0;
+  cd.num   = 2;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 2);
+  REQUIRE(cd.num == 2);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+  REQUIRE(cd.packets[1].getType() == PacketType::START_OF_ASYNC);
+
+  cd.flags = 0;
+  cd.num   = 4;
+  REQUIRE(handler.parseCycle(&cd) == false);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) != 0);
+
+  cd.flags = 0;
+  cd.num   = 3;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 3);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+
+  cd.flags = 0;
+  cd.num   = 4;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) == 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 3);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+
+  cd.flags = 0;
+  cd.num   = 2;
+  REQUIRE(handler.parseCycle(&cd) == true);
+  REQUIRE((cd.flags & InputHandler::DONE) != 0);
+  REQUIRE((cd.flags & InputHandler::USED_SEEK) != 0);
+  REQUIRE((cd.flags & InputHandler::ERROR) == 0);
+  REQUIRE(cd.packets.size() == 2);
+  REQUIRE(cd.num == 2);
+  REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+  REQUIRE(cd.packets[1].getType() == PacketType::START_OF_ASYNC);
+
+  ws_dissect_free(dissect);
+  handler.setDissector(nullptr);
+  ws_capture_close(capture);
+}
+
+
+TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+  handler.startLoop();
+
+  std::vector<Packet> packets;
+  packets = handler.getCyclePackets(0);
+  REQUIRE(packets.size() == 11);
+  REQUIRE(packets[0].getType() == PacketType::START_OF_ASYNC);
+  uint32_t i = 1;
+  for (;;) {
+    packets = handler.getCyclePackets(i);
+
+    if (packets.empty())
+      break;
+
+    REQUIRE(packets.size() > 1);
+    REQUIRE(packets[0].getType() == PacketType::START_OF_CYCLE);
+    ++i;
+  }
+
+  REQUIRE(i == 249);
+
+  packets = handler.getCyclePackets(4);
+  REQUIRE(packets.size() == 3);
+  REQUIRE(packets[0].getType() == PacketType::START_OF_CYCLE);
+  REQUIRE(packets[1].getType() == PacketType::START_OF_ASYNC);
+  REQUIRE(packets[2].getType() == PacketType::ASYNC_SEND);
+
+  handler.stopLoop();
+  handler.setDissector(nullptr);
+
+  ws_dissect_free(dissect);
   ws_capture_close(capture);
 }

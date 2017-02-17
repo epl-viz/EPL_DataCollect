@@ -65,6 +65,11 @@ int CaptureInstance::setupLoop() {
     return 1;
   }
 
+  if (dissect == nullptr) {
+    state = ERRORED;
+    return -2;
+  }
+
   iHandler.setDissector(dissect);
 
   if (!builder.startLoop(startCycle)) {

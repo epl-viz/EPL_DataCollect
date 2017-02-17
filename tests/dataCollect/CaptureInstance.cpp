@@ -97,6 +97,7 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x5].get(), [](PluginBase *) {}));
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
 
+#if 0
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
     REQUIRE(ci.startRecording("") == 0);
     REQUIRE(ci.startRecording("") == -1);
@@ -104,6 +105,10 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.stopRecording() == 0);
     REQUIRE(ci.stopRecording() == -1);
     REQUIRE(ci.getState() == CaptureInstance::DONE);
+#else
+    REQUIRE(ci.startRecording("") == -2);
+    REQUIRE(ci.getState() == CaptureInstance::ERRORED);
+#endif
   }
 
   SECTION("Adding plugins -- PCAP") {
@@ -145,7 +150,7 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.registerCycleStorage<CSTest1>("A") == true);
     REQUIRE(ci.registerCycleStorage<CSTest1>("B") == true);
     REQUIRE(ci.registerCycleStorage<CSTest1>("A") == false);
-    REQUIRE(ci.startRecording("") == 0);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
     REQUIRE(ci.stopRecording() == 0);
     REQUIRE(ci.registerCycleStorage<CSTest1>("C") == false);
   }
@@ -217,7 +222,7 @@ TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") 
   pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
 
   REQUIRE(ci.getState() == CaptureInstance::SETUP);
-  REQUIRE(ci.startRecording("") == 0);
+  REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
   REQUIRE(ci.getState() == CaptureInstance::RUNNING);
   REQUIRE(ci.stopRecording() == 1);
   REQUIRE(ci.getState() == CaptureInstance::ERRORED);

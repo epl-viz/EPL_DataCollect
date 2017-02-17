@@ -34,8 +34,16 @@
 
 #include "InputParser.hpp"
 #include "Packet.hpp"
+#include <chrono>
+#include <condition_variable>
 #include <mutex>
+#include <plf_colony.h>
+#include <queue>
+#include <thread>
 #include <vector>
+
+using std::chrono_literals::operator""ms;
+using std::chrono::milliseconds;
 
 extern "C" {
 typedef struct ws_capture_t ws_capture_t;
@@ -57,13 +65,94 @@ namespace EPL_DataCollect {
   * The ODDescription is also copied (\sa ODDescription).
   */
 class InputHandler {
- private:
-  ws_dissect_t *              dissect = nullptr;
-  WiresharkParser::parserData workingData;
+ public:
+  typedef std::chrono::system_clock::time_point TP;
 
-  std::recursive_mutex parserLocker;
-  std::string          eplFrameName      = "Ethernet POWERLINK";
-  std::string          ethernetFrameName = "Ethernet";
+  static const uint8_t DONE            = 0b00000001; //!< \brief The cycle is completely processed
+  static const uint8_t ERROR           = 0b00000010; //!< \brief There was a error
+  static const uint8_t IS_EOF          = 0b00000100; //!< \brief Reached the end of capture
+  static const uint8_t NO_DELETE       = 0b00001000; //!< \brief Do not delete this entry (unless CLEANUP is set)
+  static const uint8_t CLEANUP         = 0b00010000; //!< \brief Clean this entry up (overrides NO_DELETE)
+  static const uint8_t QC_PREFETCH_HIT = 0b00100000; //!< \brief The entry was already queued
+  static const uint8_t QC_ALREADY_DONE = 0b01000000; //!< \brief The entry was already processed when required
+  static const uint8_t USED_SEEK       = 0b10000000; //!< \brief Debug flag to identify seeks
+
+  struct CompletedCycle {
+    uint8_t             flags = 0;
+    uint32_t            num   = UINT32_MAX;
+    std::vector<Packet> packets;
+    TP                  tp;
+
+    CompletedCycle() = delete;
+    CompletedCycle(uint32_t n) : num(n) {}
+  };
+
+  struct QueuedCycle {
+    bool            cleanup = false;
+    CompletedCycle *out     = nullptr;
+
+    QueuedCycle() = delete;
+    QueuedCycle(bool c, CompletedCycle *o) : cleanup(c), out(o) {}
+  };
+
+  struct Config {
+    uint32_t     cleanupInterval   = 50;
+    uint8_t      prefetchSize      = 20; //!< \brief The number of cycles to prefetch
+    uint8_t      checkPrefetch     = 13; //!< \brief Checks for prefetching every [num] cycles
+    milliseconds loopWaitTimeout   = 500ms;
+    milliseconds deleteCyclesAfter = 5000ms;
+
+    std::string eplFrameName = "Ethernet POWERLINK";
+  };
+
+ private:
+  // This data may only be accessed in parsing functions (parsePacket, parseCycle, setDissector)
+  struct {
+    std::recursive_mutex parserLocker;
+
+    ws_dissect_t *              dissect = nullptr;
+    WiresharkParser::parserData workingData;
+
+    std::vector<uint64_t> cycleOffsetMap;
+    bool                  parserReachedEnd = false;
+
+    Packet latestSoC = Packet(nullptr);
+
+    // TODO remove this vector and use the next offset instead
+    std::vector<uint64_t> packetOffsetMap;
+  } pData;
+
+  std::mutex accessMutex;
+  std::mutex configMutex;
+
+  Config cfg;
+
+  std::thread loopThread;
+
+  std::deque<QueuedCycle> buildQueue;
+  std::mutex              buildQueueMutex;
+
+  plf::colony<CompletedCycle> cycles;
+  std::mutex                  cyclesMutex;
+
+  std::mutex              startLoopMutex;
+  std::mutex              stopLoopMutex;
+  std::condition_variable startLoopWait;
+  std::condition_variable stopLoopWait;
+
+  std::condition_variable waitForWorkSignal;
+  std::condition_variable waitForDoneWorkSignal;
+
+  bool buildLoopIsRunning   = false;
+  bool keepBuildLoopRunning = false;
+
+  uint32_t maxQueuedCycle         = 0;
+  uint32_t queuedAfterLastCleanup = 0;
+  uint32_t lastCheckedForPrefetch = UINT32_MAX;
+
+  CompletedCycle *updateQueue(CompletedCycle *oldCycle, uint32_t target = UINT32_MAX) noexcept;
+  void builderLoop();
+  bool waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept;
 
  public:
   InputHandler() = default;
@@ -76,16 +165,16 @@ class InputHandler {
   InputHandler &operator=(InputHandler &&) = delete;
 
   mockable Packet parsePacket(ws_dissection *diss) noexcept;
+  mockable bool parseCycle(CompletedCycle *cd) noexcept;
 
-  mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum) noexcept;
-  mockable bool waitForCycle(uint32_t num, uint32_t timeout = 0) noexcept;
+  mockable bool startLoop();
+  mockable bool stopLoop();
+
+  mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum, milliseconds timeout = 10000000ms) noexcept;
 
   mockable void setDissector(ws_dissect_t *dissPTR);
 
-  mockable void setEPLFrameName(std::string name) noexcept;
-  mockable std::string getEPLFrameName() const noexcept;
-
-  mockable void setEthernetFrameName(std::string name) noexcept;
-  mockable std::string getEthernetFrameName() const noexcept;
+  mockable void setConfig(Config newCFG) noexcept;
+  mockable Config getConfig() const noexcept;
 };
 }

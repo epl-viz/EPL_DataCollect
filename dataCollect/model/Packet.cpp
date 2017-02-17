@@ -38,6 +38,13 @@ namespace EPL_DataCollect {
  * \warning data must not be nullptr
  */
 Packet::Packet(const WiresharkParser::parserData *const data) {
+  if (!data) {
+    type         = PacketType::UNDEF;
+    wiresharkSTR = "THE BEGINNING OF TIME";
+    miscData     = "THE BEGINNING OF TIME";
+    return;
+  }
+
   type         = data->pType;
   nodeSource   = data->src;
   nodeDest     = data->dst;
