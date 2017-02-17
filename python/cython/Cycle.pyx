@@ -38,7 +38,7 @@ cdef class Cycle:
       return ERRVAL
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
       return ERRVAL
-    return _C_Cycle.getNode(nodeNumber).getStatusStr()
+    return self._C_Cycle.getNode(nodeNumber).getStatusStr()
 
 
 
@@ -50,6 +50,6 @@ cdef class Cycle:
       return ERRVAL
     if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
       return ERRVAL
-    _C_Cycle.getODEntry()
+    self._C_Cycle.getNode(nodeNumber).getOD()
     return 42 ##TODO Implement with cycle.getODEntry(...)
 
