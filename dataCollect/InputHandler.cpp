@@ -49,7 +49,7 @@ InputHandler::~InputHandler() {
 Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
 
-  // Reset the pareser data
+  // Reset the parser data
   pData.workingData.~parserData();
   new (&pData.workingData) parserData;
 
@@ -86,7 +86,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
   static std::vector<Packet>            tempPKG; // static: reuse memory
   ws_dissection                         diss;
 
-  tempPKG.clear(); // tempPKG is static (less maloc) ==> must be cleared
+  tempPKG.clear(); // tempPKG is static (less malloc) ==> must be cleared
 
   if (!cd)
     return false;
@@ -128,7 +128,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     pData.cycleOffsetMap.emplace_back(currentCyclePacketIndex);
 
-    std::lock_guard<std::mutex> cLk(cyclesMutex); // Can not to this because of goto
+    std::lock_guard<std::mutex> cLk(cyclesMutex);
     cd->packets = std::move(tempPKG);
     cd->tp      = std::chrono::system_clock::now();
     cd->flags |= DONE;
@@ -153,7 +153,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       tempPKG.emplace_back(parsePacket(&diss));
     }
 
-    std::lock_guard<std::mutex> cLk(cyclesMutex); // Can not to this because of goto
+    std::lock_guard<std::mutex> cLk(cyclesMutex);
     cd->packets = std::move(tempPKG);
     cd->tp      = std::chrono::system_clock::now();
     cd->flags |= DONE | USED_SEEK;
@@ -168,13 +168,13 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept {
   std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 
-  std::mutex waiter;
+  std::mutex wait;
 
   while (true) {
     if (std::chrono::system_clock::now() - start > timeout)
       break;
 
-    std::unique_lock<std::mutex> lk(waiter);
+    std::unique_lock<std::mutex> lk(wait);
     waitForDoneWorkSignal.wait_until(lk, start + timeout);
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
@@ -191,7 +191,6 @@ bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeo
  * \note Waits until the specified cycle is available
  *
  * \return a std::vector of Packet
- * \todo IMPLEMENT
  * \param  cycleNum The number of the cycle
  * \param  timeout The timeout in milliseconds (0 for no timeout)
  */
@@ -437,7 +436,7 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
 
 /*!
  * \brief Sets the config struct of the class
- * \param newCFG The new config truct
+ * \param newCFG The new config struct
  */
 void InputHandler::setConfig(Config newCFG) noexcept {
   std::lock_guard<std::mutex> accessLock(accessMutex);

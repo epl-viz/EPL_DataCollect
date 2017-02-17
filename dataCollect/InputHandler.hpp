@@ -42,7 +42,6 @@
 #include <thread>
 #include <vector>
 
-using std::chrono_literals::operator""ms;
 using std::chrono::milliseconds;
 
 extern "C" {
@@ -99,8 +98,8 @@ class InputHandler {
     uint32_t     cleanupInterval   = 50;
     uint8_t      prefetchSize      = 20; //!< \brief The number of cycles to prefetch
     uint8_t      checkPrefetch     = 13; //!< \brief Checks for prefetching every [num] cycles
-    milliseconds loopWaitTimeout   = 500ms;
-    milliseconds deleteCyclesAfter = 5000ms;
+    milliseconds loopWaitTimeout   = milliseconds(500);
+    milliseconds deleteCyclesAfter = milliseconds(5000);
 
     std::string eplFrameName = "Ethernet POWERLINK";
   };
@@ -170,7 +169,7 @@ class InputHandler {
   mockable bool startLoop();
   mockable bool stopLoop();
 
-  mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum, milliseconds timeout = 10000000ms) noexcept;
+  mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum, milliseconds timeout = milliseconds(999999)) noexcept;
 
   mockable void setDissector(ws_dissect_t *dissPTR);
 
