@@ -12,6 +12,10 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
     Node* getNode(int)
     bool registerCycleStorage(string, CycleStorageBase)
     CycleStorageBase* getCycleStorage(string)
+    string getData(const char*)
+    bool setDataStr(const char*, const char*)
+    bool setDataInt(const char*, int)
+    bool setDataBool(const char*, bool)
 
 cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
   cdef cppclass Node:

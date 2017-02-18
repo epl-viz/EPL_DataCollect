@@ -68,6 +68,9 @@ PythonPlugin::PythonPlugin(std::string pluginName) {
     }
   }
 
+
+  state = CSPythonPluginStorage();
+  // registerCycleStorage (CSPythonPluginStorage) !!!
   // initing
   std::cout << "initing returns ...\t" << initialize(NULL) << "\n";
 };
@@ -127,21 +130,63 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   // TODO: IMPLEMENT THIS METHOD IS KEY
   //
   // addEvent(ev);
+  std::unique_ptr<EventBase> eventToAdd;
+
+  switch (key) {
+    case 0:
+      break; // add event STARTCAP
+    case 1:
+      std::cout << "adding event 1, ENDCAP";
+      break; // add event ENDCAP
+    case 2:
+      std::cout << "adding event 2, HIGLIGHTING MN";
+      break; // add event highlight MN
+    case 3:
+      break; // add event highlight CN x (given by value)
+    case 4:
+      break; // add event jump to time (given by value)
+    case 5:
+      break; // add event highlight od entry (given by value)
+    case 6:
+      break; // add event text (given by value)
+    case 7:
+      break; // add image given by path in value
+    default: return false;
+  }
 
   std::cout << "\nadd ev\t" + std::string(value);
   return true;
 };
 
-bool PythonPlugin::registerPyCycleStorage(const char *index, const char *typeAsStr) {
+bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
   (void)index;
-  (void)typeAsStr;
+  (void)typeAsInt;
 
   // TODO: IMPLEMENT THIS METHOD IS KEY
   // create IntStorage / str storage / boolStorage class and then call registerCycleStorage<IntStorage>("stringindex!")
   // !!!
   // typeAsStr is either "bool", "int", or "str" -> register appropriately
-  std::cout << "\nregging\t" + std::string(index) + ":" + std::string(typeAsStr);
+  switch (typeAsInt) {
+    case 0:
+      break; // adding bool
+    case 1:
+      break; // adding int
+    case 2:
+      break; // adding string
+  }
+  std::cout << "\nregging\t" + std::string(index) + ":";
   return true;
+};
+
+bool PythonPlugin::setStorage(const char *index, const char *var) {
+  (void)index;
+  (void)var;
+  return false;
+};
+
+std::string PythonPlugin::getStorage(const char *index) {
+  (void)index;
+  return std::string("IT IS false") + std::string(index);
 };
 }
 }

@@ -119,6 +119,28 @@ ODEntry *Cycle::getODEntry(uint8_t node, uint16_t entry) noexcept {
   return n->getOD()->getEntry(entry);
 }
 
+std::string Cycle::getData(const char *index) {
+  (void)index;
+  return "";
+};
+
+bool Cycle::setDataStr(const char *index, const char *var) {
+  (void)index;
+  (void)var;
+  return false;
+};
+
+bool Cycle::setDataInt(const char *index, int var) {
+  (void)index;
+  (void)var;
+  return false;
+};
+
+bool Cycle::setDataBool(const char *index, bool var) {
+  (void)index;
+  (void)var;
+  return false;
+};
 
 /*!
  * \brief Returns a pointer to the cycle storage corresponding to the ID
