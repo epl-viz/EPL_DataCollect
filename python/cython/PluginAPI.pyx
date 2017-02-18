@@ -31,7 +31,14 @@ def getAmountOfCN():
   """
   return currentCycle.getNumNodes()
 
-def addData(key, data):
+def getData(key):
+  cdef char* c_index
+  if isinstance(key, str):
+    py_byte_string = key.encode('UTF-8')
+    c_index = py_byte_string
+    return currentCycle.getData(c_index)  # return None Type if index no string
+
+def setData(key, data):
   """
   \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.
 

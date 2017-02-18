@@ -5,6 +5,8 @@ import importlib
 import sys
 from libcpp.string cimport string
 
+#INFO: cython cannot get char* from function hence a lot of code copy to get char*.
+
 cdef class Plugin:
   """
   \brief This class represents a custom user plugin base.
@@ -123,15 +125,15 @@ cdef class Plugin:
     \version 0.5.0
     \author Denis Megerle
     """
-    cdef const char* c_type
+    cdef int c_type
     cdef char* c_index
 
     if (type == bool):
-      c_type = "bool"
-    elif (type == str):
-      c_type = "str"
+      c_type = 0
     elif (type == int):
-      c_type = "int"
+      c_type = 1
+    elif (type == str):
+      c_type = 2
 
     if isinstance(index, str):
       py_byte_string = index.encode('UTF-8')
@@ -147,6 +149,24 @@ cdef class Plugin:
 
   cpdef registerBool(self, index):
     return self.registerCycleStorage(index, bool)
+
+  cpdef getStorage(self, index): #THIS METHOD returns stuff from the own storage of the plugin
+    cdef char* c_index
+    if isinstance(index, str):
+      py_byte_string = index.encode('UTF-8')
+      c_index = py_byte_string
+      return self.getPythonPlugin().getStorage(c_index) #returning None type if not found !
+
+  cpdef setStorage(self, index, var):
+    cdef char* c_index
+    cdef char* c_var
+    if isinstance(index, str) and isinstance(var, str):
+      py_byte_string_index = index.encode('UTF-8')
+      py_byte_string_var = var.encode('UTF-8')
+      c_index = py_byte_string_index
+      c_var = py_byte_string_var
+      return self.getPythonPlugin().setStorage(c_index, c_var)
+    return False
   ########################################################################################
 
   #Private elper method getting the corresponding pythonplugin############################
