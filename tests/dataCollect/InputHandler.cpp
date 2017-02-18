@@ -45,9 +45,108 @@ namespace fs = std::filesystem;
 using namespace EPL_DataCollect;
 
 
-TEST_CASE("InputHandler parsing", "[InputHandler]") {
+TEST_CASE("InputHandler parsing EPL_Example", "[InputHandler]") {
   InputHandler handler;
   std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+
+  uint32_t      counter = 0;
+  ws_dissection diss;
+  while (ws_dissect_next(dissect, &diss)) {
+    Packet packet = handler.parsePacket(&diss);
+
+#if ENABLE_DEBUG_PRINT
+    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
+#endif
+
+    counter++;
+  }
+
+  handler.setDissector(nullptr);
+  ws_dissect_free(dissect);
+  ws_capture_close(capture);
+}
+
+TEST_CASE("InputHandler parsing epl_sdo_udp", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/epl_sdo_udp.cap";
+
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+
+  uint32_t      counter = 0;
+  ws_dissection diss;
+  while (ws_dissect_next(dissect, &diss)) {
+    Packet packet = handler.parsePacket(&diss);
+
+#if ENABLE_DEBUG_PRINT
+    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
+#endif
+
+    counter++;
+  }
+
+  handler.setDissector(nullptr);
+  ws_dissect_free(dissect);
+  ws_capture_close(capture);
+}
+
+TEST_CASE("InputHandler parsing 1CN", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN.pcapng";
+
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  REQUIRE(capture != nullptr);
+
+  ws_dissect_t *dissect = ws_dissect_capture(capture);
+  REQUIRE(dissect != nullptr);
+
+  handler.setDissector(dissect);
+
+  uint32_t      counter = 0;
+  ws_dissection diss;
+  while (ws_dissect_next(dissect, &diss)) {
+    Packet packet = handler.parsePacket(&diss);
+
+#if ENABLE_DEBUG_PRINT
+    std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
+#endif
+
+    counter++;
+  }
+
+  handler.setDissector(nullptr);
+  ws_dissect_free(dissect);
+  ws_capture_close(capture);
+}
+
+TEST_CASE("InputHandler parsing 1CN-with-ObjectMapping-PDO", "[InputHandler]") {
+  InputHandler handler;
+  std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
 
   fs::path filePath(file);
   REQUIRE(fs::exists(filePath));

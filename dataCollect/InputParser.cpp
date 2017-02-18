@@ -273,6 +273,10 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       bindBYTES(d, fi, d->data);
       break;
 
+    // Ignore Section
+    case "_ws.expert"_h:
+      return;
+
     // IGONRE:
     case "data"_h:
     case "data.len"_h:
