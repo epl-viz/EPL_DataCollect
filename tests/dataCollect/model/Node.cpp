@@ -47,6 +47,7 @@ TEST_CASE("Changing Status works") {
   SECTION("Test setting to starting") {
     n.setStatus(NodeStatus::STARTING);
     REQUIRE(n.getStatus() == NodeStatus::STARTING);
+    REQUIRE(n.getStatusStr() == "STARTING");
   }
   SECTION("Test setting to OK") {
     n.setStatus(NodeStatus::OK);

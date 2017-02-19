@@ -155,7 +155,7 @@ bool XDDVisitorTypes::VisitEnter(const XMLElement &el, const XMLAttribute *) {
       case "NETTIME"_h: dt        = ObjectDataType::NETTIME; break;
     }
 
-    uint16_t id = std::stoul(currentDTID, nullptr, 16);
+    uint16_t id = static_cast<uint16_t>(std::stoul(currentDTID, nullptr, 16));
 
     auto *map  = desc->getTypesMap();
     (*map)[id] = dt;
@@ -166,7 +166,7 @@ bool XDDVisitorTypes::VisitEnter(const XMLElement &el, const XMLAttribute *) {
   }
 
   path.append(t);
-  strSize.push(path.size());
+  strSize.push(static_cast<uint32_t>(path.size()));
 
   if (t == "defType") {
     const XMLAttribute *at = el.FindAttribute("dataType");
@@ -250,7 +250,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
   }
 
   path.append(t);
-  strSize.push(path.size());
+  strSize.push(static_cast<uint32_t>(path.size()));
 
   if (path == pathStrings[1]) {
     const XMLAttribute *index        = el.FindAttribute("index");
@@ -269,7 +269,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
       return false;
     }
 
-    uint16_t       ODIndex    = std::stoul(index->Value(), nullptr, 16);
+    uint16_t       ODIndex    = static_cast<uint16_t>(std::stoul(index->Value(), nullptr, 16));
     std::string    ODName     = name->Value();
     ObjectType     ODObjType  = static_cast<ObjectType>(std::stoul(objectType->Value(), nullptr, 16));
     ObjectDataType ODDataType = ObjectDataType::UNSIGNED64;
@@ -281,7 +281,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
         return false;
       }
 
-      uint16_t tempIndex = std::stoul(dataType->Value(), nullptr, 16);
+      uint16_t tempIndex = static_cast<uint16_t>(std::stoul(dataType->Value(), nullptr, 16));
       ODDataType         = (*desc->getTypesMap())[tempIndex];
       ODEntryDescription newEntry(ObjectType::VAR, ODDataType);
 
@@ -301,7 +301,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
 
     } else if (ODObjType == ObjectType::ARRAY) {
       if (dataType) {
-        uint16_t tempIndex = std::stoul(dataType->Value(), nullptr, 16);
+        uint16_t tempIndex = static_cast<uint16_t>(std::stoul(dataType->Value(), nullptr, 16));
         ODDataType         = (*desc->getTypesMap())[tempIndex];
       }
 
@@ -339,7 +339,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
       return false;
     }
 
-    uint8_t     ODIndex   = std::stoul(subIndex->Value(), nullptr, 16);
+    uint8_t     ODIndex   = static_cast<uint8_t>(std::stoul(subIndex->Value(), nullptr, 16));
     std::string ODName    = name->Value();
     ObjectType  ODObjType = static_cast<ObjectType>(std::stoul(objectType->Value(), nullptr, 16));
 
@@ -348,7 +348,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
       return false;
     }
 
-    uint16_t           tempIndex  = std::stoul(dataType->Value(), nullptr, 16);
+    uint16_t           tempIndex  = static_cast<uint16_t>(std::stoul(dataType->Value(), nullptr, 16));
     ObjectDataType     ODDataType = (*desc->getTypesMap())[tempIndex];
     ODEntryDescription newEntry(ObjectType::VAR, ODDataType);
 

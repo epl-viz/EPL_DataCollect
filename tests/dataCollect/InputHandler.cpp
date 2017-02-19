@@ -49,6 +49,9 @@ TEST_CASE("InputHandler parsing EPL_Example", "[InputHandler]") {
   InputHandler handler;
   std::string  file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
 
+  auto cfg = handler.getConfig();
+  handler.setConfig(cfg);
+
   fs::path filePath(file);
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
