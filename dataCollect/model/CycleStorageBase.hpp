@@ -59,7 +59,7 @@ class CycleStorageBase {
    * \brief Returns a numeric representation of the stored information
    * \return The numeric value of the stored information
    */
-  virtual double getNumericValue() = 0;
+  virtual double      getNumericValue() = 0;
   virtual std::string getStringRepresentation() { return ""; };
 
   /*!
