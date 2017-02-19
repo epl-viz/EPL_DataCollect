@@ -12,10 +12,6 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
     Node* getNode(int)
     bool registerCycleStorage(string, CycleStorageBase)
     CycleStorageBase* getCycleStorage(string)
-    string getData(const char*)
-    bool setDataStr(const char*, const char*)
-    bool setDataInt(const char*, int)
-    bool setDataBool(const char*, bool)
 
 cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
   cdef cppclass Node:
@@ -54,6 +50,7 @@ cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCol
 cdef extern from "../../dataCollect/model/CycleStorageBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass CycleStorageBase:
     CycleStorageBase() except +
+    string getStringRepresentation()
 
 cdef extern from "../../include/EPLEnums.h":
   ctypedef enum EvType:

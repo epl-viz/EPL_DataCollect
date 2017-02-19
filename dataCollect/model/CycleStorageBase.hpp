@@ -60,6 +60,7 @@ class CycleStorageBase {
    * \return The numeric value of the stored information
    */
   virtual double getNumericValue() = 0;
+  virtual std::string getStringRepresentation() { return ""; };
 
   /*!
    * \brief Returns whether the entry can be represented as ONE numeric value
