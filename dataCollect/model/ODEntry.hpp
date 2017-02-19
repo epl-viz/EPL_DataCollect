@@ -32,6 +32,7 @@
 
 #include "defines.hpp"
 #include "EPLEnums.h"
+#include <memory>
 #include <vector>
 
 namespace EPL_DataCollect {
@@ -72,8 +73,12 @@ class ODEntry {
    * \return double
    */
   virtual REAL_TYPE getNumericValue() = 0;
-  virtual void clone(void *pos)       = 0;
+  virtual void setFromString(std::string str, uint8_t subIndex = 0) = 0;
+  virtual std::string toString()           = 0;
+  virtual void clone(void *pos)            = 0;
+  virtual std::unique_ptr<ODEntry> clone() = 0;
 };
+
 
 
 
@@ -83,8 +88,12 @@ class ODEntryInt final : public ODEntry {
 
   ODEntryInt(ObjectDataType dt) : ODEntry(ObjectClassType::INTEGER, dt, true) {}
   REAL_TYPE                 getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -96,8 +105,12 @@ class ODEntryUInt final : public ODEntry {
 
   ODEntryUInt(ObjectDataType dt) : ODEntry(ObjectClassType::UNSIGNED, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -109,8 +122,12 @@ class ODEntryBool final : public ODEntry {
 
   ODEntryBool(ObjectDataType dt) : ODEntry(ObjectClassType::BOOL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -122,8 +139,12 @@ class ODEntryReal final : public ODEntry {
 
   ODEntryReal(ObjectDataType dt) : ODEntry(ObjectClassType::REAL, dt, true) {}
   REAL_TYPE                  getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -135,8 +156,12 @@ class ODEntryString final : public ODEntry {
 
   ODEntryString(ObjectDataType dt) : ODEntry(ObjectClassType::STRING, dt, false) {}
   REAL_TYPE                    getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -146,10 +171,14 @@ class ODEntryArrayInt final : public ODEntry {
  public:
   std::vector<int64_t> data;
 
-  ODEntryArrayInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_INTEGER, dt, false) {}
+  ODEntryArrayInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_INTEGER, dt, false) { data.resize(0xFF); }
   REAL_TYPE                      getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -159,10 +188,14 @@ class ODEntryArrayUInt final : public ODEntry {
  public:
   std::vector<uint64_t> data;
 
-  ODEntryArrayUInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_UNSIGNED, dt, false) {}
+  ODEntryArrayUInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_UNSIGNED, dt, false) { data.resize(0xFF); }
   REAL_TYPE                       getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -172,10 +205,14 @@ class ODEntryArrayBool final : public ODEntry {
  public:
   std::vector<uint8_t> data;
 
-  ODEntryArrayBool(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_BOOL, dt, false) {}
+  ODEntryArrayBool(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_BOOL, dt, false) { data.resize(0xFF); }
   REAL_TYPE                       getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
@@ -185,23 +222,38 @@ class ODEntryArrayReal final : public ODEntry {
  public:
   std::vector<REAL_TYPE> data;
 
-  ODEntryArrayReal(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_REAL, dt, false) {}
+  ODEntryArrayReal(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_REAL, dt, false) { data.resize(0xFF); }
   REAL_TYPE                       getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;
 };
 
+
 class ODEntryComplex final : public ODEntry {
  public:
-  std::vector<ODEntry *> data;
+  std::vector<std::unique_ptr<ODEntry>> data;
 
-  ODEntryComplex(ObjectDataType dt) : ODEntry(ObjectClassType::COMPLEX, dt, false) {}
-  REAL_TYPE                     getNumericValue() override;
+  ODEntryComplex(const ODEntryComplex &);
+  ODEntryComplex(ODEntryComplex &&) = delete;
+
+  ODEntryComplex &operator=(const ODEntryComplex &) = delete;
+  ODEntryComplex &operator=(ODEntryComplex &&) = delete;
+
+  ODEntryComplex(ObjectDataType dt);
+  REAL_TYPE getNumericValue() override;
+  void setFromString(std::string str, uint8_t subIndex = 0) override;
+  std::string toString() override;
 
   friend class ODEntryContainer;
+
+  std::unique_ptr<ODEntry> clone() override;
 
  private:
   void clone(void *pos) override;

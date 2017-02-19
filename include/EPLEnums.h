@@ -74,6 +74,7 @@ enum class ObjectCategory {
  * \brief The DATA type of the entry
  */
 enum class ObjectDataType {
+  UNDEF   = 0x0000,
   BOOLEAN = 0x0001,
   INTEGER8,
   INTEGER16,
@@ -212,9 +213,11 @@ enum class ObjectAccess {
  * \brief Describes how the Entry can be mapped
  */
 enum class ObjectPDOMapping {
-  OPT, //!< \brief Object shall be mappable into a PDO
-  DEF, //!< \brief Object is part of the default mapping (see device profile)
-  NO   //!< \brief Object shall not be mappable into a PDO
+  OPT,  //!< \brief Object shall be mappable into a PDO
+  DEF,  //!< \brief Object is part of the default mapping (see device profile)
+  NO,   //!< \brief Object shall not be mappable into a PDO
+  TPDO, //!< \brief Object may be mapped into TPDO only
+  RPDO  //!< \brief Object may be mapped into RPDO only
 };
 
 
@@ -351,12 +354,7 @@ enum class AsyncSendPriority {
   LOWEST  = 0b000
 };
 
-enum class SDOResConnectionType {
-  NO_CONNECTION    = 0,
-  INITIALISATION   = 1,
-  CONNECTION_VALID = 2,
-  ERROR_RESPONSE   = 3
-};
+enum class SDOResConnectionType { NO_CONNECTION = 0, INITIALISATION = 1, CONNECTION_VALID = 2, ERROR_RESPONSE = 3 };
 
 
 enum class SDOSndConnectionType {
@@ -366,12 +364,7 @@ enum class SDOSndConnectionType {
   CONNECTION_VALID_WAR = 3
 };
 
-enum class SDOSegmentation {
-  EXPEDITED_TRANSFER    = 0,
-  INITIATE_SGE_TRANSFER = 1,
-  SEGMENT               = 2,
-  END_SEG_TRANSFER      = 3
-};
+enum class SDOSegmentation { EXPEDITED_TRANSFER = 0, INITIATE_SGE_TRANSFER = 1, SEGMENT = 2, END_SEG_TRANSFER = 3 };
 
 /*!
  * \brief Command ID
@@ -392,5 +385,4 @@ enum class SDOCommandID {
   BEGIN_MANUFACTURER_SPECIFIC    = 0x80,
   END_MANUFACTURER_SPECIFIC      = 0xFF
 };
-
 }

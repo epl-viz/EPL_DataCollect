@@ -117,6 +117,7 @@ add_definitions(-DWS_NORETURN=) # For some reason wireshark needs this
 find_package( Git              REQUIRED )
 find_package( PythonInterp 3.5 REQUIRED ) # Exec python with PYTHON_EXECUTABLE
 find_package( PythonLibs   3.5 REQUIRED )
+find_package( TinyXML2     4.0 REQUIRED )
 find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
 find_package( PkgConfig        REQUIRED )
@@ -176,6 +177,7 @@ ExternalProject_Add( liblibwireshark
 #    "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
    "-DCMAKE_INSTALL_PREFIX=${LIBLIBW_INSTALL_DIR}"
    "-DENABLE_EXAMPLES=OFF"
+   "-DWireshark_DIR=${Wireshark_DIR}"
 #    -DDISABLE_TESTS=ON
 #    -DENABLE_CODE_COVERAGE=OFF
 )
@@ -197,7 +199,11 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/dataCollect"
   NAME         "epl_DataCollect"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-  DEPENDENCIES ${PYTHON_LIBRARIES} Threads::Threads ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static stdc++fs
+  DEPENDENCIES
+    ${PYTHON_LIBRARIES}
+    Threads::Threads stdc++fs
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static
+    TinyXML2::TinyXML2
 )
 
 foreach( I IN ITEMS protocolValidator python timeSeries )

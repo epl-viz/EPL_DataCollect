@@ -30,6 +30,7 @@
 
 #include "InputParser.hpp"
 #include "EPLEnum2Str.hpp"
+#include <StringHash.hpp>
 #include <epan/address_types.h>
 #include <epan/print.h>
 #include <epan/proto.h>
@@ -243,7 +244,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
   if (!hi->name || !hi->abbrev)
     return;
 
-  switch (jenkinsHash(hi->abbrev)) {
+  switch (hashFunc(hi->abbrev)) {
     /*
      * Replace regex
      * 1. '[\t]+\{[\t ]*&[^,]+,\n'                                    ==> ''

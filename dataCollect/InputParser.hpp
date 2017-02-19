@@ -294,34 +294,5 @@ void debugFN(parserData *d, field_info *fi, std::string str);
 
 void foreachFunc(proto_tree *node, gpointer data);
 void foreachEPLFunc(proto_tree *node, gpointer data);
-
-inline size_t jenkinsHash(char const *data) {
-  size_t hash = 0;
-  while (*data != 0) {
-    hash += static_cast<size_t>(*data);
-    hash += hash << 10;
-    hash ^= hash >> 6;
-    ++data;
-  }
-  hash += hash << 3;
-  hash ^= hash >> 11;
-  hash += hash << 15;
-  return hash;
-}
-
-constexpr size_t jenkinsHash(char const *data, size_t n) {
-  size_t hash = 0;
-  for (size_t i = 0; i < n; ++i) {
-    hash += static_cast<size_t>(data[i]);
-    hash += hash << 10;
-    hash ^= hash >> 6;
-  }
-  hash += hash << 3;
-  hash ^= hash >> 11;
-  hash += hash << 15;
-  return hash;
-}
-
-constexpr size_t operator"" _h(char const *data, size_t n) { return jenkinsHash(data, n); }
 }
 }

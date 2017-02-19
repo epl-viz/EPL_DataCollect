@@ -24,57 +24,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file ODDescription.hpp
- * \brief Contains class ODDescription
+ * \file XDDParser.hpp
+ * \brief Contains class XDDParser
  */
 
 #pragma once
 
 #include "defines.hpp"
-#include "ODEntryDescription.hpp"
-#include <unordered_map>
+#include <stack>
+#include <string>
+#include <tinyxml2.h>
 
 namespace EPL_DataCollect {
 
+class OD;
+
 /*!
-  * class ODDescription
-  * \brief Main high level structure describing the OD of ONE Node
-  *
-  * This structure is generated and managed by the Wireshark backend.
-  * For each node one object is created.
-  * Each dissected packet in the Wireshark backend and C++ backend Packet class has a
-  * pointer to its corresponding ODDescription.
-  * It is the responsibility of the CycleBuilder to interpret the Packet data with
-  * the information of this struct.
-  */
-class ODDescription final {
+ * \brief Class for parsing XDD and XDC files
+ * Has only one static parsing function
+ */
+class XDDParser final {
  public:
-  typedef std::unordered_map<uint16_t, ODEntryDescription> MAP;
-  typedef std::unordered_map<uint16_t, ObjectDataType>     TYPES_MAP;
+  enum ErrorCode {
+    SUCCESS = 0,
+    FILE_DOES_NOT_EXIST,
+    FILE_IS_NOT_A_REGUAR_FILE,
+    FAILED_TO_PARSE_XML,
+    FILE_IS_NOT_A_VALID_XDD
+  };
 
- private:
-  MAP       entries;
-  TYPES_MAP typesMap;
+  XDDParser() = delete;
 
-  mockable MAP &getEntries() noexcept;
-
- public:
-  ODDescription()  = default;
-  ~ODDescription() = default;
-
-  ODDescription(const ODDescription &) = default;
-  ODDescription(ODDescription &&)      = default;
-
-  ODDescription &operator=(const ODDescription &) = default;
-  ODDescription &operator=(ODDescription &&) = default;
-
-  mockable bool exists(uint16_t index) noexcept;
-
-  mockable bool setEntry(uint16_t index, ODEntryDescription desc) noexcept;
-  mockable bool overrideEntry(uint16_t index, ODEntryDescription desc) noexcept;
-  mockable ODEntryDescription *getEntry(uint16_t index) noexcept;
-  mockable void applyDesc(ODDescription &desc) noexcept;
-
-  mockable TYPES_MAP *getTypesMap() noexcept;
+  static ErrorCode parseXDD(OD *od, std::string str);
 };
 }

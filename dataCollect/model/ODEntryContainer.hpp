@@ -96,8 +96,8 @@ class ODEntryContainer final {
   template <class C>
   C *getData() noexcept;
 
-  ODEntry *operator*() noexcept;
-  ODEntry *operator->() noexcept;
+  inline ODEntry *operator*() noexcept { return getData<ODEntry>(); }
+  inline ODEntry *operator->() noexcept { return getData<ODEntry>(); }
 };
 
 /*!
@@ -122,6 +122,9 @@ C *ODEntryContainer::init(ObjectDataType type) noexcept {
 }
 
 constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept {
+  if (ot == ObjectType::RECORD)
+    return ObjectClassType::COMPLEX;
+
   if (ot == ObjectType::ARRAY) {
     switch (dt) {
       case ObjectDataType::BOOLEAN: return ObjectClassType::ARRAY_BOOL;

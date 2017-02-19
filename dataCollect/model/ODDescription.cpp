@@ -109,4 +109,9 @@ void ODDescription::applyDesc(ODDescription &desc) noexcept {
  * \returns The entries of the OD Description as a map
  */
 ODDescription::MAP &ODDescription::getEntries() noexcept { return entries; }
+
+/*!
+ * \brief Returns the types map used for parsing XDDs
+ */
+ODDescription::TYPES_MAP *ODDescription::getTypesMap() noexcept { return &typesMap; }
 }

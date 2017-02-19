@@ -34,6 +34,7 @@
 #include "defines.hpp"
 #include "ODEntryContainer.hpp"
 #include "EPLEnums.h"
+#include <vector>
 
 namespace EPL_DataCollect {
 
@@ -41,19 +42,23 @@ namespace EPL_DataCollect {
   * \brief Description of a specific OD entry
   */
 struct ODEntryDescription final {
-  uint16_t         index    = 0;                   //!< \brief The 16bit Index of the OD Entry
-  ObjectType       type     = ObjectType::NULL_OT; //!< \brief The Object type (see EPSG DS 301 v1.3.0 Section 6.2.1)
-  std::string      name     = "<UNDEFINED>";
-  ObjectDataType   dataType = ObjectDataType::BOOLEAN;
-  ObjectCategory   category = ObjectCategory::NOT_RELEVANT;
-  ObjectAccess     access   = ObjectAccess::CONST;
+  bool             isSubEntry = false;
+  uint16_t         index      = 0;                   //!< \brief The 16bit Index of the OD Entry
+  ObjectType       type       = ObjectType::NULL_OT; //!< \brief The Object type (see EPSG DS 301 v1.3.0 Section 6.2.1)
+  std::string      name       = "<UNDEFINED>";
+  ObjectDataType   dataType   = ObjectDataType::UNDEF;
+  ObjectCategory   category   = ObjectCategory::NOT_RELEVANT;
+  ObjectAccess     access     = ObjectAccess::CONST;
+  ObjectPDOMapping pdo        = ObjectPDOMapping::NO;
   ODEntryContainer valueMin;
   ODEntryContainer valueMax;
   ODEntryContainer defaultValue;
 
+  std::vector<ODEntryDescription> subEntries;
+
   ODEntryDescription() = delete;
   ODEntryDescription(ObjectType t, ObjectDataType dt)
-      : type(t), dataType(dt), valueMin(dataType), valueMax(dataType), defaultValue(dataType) {}
+      : type(t), dataType(dt), valueMin(dataType, type), valueMax(dataType, type), defaultValue(dataType, type) {}
   ~ODEntryDescription() = default;
 
   ODEntryDescription(const ODEntryDescription &) = default;

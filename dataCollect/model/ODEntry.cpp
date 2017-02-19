@@ -29,6 +29,7 @@
  */
 
 #include "ODEntry.hpp"
+#include "ODEntryContainer.hpp"
 
 namespace EPL_DataCollect {
 
@@ -73,6 +74,39 @@ ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue() { return 0; }
 ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue() { return 0; }
 ODEntry::REAL_TYPE ODEntryComplex::getNumericValue() { return 0; }
 
+inline bool strToBool(std::string str) {
+  return str == "true" || str == "True" || str == "TRUE" || str == "1" || str == "ON" || str == "on";
+}
+
+void ODEntryInt::setFromString(std::string str, uint8_t) { data = std::stol(str, nullptr, 0); }
+void ODEntryUInt::setFromString(std::string str, uint8_t) { data = std::stoul(str, nullptr, 0); }
+void ODEntryBool::setFromString(std::string str, uint8_t) { data = strToBool(str); }
+void ODEntryReal::setFromString(std::string str, uint8_t) { data = std::stod(str); }
+void ODEntryString::setFromString(std::string str, uint8_t) { data = str; }
+void ODEntryArrayInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stol(str); }
+void ODEntryArrayUInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stoul(str); }
+void ODEntryArrayBool::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = strToBool(str) ? 1 : 0; }
+void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stod(str); }
+void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
+  if (subIndex >= data.size())
+    return;
+
+  data[subIndex]->setFromString(str);
+}
+
+
+std::string ODEntryInt::toString() { return std::to_string(data); }
+std::string ODEntryUInt::toString() { return std::to_string(data); }
+std::string ODEntryBool::toString() { return data ? "true" : "false"; }
+std::string ODEntryReal::toString() { return std::to_string(data); }
+std::string ODEntryString::toString() { return data; }
+std::string ODEntryArrayInt::toString() { return "Int data array"; }
+std::string ODEntryArrayUInt::toString() { return "Unsigned int data array"; }
+std::string ODEntryArrayBool::toString() { return "Bool data array"; }
+std::string ODEntryArrayReal::toString() { return "Real data array"; }
+std::string ODEntryComplex::toString() { return "Complex data"; }
+
+
 void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); };
 void ODEntryUInt::clone(void *pos) { new (pos) ODEntryUInt(*this); };
 void ODEntryBool::clone(void *pos) { new (pos) ODEntryBool(*this); };
@@ -83,4 +117,31 @@ void ODEntryArrayUInt::clone(void *pos) { new (pos) ODEntryArrayUInt(*this); };
 void ODEntryArrayBool::clone(void *pos) { new (pos) ODEntryArrayBool(*this); };
 void ODEntryArrayReal::clone(void *pos) { new (pos) ODEntryArrayReal(*this); };
 void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
+
+std::unique_ptr<ODEntry> ODEntryInt::clone() { return std::make_unique<ODEntryInt>(*this); };
+std::unique_ptr<ODEntry> ODEntryUInt::clone() { return std::make_unique<ODEntryUInt>(*this); };
+std::unique_ptr<ODEntry> ODEntryBool::clone() { return std::make_unique<ODEntryBool>(*this); };
+std::unique_ptr<ODEntry> ODEntryReal::clone() { return std::make_unique<ODEntryReal>(*this); };
+std::unique_ptr<ODEntry> ODEntryString::clone() { return std::make_unique<ODEntryString>(*this); };
+std::unique_ptr<ODEntry> ODEntryArrayInt::clone() { return std::make_unique<ODEntryArrayInt>(*this); };
+std::unique_ptr<ODEntry> ODEntryArrayUInt::clone() { return std::make_unique<ODEntryArrayUInt>(*this); };
+std::unique_ptr<ODEntry> ODEntryArrayBool::clone() { return std::make_unique<ODEntryArrayBool>(*this); };
+std::unique_ptr<ODEntry> ODEntryArrayReal::clone() { return std::make_unique<ODEntryArrayReal>(*this); };
+std::unique_ptr<ODEntry> ODEntryComplex::clone() { return std::make_unique<ODEntryComplex>(*this); };
+
+
+ODEntryComplex::ODEntryComplex(const ODEntryComplex &c) : ODEntry(ObjectClassType::COMPLEX, c.getDataType(), false) {
+  for (auto &i : c.data) {
+    if (!i.get())
+      continue;
+
+    data.emplace_back(i->clone());
+  }
+}
+
+ODEntryComplex::ODEntryComplex(ObjectDataType dt) : ODEntry(ObjectClassType::COMPLEX, dt, false) {
+  data.resize(0xFF);
+  for (auto &i : data)
+    i = nullptr;
+}
 }

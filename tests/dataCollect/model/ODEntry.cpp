@@ -114,7 +114,9 @@ TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
   auto             ptr   = *ct;
   ODEntryInt *     t     = ct.getData<ODEntryInt>();
   ODEntry *        entry = *ct;
-  t->data                = 42;
+  t->setFromString("42");
+  REQUIRE(t->data == 42);
+  REQUIRE(t->toString() == "42");
   REQUIRE(t->getType() == ObjectClassType::INTEGER);
   REQUIRE(t->getType() == ct->getType());
   REQUIRE(t->getDataType() == ObjectDataType::INTEGER32);
@@ -122,6 +124,7 @@ TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
   REQUIRE(t->isNumericValue() == true);
   REQUIRE(checkDouble(t->getNumericValue(), 42) == true);
   REQUIRE(ptr == entry);
+  REQUIRE(t->clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -133,11 +136,14 @@ TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
 TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
   ODEntryContainer ct(ObjectDataType::UNSIGNED16);
   ODEntryUInt &    t = *ct.getData<ODEntryUInt>();
-  t.data             = 42;
+  t.setFromString("0x2A");
+  REQUIRE(t.data == 42);
+  REQUIRE(t.toString() == "42");
   REQUIRE(t.getType() == ObjectClassType::UNSIGNED);
   REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED16);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   ODEntryContainer ct2(ct);
   ODEntryContainer ct3(std::move(ct));
@@ -150,11 +156,14 @@ TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
 TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
   ODEntryContainer ct(ObjectDataType::BOOLEAN);
   ODEntryBool &    t = *ct.getData<ODEntryBool>();
-  t.data             = true;
+  t.setFromString("True");
+  REQUIRE(t.data == true);
+  REQUIRE(t.toString() == "true");
   REQUIRE(t.getType() == ObjectClassType::BOOL);
   REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 1) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -167,11 +176,14 @@ TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
 TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
   ODEntryContainer ct(ObjectDataType::REAL32);
   ODEntryReal &    t = *ct.getData<ODEntryReal>();
-  t.data             = 42;
+  t.setFromString("42");
+  REQUIRE(checkDouble(t.data, 42) == true);
+  REQUIRE(t.toString().substr(0, 2) == "42");
   REQUIRE(t.getType() == ObjectClassType::REAL);
   REQUIRE(t.getDataType() == ObjectDataType::REAL32);
   REQUIRE(t.isNumericValue() == true);
   REQUIRE(checkDouble(t.getNumericValue(), 42) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -184,11 +196,14 @@ TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
 TEST_CASE("Testing ODEntryString", "[ODEntry]") {
   ODEntryContainer ct(ObjectDataType::VISIBLE_STRING);
   ODEntryString &  t = *ct.getData<ODEntryString>();
-  t.data             = "Hello world";
+  t.setFromString("Hello world");
+  REQUIRE(t.data == "Hello world");
+  REQUIRE(t.toString() == "Hello world");
   REQUIRE(t.getType() == ObjectClassType::STRING);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -209,10 +224,14 @@ TEST_CASE("Testing ODEntryString", "[ODEntry]") {
 TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
   ODEntryContainer ct(ObjectDataType::INTEGER40, ObjectType::ARRAY);
   ODEntryArrayInt &t = *ct.getData<ODEntryArrayInt>();
+  t.setFromString("11", 5);
+  REQUIRE(t.data[5] == 11);
+  REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::ARRAY_INTEGER);
   REQUIRE(t.getDataType() == ObjectDataType::INTEGER40);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -225,10 +244,14 @@ TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
 TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
   ODEntryContainer  ct(ObjectDataType::UNSIGNED56, ObjectType::ARRAY);
   ODEntryArrayUInt &t = *ct.getData<ODEntryArrayUInt>();
+  t.setFromString("11", 5);
+  REQUIRE(t.data[5] == 11);
+  REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::ARRAY_UNSIGNED);
   REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED56);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -241,10 +264,14 @@ TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
 TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
   ODEntryContainer  ct(ObjectDataType::BOOLEAN, ObjectType::ARRAY);
   ODEntryArrayBool &t = *ct.getData<ODEntryArrayBool>();
+  t.setFromString("TRUE", 5);
+  REQUIRE(t.data[5] == true);
+  REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::ARRAY_BOOL);
   REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -257,10 +284,14 @@ TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
 TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
   ODEntryContainer  ct(ObjectClassType::ARRAY_REAL, ObjectDataType::VISIBLE_STRING);
   ODEntryArrayReal &t = *ct.getData<ODEntryArrayReal>();
+  t.setFromString("11", 5);
+  REQUIRE(checkDouble(t.data[5], 11) == true);
+  REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::ARRAY_REAL);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
@@ -273,10 +304,16 @@ TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
 TEST_CASE("Testing ODEntryComplex", "[ODEntry]") {
   ODEntryContainer ct(ObjectClassType::COMPLEX, ObjectDataType::VISIBLE_STRING);
   ODEntryComplex & t = *ct.getData<ODEntryComplex>();
+  //   t.data.emplace_back(std::make_unique<ODEntryInt>(ObjectDataType::INTEGER64));
+  //   t.setFromString("1", 11);
+  //   t.setFromString("33", 0);
+  //   REQUIRE(reinterpret_cast<ODEntryInt *>(t.data[0].get())->data == 33);
+  REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::COMPLEX);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
