@@ -32,14 +32,18 @@
 
 namespace EPL_DataCollect {
 
+using namespace WiresharkParser;
+using PT  = PacketType;
+using AID = ASndServiceID;
+
 /*!
  * \brief The constructor
  * \param data Pointer to the paresed wireshark data
  * \warning data must not be nullptr
  */
-Packet::Packet(const WiresharkParser::parserData *const data) {
+Packet::Packet(const parserData *const data) {
   if (!data) {
-    type         = PacketType::UNDEF;
+    type         = PT::UNDEF;
     wiresharkSTR = "THE BEGINNING OF TIME";
     miscData     = "THE BEGINNING OF TIME";
     return;
@@ -51,6 +55,33 @@ Packet::Packet(const WiresharkParser::parserData *const data) {
   wiresharkSTR = data->wsString;
   miscData     = data->wsOther;
   timeStamp    = data->tp;
+
+  switch (type) {
+    case PT::START_OF_CYCLE: SoC = std::make_shared<s_SoC>(data->SoC); break;
+    case PT::START_OF_ASYNC: SoA = std::make_shared<s_SoA>(data->SoA); break;
+    case PT::POLL_REQUEST: PReq  = std::make_shared<s_PReq>(data->PReq); break;
+    case PT::POLL_RESPONSE: PRes = std::make_shared<s_PRes>(data->PRes); break;
+    case PT::ASYNC_SEND:
+      ASnd                         = std::make_shared<s_ASnd>();
+      ASnd->RequestedServiceTarget = data->ASnd.RequestedServiceTarget;
+      ASnd->RequestedServiceID     = data->ASnd.RequestedServiceID;
+      ASnd->Data                   = data->ASnd.Data;
+
+      switch (data->ASnd.RequestedServiceID) {
+        case AID::IDENT_RESPONSE: IdentResponse   = std::make_shared<s_IResp>(data->ASnd.IdentResponse); break;
+        case AID::STATUS_RESPONSE: StatusResponse = std::make_shared<s_StatResp>(data->ASnd.StatusResponse); break;
+        case AID::NMT_REQUEST: NMTRequest         = std::make_shared<s_NMTRequest>(data->ASnd.NMTRequest); break;
+        case AID::NMT_COMMAND: NMTCmd             = std::make_shared<s_NMTCmd>(data->ASnd.NMTCmd); break;
+        case AID::SDO: SDO                        = std::make_shared<s_SDO>(data->ASnd.SDO); break;
+        case AID::BEGIN_MANUFACTURER_SPECIFIC:
+        case AID::END_MANUFACTURER_SPECIFIC:
+        case AID::RESERVED_0: break;
+      }
+      break;
+    case PT::AINV:
+    case PT::AMNI:
+    case PT::UNDEF: break;
+  }
 }
 
 Packet::~Packet() {}

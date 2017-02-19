@@ -215,6 +215,8 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE((cd.flags & InputHandler::ERROR) == 0);
   REQUIRE(cd.packets.size() == 2);
   REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+  REQUIRE(cd.packets[0].SoC.get() != nullptr);
+  REQUIRE(cd.packets[0].SoC->RelativeTime == 0);
 
   cd.flags = 0;
   cd.num   = 2;
@@ -251,6 +253,12 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE((cd.flags & InputHandler::ERROR) == 0);
   REQUIRE(cd.packets.size() == 3);
   REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
+  REQUIRE(cd.packets[2].getType() == PacketType::ASYNC_SEND);
+  REQUIRE(cd.packets[2].ASnd.get() != nullptr);
+  REQUIRE(cd.packets[2].ASnd->RequestedServiceID == ASndServiceID::IDENT_RESPONSE);
+  REQUIRE(cd.packets[2].IdentResponse.get() != nullptr);
+  REQUIRE(cd.packets[2].IdentResponse->Profile == 401);
+  REQUIRE(cd.packets[2].IdentResponse->VendorId == 0x0100006C);
 
   cd.flags = 0;
   cd.num   = 2;

@@ -58,6 +58,11 @@ Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
     pData.workingData.eplFrameName = &cfg.eplFrameName;
   }
 
+  char *wsStr = nullptr;
+  ws_dissect_tostr(diss, &wsStr);
+  pData.workingData.wsString = wsStr;
+  g_free(wsStr);
+
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
   Packet packet(&pData.workingData);

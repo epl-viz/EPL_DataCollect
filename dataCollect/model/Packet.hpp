@@ -36,6 +36,7 @@
 #include "PacketDiff.hpp"
 #include "EPLEnums.h"
 #include <chrono>
+#include <memory>
 #include <plf_colony.h>
 #include <vector>
 
@@ -47,7 +48,27 @@ namespace EPL_DataCollect {
  */
 class Packet {
  public:
+  struct ASnd;
+
+  using s_SoC        = struct WiresharkParser::parserData::SoC;
+  using s_PReq       = struct WiresharkParser::parserData::PReq;
+  using s_PRes       = struct WiresharkParser::parserData::PRes;
+  using s_SoA        = struct WiresharkParser::parserData::SoA;
+  using s_ASnd       = struct ASnd;
+  using s_IResp      = struct WiresharkParser::parserData::ASnd::IdentResponse;
+  using s_NMTRequest = struct WiresharkParser::parserData::ASnd::NMTRequest;
+  using s_NMTCmd     = struct WiresharkParser::parserData::ASnd::NMTCmd;
+  using s_StatResp   = struct WiresharkParser::parserData::ASnd::StatusResponse;
+  using s_SyncResp   = struct WiresharkParser::parserData::ASnd::SyncResponse;
+  using s_SDO        = struct WiresharkParser::parserData::ASnd::SDO;
+
   typedef std::chrono::system_clock::time_point TIME_POINT;
+
+  struct ASnd {
+    ASndServiceID        RequestedServiceID     = ASndServiceID::RESERVED_0;
+    uint8_t              RequestedServiceTarget = UINT8_MAX;
+    std::vector<uint8_t> Data;
+  };
 
  private:
   PacketType              type = PacketType::UNDEF;
@@ -62,6 +83,18 @@ class Packet {
   TIME_POINT timeStamp;
 
  public:
+  std::shared_ptr<s_SoC>        SoC            = nullptr;
+  std::shared_ptr<s_PReq>       PReq           = nullptr;
+  std::shared_ptr<s_PRes>       PRes           = nullptr;
+  std::shared_ptr<s_SoA>        SoA            = nullptr;
+  std::shared_ptr<s_ASnd>       ASnd           = nullptr;
+  std::shared_ptr<s_IResp>      IdentResponse  = nullptr;
+  std::shared_ptr<s_NMTRequest> NMTRequest     = nullptr;
+  std::shared_ptr<s_NMTCmd>     NMTCmd         = nullptr;
+  std::shared_ptr<s_StatResp>   StatusResponse = nullptr;
+  std::shared_ptr<s_SyncResp>   SyncResponse   = nullptr;
+  std::shared_ptr<s_SDO>        SDO            = nullptr;
+
   Packet() = delete;
   virtual ~Packet();
 
