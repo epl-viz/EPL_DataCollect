@@ -32,11 +32,7 @@ def getAmountOfCN():
   return currentCycle.getNumNodes()
 
 def getData(key):
-  cdef char* c_index
-  if isinstance(key, str):
-    py_byte_string = key.encode('UTF-8')
-    c_index = py_byte_string
-    return currentCycle.getData(c_index)  # return None Type if index no string
+  pass
 
 def setData(key, data):
   """

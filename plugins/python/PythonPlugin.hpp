@@ -65,6 +65,10 @@ class PythonPlugin : public PluginBase {
   bool setStorage(const char *index, const char *var);
   std::string getStorage(const char *index);
 
+  std::string getData(const char *index);
+  bool setDataStr(const char *index, const char *var);
+  bool setDataInt(const char *index, int var);
+
  protected:
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);

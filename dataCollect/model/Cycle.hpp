@@ -86,11 +86,6 @@ class Cycle {
   mockable CycleStorageBase *getCycleStorage(std::string id) noexcept;
   mockable bool registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept;
 
-  std::string getData(const char *index);
-  bool setDataStr(const char *index, const char *var);
-  bool setDataInt(const char *index, int var);
-  bool setDataBool(const char *index, bool var);
-
   bool operator==(const Cycle &b) const;
 
 #if EPL_DC_ENABLE_MOCKING == 0

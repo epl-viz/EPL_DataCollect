@@ -128,9 +128,7 @@ cdef class Plugin:
     cdef int c_type
     cdef char* c_index
 
-    if (type == bool):
-      c_type = 0
-    elif (type == int):
+    if (type == int):
       c_type = 1
     elif (type == str):
       c_type = 2
@@ -146,9 +144,6 @@ cdef class Plugin:
 
   cpdef registerString(self, index):
     return self.registerCycleStorage(index, str)
-
-  cpdef registerBool(self, index):
-    return self.registerCycleStorage(index, bool)
 
   cpdef getStorage(self, index): #THIS METHOD returns stuff from the own storage of the plugin
     cdef char* c_index
@@ -166,6 +161,27 @@ cdef class Plugin:
       c_index = py_byte_string_index
       c_var = py_byte_string_var
       return self.getPythonPlugin().setStorage(c_index, c_var)
+    return False
+
+  cpdef getData(self, index):
+    cdef char* c_index
+    if isinstance(index, str):
+      py_byte_string = index.encode('UTF-8')
+      c_index = py_byte_string
+      return self.getPythonPlugin().getData(c_index)
+
+  cpdef setData(self, index, var):
+    cdef char* c_index
+    cdef char* c_var  # if necessary
+    if isinstance(index, str):
+      py_byte_string = index.encode('UTF-8')
+      c_index = py_byte_string
+      if isinstance(var, str):
+        py_byte_string_var = var.encode('UTF-8')
+        c_var = py_byte_string_var
+        return self.getPythonPlugin().setDataStr(c_index, c_var)
+      elif isinstance(var, int):
+        return self.getPythonPlugin().setDataInt(c_index, var)
     return False
   ########################################################################################
 

@@ -13,6 +13,9 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     bool registerPyCycleStorage(const char*, int)
     bool setStorage(const char*, const char*)
     string getStorage(const char*)
+    string getData(const char*)
+    bool setDataStr(const char*, const char*)
+    bool setDataInt(const char*, int)
 
     @staticmethod
     CCycle.Cycle* getCurrentCycle()

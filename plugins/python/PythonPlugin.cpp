@@ -188,5 +188,22 @@ std::string PythonPlugin::getStorage(const char *index) {
   (void)index;
   return std::string("IT IS false") + std::string(index);
 };
+
+std::string PythonPlugin::getData(const char *index) {
+  (void)index;
+  return "";
+};
+
+bool PythonPlugin::setDataStr(const char *index, const char *var) {
+  (void)index;
+  (void)var;
+  return true;
+};
+
+bool PythonPlugin::setDataInt(const char *index, int var) {
+  (void)index;
+  (void)var;
+  return true;
+};
 }
 }
