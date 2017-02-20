@@ -50,17 +50,17 @@ class Packet {
  public:
   struct ASnd;
 
-  using s_SoC        = struct WiresharkParser::parserData::SoC;
-  using s_PReq       = struct WiresharkParser::parserData::PReq;
-  using s_PRes       = struct WiresharkParser::parserData::PRes;
-  using s_SoA        = struct WiresharkParser::parserData::SoA;
-  using s_ASnd       = struct ASnd;
-  using s_IResp      = struct WiresharkParser::parserData::ASnd::IdentResponse;
-  using s_NMTRequest = struct WiresharkParser::parserData::ASnd::NMTRequest;
-  using s_NMTCmd     = struct WiresharkParser::parserData::ASnd::NMTCmd;
-  using s_StatResp   = struct WiresharkParser::parserData::ASnd::StatusResponse;
-  using s_SyncResp   = struct WiresharkParser::parserData::ASnd::SyncResponse;
-  using s_SDO        = struct WiresharkParser::parserData::ASnd::SDO;
+  typedef struct WiresharkParser::parserData::SoC                  s_SoC;
+  typedef struct WiresharkParser::parserData::PReq                 s_PReq;
+  typedef struct WiresharkParser::parserData::PRes                 s_PRes;
+  typedef struct WiresharkParser::parserData::SoA                  s_SoA;
+  typedef struct ASnd                                              s_ASnd;
+  typedef struct WiresharkParser::parserData::ASnd::IdentResponse  s_IResp;
+  typedef struct WiresharkParser::parserData::ASnd::NMTRequest     s_NMTRequest;
+  typedef struct WiresharkParser::parserData::ASnd::NMTCmd         s_NMTCmd;
+  typedef struct WiresharkParser::parserData::ASnd::StatusResponse s_StatResp;
+  typedef struct WiresharkParser::parserData::ASnd::SyncResponse   s_SyncResp;
+  typedef struct WiresharkParser::parserData::ASnd::SDO            s_SDO;
 
   typedef std::chrono::system_clock::time_point TIME_POINT;
 

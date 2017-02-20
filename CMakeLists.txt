@@ -75,7 +75,7 @@ run_git()
 add_compiler(
   GNU MIN_VERSION "6.2"
   ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas"
-  DEBUG      "-O0 " ${COVERAGE_COMPILER_FLAG}
+  DEBUG      "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
   C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -std=c11"
