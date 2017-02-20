@@ -171,6 +171,9 @@ class InputHandler {
 
   mockable std::vector<Packet> getCyclePackets(uint32_t cycleNum, milliseconds timeout = milliseconds(999999)) noexcept;
 
+  mockable bool getReachedEnd(uint32_t target) noexcept;
+  mockable bool getIsLoopRunning() const noexcept { return buildLoopIsRunning; }
+
   mockable void setDissector(ws_dissect_t *dissPTR);
 
   mockable void setConfig(Config newCFG) noexcept;

@@ -87,7 +87,7 @@ class CaptureInstance {
   mockable int setupLoop();
 
  public:
-  CaptureInstance() : cycleContainer(this), builder(&iHandler) {}
+  CaptureInstance() : cycleContainer(this), builder(this) {}
   virtual ~CaptureInstance();
 
   CaptureInstance(const CaptureInstance &) = delete;
@@ -112,6 +112,7 @@ class CaptureInstance {
   mockable SnapshotManager *getSnapshotManager() noexcept;
   mockable PluginManager *getPluginManager() noexcept;
   mockable CycleContainer *getCycleContainer() noexcept;
+  mockable InputHandler *getInputHandler() noexcept;
 
   mockable CycleBuilder *getCycleBuilder() noexcept;
 

@@ -154,17 +154,14 @@ bool Cycle::registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBas
 
 
 /*!
-   * \brief Updates the packet list and increases the cycle counter.
-   * This will clear the old packet list and increment the cycle counter by one.
+   * \brief Updates the packet list.
+   * This will clear the old packet.
    * \note This function will NOT change the OD entries!
    *
    * C++: friend class CycleBuilder
    * \param  newPackets The packets to apply
    */
-void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept {
-  packets = newPackets;
-  cycleNum++;
-}
+void Cycle::updatePackets(std::vector<Packet> newPackets) noexcept { packets = newPackets; }
 
 /*!
    * \brief Adds the node with the given index to the cycles node map

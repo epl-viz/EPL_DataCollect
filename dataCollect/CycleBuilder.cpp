@@ -29,7 +29,9 @@
  */
 
 #include "CycleBuilder.hpp"
+#include "CaptureInstance.hpp"
 #include <chrono>
+#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -43,12 +45,64 @@ CycleBuilder::~CycleBuilder() {
   }
 }
 
-void CycleBuilder::buildNextCycle() noexcept { (void)handlerPTR; }
+void CycleBuilder::buildNextCycle() noexcept {
+  uint32_t currentCycleNum = currentCycle.getCycleNum();
+  uint32_t nextCycleNum    = currentCycleNum + 1;
+
+  if (currentCycleNum == UINT32_MAX) {
+    nextCycleNum = 0;
+  }
+
+  currentCycle.cycleNum = nextCycleNum;
+
+  if (parent->getInputHandler()->getReachedEnd(nextCycleNum)) {
+    reachedEnd = true;
+    return;
+  }
+
+  std::vector<Packet> packets = parent->getInputHandler()->getCyclePackets(nextCycleNum);
+
+  currentCycle.updatePackets(packets);
+
+
+  parent->getPluginManager()->processCycle(&currentCycle);
+
+
+  // Process Events
+  auto events = parent->getEventLog()->pollEvents(appID);
+  for (auto i : events) {
+    currentCycle.events.emplace_back(i);
+  }
+
+  while (true) {
+    uint32_t toRemove = UINT32_MAX;
+
+    for (uint32_t i = 0; i < currentCycle.events.size(); ++i) {
+      EventBase *it = currentCycle.events[i];
+
+      uint32_t maxCycle;
+      it->getCycleRange(nullptr, &maxCycle);
+
+      if (maxCycle < nextCycleNum) {
+        toRemove = i;
+        break;
+      }
+    }
+
+    if (toRemove == UINT32_MAX)
+      break;
+
+    currentCycle.events.erase(currentCycle.events.begin() + toRemove);
+  }
+
+  parent->getSnapshotManager()->registerCycle(currentCycle);
+
+  std::cout << "Cycle " << nextCycleNum << " " << packets.size() << std::endl;
+}
 
 
 /*!
  * \brief Main cycle builder loop. Runs in a seperate thread
- * \todo IMPLEMENT
  */
 void CycleBuilder::buildLoop() noexcept {
 
@@ -58,10 +112,15 @@ void CycleBuilder::buildLoop() noexcept {
     startLoopWait.notify_all();
   }
 
-  //! \todo IMPLEMENT
   while (keepLoopAlive) {
-    std::this_thread::sleep_for(std::chrono::nanoseconds(1000));
     buildNextCycle();
+
+    if (reachedEnd) {
+      std::lock_guard<std::mutex> lk2(stopLoopSignal);
+      isLoopRunning = false;
+      stopLoopWait.notify_all();
+      return;
+    }
   }
 
   std::lock_guard<std::mutex> lk(stopLoopSignal);
@@ -76,6 +135,9 @@ void CycleBuilder::buildLoop() noexcept {
  */
 bool CycleBuilder::startLoop(Cycle startPoint) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  std::unique_lock<std::mutex>          lk1(startLoopSignal);
+
+  appID = parent->getEventLog()->getAppID();
 
   if (isLoopRunning)
     return false;
@@ -86,9 +148,8 @@ bool CycleBuilder::startLoop(Cycle startPoint) noexcept {
   loopThread    = std::thread(&CycleBuilder::buildLoop, this);
 
   while (true) {
-    std::unique_lock<std::mutex> lk(startLoopSignal);
     if (!isLoopRunning) {
-      startLoopWait.wait(lk);
+      startLoopWait.wait(lk1);
     } else {
       break;
     }
@@ -105,6 +166,7 @@ bool CycleBuilder::startLoop(Cycle startPoint) noexcept {
  */
 bool CycleBuilder::stopLoop() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  std::unique_lock<std::mutex>          lk2(stopLoopSignal);
 
   if (!isLoopRunning)
     return false;
@@ -112,9 +174,8 @@ bool CycleBuilder::stopLoop() noexcept {
   keepLoopAlive = false;
 
   while (true) {
-    std::unique_lock<std::mutex> lk(stopLoopSignal);
     if (isLoopRunning) {
-      stopLoopWait.wait(lk);
+      stopLoopWait.wait(lk2);
     } else {
       break;
     }
@@ -140,7 +201,6 @@ bool CycleBuilder::isRunning() noexcept {
  * \return Cycle
  * \param  targetCycle The target cycle
  * \param  start The base cycle to iterate over
- * \todo IMPLEMENT
  */
 Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
@@ -152,7 +212,6 @@ Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
 /*!
  * \brief Returns the last cycle completely processed by the buildLoop
  * \return Cycle
- * \todo IMPLEMENT
  */
 Cycle CycleBuilder::getCurrentCycle() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);

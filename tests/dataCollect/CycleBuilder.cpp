@@ -24,40 +24,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <CaptureInstance.hpp>
 #include <CycleBuilder.hpp>
 #include <InputHandler.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
 
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 using namespace EPL_DataCollect;
 using namespace fakeit;
 
-TEST_CASE("Testing CycleBuilder", "[CycleBuilder]") {
-  Mock<InputHandler> mock;
 
-  CycleBuilder cb(&mock.get());
-  Cycle        c;
+TEST_CASE("Testing loading a cap", "[CycleBuilder]") {
+  CaptureInstance inst;
 
-  SECTION("Test Start Stop") {
-    REQUIRE(cb.startLoop(c) == true);
-    REQUIRE(cb.isRunning() == true);
-    REQUIRE(cb.startLoop(c) == false);
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
 
-    REQUIRE(cb.isRunning() == true);
+  REQUIRE(inst.loadPCAP(file) == 0);
 
-    REQUIRE(cb.stopLoop() == true);
-    REQUIRE(cb.isRunning() == false);
-    REQUIRE(cb.stopLoop() == false);
-    REQUIRE(cb.isRunning() == false);
-  }
-
-  SECTION("Test stubbs") {
-    REQUIRE(cb.seekCycle(16, c) == c);
-    REQUIRE(cb.getCurrentCycle() == Cycle());
-  }
-
-  SECTION("Test Deconstructor") {
-    REQUIRE(cb.startLoop(c) == true);
-    REQUIRE(cb.isRunning() == true);
+  while (inst.getCycleBuilder()->isRunning()) {
+    SLEEP(milliseconds, 500);
   }
 }

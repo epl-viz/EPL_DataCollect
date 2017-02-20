@@ -40,6 +40,7 @@
 namespace EPL_DataCollect {
 
 class CycleBuilder;
+class CaptureInstance;
 
 /*!
   * class Cycle
@@ -75,6 +76,7 @@ class Cycle {
   Cycle &operator=(Cycle &&) = default;
 
   friend CycleBuilder;
+  friend CaptureInstance;
 
   mockable std::vector<EventBase *> getActiveEvents() const noexcept;
   mockable std::vector<Packet> getPackets() const noexcept;

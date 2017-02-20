@@ -26,29 +26,13 @@
 /*!
  * \file SnapshotManager.hpp
  * \brief Contains class SnapshotManager
- * \todo IMPLEMENT
  */
 
 #include "SnapshotManager.hpp"
 
 namespace EPL_DataCollect {
 
-// Constructors/Destructors
-//
-
 SnapshotManager::SnapshotManager() {}
 
 SnapshotManager::~SnapshotManager() {}
-
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
 }

@@ -115,7 +115,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     auto currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
 
     while (true) {
-      if (ws_dissect_next(pData.dissect, &diss) == 0) {
+      auto ret = ws_dissect_next(pData.dissect, &diss);
+      if (ret == 0) {
         pData.parserReachedEnd = true;
         return errorFN();
       }
@@ -172,8 +173,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
 bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept {
   std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
-
-  std::mutex wait;
+  std::mutex                            wait;
 
   while (true) {
     if (std::chrono::system_clock::now() - start > timeout)
@@ -417,6 +417,17 @@ bool InputHandler::stopLoop() {
   }
 
   return true;
+}
+
+bool InputHandler::getReachedEnd(uint32_t target) noexcept {
+  std::lock_guard<std::mutex> accessLock(accessMutex);
+  if (!buildLoopIsRunning)
+    return true;
+
+  if (pData.parserReachedEnd && target > maxQueuedCycle)
+    return true;
+
+  return false;
 }
 
 void InputHandler::setDissector(ws_dissect_t *dissPTR) {

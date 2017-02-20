@@ -70,7 +70,10 @@ int CaptureInstance::setupLoop() {
     return -2;
   }
 
+  startCycle.cycleNum = UINT32_MAX; // Build from start
+
   iHandler.setDissector(dissect);
+  iHandler.startLoop();
 
   if (!builder.startLoop(startCycle)) {
     state = ERRORED;
@@ -130,6 +133,9 @@ int CaptureInstance::stopRecording() noexcept {
     return -1;
   }
 
+  builder.stopLoop();
+  iHandler.stopLoop();
+
   if (dissect) {
     ws_dissect_free(dissect);
     iHandler.setDissector(nullptr);
@@ -139,11 +145,6 @@ int CaptureInstance::stopRecording() noexcept {
   if (capture) {
     ws_capture_close(capture);
     capture = nullptr;
-  }
-
-  if (!builder.stopLoop()) {
-    state = ERRORED;
-    return 2;
   }
 
   if (!pluginManager.reset(this)) {
@@ -232,10 +233,7 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
  * \return The pointer to the EventLog
  */
-EventLog *CaptureInstance::getEventLog() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return &eventLog;
-}
+EventLog *CaptureInstance::getEventLog() noexcept { return &eventLog; }
 
 
 /*!
@@ -243,10 +241,7 @@ EventLog *CaptureInstance::getEventLog() noexcept {
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
  * \return The pointer to the PluginManager
  */
-PluginManager *CaptureInstance::getPluginManager() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return &pluginManager;
-}
+PluginManager *CaptureInstance::getPluginManager() noexcept { return &pluginManager; }
 
 
 /*!
@@ -254,36 +249,31 @@ PluginManager *CaptureInstance::getPluginManager() noexcept {
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
  * \return The pointer to the CycleContainer
  */
-CycleContainer *CaptureInstance::getCycleContainer() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return &cycleContainer;
-}
+CycleContainer *CaptureInstance::getCycleContainer() noexcept { return &cycleContainer; }
 
 /*!
  * \brief Returns the current state of the CaptureInstance
  */
-CaptureInstance::CIstate CaptureInstance::getState() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return state;
-}
+CaptureInstance::CIstate CaptureInstance::getState() noexcept { return state; }
 
 /*!
  * \brief Returns a pointer to the CycleBuilder
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
  * \return  The pointer to the CycleBuilder
  */
-CycleBuilder *CaptureInstance::getCycleBuilder() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return &builder;
-}
+CycleBuilder *CaptureInstance::getCycleBuilder() noexcept { return &builder; }
 
 /*!
  * \brief Returns a pointer to the SnapshotManager
  * \note The pointer is valid for the entire lifetime of the CaptureInstance instance
  * \return The pointer to the SnapshotManager
  */
-SnapshotManager *CaptureInstance::getSnapshotManager() noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  return &snapshotManager;
-}
+SnapshotManager *CaptureInstance::getSnapshotManager() noexcept { return &snapshotManager; }
+
+/*!
+ * \brief Returns a pointer to the InputHandler
+ * \note The pointer is valid for the entire lifetime of the InputHandler instance
+ * \return The pointer to the InputHandler
+ */
+InputHandler *CaptureInstance::getInputHandler() noexcept { return &iHandler; }
 }

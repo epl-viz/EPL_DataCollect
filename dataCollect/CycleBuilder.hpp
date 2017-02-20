@@ -31,12 +31,13 @@
 #pragma once
 
 #include "Cycle.hpp"
-#include "InputHandler.hpp"
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
 namespace EPL_DataCollect {
+
+class CaptureInstance;
 
 /*!
   * class CycleBuilder
@@ -48,7 +49,8 @@ namespace EPL_DataCollect {
   */
 class CycleBuilder {
  private:
-  InputHandler *       handlerPTR = nullptr;
+  CaptureInstance *parent = nullptr;
+
   Cycle                currentCycle;
   std::recursive_mutex accessMutex;
   std::thread          loopThread;
@@ -61,9 +63,13 @@ class CycleBuilder {
   bool isLoopRunning = false;
   bool keepLoopAlive = false;
 
+  bool reachedEnd = false;
+
+  uint32_t appID;
+
  public:
   CycleBuilder() = delete;
-  CycleBuilder(InputHandler *ptr) : handlerPTR(ptr) {}
+  CycleBuilder(CaptureInstance *ptr) : parent(ptr) {}
   virtual ~CycleBuilder();
 
   CycleBuilder(const CycleBuilder &) = delete;

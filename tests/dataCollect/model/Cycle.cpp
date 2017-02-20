@@ -131,7 +131,7 @@ TEST_CASE("Packets are updated correctly") {
     c.updatePackets(newPackets);
 
     REQUIRE(c.getPackets() == newPackets);
-    REQUIRE(c.getCycleNum() == oldCycleNum + 1);
+    REQUIRE(c.getCycleNum() == oldCycleNum);
   }
 }
 

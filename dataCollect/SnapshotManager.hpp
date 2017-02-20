@@ -26,7 +26,6 @@
 /*!
  * \file SnapshotManager.hpp
  * \brief Contains class SnapshotManager
- * \todo IMPLEMENT
  */
 
 #pragma once
@@ -41,37 +40,10 @@ namespace EPL_DataCollect {
   * \brief Internal class for saving strategically important cycles
   */
 
-class SnapshotManager {
+class SnapshotManager final {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
   SnapshotManager();
-
-  /*!
-   * Empty Destructor
-   */
-  virtual ~SnapshotManager();
-
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
+  ~SnapshotManager();
 
   /*!
    * \brief Notifies the SnapshotManager about a new cycle
@@ -90,40 +62,5 @@ class SnapshotManager {
     (void)cycleNum;
     return Cycle();
   }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
 };
 }
