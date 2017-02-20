@@ -56,7 +56,7 @@ TEST_CASE("InputHandler parsing EPL_Example", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);
@@ -66,7 +66,7 @@ TEST_CASE("InputHandler parsing EPL_Example", "[InputHandler]") {
 
   uint32_t      counter = 0;
   ws_dissection diss;
-  while (ws_dissect_next(dissect, &diss)) {
+  while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
     Packet packet = handler.parsePacket(&diss);
 
 #if ENABLE_DEBUG_PRINT
@@ -89,7 +89,7 @@ TEST_CASE("InputHandler parsing epl_sdo_udp", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);
@@ -99,7 +99,7 @@ TEST_CASE("InputHandler parsing epl_sdo_udp", "[InputHandler]") {
 
   uint32_t      counter = 0;
   ws_dissection diss;
-  while (ws_dissect_next(dissect, &diss)) {
+  while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
     Packet packet = handler.parsePacket(&diss);
 
 #if ENABLE_DEBUG_PRINT
@@ -122,7 +122,7 @@ TEST_CASE("InputHandler parsing 1CN", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);
@@ -132,7 +132,7 @@ TEST_CASE("InputHandler parsing 1CN", "[InputHandler]") {
 
   uint32_t      counter = 0;
   ws_dissection diss;
-  while (ws_dissect_next(dissect, &diss)) {
+  while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
     Packet packet = handler.parsePacket(&diss);
 
 #if ENABLE_DEBUG_PRINT
@@ -155,7 +155,7 @@ TEST_CASE("InputHandler parsing 1CN-with-ObjectMapping-PDO", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);
@@ -165,7 +165,7 @@ TEST_CASE("InputHandler parsing 1CN-with-ObjectMapping-PDO", "[InputHandler]") {
 
   uint32_t      counter = 0;
   ws_dissection diss;
-  while (ws_dissect_next(dissect, &diss)) {
+  while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
     Packet packet = handler.parsePacket(&diss);
 
 #if ENABLE_DEBUG_PRINT
@@ -189,7 +189,7 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);
@@ -285,7 +285,7 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
-  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0);
+  ws_capture_t *capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   REQUIRE(capture != nullptr);
 
   ws_dissect_t *dissect = ws_dissect_capture(capture);

@@ -185,7 +185,7 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
     return 11;
   }
 
-  capture = ws_capture_open_offline(file.c_str(), 0);
+  capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   if (capture == nullptr) {
     return 12;
   }

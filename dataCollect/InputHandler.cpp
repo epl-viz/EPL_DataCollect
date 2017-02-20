@@ -115,8 +115,9 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     auto currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
 
     while (true) {
-      auto ret = ws_dissect_next(pData.dissect, &diss);
-      if (ret == 0) {
+      int  err;
+      auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
+      if (ret == 0 && err == 0) {
         pData.parserReachedEnd = true;
         return errorFN();
       }
@@ -152,7 +153,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     // Iterate from first to last - 1 (last is the NEXT SoC)
     for (auto i = first; i < last; ++i) {
-      if (ws_dissect_seek(pData.dissect, &diss, static_cast<int64_t>(pData.packetOffsetMap[i])) != 1) {
+      if (ws_dissect_seek(pData.dissect, &diss, static_cast<int64_t>(pData.packetOffsetMap[i]), nullptr, nullptr) !=
+          1) {
         return errorFN();
       }
 
@@ -440,7 +442,7 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
 
   if (pData.dissect) {
     ws_dissection diss;
-    if (ws_dissect_next(pData.dissect, &diss) == 0) {
+    if (ws_dissect_next(pData.dissect, &diss, nullptr, nullptr) == 0) {
       pData.parserReachedEnd = true;
       return;
     }
