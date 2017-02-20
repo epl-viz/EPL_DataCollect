@@ -35,32 +35,18 @@ cdef class Cycle:
 
   def getNodeStatus(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
-      return ERRVAL
+      return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
-      return ERRVAL
+      return
     return self._C_Cycle.getNode(nodeNumber).getStatusStr()
 
-
-  ############''TODO''###############
-  def getODEntry(self, nodeNumber, odnumber):
-    if not (isinstance(nodeNumber, int) and isinstance(odnumber, int)):   # numbers have to be integer
-      return ERRVAL
+  def getODEntry(self, nodeNumber, odNumber):
+    if not (isinstance(nodeNumber, int) and isinstance(odNumber, int)):   # numbers have to be integer
+      return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
-      return ERRVAL
-    if odnumber < 0x0000 or odnumber >= 0xFFFF:                           # od entry available
-      return ERRVAL
-    self._C_Cycle.getNode(nodeNumber).getOD()
-
-    return 42 #TODO: use with getODEntry then
-
-
-  def getData(self, index):
-    pass
-    #cdef char* c_index
-    #if isinstance(index, str):
-    #  py_byte_string = index.encode('UTF-8')
-    #  c_index = py_byte_string
-    #  return self.getData(c_index)  # return None Type if index no string
-
-  def setData(self, index, data): #setdataStr, setDataInt, setDataBool
-    pass
+      return
+    if odNumber < 0x0000 or odNumber >= 0xFFFF:                           # od entry available
+      return
+    cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
+    if (odEntry != NULL):
+      return odEntry.toString()

@@ -23,30 +23,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*!
+ * \file EvView.cpp
+ * \brief Contains class EvView
+ */
 
-#define CATCH_CONFIG_RUNNER
-#include "Init.hpp"
-#include <CycleBuilder.hpp>
-#include "Python.h"
-#include <catch.hpp>
+#include "EvView.hpp"
 
-int main(int argc, char *argv[]) {
-  EPL_DataCollect::Init init;
-  Py_Initialize();
-  std::string import_libs =
-        "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/build/lib')\n";
-  std::string import_plugins =
-        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
-  PyRun_SimpleString(import_libs.c_str());
-  PyRun_SimpleString(import_plugins.c_str());
+namespace EPL_DataCollect {
 
-  Catch::Session session;
+EvView::~EvView() {}
 
-  int returnCode = session.applyCommandLine(argc, argv);
-  if (returnCode != 0) // Indicates a command line error
-    return returnCode;
-
-  auto ret = session.run();
-  Py_Finalize();
-  return ret;
+/*!
+ * \brief Constructor for the EvError class
+ * \param evPluginID The plugin ID
+ * \param evName The name of the event
+ * \param evDesc The description
+ * \param evFlags Flags for the new event \sa EvFlags
+ * \param cycle Pointer to the first cycle the event occurred
+ * \param evIndices Affected indices
+ */
+EvView::EvView(EvType               evType,
+               std::string          evPluginID,
+               std::string          evName,
+               std::string          evDesc,
+               uint64_t             evFlags,
+               Cycle *              cycle,
+               EventBase::INDEX_MAP evIndices)
+    : EventBase(evType, evPluginID, evName, evDesc, evFlags, cycle, evIndices) {}
 }
