@@ -1,16 +1,16 @@
 import Cycle 
 import Plugin
-import sys
 
 class PluginA(Plugin.Plugin): 
  
   def initialize(self): 
     print("hey")
-    print(sys.path)
  
   def run(self): 
     print("PluginA running!!") 
     cy = self.getCycle() 
+    print("NODE STATUS:", cy.getNodeStatus(23))
+    print("GET OD ENTRY:", cy.getODEntry(1, "234432"))
     print("Number of Nodes currently active", cy.getNumNodes()) 
     print(self.addEvent(2, "asdfIMPLUG")) 
     print(cy.getActiveEvents())

@@ -12,6 +12,7 @@ cdef extern from "../../dataCollect/model/Cycle.hpp" namespace "EPL_DataCollect"
     Node* getNode(int)
     bool registerCycleStorage(string, CycleStorageBase)
     CycleStorageBase* getCycleStorage(string)
+    ODEntry* getODEntry(int, int)
 
 cdef extern from "../../dataCollect/model/Node.hpp" namespace "EPL_DataCollect":
   cdef cppclass Node:
@@ -28,12 +29,7 @@ cdef extern from "../../dataCollect/model/OD.hpp" namespace "EPL_DataCollect":
 cdef extern from "../../dataCollect/model/ODEntry.hpp" namespace "EPL_DataCollect":
   cdef cppclass ODEntry:
     ODEntry() except+
-    #TODO: Methods
-    #       string getEntry_AsString(int)
-    #       int getEntry_AsInt(int)
-    #       int getEntry_AsUInt(int)
-    #       bool getEntry_AsBool(int)
-    #       int getEntry_AsComplex(int)
+    string toString()
 
 
 cdef extern from "../../dataCollect/events/EventBase.hpp" namespace "EPL_DataCollect":
