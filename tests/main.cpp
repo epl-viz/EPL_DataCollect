@@ -27,15 +27,26 @@
 #define CATCH_CONFIG_RUNNER
 #include "Init.hpp"
 #include <CycleBuilder.hpp>
+#include "Python.h"
 #include <catch.hpp>
 
 int main(int argc, char *argv[]) {
   EPL_DataCollect::Init init;
-  Catch::Session        session;
+  Py_Initialize();
+  std::string import_libs =
+        "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/build/lib')\n";
+  std::string import_plugins =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
+  PyRun_SimpleString(import_libs.c_str());
+  PyRun_SimpleString(import_plugins.c_str());
+
+  Catch::Session session;
 
   int returnCode = session.applyCommandLine(argc, argv);
   if (returnCode != 0) // Indicates a command line error
     return returnCode;
 
-  return session.run();
+  auto ret = session.run();
+  Py_Finalize();
+  return ret;
 }
