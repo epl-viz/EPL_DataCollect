@@ -31,10 +31,12 @@
 
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
+#include "EvView.hpp"
 #include "EventBase.hpp"
 #include "EPLEnums.h"
 #include "Python.h"
 #include "iostream"
+#include <memory>
 #include <string>
 
 namespace EPL_DataCollect {
@@ -124,38 +126,68 @@ std::string PythonPlugin::getID() {
 };
 
 bool PythonPlugin::addPyEvent(int key, const char *value) {
-  (void)value;
-  (void)key;
-
-  // TODO: IMPLEMENT THIS METHOD IS KEY
-  //
-  // addEvent(ev);
-  std::unique_ptr<EventBase> eventToAdd;
+  char *   end_ptr;
+  uint64_t var = strtoull(value, &end_ptr, 0);
 
   switch (key) {
-    case 0:
-      break; // add event STARTCAP
-    case 1:
-      std::cout << "adding event 1, ENDCAP";
-      break; // add event ENDCAP
-    case 2:
-      std::cout << "adding event 2, HIGLIGHTING MN";
-      break; // add event highlight MN
-    case 3:
-      break; // add event highlight CN x (given by value)
-    case 4:
-      break; // add event jump to time (given by value)
-    case 5:
-      break; // add event highlight od entry (given by value)
-    case 6:
-      break; // add event text (given by value)
-    case 7:
-      break; // add image given by path in value
-    default: return false;
+    case 0: // add event STARTCAP
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_STARTCAP,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Starting live view..."),
+                                               0,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
+    case 1: // add event ENDCAP
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_ENDCAP,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Stopping live view..."),
+                                               0,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
+    case 2: // add event highlight MN
+      if (value == end_ptr)
+        return false;
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_MN,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Starting live capture..."),
+                                               var,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
+    case 3: // add event highlight CN x (given by value)
+      if (value == end_ptr)
+        return false;
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_CN,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Starting live capture..."),
+                                               var,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
+    case 4: // add event jump to time (given by value)
+      if (value == end_ptr)
+        return false;
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_JUMPTOTIME,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Starting live capture..."),
+                                               var,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
+    case 5: // add event highlight od entry (given by value)
+      if (value == end_ptr)
+        return false;
+      return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY,
+                                               getID(),
+                                               std::string("PluginEvent"),
+                                               std::string("Starting live capture..."),
+                                               var,
+                                               getCurrentCycle(),
+                                               EventBase::INDEX_MAP()));
   }
-
-  std::cout << "\nadd ev\t" + std::string(value);
-  return true;
+  return false;
 };
 
 bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
