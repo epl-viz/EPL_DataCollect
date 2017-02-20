@@ -32,7 +32,50 @@
 
 namespace EPL_DataCollect {
 
-SnapshotManager::SnapshotManager() {}
+/*!
+ * \brief Notifies the SnapshotManager about a new cycle
+ * The SnapshotManager MAY create a snapshot for this cycle
+ * \param  cycle The cycle to register
+ */
+void SnapshotManager::registerCycle(Cycle cycle) noexcept {
+  if (cycle.getCycleNum() >= lastSaved + cfg.saveInterval || cycle.getCycleNum() == 0) {
+    std::lock_guard<std::mutex> lk(dataMutex);
+    data.emplace(std::move(cycle));
+  }
+}
 
-SnapshotManager::~SnapshotManager() {}
+
+/*!
+ * \brief Returns a saved cycle, closest to cycleNum
+ * \return Cycle
+ * \param  cycleNum The target cycle number
+ */
+Cycle SnapshotManager::getClosestCycle(uint32_t cycleNum) noexcept {
+  std::lock_guard<std::mutex> lk(dataMutex);
+
+  if (data.empty())
+    return Cycle();
+
+  Cycle &  best     = *data.begin();
+  uint32_t bestDiff = UINT32_MAX;
+
+  if (best.getCycleNum() <= cycleNum)
+    bestDiff = cycleNum - best.getCycleNum();
+
+  for (auto &i : data) {
+    if (i.getCycleNum() > cycleNum)
+      continue;
+
+    if ((cycleNum - i.getCycleNum()) < bestDiff) {
+      bestDiff = cycleNum - i.getCycleNum();
+      best     = i;
+    }
+  }
+
+  return best;
+}
+
+
+SnapshotManager::Config SnapshotManager::getConfig() const noexcept { return cfg; }
+void SnapshotManager::setConfig(SnapshotManager::Config c) noexcept { cfg = c; }
 }

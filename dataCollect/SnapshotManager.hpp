@@ -32,6 +32,8 @@
 
 #include "defines.hpp"
 #include "Cycle.hpp"
+#include <mutex>
+#include <plf_colony.h>
 
 namespace EPL_DataCollect {
 
@@ -42,25 +44,32 @@ namespace EPL_DataCollect {
 
 class SnapshotManager final {
  public:
-  SnapshotManager();
-  ~SnapshotManager();
+  struct Config {
+    uint32_t saveInterval = 10;
+  };
 
-  /*!
-   * \brief Notifies the SnapshotManager about a new cycle
-   * The SnapshotManager MAY create a snapshot for this cycle
-   * \param  cycle The cycle to register
-   */
-  void registerCycle(Cycle cycle) { (void)cycle; }
+ private:
+  Config cfg;
 
+  uint32_t lastSaved = 0;
 
-  /*!
-   * \brief Returns a saved cycle, closest to cycleNum
-   * \return Cycle
-   * \param  cycleNum The target cycle number
-   */
-  Cycle getClosestCycle(unsigned int cycleNum) {
-    (void)cycleNum;
-    return Cycle();
-  }
+  std::mutex         dataMutex;
+  plf::colony<Cycle> data;
+
+ public:
+  SnapshotManager()  = default;
+  ~SnapshotManager() = default;
+
+  SnapshotManager(const SnapshotManager &) = delete;
+  SnapshotManager(SnapshotManager &&)      = delete;
+
+  SnapshotManager &operator=(const SnapshotManager &) = delete;
+  SnapshotManager &operator=(SnapshotManager &&) = delete;
+
+  mockable void registerCycle(Cycle cycle) noexcept;
+  mockable Cycle getClosestCycle(uint32_t cycleNum) noexcept;
+
+  mockable Config getConfig() const noexcept;
+  mockable void setConfig(Config c) noexcept;
 };
 }

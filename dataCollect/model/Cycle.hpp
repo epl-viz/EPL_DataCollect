@@ -63,7 +63,7 @@ class Cycle {
   CS_MAP cycleStorages;
 
   uint8_t  nodeCount = 0;
-  uint32_t cycleNum  = 0;
+  uint32_t cycleNum  = UINT32_MAX;
 
  public:
   Cycle() = default;
