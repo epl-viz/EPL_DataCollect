@@ -31,7 +31,6 @@
 #include "CycleBuilder.hpp"
 #include "CaptureInstance.hpp"
 #include <chrono>
-#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -53,8 +52,6 @@ void CycleBuilder::buildNextCycle() noexcept {
     nextCycleNum = 0;
   }
 
-  currentCycle.cycleNum = nextCycleNum;
-
   if (parent->getInputHandler()->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
     return;
@@ -62,8 +59,8 @@ void CycleBuilder::buildNextCycle() noexcept {
 
   std::vector<Packet> packets = parent->getInputHandler()->getCyclePackets(nextCycleNum);
 
+  currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);
-
 
   parent->getPluginManager()->processCycle(&currentCycle);
 
@@ -96,8 +93,6 @@ void CycleBuilder::buildNextCycle() noexcept {
   }
 
   parent->getSnapshotManager()->registerCycle(currentCycle);
-
-  std::cout << "Cycle " << nextCycleNum << " " << packets.size() << std::endl;
 }
 
 
@@ -186,6 +181,25 @@ bool CycleBuilder::stopLoop() noexcept {
 
 
 /*!
+ * \brief Blocks the current thread until the builder loop finished
+ */
+void CycleBuilder::waitForLoopToFinish() noexcept {
+  std::unique_lock<std::mutex> lock(stopLoopSignal);
+
+  if (!isLoopRunning)
+    return;
+
+  while (true) {
+    if (isLoopRunning) {
+      stopLoopWait.wait(lock);
+    } else {
+      break;
+    }
+  }
+}
+
+
+/*!
  * \brief Returns whether the build loop is running or not
  * \return bool
  */
@@ -204,8 +218,16 @@ bool CycleBuilder::isRunning() noexcept {
  */
 Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  (void)targetCycle;
-  return start;
+
+  currentCycle = start;
+
+  if (targetCycle <= currentCycle.getCycleNum())
+    return std::move(currentCycle);
+
+  while (targetCycle > currentCycle.getCycleNum())
+    buildNextCycle();
+
+  return std::move(currentCycle);
 }
 
 

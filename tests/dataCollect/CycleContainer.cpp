@@ -23,60 +23,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file SnapshotManager.hpp
- * \brief Contains class SnapshotManager
- */
 
-#include "SnapshotManager.hpp"
+#include <CaptureInstance.hpp>
+#include <CycleBuilder.hpp>
+#include <InputHandler.hpp>
+#include <catch.hpp>
+#include <fakeit.hpp>
 
-namespace EPL_DataCollect {
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
-/*!
- * \brief Notifies the SnapshotManager about a new cycle
- * The SnapshotManager MAY create a snapshot for this cycle
- * \param  cycle The cycle to register
- */
-void SnapshotManager::registerCycle(Cycle cycle) noexcept {
-  if (cycle.getCycleNum() >= lastSaved + cfg.saveInterval || cycle.getCycleNum() == 0) {
-    std::lock_guard<std::mutex> lk(dataMutex);
-    data.emplace(std::move(cycle));
-    lastSaved = cycle.getCycleNum();
-  }
-}
+using namespace EPL_DataCollect;
+using namespace fakeit;
 
 
-/*!
- * \brief Returns a saved cycle, closest to cycleNum
- * \return Cycle
- * \param  cycleNum The target cycle number
- */
-Cycle SnapshotManager::getClosestCycle(uint32_t cycleNum) noexcept {
-  std::lock_guard<std::mutex> lk(dataMutex);
+TEST_CASE("Testing Cycle container", "[CycleContainer]") {
+  CaptureInstance inst;
 
-  if (data.empty())
-    return Cycle();
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
 
-  Cycle &  best     = *data.begin();
-  uint32_t bestDiff = UINT32_MAX;
+  REQUIRE(inst.loadPCAP(file) == 0);
 
-  if (best.getCycleNum() <= cycleNum)
-    bestDiff = cycleNum - best.getCycleNum();
+  inst.getCycleBuilder()->waitForLoopToFinish();
 
-  for (auto &i : data) {
-    if (i.getCycleNum() > cycleNum)
-      continue;
+  Cycle c = inst.getCycleContainer()->getCycle(4);
+  REQUIRE(c.getCycleNum() == 4);
 
-    if ((cycleNum - i.getCycleNum()) < bestDiff) {
-      bestDiff = cycleNum - i.getCycleNum();
-      best     = i;
-    }
-  }
-
-  return best;
-}
-
-
-SnapshotManager::Config SnapshotManager::getConfig() const noexcept { return cfg; }
-void SnapshotManager::setConfig(SnapshotManager::Config c) noexcept { cfg = c; }
+  c = inst.getCycleContainer()->pollCycle();
+  REQUIRE(c.getCycleNum() == 249);
 }

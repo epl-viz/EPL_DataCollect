@@ -45,8 +45,15 @@ CycleContainer::~CycleContainer() {}
    * \return The cycle with the given number
    * \param  cycleNum The ID of the cycle to get
    */
-Cycle CycleContainer::getCycle(unsigned int cycleNum) const {
-  return captureInstance->getSnapshotManager()->getClosestCycle(cycleNum);
+Cycle CycleContainer::getCycle(uint32_t cycleNum) noexcept {
+  Cycle worker = captureInstance->getSnapshotManager()->getClosestCycle(cycleNum);
+
+  if (cycleNum == worker.getCycleNum())
+    return worker;
+
+
+  CycleBuilder builder(captureInstance);
+  return builder.seekCycle(cycleNum, std::move(worker));
 }
 
 

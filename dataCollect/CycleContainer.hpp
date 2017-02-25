@@ -52,7 +52,7 @@ class CycleContainer {
   virtual ~CycleContainer();
 
 
-  mockable Cycle getCycle(unsigned int cycleNum) const;
+  mockable Cycle getCycle(uint32_t cycleNum) noexcept;
   mockable Cycle pollCycle() const noexcept;
 };
 }

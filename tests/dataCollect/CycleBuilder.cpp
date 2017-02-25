@@ -52,7 +52,5 @@ TEST_CASE("Testing loading a cap", "[CycleBuilder]") {
 
   REQUIRE(inst.loadPCAP(file) == 0);
 
-  while (inst.getCycleBuilder()->isRunning()) {
-    SLEEP(milliseconds, 500);
-  }
+  inst.getCycleBuilder()->waitForLoopToFinish();
 }

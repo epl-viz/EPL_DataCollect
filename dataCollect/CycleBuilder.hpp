@@ -80,6 +80,7 @@ class CycleBuilder {
 
   mockable bool startLoop(Cycle startPoint) noexcept;
   mockable bool stopLoop() noexcept;
+  mockable void waitForLoopToFinish() noexcept;
   mockable bool isRunning() noexcept;
 
   mockable Cycle seekCycle(uint32_t targetCycle, Cycle start) noexcept;
