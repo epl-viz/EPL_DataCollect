@@ -466,4 +466,9 @@ void InputHandler::setConfig(Config newCFG) noexcept {
  * \brief Returns the current config
  */
 InputHandler::Config InputHandler::getConfig() const noexcept { return cfg; }
+
+/*!
+ * \brief Returns the max. queued cycle
+ */
+uint32_t InputHandler::getMaxQueuedCycle() const noexcept { return maxQueuedCycle; }
 }

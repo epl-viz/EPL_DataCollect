@@ -32,6 +32,9 @@
 
 int main(int argc, char *argv[]) {
   EPL_DataCollect::Init init;
+  if (!init.getIsOK())
+    return 1;
+
   Py_Initialize();
   std::string import_libs =
         "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/build/lib')\n";

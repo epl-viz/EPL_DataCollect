@@ -62,6 +62,14 @@ set( PLF_COLONY_DIR       "${PROJECT_SOURCE_DIR}/external/plf_colony/" )
 set( CM_ENABLE_MOCKING 0 )
 set( CM_BUILD_DIR_ROOT "${PROJECT_SOURCE_DIR}" )
 
+if( NOT DEFINED CM_DISSECTOR_EPL_ID_PREFIX )
+  set( CM_DISSECTOR_EPL_ID_PREFIX "epl-xdd" )
+endif( NOT DEFINED CM_DISSECTOR_EPL_ID_PREFIX )
+
+if( NOT DEFINED CM_PLUGIN_PROTO_NAME )
+  set( CM_PLUGIN_PROTO_NAME "Ethernet POWERLINK+XDD" )
+endif( NOT DEFINED CM_PLUGIN_PROTO_NAME )
+
 ################################
 # Set up the build environment #
 ################################
@@ -123,9 +131,12 @@ find_package( Wireshark        REQUIRED )
 find_package( PkgConfig        REQUIRED )
 pkg_search_module(GLIB REQUIRED glib-2.0)
 
+
+set( CM_WS_PLUGINS_DIR "${Wireshark_INSTALL_DIR}/${Wireshark_PLUGIN_INSTALL_DIR}" )
+
 message( STATUS "Wireshark version:     ${Wireshark_VERSION_STRING}" )
 message( STATUS "Wireshark install dir: ${Wireshark_INSTALL_DIR}" )
-message( "" )
+message( STATUS "Wireshark plugins dir: ${CM_WS_PLUGINS_DIR}" )
 
 if( NOT DISABLE_TESTS )
   set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )

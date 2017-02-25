@@ -48,6 +48,8 @@
 #define SLEEP(unit, amount) std::this_thread::sleep_for(std::chrono::unit(amount));
 #endif
 
+#define EPL_DC_DISSECTOR_EPL_ID_PREFIX "@CM_DISSECTOR_EPL_ID_PREFIX@"
+
 namespace EPL_DataCollect {
 
 namespace constants {
@@ -59,5 +61,7 @@ static const int         EPL_DC_GIT_LAST_TAG_DIFF = @CM_TAG_DIFF@;
 static const std::string EPL_DC_VERSION_GIT       = "@CM_VERSION_GIT@";
 static const std::string EPL_DC_INSTALL_PREFIX    = "@CMAKE_INSTALL_PREFIX@";
 static const std::string EPL_DC_BUILD_DIR_ROOT    = "@CM_BUILD_DIR_ROOT@";
+static const std::string EPL_DC_WS_PLUGINS_DIR    = "@CM_WS_PLUGINS_DIR@";
+static const std::string EPL_DC_PLUGIN_PROTO_NAME = "@CM_PLUGIN_PROTO_NAME@";
 }
 }

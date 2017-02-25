@@ -31,6 +31,7 @@
 #pragma once
 
 #include "defines.hpp"
+#include <string>
 
 namespace EPL_DataCollect {
 
@@ -39,11 +40,15 @@ namespace EPL_DataCollect {
  * This class must be created before all other classes
  */
 class Init {
+ public:
  private:
   bool isOK = false;
 
  public:
-  Init();
+  Init(std::string pluginsDir);
+  Init() : Init(constants::EPL_DC_WS_PLUGINS_DIR) {}
   ~Init();
+
+  bool getIsOK() const noexcept { return isOK; }
 };
 }

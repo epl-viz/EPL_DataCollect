@@ -39,7 +39,7 @@
 #include <iostream>
 #include <sstream> //! \todo Remove debug code
 
-#define EPL_PREFIX "epl"
+#define EPL_PREFIX EPL_DC_DISSECTOR_EPL_ID_PREFIX
 
 namespace EPL_DataCollect {
 namespace WiresharkParser {
@@ -281,6 +281,8 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     // IGONRE:
     case "data"_h:
     case "data.len"_h:
+    case EPL_PREFIX ".info"_h:                            // Debug Info
+    case EPL_PREFIX ".convo"_h:                           // Generaged Coversation ID (for dissector debugging)
     case EPL_PREFIX ".asnd.ires.features"_h:              // == FT_UINT32 -- BASE_HEX ("FeatureFlags")
     case EPL_PREFIX ".soc"_h:                             // == FT_UINT8 -- BASE_HEX ("Flags")
     case EPL_PREFIX ".preq"_h:                            // == FT_UINT8 -- BASE_HEX ("Flags")

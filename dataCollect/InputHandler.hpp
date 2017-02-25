@@ -101,7 +101,7 @@ class InputHandler {
     milliseconds loopWaitTimeout   = milliseconds(500);
     milliseconds deleteCyclesAfter = milliseconds(5000);
 
-    std::string eplFrameName = "Ethernet POWERLINK";
+    std::string eplFrameName = "Ethernet POWERLINK+XDD";
   };
 
  private:
@@ -178,5 +178,6 @@ class InputHandler {
 
   mockable void setConfig(Config newCFG) noexcept;
   mockable Config getConfig() const noexcept;
+  mockable uint32_t getMaxQueuedCycle() const noexcept;
 };
 }

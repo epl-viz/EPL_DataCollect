@@ -29,19 +29,30 @@
  */
 
 #include "Init.hpp"
+#include <epan/proto.h>
 #include <iostream>
 #include <ws_capture.h>
 #include <ws_dissect.h>
 
 namespace EPL_DataCollect {
 
-Init::Init() {
+Init::Init(std::string pluginsDir) {
+  ws_dissect_plugin_dir(pluginsDir.c_str());
+
   auto ret1 = ws_capture_init();
   auto ret2 = ws_dissect_init();
-  std::cout << "[Init] ws_capture_init returned " << ret1 << std::endl;
-  std::cout << "[Init] ws_dissect_init returned " << ret2 << std::endl;
+  auto ret3 = proto_name_already_registered(constants::EPL_DC_PLUGIN_PROTO_NAME.c_str());
 
-  if (ret1 == 0 && ret2 == 0) {
+  std::string foundProto = ret3 != 0 ? "true" : "false";
+
+  ws_dissect_proto_disable("epl"); // Disable old dissector
+
+  std::cout << "[Init] Wireshark plugins dir:             " << pluginsDir << std::endl;
+  std::cout << "[Init] ws_capture_init returned:          " << ret1 << std::endl;
+  std::cout << "[Init] ws_dissect_init returned:          " << ret2 << std::endl;
+  std::cout << "[Init] Loaded the advanced EPL dissector: " << foundProto << std::endl;
+
+  if (ret1 == 0 && ret2 == 0 && ret3 != 0) {
     isOK = true;
   }
 }

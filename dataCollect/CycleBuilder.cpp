@@ -224,7 +224,9 @@ Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
   if (targetCycle <= currentCycle.getCycleNum())
     return std::move(currentCycle);
 
-  while (targetCycle > currentCycle.getCycleNum())
+  InputHandler *ih = parent->getInputHandler();
+
+  while (targetCycle > currentCycle.getCycleNum() && targetCycle < ih->getMaxQueuedCycle())
     buildNextCycle();
 
   return std::move(currentCycle);
