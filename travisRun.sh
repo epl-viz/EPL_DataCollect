@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_DIR=build
+BUILD_DIR=build2
 
 msg() {
   echo -e "\x1b[1;33m[ MSG ]\x1b[0;33m $@\x1b[0m"
@@ -20,20 +20,28 @@ print_version() {
 
 ERROR_COUNT=0
 
-testExec() {
+__EXEC__() {
+  SUDO_EXEC=
+  (( $1 == 1 )) && SUDO_EXEC="sudo -u nobody"
+
   echo ""
-  "$@"
+  $SUDO_EXEC "${@:3}"
   ERROR=$?
 
   echo -e "\n"
-  if (( ERROR == 0 )); then
-    msg_ok "Command '$@' returned $ERROR"
+  if (( ERROR == 0 || ( $2 == 1 && ERROR != 0 ) )); then
+    msg_ok "Command '${@:3}' returned $ERROR"
     return
   fi
 
-  msg_error "Command '$@' returned $ERROR"
+  msg_error "Command '${@:3}' returned $ERROR"
   (( ERROR_COUNT++ ))
 }
+
+testExec()           { __EXEC__ 0 0 "$@"; }
+testFail()           { __EXEC__ 0 1 "$@"; }
+testExecNoRoot()     { __EXEC__ 1 0 "$@"; }
+testExecNoRootFail() { __EXEC__ 1 1 "$@"; }
 
 cd "$(dirname $0)"
 
@@ -67,23 +75,25 @@ msg "Updating wireshark disector"
 testExec pushd /opt/wireshark/build
 testExec git pull
 testExec git submodule update --init --recursive
-testExec make install
+testExec umask 0022 && make install
+testExec cp ./run/libcapchild.a /EPL/lib
 testExec pushd ..
-testExec mkdir -p "/usr/include/wireshark"
-testExec find . -name "*.h" ! -path "*build*" -exec cp --parents {} "/usr/include/wireshark" \;
+testExec mkdir -p "/EPL/include/wireshark"
+testExec find . -name "*.h" ! -path "*build*" -exec cp --parents {} "/EPL/include/wireshark" \;
 testExec popd
 testExec popd
 
 msg "Setting up the build env"
 testExec lcov --directory . --zerocounters
 testExec ./checkFormat.sh --only-check
-testExec mkdir $BUILD_DIR
-testExec cd    $BUILD_DIR
+testExec mkdir       $BUILD_DIR
+testExec cd          $BUILD_DIR
 
 msg "START BUILD"
 
-testExec cmake -DENABLE_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
+testExec cmake -DENABLE_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/EPL -DWireshark_DIR=/EPL ..
 testExec make
+testExec chmod -R a+rwx .
 
 msg "START TEST"
 
@@ -94,13 +104,19 @@ testCheckFail() {
   return 1
 }
 
-testExec make check
-testExec testCheckFail
+testExecNoRoot     make check
+testFail           make check
+testExecNoRootFail ./bin/tests --asd-asdf
+
+if (( $ERROR_COUNT == 0 )); then
+  msg "Installing files"
+  testExec make install
+fi
 
 if [[ "$CXX" == "g++" ]]; then
   msg "Parsing coverage data"
   testExec lcov --directory . --capture --output-file coverage.info
-  testExec lcov --remove coverage.info '/usr/*' '*catch*.h*' '*/FakeIt/*' '*/external/*' '*/EPLEnum2Str*' '*/tests/*' '*.cxx' '*.h' --output-file coverage.info
+  testExec lcov --remove coverage.info '/usr/*' '/EPL/*' '*catch*.h*' '*/FakeIt/*' '*/external/*' '*/EPLEnum2Str*' '*/tests/*' '*.cxx' '*.h' --output-file coverage.info
   testExec lcov --list coverage.info
   testExec cp coverage.info /
 else

@@ -31,13 +31,35 @@
 #include "Init.hpp"
 #include <epan/proto.h>
 #include <iostream>
+#include <unistd.h>
 #include <ws_capture.h>
 #include <ws_dissect.h>
+#include <wsutil/filesystem.h>
+#include <wsutil/privileges.h>
+
+extern char **environ;
 
 namespace EPL_DataCollect {
 
 Init::Init(std::string pluginsDir) {
-  ws_dissect_plugin_dir(pluginsDir.c_str());
+  init_process_policies();
+
+  if (started_with_special_privs() || running_with_special_privs()) {
+    std::cout << "[Init] Program started with root privileges! This is dangerous ==> dropping them" << std::endl;
+    relinquish_special_privs_perm();
+
+    if (started_with_special_privs() || running_with_special_privs()) {
+      std::cerr << "[Init] Failed to dropp special privileges! Start failed" << std::endl;
+
+      return;
+    }
+  }
+
+  if (ws_dissect_plugin_dir(pluginsDir.c_str()) != TRUE) {
+    std::cerr << "Failed to set the wireshark plugin dir" << std::endl;
+    isOK = false;
+    return;
+  }
 
   auto ret1 = ws_capture_init();
   auto ret2 = ws_dissect_init();
@@ -59,6 +81,10 @@ Init::Init(std::string pluginsDir) {
 
 Init::~Init() {
   std::cout << "[Init] finalizing wireshark" << std::endl;
+
+  if (!isOK)
+    return;
+
   ws_capture_finalize();
   ws_dissect_finalize();
 }
