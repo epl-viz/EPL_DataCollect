@@ -25,7 +25,7 @@
  */
 /*!
  * \file EvView.hpp
- * \brief Contains class EvError
+ * \brief Contains class EvView
  */
 
 
@@ -38,7 +38,7 @@
 namespace EPL_DataCollect {
 
 /*!
-  * \brief A generic error occurred
+  * \brief A generic view event. Container for all event enums that use the view.
   *
   * This class does not do much. Most of the logic is handled in EventBase
   */

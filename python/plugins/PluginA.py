@@ -1,5 +1,6 @@
 import Cycle 
 import Plugin
+import PluginAPI as api
 
 class PluginA(Plugin.Plugin): 
  
@@ -9,10 +10,11 @@ class PluginA(Plugin.Plugin):
   def run(self): 
     print("PluginA running!!") 
     cy = self.getCycle() 
+    print("amount of CN!!!:", cy.getAmountOfCN())	
     print("NODE STATUS:", cy.getNodeStatus(23))
     print("GET OD ENTRY:", cy.getODEntry(1, "234432"))
     print("Number of Nodes currently active", cy.getNumNodes()) 
-    print(self.addEvent(2, "asdfIMPLUG")) 
+    print(self.addEvent(0, "0")) 
     print(cy.getActiveEvents())
     self.registerInt("MYSTORAGE") 
     print(self.getStorage("WER"))

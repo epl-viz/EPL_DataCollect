@@ -35,11 +35,11 @@ namespace EPL_DataCollect {
 EvView::~EvView() {}
 
 /*!
- * \brief Constructor for the EvError class
+ * \brief Constructor for the EvView class
  * \param evPluginID The plugin ID
  * \param evName The name of the event
  * \param evDesc The description
- * \param evFlags Flags for the new event \sa EvFlags
+ * \param evFlags Flags for the new event \sa EvFlags, these are CN number / ODEntry to highlight / etc
  * \param cycle Pointer to the first cycle the event occurred
  * \param evIndices Affected indices
  */
