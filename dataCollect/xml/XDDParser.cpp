@@ -172,6 +172,7 @@ bool XDDVisitorTypes::VisitEnter(const XMLElement &el, const XMLAttribute *) {
     const XMLAttribute *at = el.FindAttribute("dataType");
     if (!at) {
       error = true;
+      std::cerr << "[XDDParser] dataType attribute not defined in " << el.Name() << std::endl;
       return false;
     }
     currentDTID = at->Value();
@@ -225,7 +226,7 @@ void XDDVisitorEntries::setMiscData(ODEntryDescription *newEntry,
     }
   } else {
     if (!desc->exists(lastIndex)) {
-      std::cerr << "Parent index does not exist" << std::endl;
+      std::cerr << "[XDDParser] Parent index (" << lastIndex << ") does not exist" << std::endl;
       error = true;
       return;
     }
@@ -265,6 +266,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
     const XMLAttribute *PDOmapping   = el.FindAttribute("PDOmapping");
 
     if (!index || !name || !objectType) {
+      std::cerr << "[XDDParser] index, name or objectType not defined in " << el.Name() << std::endl;
       error = true;
       return false;
     }
@@ -277,6 +279,8 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
 
     if (ODObjType == ObjectType::VAR) {
       if (!dataType) {
+        std::cerr << "[XDDParser] dataType not defined in " << el.Name() << " " << static_cast<int>(ODIndex)
+                  << std::endl;
         error = true;
         return false;
       }
@@ -293,6 +297,8 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
       if (actualValue) {
         ODEntry *entry = od->getEntry(ODIndex);
         if (!entry) {
+          std::cerr << "[XDDParser] internal error: 'entry' is nullptr " << el.Name() << " "
+                    << static_cast<int>(ODIndex) << std::endl;
           error = true;
           return false;
         }
@@ -335,6 +341,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
     const XMLAttribute *PDOmapping   = el.FindAttribute("PDOmapping");
 
     if (!subIndex || !name || !objectType || !dataType) {
+      std::cerr << "[XDDParser] index, name or objectType not defined in " << el.Name() << std::endl;
       error = true;
       return false;
     }
@@ -344,6 +351,8 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
     ObjectType  ODObjType = static_cast<ObjectType>(std::stoul(objectType->Value(), nullptr, 16));
 
     if (ODObjType != ObjectType::VAR) {
+      std::cerr << "[XDDParser] internal error: ODObjType != VAR " << el.Name() << " " << static_cast<int>(ODIndex)
+                << '.' << static_cast<int>(lastIndex) << std::endl;
       error = true;
       return false;
     }
@@ -359,11 +368,30 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
     setMiscData(&newEntry, accessType, PDOmapping, defaultValue, lowLimit, highLimit);
 
     if (actualValue) {
-      ODEntry *entry = od->getEntry(ODIndex);
+      ODEntry *entry = od->getEntry(lastIndex);
       if (!entry) {
+        std::cerr << "[XDDParser] internal error: 'entry' is nullptr " << el.Name() << " "
+                  << static_cast<int>(lastIndex) << '.' << static_cast<int>(lastIndex) << std::endl;
         error = true;
         return false;
       }
+
+      if (entry->getType() == ObjectClassType::COMPLEX) {
+        ODEntryComplex *complex = dynamic_cast<ODEntryComplex *>(entry);
+        if (!complex->data[ODIndex].get()) {
+          ObjectClassType oct = ODEntryContainer::getOCTbyODT(ObjectType::VAR, ODDataType);
+
+          switch (oct) {
+            case ObjectClassType::INTEGER: complex->data[ODIndex]  = std::make_unique<ODEntryInt>(ODDataType); break;
+            case ObjectClassType::UNSIGNED: complex->data[ODIndex] = std::make_unique<ODEntryUInt>(ODDataType); break;
+            case ObjectClassType::BOOL: complex->data[ODIndex]     = std::make_unique<ODEntryBool>(ODDataType); break;
+            case ObjectClassType::REAL: complex->data[ODIndex]     = std::make_unique<ODEntryReal>(ODDataType); break;
+            case ObjectClassType::STRING: complex->data[ODIndex]   = std::make_unique<ODEntryString>(ODDataType); break;
+            default: break;
+          }
+        }
+      }
+
       entry->setFromString(actualValue->Value(), ODIndex);
     }
   }

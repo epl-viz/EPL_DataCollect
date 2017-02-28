@@ -30,6 +30,7 @@
 
 #include "ODEntry.hpp"
 #include "ODEntryContainer.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -140,8 +141,10 @@ std::unique_ptr<ODEntry> ODEntryComplex::clone() { return std::make_unique<ODEnt
 
 ODEntryComplex::ODEntryComplex(const ODEntryComplex &c) : ODEntry(ObjectClassType::COMPLEX, c.getDataType(), false) {
   for (auto &i : c.data) {
-    if (!i.get())
+    if (!i.get()) {
+      data.emplace_back(nullptr);
       continue;
+    }
 
     data.emplace_back(i->clone());
   }

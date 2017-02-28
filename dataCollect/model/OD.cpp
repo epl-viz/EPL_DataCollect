@@ -29,6 +29,8 @@
  */
 
 #include "OD.hpp"
+#include "EPLEnum2Str.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
