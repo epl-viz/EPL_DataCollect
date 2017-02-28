@@ -31,13 +31,10 @@
 #include "Init.hpp"
 #include <epan/proto.h>
 #include <iostream>
-#include <unistd.h>
 #include <ws_capture.h>
 #include <ws_dissect.h>
 #include <wsutil/filesystem.h>
 #include <wsutil/privileges.h>
-
-extern char **environ;
 
 namespace EPL_DataCollect {
 

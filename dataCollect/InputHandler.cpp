@@ -36,6 +36,7 @@
 namespace EPL_DataCollect {
 
 using namespace WiresharkParser;
+using namespace std::chrono;
 
 InputHandler::~InputHandler() {
   if (buildLoopIsRunning)
@@ -63,6 +64,9 @@ Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
   pData.workingData.wsString = wsStr;
   g_free(wsStr);
 
+  auto duration        = seconds(diss->timestamp.secs) + nanoseconds(diss->timestamp.nsecs);
+  pData.workingData.tp = system_clock::time_point(duration_cast<system_clock::duration>(duration));
+
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
   Packet packet(&pData.workingData);
@@ -76,7 +80,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
 inline bool parseCycleError(std::mutex &m, InputHandler::CompletedCycle *cd) {
   std::lock_guard<std::mutex> cLkErr(m);
   cd->packets.clear();
-  cd->tp = std::chrono::system_clock::now();
+  cd->tp = system_clock::now();
   cd->flags |= InputHandler::DONE | InputHandler::ERROR;
   return false;
 }
@@ -137,7 +141,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
     cd->packets = std::move(tempPKG);
-    cd->tp      = std::chrono::system_clock::now();
+    cd->tp      = system_clock::now();
     cd->flags |= DONE;
 
 
@@ -163,7 +167,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
     cd->packets = std::move(tempPKG);
-    cd->tp      = std::chrono::system_clock::now();
+    cd->tp      = system_clock::now();
     cd->flags |= DONE | USED_SEEK;
   }
 
@@ -174,11 +178,11 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
 
 bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept {
-  std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
-  std::mutex                            wait;
+  system_clock::time_point start = system_clock::now();
+  std::mutex               wait;
 
   while (true) {
-    if (std::chrono::system_clock::now() - start > timeout)
+    if (system_clock::now() - start > timeout)
       break;
 
     std::unique_lock<std::mutex> lk(wait);
@@ -347,7 +351,7 @@ void InputHandler::builderLoop() {
     } else {
       std::lock_guard<std::mutex> lk(cyclesMutex);
       std::lock_guard<std::mutex> lkCFG(configMutex);
-      auto                        now = std::chrono::system_clock::now();
+      auto                        now = system_clock::now();
 
       auto it = cycles.begin();
       while (it != cycles.end()) {

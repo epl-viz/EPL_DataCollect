@@ -64,7 +64,7 @@ struct parserData final {
   uint8_t                               src         = UINT8_MAX;
   uint8_t                               dst         = UINT8_MAX;
   uint16_t                              captureSize = UINT16_MAX;
-  std::chrono::system_clock::time_point tp          = std::chrono::system_clock::now();
+  std::chrono::system_clock::time_point tp;
 
   /* SoC data fields*/
   struct SoC final {
