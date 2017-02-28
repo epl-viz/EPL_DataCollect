@@ -55,6 +55,7 @@ class PythonPlugin : public PluginBase {
 
   static Cycle *       getCurrentCycle();
   static PythonPlugin *getPythonPlugin(const char *name);
+  static Cycle* getCycleWithNum(const char* name, int number);
 
   void run(Cycle *cycle);
   std::string getDependencies();

@@ -195,6 +195,12 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   return false;
 };
 
+Cycle* PythonPlugin::getCycleWithNum(const char* name, int number) {
+  (void) name;
+  (void) number;
+  return NULL;
+}
+
 bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
   (void)index;
   (void)typeAsInt;

@@ -21,3 +21,16 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     CCycle.Cycle* getCurrentCycle()
     @staticmethod
     PythonPlugin* getPythonPlugin(const char*)
+    @staticmethod
+    CCycle.Cycle* getCycleWithNum(const char*, int)
+
+    CaptureInstance* getCI()
+
+## Helper stuff that is not exposed directly to python
+cdef extern from "CaptureInstance.hpp" namespace "EPL_DataCollect":
+  cdef cppclass CaptureInstance:
+    CycleContainer* getCycleContainer()
+
+cdef extern from "CycleContainer.hpp" namespace "EPL_DataCollect":
+  cdef cppclass CycleContainer:
+    CCycle.Cycle getCycle(int)
