@@ -117,6 +117,7 @@ class CaptureInstance {
   mockable CycleBuilder *getCycleBuilder() noexcept;
 
   mockable CIstate getState() noexcept;
+  mockable Cycle *getStartCycle() noexcept;
 };
 
 

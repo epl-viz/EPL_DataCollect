@@ -30,27 +30,46 @@
  */
 
 #include "TimeSeriesBuilder.hpp"
+#include "CSTimeSeriesPtr.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 namespace plugins {
 
-// Constructors/Destructors
-//
-
-TimeSeriesBuilder::TimeSeriesBuilder() {}
+using namespace constants;
 
 TimeSeriesBuilder::~TimeSeriesBuilder() {}
 
-//
-// Methods
-//
+void TimeSeriesBuilder::run(Cycle *cycle) {
+  uint32_t          cycleNum = cycle->getCycleNum();
+  CycleStorageBase *storage  = cycle->getCycleStorage(EPL_DC_PLUGIN_TIME_SERIES_CSID);
+  CSTimeSeriesPtr * pointers = dynamic_cast<CSTimeSeriesPtr *>(storage);
+
+  if (!pointers) {
+    std::cerr << "[pl::TimeSeriesBuilder] invalid cycle storage! ID=" << EPL_DC_PLUGIN_TIME_SERIES_CSID << std::endl;
+    return;
+  }
+
+  for (auto i : *pointers->getTsPTRs()) {
+    if (i->isCustomEntry()) {
+      i->addDataPoint(cycleNum, cycle->getCycleStorage(i->getCSID()));
+    } else {
+      i->addDataPoint(cycleNum, cycle->getNode(i->getNodeID())->getOD()->getEntry(i->getIndex()));
+    }
+  }
+}
 
 
-// Accessor methods
-//
+std::string TimeSeriesBuilder::getDependencies() { return ""; }
+std::string TimeSeriesBuilder::getID() { return EPL_DC_PLUGIN_TIME_SERIES_CSID; }
 
+bool TimeSeriesBuilder::initialize(CaptureInstance *ci) {
+  if (!ci->getStartCycle()->getCycleStorage(EPL_DC_PLUGIN_TIME_SERIES_CSID))
+    return ci->registerCycleStorage<CSTimeSeriesPtr>(EPL_DC_PLUGIN_TIME_SERIES_CSID);
 
-// Other methods
-//
+  return true;
+}
+
+bool TimeSeriesBuilder::reset(CaptureInstance *) { return true; }
 }
 }

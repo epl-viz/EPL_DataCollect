@@ -23,20 +23,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file CSTimeSeriesPtr.cpp
- * \brief Contains class CSTimeSeriesPtr
- */
 
-#include "CSTimeSeriesPtr.hpp"
+#include <CaptureInstance.hpp>
+#include <TimeSeries.hpp>
+#include <TimeSeriesBuilder.hpp>
+#include <catch.hpp>
 
-namespace EPL_DataCollect {
-namespace plugins {
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
-CSTimeSeriesPtr::~CSTimeSeriesPtr() {}
+using namespace EPL_DataCollect;
+using namespace EPL_DataCollect::plugins;
 
-CSTimeSeriesPtr::CONTAINER *CSTimeSeriesPtr::getTsPTRs() noexcept { return &timeSeries; }
-void CSTimeSeriesPtr::addTS(std::shared_ptr<TimeSeries> newTS) noexcept { timeSeries.emplace(std::move(newTS)); }
+TEST_CASE("Testing TimeSeries plugin -- no data", "[plugin][TimeSeries]") {
+  CaptureInstance ci;
+  ci.getPluginManager()->addPlugin(std::make_shared<TimeSeriesBuilder>());
 
-}
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ci.loadPCAP(file);
+  ci.getCycleBuilder()->waitForLoopToFinish();
 }

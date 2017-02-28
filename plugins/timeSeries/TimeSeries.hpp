@@ -26,7 +26,6 @@
 /*!
  * \file TimeSeries.hpp
  * \brief Contains class TimeSeries
- * \todo IMPLEMENT
  */
 
 
@@ -37,15 +36,10 @@
 #include "CycleStorageBase.hpp"
 #include "ODEntry.hpp"
 #include <string>
+#include <vector>
 
 namespace EPL_DataCollect {
 namespace plugins {
-
-/*!
- * \brief The type of the TimeSeries
- * \todo IMPLEMENT
- */
-enum TimeSeriesDataType { TS_DT_INT };
 
 /*!
   * class TimeSeries
@@ -53,122 +47,42 @@ enum TimeSeriesDataType { TS_DT_INT };
   */
 class TimeSeries {
  public:
-  // Constructors/Destructors
-  //
-
-
   /*!
-   * Empty Constructor
+   * \brief The type of the TimeSeries
    */
-  TimeSeries();
+  enum TimeSeriesDataType { OBJECT, CYClE_STORAGE };
 
-  /*!
-   * Empty Destructor
-   */
+ private:
+  TimeSeriesDataType type;
+  uint16_t           odIndex    = 0;
+  uint8_t            odSubIndex = 0;
+  uint8_t            nodeID     = 0;
+
+  std::string csID = "";
+
+ public:
+  std::vector<double> tsData;
+
+  TimeSeries() = delete;
+  TimeSeries(uint8_t nID, uint16_t index, uint8_t subIndex = 0);
+  TimeSeries(uint8_t nID, std::string cycleStorageID);
   virtual ~TimeSeries();
 
-  // Static Public attributes
-  //
+  TimeSeries(const TimeSeries &) = delete;
+  TimeSeries(TimeSeries &&)      = delete;
 
-  // Public attributes
-  //
+  TimeSeries &operator=(const TimeSeries &) = delete;
+  TimeSeries &operator=(TimeSeries &&) = delete;
 
+  bool               isCustomEntry() const noexcept;
+  TimeSeriesDataType getType() const noexcept;
+  uint16_t           getIndex() const noexcept;
+  uint8_t            getSubIndex() const noexcept;
+  uint8_t            getNodeID() const noexcept;
+  std::string        getCSID() const noexcept;
 
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-
-  /*!
-   * \brief returns whether the specified OD entry is a custom Entry
-   * \return bool
-   */
-  bool isCustomEntry() { return false; }
-
-
-  /*!
-   * \brief Returns the type of the data to store
-   * \return TimeSeriesDataType
-   */
-  TimeSeriesDataType getType() { return type; }
-
-
-  /*!
-   * \brief returns the OD / custom entry index for this time series
-   * \return unsigned int
-   */
-  unsigned int getIndex() { return 0; }
-
-
-  /*!
-   * \brief Returns the ID of the Node
-   * \return unsigned int
-   */
-  unsigned int getNodeID() { return 0; }
-
-
-  /*!
-   * \brief Returns the ID of the cycle storage
-   * \return std::string
-   */
-  std::string getCSID() { return ""; }
-
-
-  /*!
-   * \brief Adds a new data point to the timeseries
-   * \param  data The new data point
-   */
-  void addDataPoint(ODEntry *data) { (void)data; }
-
-
-  /*!
-   * \brief Adds a new data point to the timeseries
-   * \param  data The new data point
-   */
-  void addDataPoint(CycleStorageBase *data) { (void)data; }
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
-  // The type of the data
-  TimeSeriesDataType type;
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
-
- private:
+  void addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept;
+  void addDataPoint(uint32_t cycleNum, CycleStorageBase *data) noexcept;
 };
 }
 }

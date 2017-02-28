@@ -38,75 +38,23 @@
 namespace EPL_DataCollect {
 namespace plugins {
 
+const static std::string csID = "timeSeries.ptr";
+
 /*!
   * class TimeSeriesBuilder
   * \brief Plugin to build time series
   */
-class TimeSeriesBuilder : public PluginBase {
+class TimeSeriesBuilder final : public PluginBase {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  TimeSeriesBuilder();
-
-  /*!
-   * Empty Destructor
-   */
+  TimeSeriesBuilder() = default;
   virtual ~TimeSeriesBuilder();
 
-  // Static Public attributes
-  //
+  void run(Cycle *cycle) override;
+  std::string getDependencies() override;
+  std::string getID() override;
 
-  // Public attributes
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  bool initialize(CaptureInstance *ci) override;
+  bool reset(CaptureInstance *ci) override;
 };
 }
 }
