@@ -50,12 +50,26 @@ cdef extern from "../../dataCollect/model/CycleStorageBase.hpp" namespace "EPL_D
 
 cdef extern from "../../include/EPLEnums.h":
   ctypedef enum EvType:
-    EVT_PROTO_ERROR,
-    EVT_ERROR,
-    EVT_WARNING,
-    EVT_INFO,
-    EVT_DEBUG,
-    EVT_PLUGIN_EV_TEXT,
-    EVT_PLUGIN_OTHER = 0x1000,
-    EVT_FRONTEND_OTHER = 0x2000,
-    EVT_UNKNOWN
+    PROTO_ERROR,
+    ERROR,
+    WARNING,
+    INFO,
+    DEBUG,
+
+    # plugin specific events
+    PLUGIN_OTHER,
+    PLUGIN_EV_TEXT,
+
+    # view specific events
+    VIEW_STARTCAP,
+    VIEW_ENDCAP,
+    VIEW_EV_HIGHLIGHT_MN,
+    VIEW_EV_HIGHLIGHT_CN,
+    VIEW_EV_JUMPTOTIME,
+    VIEW_EV_HIGHLIGHT_OD_ENTRY,
+    VIEW_EV_TEXT,
+    VIEW_EV_IMAGE,
+
+    FRONTEND_OTHER,
+
+    UNKNOWN

@@ -5,8 +5,6 @@ from libcpp.string cimport string
 from libcpp cimport bool
 from libcpp.unordered_map cimport unordered_map
 
-cdef int ERRVAL = -1
-
 cdef class Cycle:
   cdef CCycle.Cycle* _C_Cycle
 
@@ -50,3 +48,11 @@ cdef class Cycle:
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
       return odEntry.toString()
+
+  def getAmountOfCN(self):
+    """
+    \brief This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+
+    \returns number of CNs in the current cycle
+    """
+    return self._C_Cycle.getNumNodes()
