@@ -38,6 +38,7 @@
 #include "iostream"
 #include <memory>
 #include <string>
+#include "EvPluginText.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -183,6 +184,13 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                var,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
+    case 6: // add event text
+      return addEvent(std::make_unique<EvPluginText>(getID(),
+                                                     std::string("PluginEvent"),
+                                                     std::string(value),
+                                                     0,
+                                                     getCurrentCycle(),
+                                                     EventBase::INDEX_MAP()));
   }
   return false;
 };
