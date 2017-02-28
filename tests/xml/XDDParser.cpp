@@ -32,7 +32,9 @@
 using namespace EPL_DataCollect;
 using namespace fakeit;
 
-const std::string DATA_ROOT = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources";
+using namespace constants;
+
+const std::string DATA_ROOT = EPL_DC_BUILD_DIR_ROOT + "/external/resources";
 
 TEST_CASE("Testing XDD parser", "[xml]") {
   OD od;
@@ -40,7 +42,7 @@ TEST_CASE("Testing XDD parser", "[xml]") {
   std::string f1 = DATA_ROOT + "/pcaps/EPL_Exa";
   std::string f2 = DATA_ROOT + "/pcaps";
   std::string f3 = DATA_ROOT + "/pcaps/EPL_Example.cap";
-  std::string f4 = DATA_ROOT + "/profiles/00000000_POWERLINK_CiA302-4_RMN.xdd";
+  std::string f4 = EPL_DC_BUILD_DIR_ROOT + "/xdd/401.xdc";
 
   REQUIRE(XDDParser::parseXDD(nullptr, f1) == XDDParser::FILE_DOES_NOT_EXIST);
   REQUIRE(XDDParser::parseXDD(nullptr, f2) == XDDParser::FILE_IS_NOT_A_REGUAR_FILE);
@@ -54,6 +56,7 @@ TEST_CASE("Testing XDD parser", "[xml]") {
   ODEntryDescription *d1 = od.getODDesc()->getEntry(0x1008);
   ODEntryDescription *d2 = od.getODDesc()->getEntry(0x1030);
   ODEntryDescription *d3 = od.getODDesc()->getEntry(0x1050);
+  ODEntryDescription *d4 = od.getODDesc()->getEntry(0x1F98);
 
   REQUIRE(d1 != nullptr);
   REQUIRE(d2 != nullptr);
@@ -92,4 +95,33 @@ TEST_CASE("Testing XDD parser", "[xml]") {
 
   REQUIRE(d3->index == 0x1050);
   REQUIRE(d3->type == ObjectType::ARRAY);
+
+  REQUIRE(d4->index == 0x1F98);
+  REQUIRE(d4->name == "NMT_CycleTiming_REC");
+  REQUIRE(d4->type == ObjectType::RECORD);
+  REQUIRE(d4->subEntries.size() == 15);
+  REQUIRE(d4->subEntries[0].name == "NumberOfEntries");
+  REQUIRE(d4->subEntries[1].name == "IsochrTxMaxPayload_U16");
+  REQUIRE(d4->subEntries[2].name == "IsochrRxMaxPayload_U16");
+  REQUIRE(d4->subEntries[3].name == "PResMaxLatency_U32");
+  REQUIRE(d4->subEntries[4].name == "PReqActPayloadLimit_U16");
+  REQUIRE(d4->subEntries[5].name == "PResActPayloadLimit_U16");
+  REQUIRE(d4->subEntries[6].name == "ASndMaxLatency_U32");
+  REQUIRE(d4->subEntries[7].name == "MultiplCycleCnt_U8");
+  REQUIRE(d4->subEntries[8].name == "AsyncMTU_U16");
+  REQUIRE(d4->subEntries[9].name == "Prescaler_U16");
+  REQUIRE(d4->subEntries[10].name == "PResMode_U8");
+  REQUIRE(d4->subEntries[11].name == "PResTimeFirst_U32");
+  REQUIRE(d4->subEntries[12].name == "PResTimeSecond_U32");
+  REQUIRE(d4->subEntries[13].name == "SyncMNDelayFirst_U32");
+  REQUIRE(d4->subEntries[14].name == "SyncMNDelaySecond_U32");
+  REQUIRE(od.hasEntry(0x1F98) == true);
+  auto entry = od.getEntry(0x1F98);
+  REQUIRE(entry->getType() == ObjectClassType::COMPLEX);
+  ODEntryComplex *comp = dynamic_cast<ODEntryComplex *>(entry);
+  REQUIRE(comp != nullptr);
+  REQUIRE(comp->data.size() >= 5);
+  REQUIRE(comp->data[4].get() != nullptr);
+  REQUIRE(comp->data[4]->getDataType() == ObjectDataType::UNSIGNED16);
+  REQUIRE(dynamic_cast<ODEntryUInt *>(comp->data[4].get())->data == 0x24);
 }
