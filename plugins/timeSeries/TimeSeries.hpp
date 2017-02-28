@@ -55,8 +55,8 @@ class TimeSeries {
  private:
   TimeSeriesDataType type;
   uint16_t           odIndex    = 0;
-  uint16_t           odSubIndex = 0;
-  uint16_t           nodeID     = 0;
+  uint8_t            odSubIndex = 0;
+  uint8_t            nodeID     = 0;
 
   std::string csID = "";
 
@@ -64,8 +64,8 @@ class TimeSeries {
   std::vector<double> tsData;
 
   TimeSeries() = delete;
-  TimeSeries(uint16_t nID, uint16_t index, uint16_t subIndex = 0);
-  TimeSeries(uint16_t nID, std::string cycleStorageID);
+  TimeSeries(uint8_t nID, uint16_t index, uint8_t subIndex = 0);
+  TimeSeries(uint8_t nID, std::string cycleStorageID);
   virtual ~TimeSeries();
 
   TimeSeries(const TimeSeries &) = delete;
@@ -77,8 +77,8 @@ class TimeSeries {
   bool               isCustomEntry() const noexcept;
   TimeSeriesDataType getType() const noexcept;
   uint16_t           getIndex() const noexcept;
-  uint16_t           getSubIndex() const noexcept;
-  uint16_t           getNodeID() const noexcept;
+  uint8_t            getSubIndex() const noexcept;
+  uint8_t            getNodeID() const noexcept;
   std::string        getCSID() const noexcept;
 
   void addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept;

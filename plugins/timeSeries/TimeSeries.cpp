@@ -34,9 +34,9 @@
 namespace EPL_DataCollect {
 namespace plugins {
 
-TimeSeries::TimeSeries(uint16_t nID, uint16_t index, uint16_t subIndex)
+TimeSeries::TimeSeries(uint8_t nID, uint16_t index, uint8_t subIndex)
     : type(OBJECT), odIndex(index), odSubIndex(subIndex), nodeID(nID) {}
-TimeSeries::TimeSeries(uint16_t nID, std::string cycleStorageID)
+TimeSeries::TimeSeries(uint8_t nID, std::string cycleStorageID)
     : type(CYClE_STORAGE), nodeID(nID), csID(cycleStorageID) {}
 
 TimeSeries::~TimeSeries() {}
@@ -65,14 +65,14 @@ uint16_t TimeSeries::getIndex() const noexcept { return odIndex; }
  * \brief returns the OD sub index
  * \return unsigned int
  */
-uint16_t TimeSeries::getSubIndex() const noexcept { return odSubIndex; }
+uint8_t TimeSeries::getSubIndex() const noexcept { return odSubIndex; }
 
 
 /*!
  * \brief Returns the ID of the Node
  * \return unsigned int
  */
-uint16_t TimeSeries::getNodeID() const noexcept { return nodeID; }
+uint8_t TimeSeries::getNodeID() const noexcept { return nodeID; }
 
 
 /*!
