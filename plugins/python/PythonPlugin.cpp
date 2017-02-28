@@ -70,11 +70,8 @@ PythonPlugin::PythonPlugin(std::string pluginName) {
     }
   }
 
-
-  state = CSPythonPluginStorage();
-  // registerCycleStorage (CSPythonPluginStorage) !!!
+  registerCycleStorage<CSPythonPluginStorage>(pluginName);
   // initing
-  std::cout << "initing returns ...\t" << initialize(NULL) << "\n";
 };
 
 PythonPlugin::~PythonPlugin() {}
@@ -199,8 +196,6 @@ bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
   // !!!
   // typeAsStr is either "bool", "int", or "str" -> register appropriately
   switch (typeAsInt) {
-    case 0:
-      break; // adding bool
     case 1:
       break; // adding int
     case 2:

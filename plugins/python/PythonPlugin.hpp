@@ -69,7 +69,6 @@ class PythonPlugin : public PluginBase {
   bool setDataStr(const char *index, const char *var);
   bool setDataInt(const char *index, int var);
 
- protected:
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
 
@@ -79,15 +78,8 @@ class PythonPlugin : public PluginBase {
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
   static std::unordered_map<std::string, PythonPlugin *> plugins;
-  CSPythonPluginStorage state;
   static Cycle *        currentCycle;
 
- public:
-  /*!
-   * Get the value of state
-   * \return the value of state
-   */
-  CSPythonPluginStorage *getState() { return &state; }
 };
 }
 }

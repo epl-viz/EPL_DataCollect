@@ -66,13 +66,10 @@ class PluginBase {
   virtual std::string getDependencies() = 0;
   virtual std::string getID()           = 0;
 
-  friend class PluginManager;
-
-#if not EPL_DC_ENABLE_MOCKING
- protected:
-#endif
   virtual bool initialize(CaptureInstance *ci) = 0;
   virtual bool reset(CaptureInstance *ci)      = 0;
+
+  friend class PluginManager;
 
   bool addEvent(std::unique_ptr<EventBase> event) noexcept;
 
