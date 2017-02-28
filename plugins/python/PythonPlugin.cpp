@@ -31,6 +31,7 @@
 
 #include "PythonPlugin.hpp"
 #include "Cycle.hpp"
+#include "EvPluginText.hpp"
 #include "EvView.hpp"
 #include "EventBase.hpp"
 #include "EPLEnums.h"
@@ -38,7 +39,6 @@
 #include "iostream"
 #include <memory>
 #include <string>
-#include "EvPluginText.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -99,7 +99,7 @@ bool PythonPlugin::reset(CaptureInstance *ci) {
 
 Cycle *PythonPlugin::getCurrentCycle() { return currentCycle; }
 
-PythonPlugin *PythonPlugin::getPythonPlugin(const char *name) { return plugins[std::string(name)]; }
+PythonPlugin *PythonPlugin::getPythonPlugin(std::string name) { return plugins[name]; }
 
 std::string PythonPlugin::getDependencies() {
   std::string ret_val = "";
@@ -185,23 +185,30 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case 6: // add event text
-      return addEvent(std::make_unique<EvPluginText>(getID(),
-                                                     std::string("PluginEvent"),
-                                                     std::string(value),
-                                                     0,
-                                                     getCurrentCycle(),
-                                                     EventBase::INDEX_MAP()));
+      return addEvent(std::make_unique<EvPluginText>(
+            getID(), std::string("PluginEvent"), std::string(value), 0, getCurrentCycle(), EventBase::INDEX_MAP()));
   }
   return false;
 };
 
-Cycle* PythonPlugin::getCycleWithNum(const char* name, int number) {
-  (void) name;
-  (void) number;
+Cycle *PythonPlugin::getCycleWithNum(const char *name, int number) {
+  PythonPlugin *pyPlug = getPythonPlugin(name);
+  if (pyPlug != nullptr) {
+    if (pyPlug->workingCycle.getCycleNum() == ((uint32_t)number)) {
+      return &(pyPlug->workingCycle);
+    } else {
+      // pyPlug->workingCycle = pyPlug->getCI();
+      CaptureInstance *cp = pyPlug->getCI();
+      (void)cp;
+    }
+  }
+  (void)name;
+  (void)number;
   return NULL;
 }
 
-bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
+void PythonPlugin::testPrint(std::string value) { std::cout << value; }
+bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
   (void)index;
   (void)typeAsInt;
 
@@ -215,33 +222,33 @@ bool PythonPlugin::registerPyCycleStorage(const char *index, int typeAsInt) {
     case 2:
       break; // adding string
   }
-  std::cout << "\nregging\t" + std::string(index) + ":";
+  std::cout << "\nregging\t" + index + ":";
   return true;
 };
 
-bool PythonPlugin::setStorage(const char *index, const char *var) {
+bool PythonPlugin::setStorage(std::string index, std::string var) {
   (void)index;
   (void)var;
   return false;
 };
 
-std::string PythonPlugin::getStorage(const char *index) {
+std::string PythonPlugin::getStorage(std::string index) {
   (void)index;
-  return std::string("IT IS false") + std::string(index);
+  return std::string("IT IS false") + index;
 };
 
-std::string PythonPlugin::getData(const char *index) {
+std::string PythonPlugin::getData(std::string index) {
   (void)index;
-  return "";
+  return ""; // have to return empty string !!! otherwise seg
 };
 
-bool PythonPlugin::setDataStr(const char *index, const char *var) {
+bool PythonPlugin::setDataStr(std::string index, std::string var) {
   (void)index;
   (void)var;
   return true;
 };
 
-bool PythonPlugin::setDataInt(const char *index, int var) {
+bool PythonPlugin::setDataInt(std::string index, int var) {
   (void)index;
   (void)var;
   return true;

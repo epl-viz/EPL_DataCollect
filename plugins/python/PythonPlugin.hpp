@@ -54,24 +54,26 @@ class PythonPlugin : public PluginBase {
   virtual ~PythonPlugin();
 
   static Cycle *       getCurrentCycle();
-  static PythonPlugin *getPythonPlugin(const char *name);
-  static Cycle* getCycleWithNum(const char* name, int number);
+  static PythonPlugin *getPythonPlugin(std::string name);
+  static Cycle *getCycleWithNum(const char *name, int number);
 
   void run(Cycle *cycle);
   std::string getDependencies();
   std::string getID();
 
   bool addPyEvent(int key, const char *value);
-  bool registerPyCycleStorage(const char *index, int typeAsInt);
-  bool setStorage(const char *index, const char *var);
-  std::string getStorage(const char *index);
+  bool registerPyCycleStorage(std::string index, int typeAsInt);
+  bool setStorage(std::string index, std::string var);
+  std::string getStorage(std::string index);
 
-  std::string getData(const char *index);
-  bool setDataStr(const char *index, const char *var);
-  bool setDataInt(const char *index, int var);
+  std::string getData(std::string index);
+  bool setDataStr(std::string index, std::string var);
+  bool setDataInt(std::string index, int var);
 
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
+
+  void testPrint(std::string value);
 
  private:
   std::string plugName;
@@ -79,8 +81,8 @@ class PythonPlugin : public PluginBase {
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
   static std::unordered_map<std::string, PythonPlugin *> plugins;
-  static Cycle *        currentCycle;
-
+  static Cycle *currentCycle;
+  Cycle         workingCycle; // current working cycle, used if user wants a random cycle
 };
 }
 }

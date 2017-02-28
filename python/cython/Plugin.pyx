@@ -126,7 +126,6 @@ cdef class Plugin:
     \author Denis Megerle
     """
     cdef int c_type
-    cdef char* c_index
 
     if (type == int):
       c_type = 1
@@ -134,9 +133,7 @@ cdef class Plugin:
       c_type = 2
 
     if isinstance(index, str):
-      py_byte_string = index.encode('UTF-8')
-      c_index = py_byte_string
-      return self.getPythonPlugin().registerPyCycleStorage(c_index, c_type)
+      return self.getPythonPlugin().registerPyCycleStorage(index.encode('utf-8'), c_type)
     return False;
 
   cpdef registerInt(self, index):
@@ -146,23 +143,13 @@ cdef class Plugin:
     return self.registerCycleStorage(index, str)
 
   cpdef getStorage(self, index): #THIS METHOD returns stuff from the own storage of the plugin
-    cdef char* c_index
     if isinstance(index, str):
-      py_byte_string = index.encode('UTF-8')
-      c_index = py_byte_string
-      return self.getPythonPlugin().getStorage(c_index) #returning None type if not found !
+      return self.getPythonPlugin().getStorage(index.encode('utf-8')).decode() #returning None type if not found !
 
   cpdef setStorage(self, index, var):
-    cdef char* c_index
-    cdef char* c_var
     if isinstance(index, str) and isinstance(var, str):
-      py_byte_string_index = index.encode('UTF-8')
-      py_byte_string_var = var.encode('UTF-8')
-      c_index = py_byte_string_index
-      c_var = py_byte_string_var
-      return self.getPythonPlugin().setStorage(c_index, c_var)
+      return self.getPythonPlugin().setStorage(index.encode('utf-8'), var.encode('utf-8'))
     return False
-
 
   cpdef getData(self, index):
     """
@@ -173,30 +160,24 @@ cdef class Plugin:
 
     \returns whether the data has been successfully added
     """
-    cdef char* c_index
     if isinstance(index, str):
-      py_byte_string = index.encode('UTF-8')
-      c_index = py_byte_string
-      return self.getPythonPlugin().getData(c_index)
+      data = self.getPythonPlugin().getData(index.encode('utf-8'))
+      return data.decode()
+    # return None if not available
 
   cpdef setData(self, index, var):
-    cdef char* c_index
-    cdef char* c_var  # if necessary
     if isinstance(index, str):
-      py_byte_string = index.encode('UTF-8')
-      c_index = py_byte_string
       if isinstance(var, str):
-        py_byte_string_var = var.encode('UTF-8')
-        c_var = py_byte_string_var
-        return self.getPythonPlugin().setDataStr(c_index, c_var)
+        return self.getPythonPlugin().setDataStr(index.encode('utf-8'), var.encode('utf-8'))
       elif isinstance(var, int):
-        return self.getPythonPlugin().setDataInt(c_index, var)
+        return self.getPythonPlugin().setDataInt(index.encode('utf-8'), var)
     return False
   ########################################################################################
 
   #Private elper method getting the corresponding pythonplugin############################
   cdef CPlugin.PythonPlugin* getPythonPlugin(self):
-    py_byte_string = self.getID().encode('UTF-8')
-    cdef char* c_string = py_byte_string
-    return CPlugin.PythonPlugin.getPythonPlugin(c_string)
+    return CPlugin.PythonPlugin.getPythonPlugin(self.getID().encode('utf-8'))
+
+  cpdef testPrint(self, name):
+    self.getPythonPlugin().testPrint(name.encode('utf-8'))
   #####################################################################################END
