@@ -26,7 +26,6 @@
 /*!
  * \file CSTimeSeriesPtr.cpp
  * \brief Contains class CSTimeSeriesPtr
- * \todo IMPLEMENT
  */
 
 #include "CSTimeSeriesPtr.hpp"
@@ -34,23 +33,10 @@
 namespace EPL_DataCollect {
 namespace plugins {
 
-// Constructors/Destructors
-//
-
-CSTimeSeriesPtr::CSTimeSeriesPtr() {}
-
 CSTimeSeriesPtr::~CSTimeSeriesPtr() {}
 
-//
-// Methods
-//
+CSTimeSeriesPtr::CONTAINER *CSTimeSeriesPtr::getTsPTRs() noexcept { return &timeSeries; }
+void CSTimeSeriesPtr::addTS(std::shared_ptr<TimeSeries> newTS) noexcept { timeSeries.emplace(std::move(newTS)); }
 
-
-// Accessor methods
-//
-
-
-// Other methods
-//
 }
 }

@@ -26,31 +26,93 @@
 /*!
  * \file TimeSeries.cpp
  * \brief Contains class TimeSeries
- * \todo IMPLEMENT
  */
 
 #include "TimeSeries.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 namespace plugins {
 
-// Constructors/Destructors
-//
-
-TimeSeries::TimeSeries() {}
+TimeSeries::TimeSeries(uint16_t nID, uint16_t index, uint16_t subIndex)
+    : type(OBJECT), odIndex(index), odSubIndex(subIndex), nodeID(nID) {}
+TimeSeries::TimeSeries(uint16_t nID, std::string cycleStorageID)
+    : type(CYClE_STORAGE), nodeID(nID), csID(cycleStorageID) {}
 
 TimeSeries::~TimeSeries() {}
 
-//
-// Methods
-//
+/*!
+ * \brief returns whether the specified OD entry is a custom Entry
+ * \return bool
+ */
+bool TimeSeries::isCustomEntry() const noexcept { return type == CYClE_STORAGE; }
 
 
-// Accessor methods
-//
+/*!
+ * \brief Returns the type of the data to store
+ * \return TimeSeriesDataType
+ */
+TimeSeries::TimeSeriesDataType TimeSeries::getType() const noexcept { return type; }
 
 
-// Other methods
-//
+/*!
+ * \brief returns the OD index
+ * \return unsigned int
+ */
+uint16_t TimeSeries::getIndex() const noexcept { return odIndex; }
+
+/*!
+ * \brief returns the OD sub index
+ * \return unsigned int
+ */
+uint16_t TimeSeries::getSubIndex() const noexcept { return odSubIndex; }
+
+
+/*!
+ * \brief Returns the ID of the Node
+ * \return unsigned int
+ */
+uint16_t TimeSeries::getNodeID() const noexcept { return nodeID; }
+
+
+/*!
+ * \brief Returns the ID of the cycle storage
+ * \return std::string
+ */
+std::string TimeSeries::getCSID() const noexcept { return csID; }
+
+
+/*!
+ * \brief Adds a new data point to the timeseries
+ * \param  data The new data point
+ */
+void TimeSeries::addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept {
+  if (!data) {
+    std::cerr << "[TimeSeries] addDataPoint [OD] invalid pointer" << std::endl;
+    return;
+  }
+
+  if (cycleNum >= tsData.size())
+    tsData.resize(cycleNum + 1);
+
+  tsData[cycleNum] = data->getNumericValue(odSubIndex);
+}
+
+
+/*!
+ * \brief Adds a new data point to the timeseries
+ * \param  data The new data point
+ */
+void TimeSeries::addDataPoint(uint32_t cycleNum, CycleStorageBase *data) noexcept {
+  if (!data) {
+    std::cerr << "[TimeSeries] addDataPoint [CycleStorage] invalid pointer" << std::endl;
+    return;
+  }
+
+  if (cycleNum >= tsData.size())
+    tsData.resize(cycleNum + 1);
+
+  tsData[cycleNum] = data->getNumericValue();
+}
 }
 }

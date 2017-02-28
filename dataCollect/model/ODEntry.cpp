@@ -63,16 +63,21 @@ bool ODEntry::isNumericValue() const noexcept { return isNumerical; }
 
 
 
-ODEntry::REAL_TYPE ODEntryInt::getNumericValue() { return static_cast<ODEntry::REAL_TYPE>(data); }
-ODEntry::REAL_TYPE ODEntryUInt::getNumericValue() { return static_cast<ODEntry::REAL_TYPE>(data); }
-ODEntry::REAL_TYPE ODEntryBool::getNumericValue() { return data ? 1 : 0; }
-ODEntry::REAL_TYPE ODEntryReal::getNumericValue() { return data; }
-ODEntry::REAL_TYPE ODEntryString::getNumericValue() { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue() { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue() { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue() { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue() { return 0; }
-ODEntry::REAL_TYPE ODEntryComplex::getNumericValue() { return 0; }
+ODEntry::REAL_TYPE ODEntryInt::getNumericValue(uint8_t) { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryUInt::getNumericValue(uint8_t) { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryBool::getNumericValue(uint8_t) { return data ? 1 : 0; }
+ODEntry::REAL_TYPE ODEntryReal::getNumericValue(uint8_t) { return data; }
+ODEntry::REAL_TYPE ODEntryString::getNumericValue(uint8_t) { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(uint8_t si) { return static_cast<ODEntry::REAL_TYPE>(data[si]); }
+ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(uint8_t si) { return static_cast<ODEntry::REAL_TYPE>(data[si]); }
+ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(uint8_t si) { return data[si] ? 1 : 0; }
+ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(uint8_t si) { return data[si]; }
+ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(uint8_t si) {
+  if (data[si].get() == nullptr)
+    return 0;
+
+  return data[si]->getNumericValue();
+}
 
 inline bool strToBool(std::string str) {
   return str == "true" || str == "True" || str == "TRUE" || str == "1" || str == "ON" || str == "on";
@@ -90,6 +95,9 @@ void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[s
 void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
   if (subIndex >= data.size())
     return;
+
+  if (data[subIndex].get() == nullptr)
+    data[subIndex] = std::make_unique<ODEntryInt>(ObjectDataType::INTEGER64);
 
   data[subIndex]->setFromString(str);
 }

@@ -26,7 +26,6 @@
 /*!
  * \file CSTimeSeriesPtr.hpp
  * \brief Contains class CSTimeSeriesPtr
- * \todo IMPLEMENT
  */
 
 
@@ -34,6 +33,9 @@
 
 #include "defines.hpp"
 #include "CycleStorageBase.hpp"
+#include "TimeSeries.hpp"
+#include <memory>
+#include <plf_colony.h>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -44,71 +46,30 @@ namespace plugins {
   *
   * \note This class is part of the TimeSeries plugin
   */
-class CSTimeSeriesPtr : public CycleStorageBase {
+class CSTimeSeriesPtr final : public CycleStorageBase {
  public:
-  // Constructors/Destructors
-  //
+  typedef plf::colony<std::shared_ptr<TimeSeries>> CONTAINER;
 
+ private:
+  CONTAINER timeSeries;
 
-  /*!
-   * Empty Constructor
-   */
-  CSTimeSeriesPtr();
-
-  /*!
-   * Empty Destructor
-   */
+ public:
+  CSTimeSeriesPtr() = default;
   virtual ~CSTimeSeriesPtr();
 
-  // Static Public attributes
-  //
+  CSTimeSeriesPtr(const CSTimeSeriesPtr &) = default;
+  CSTimeSeriesPtr(CSTimeSeriesPtr &&)      = default;
 
-  // Public attributes
-  //
+  CSTimeSeriesPtr &operator=(const CSTimeSeriesPtr &) = default;
+  CSTimeSeriesPtr &operator=(CSTimeSeriesPtr &&) = default;
 
+  CONTAINER *getTsPTRs() noexcept;
+  void addTS(std::shared_ptr<TimeSeries> newTS) noexcept;
 
-  // Public attribute accessor methods
-  //
+  double getNumericValue() override { return 0; }
+  bool   isNumericValue() override { return false; }
 
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
-
- private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<CSTimeSeriesPtr>(*this); }
 };
 }
 }

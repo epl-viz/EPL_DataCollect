@@ -304,15 +304,17 @@ TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
 TEST_CASE("Testing ODEntryComplex", "[ODEntry]") {
   ODEntryContainer ct(ObjectClassType::COMPLEX, ObjectDataType::VISIBLE_STRING);
   ODEntryComplex & t = *ct.getData<ODEntryComplex>();
-  //   t.data.emplace_back(std::make_unique<ODEntryInt>(ObjectDataType::INTEGER64));
-  //   t.setFromString("1", 11);
-  //   t.setFromString("33", 0);
-  //   REQUIRE(reinterpret_cast<ODEntryInt *>(t.data[0].get())->data == 33);
+  t.data.emplace_back(std::make_unique<ODEntryInt>(ObjectDataType::INTEGER64));
+  t.setFromString("1", 11);
+  t.setFromString("33", 0);
+  REQUIRE(reinterpret_cast<ODEntryInt *>(t.data[0].get())->data == 33);
   REQUIRE(t.toString() != "");
   REQUIRE(t.getType() == ObjectClassType::COMPLEX);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
-  REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
+  REQUIRE(checkDouble(t.getNumericValue(0), 33) == true);
+  REQUIRE(checkDouble(t.getNumericValue(11), 1) == true);
+  REQUIRE(checkDouble(t.getNumericValue(5), 0) == true);
   REQUIRE(t.clone().get() != nullptr);
 
   // Test copying of complex stuff

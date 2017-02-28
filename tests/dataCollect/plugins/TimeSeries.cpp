@@ -23,66 +23,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file TimeSeries.hpp
- * \brief Contains class TimeSeries
- */
 
+#include <CaptureInstance.hpp>
+#include <TimeSeries.hpp>
+#include <TimeSeriesBuilder.hpp>
+#include <catch.hpp>
 
-#pragma once
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
+using namespace EPL_DataCollect;
+using namespace EPL_DataCollect::plugins;
 
-#include "defines.hpp"
-#include "CycleStorageBase.hpp"
-#include "ODEntry.hpp"
-#include <string>
-#include <vector>
+TEST_CASE("Testing TimeSeries plugin -- no data", "[plugin][TimeSeries]") {
+  CaptureInstance ci;
+  ci.getPluginManager()->addPlugin(std::make_shared<TimeSeriesBuilder>());
 
-namespace EPL_DataCollect {
-namespace plugins {
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
 
-/*!
-  * class TimeSeries
-  * \brief Time series for a specific OD (or CycleStorage) entry
-  */
-class TimeSeries {
- public:
-  /*!
-   * \brief The type of the TimeSeries
-   */
-  enum TimeSeriesDataType { OBJECT, CYClE_STORAGE };
-
- private:
-  TimeSeriesDataType type;
-  uint16_t           odIndex    = 0;
-  uint16_t           odSubIndex = 0;
-  uint16_t           nodeID     = 0;
-
-  std::string csID = "";
-
- public:
-  std::vector<double> tsData;
-
-  TimeSeries() = delete;
-  TimeSeries(uint16_t nID, uint16_t index, uint16_t subIndex = 0);
-  TimeSeries(uint16_t nID, std::string cycleStorageID);
-  virtual ~TimeSeries();
-
-  TimeSeries(const TimeSeries &) = delete;
-  TimeSeries(TimeSeries &&)      = delete;
-
-  TimeSeries &operator=(const TimeSeries &) = delete;
-  TimeSeries &operator=(TimeSeries &&) = delete;
-
-  bool               isCustomEntry() const noexcept;
-  TimeSeriesDataType getType() const noexcept;
-  uint16_t           getIndex() const noexcept;
-  uint16_t           getSubIndex() const noexcept;
-  uint16_t           getNodeID() const noexcept;
-  std::string        getCSID() const noexcept;
-
-  void addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept;
-  void addDataPoint(uint32_t cycleNum, CycleStorageBase *data) noexcept;
-};
-}
+  ci.loadPCAP(file);
+  ci.getCycleBuilder()->waitForLoopToFinish();
 }

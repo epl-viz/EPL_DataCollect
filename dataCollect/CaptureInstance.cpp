@@ -276,4 +276,9 @@ SnapshotManager *CaptureInstance::getSnapshotManager() noexcept { return &snapsh
  * \return The pointer to the InputHandler
  */
 InputHandler *CaptureInstance::getInputHandler() noexcept { return &iHandler; }
+
+/*!
+ * \brief Returns a pointer to the start cycle
+ */
+Cycle *CaptureInstance::getStartCycle() noexcept { return &startCycle; }
 }
