@@ -163,7 +163,16 @@ cdef class Plugin:
       return self.getPythonPlugin().setStorage(c_index, c_var)
     return False
 
+
   cpdef getData(self, index):
+    """
+    \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.
+
+    \param key The key this data shall be associated with.
+    \param data Data to be added as a string
+
+    \returns whether the data has been successfully added
+    """
     cdef char* c_index
     if isinstance(index, str):
       py_byte_string = index.encode('UTF-8')

@@ -6,4 +6,3 @@ cpdef enum Events:
   EV_JUMPTOTIME = 4
   EV_HIGHLIGHT_OD_ENTRY = 5
   EV_TEXT = 6
-  EV_IMAGE = 7

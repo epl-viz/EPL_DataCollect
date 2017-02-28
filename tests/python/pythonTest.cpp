@@ -43,6 +43,7 @@ TEST_CASE("Testing calling cython", "[python]") {
   std::cout << "\n\n";
 
   EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("PluginA");
+  std::cout << "plugin.init returns \t" << pyPlugin->initialize(NULL) << "\n";
   std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
   std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
   std::cout << "plugin.run()..."
