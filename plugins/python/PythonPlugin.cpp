@@ -194,7 +194,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
 Cycle *PythonPlugin::getCycleWithNum(const char *name, int number) {
   PythonPlugin *pyPlug = getPythonPlugin(name);
   if (pyPlug != nullptr) {
-    if (pyPlug->workingCycle.getCycleNum() == ((uint32_t)number)) {
+    if (pyPlug->workingCycle.getCycleNum() == static_cast<uint32_t>(number)) {
       return &(pyPlug->workingCycle);
     } else {
       // pyPlug->workingCycle = pyPlug->getCI();
