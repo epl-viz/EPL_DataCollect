@@ -72,7 +72,7 @@ class PluginBase {
   friend class PluginManager;
 
   bool addEvent(std::unique_ptr<EventBase> event) noexcept;
-  CaptureInstance* getCI(){ return ciPTR; }
+  CaptureInstance *getCI() { return ciPTR; }
 
   template <class C, class... ARGS>
   inline bool registerCycleStorage(std::string index, ARGS &&... args);
