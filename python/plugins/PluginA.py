@@ -28,6 +28,8 @@ class PluginA(Plugin.Plugin):
     print("startlive!!!", PluginGUIAPI.startLive(self))
     print("higlightNode!!!", PluginGUIAPI.highlightNode(self, 2))
     print("higlightODEntry!!!", PluginGUIAPI.highlightODEntry(self, 2, 1.0))
+    cy2 = self.getCycleByNum(3)
+    print("cy props", cy, "| cy2 props", cy2)
 
   def getID(self): 
     return "PluginA" 

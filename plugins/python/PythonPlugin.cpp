@@ -191,21 +191,14 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   return false;
 };
 
-Cycle *PythonPlugin::getCycleWithNum(const char *name, int number) {
-  PythonPlugin *pyPlug = getPythonPlugin(name);
-  if (pyPlug != nullptr) {
-    if (pyPlug->workingCycle.getCycleNum() == static_cast<uint32_t>(number)) {
-      return &(pyPlug->workingCycle);
-    } else {
-      // pyPlug->workingCycle = pyPlug->getCI();
-      CaptureInstance *cp = pyPlug->getCI();
-      (void)cp;
-    }
+Cycle *PythonPlugin::getCycleByNum(int number) {
+  if (workingCycle.getCycleNum() != static_cast<uint32_t>(number) && getCI() != nullptr) {
+    workingCycle = getCI()->getCycleContainer()->getCycle(static_cast<uint32_t>(number));
   }
-  (void)name;
-  (void)number;
-  return NULL;
+  return &workingCycle;
 }
+
+// to IMPLEMENT
 
 bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
   (void)index;

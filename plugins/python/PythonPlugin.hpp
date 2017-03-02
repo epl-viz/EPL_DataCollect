@@ -55,13 +55,16 @@ class PythonPlugin : public PluginBase {
 
   static Cycle *       getCurrentCycle();
   static PythonPlugin *getPythonPlugin(std::string name);
-  static Cycle *getCycleWithNum(const char *name, int number);
+
 
   void run(Cycle *cycle);
   std::string getDependencies();
   std::string getID();
 
+  Cycle *getCycleByNum(int number);
+
   bool addPyEvent(int key, const char *value);
+
   bool registerPyCycleStorage(std::string index, int typeAsInt);
   bool setStorage(std::string index, std::string var);
   std::string getStorage(std::string index);

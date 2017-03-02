@@ -1,7 +1,7 @@
 cimport CCycle
 cimport CPlugin
-from libcpp.unordered_map cimport unordered_map
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 """
 \brief The plugin api provides some basic functionality and convenience method
 for user plugins.
@@ -12,15 +12,6 @@ data.
 :author: Denis Megerle
 """
 
-def getCycle(number):
-  """
-  \brief This method gets a cycle at any given moment. The capture starts at 0, so a plugin can technically access any cycle (and therefore also compare cycles). However this method should be called very rarely since it recalculates the cycle based on snapshots.
-
-      \returns the 'number'th captured cycle
-  """
-  ## TODO: implement ##
-  pass
-
 def addFilter(filters):
   """
   \brief This method adds a filter for specific ODs or other data.
@@ -30,5 +21,6 @@ def addFilter(filters):
   \return whether the filter addition has been successful
   """
 
-  ## TODO: implement ##
+  ## TODO: implement ## -> just create stdstring vector in PythonPlugin and create addFilter method in Pythonplugin, add filter "asdf asfdff asdffe",
+  #Trenner sind " "
   pass

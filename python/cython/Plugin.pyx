@@ -16,7 +16,6 @@ cdef class Plugin:
   data each cycle.
 
   \version 0.5.0
-  \author Denis Megerle
   """
 
   def __cinit__(self):
@@ -32,7 +31,6 @@ cdef class Plugin:
     By default this will return nothing, since not initializing a plugin is legit.
 
     \version 0.5.0
-    \author Denis Megerle
     """
     pass  #initialize can be empty
 
@@ -44,7 +42,6 @@ cdef class Plugin:
     the program.
 
     \version 0.5.0
-    \author Denis Megerle
     """
     pass
 
@@ -57,7 +54,6 @@ cdef class Plugin:
     \returns a string of dependencies
 
     \version 0.5.0
-    \author Denis Megerle
     """
     return "" #Dependencies can be empty if needed
 
@@ -68,7 +64,6 @@ cdef class Plugin:
     \returns the string of the ID
 
     \version 0.5.0
-    \author Denis Megerle
     """
     return "" #Having no ID is not allowed. However this will be handled in C++.
 
@@ -79,7 +74,6 @@ cdef class Plugin:
     cycle.
 
     \version 0.5.0
-    \author Denis Megerle
     """
     pass  ##TODO: implement
 
@@ -87,18 +81,31 @@ cdef class Plugin:
 
   ##################################Acessor Methods#######################################
 
-  cpdef getCycle(self):
+  def getCycle(self):
     """
     \brief Method gives the current cycle to work on.
 
     \returns the python cycle representation
 
     \version 0.5.0
-    \author Denis Megerle
     """
     return Cycle.createCycle(CPlugin.PythonPlugin.getCurrentCycle())
 
-  cpdef addEvent(self, key, value):
+  def getCycleByNum(self, number):
+    """
+    \brief This method gets a cycle at any given moment. The capture starts at 0, so a plugin can technically access any cycle
+    (and therefore also compare cycles). However this method should be called very rarely since it recalculates the cycle based on snapshots.
+
+    \param number the number of the cycle
+
+    \returns the python cycle representation
+
+    \version 0.5.0
+    """
+    if isinstance(number, int):
+      return Cycle.createCycle(self.getPythonPlugin().getCycleByNum(number))
+
+  def addEvent(self, key, value):
     """
     \brief This method adds an event to the current cycle. The event to be added is coded as a key (event type) and a string (additional event information). Events can be anything and will be added to the cycle.
 
@@ -108,7 +115,6 @@ cdef class Plugin:
     \returns a bool stating whether the event has been added
 
     \version 0.5.0
-    \author Denis Megerle
     """
     cdef char* c_value
     if isinstance(key, int) and isinstance(value, str):
@@ -124,7 +130,6 @@ cdef class Plugin:
     \returns a bool whether the storage has been added or not
 
     \version 0.5.0
-    \author Denis Megerle
     """
     cdef int c_type
 
