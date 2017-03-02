@@ -207,7 +207,6 @@ Cycle *PythonPlugin::getCycleWithNum(const char *name, int number) {
   return NULL;
 }
 
-void PythonPlugin::testPrint(std::string value) { std::cout << value; }
 bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
   (void)index;
   (void)typeAsInt;

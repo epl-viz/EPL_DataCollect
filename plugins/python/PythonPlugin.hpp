@@ -73,8 +73,6 @@ class PythonPlugin : public PluginBase {
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
 
-  void testPrint(std::string value);
-
  private:
   std::string plugName;
   std::string plugInstanceName;

@@ -28,7 +28,6 @@ class PluginA(Plugin.Plugin):
     print("startlive!!!", PluginGUIAPI.startLive(self))
     print("higlightNode!!!", PluginGUIAPI.highlightNode(self, 2))
     print("higlightODEntry!!!", PluginGUIAPI.highlightODEntry(self, 2, 1.0))
-    self.testPrint("JUHUUUUUUU STRING CONVERSION WORKS")
 
   def getID(self): 
     return "PluginA" 

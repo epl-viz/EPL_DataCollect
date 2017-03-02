@@ -16,7 +16,6 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     string getData(string)
     bool setDataStr(string, string)
     bool setDataInt(string, int)
-    void testPrint(string)
 
     @staticmethod
     CCycle.Cycle* getCurrentCycle()
