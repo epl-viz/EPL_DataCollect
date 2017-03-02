@@ -280,7 +280,7 @@ if( NOT DISABLE_TESTS )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
-add_dependencies( eplp_python_obj Plugin_cythonLib Test_cythonLib )
+add_dependencies( eplp_python_obj Plugin_cythonLib )
 
 ##################
 # Generate Files #
