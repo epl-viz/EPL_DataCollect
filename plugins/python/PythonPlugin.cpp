@@ -52,39 +52,76 @@ PythonPlugin::PythonPlugin() {}
 
 
 // BEFORE CALLING MAKE SURE PYTHONPATH IS SET TO PLUGIN DIRECTIONARY !!!
-PythonPlugin::PythonPlugin(std::string pluginName) {
-  plugName = pluginName;
-
-  plugins[plugName] = this;
-
-  // Python INIT
-  pName   = PyUnicode_DecodeFSDefault(plugName.c_str());
-  pModule = PyImport_Import(pName);
-  Py_DECREF(pName);
-
-  if (pModule != NULL) {
-    pDict  = PyModule_GetDict(pModule);
-    pClass = PyDict_GetItemString(pDict, plugName.c_str());
-
-    if (PyCallable_Check(pClass)) {
-      pInstance = PyObject_CallObject(pClass, NULL);
-    }
-  }
-
-  registerCycleStorage<CSPythonPluginStorage>(pluginName);
-  // initing
-};
+PythonPlugin::PythonPlugin(std::string pluginName) { plugID = pluginName; };
 
 PythonPlugin::~PythonPlugin() {}
 
+std::string PythonPlugin::getID() { return plugID; };
+
+std::string PythonPlugin::getDependencies() { return plugDeps; };
+
 bool PythonPlugin::initialize(CaptureInstance *ci) {
-  (void)ci;
-  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL);
-  if (pValue != NULL) {
-    Py_DECREF(pValue);
-    return true;
+  (void)ci; // TODO: init ci before
+
+  //** Python Initialization
+  pName = PyUnicode_DecodeFSDefault(plugID.c_str());
+
+  // check if module is present
+  pModule = PyImport_Import(pName);
+  Py_DECREF(pName);
+  if (pModule == NULL)
+    return false;
+
+  // check if correct class is available
+  pDict  = PyModule_GetDict(pModule);
+  pClass = PyDict_GetItemString(pDict, plugID.c_str());
+  if (pClass == NULL)
+    return false;
+
+  if (PyCallable_Check(pClass)) {
+    pInstance = PyObject_CallObject(pClass, NULL);
   }
-  return false;
+
+  // check if instance could be created, and correct instance of super class Plugin
+  if (pInstance == NULL)
+    return false;
+
+  if (strcmp(pInstance->ob_type->tp_base->tp_name, "Plugin.Plugin") != 0)
+    return false;
+
+  // check if (correct) getID() method is implemented
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
+  if (pValue == NULL || strcmp(pValue->ob_type->tp_name, "str") != 0)
+    return false;
+
+  pValue         = PyUnicode_AsUTF8String(pValue);
+  std::string id = PyBytes_AsString(pValue);
+  Py_DECREF(pValue);
+  if (id.compare(plugID) != 0)
+    return false;
+
+  // now check if the initialization of the plugin is successful in python
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL);
+  if (pValue != Py_True)
+    return false;
+  Py_DECREF(pValue);
+
+  // retrieving dependencies
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getDependencies"), NULL); // can't be NULL
+  Py_DECREF(pValue);
+
+  if (strcmp(pValue->ob_type->tp_name, "str") != 0)
+    return false;
+  pValue   = PyUnicode_AsUTF8String(pValue);
+  plugDeps = PyBytes_AsString(pValue);
+
+
+  //** instancing was successful, initing needed stuff...
+
+  //   if (!registerCycleStorage<CSPythonPluginStorage>(plugID))
+  //     return false;   TODO: uncomment soon, have to init ci first !
+  plugins[plugID] = this;
+  return true;
 };
 
 void PythonPlugin::run(Cycle *cycle) {
@@ -101,27 +138,8 @@ Cycle *PythonPlugin::getCurrentCycle() { return currentCycle; }
 
 PythonPlugin *PythonPlugin::getPythonPlugin(std::string name) { return plugins[name]; }
 
-std::string PythonPlugin::getDependencies() {
-  std::string ret_val = "";
-  pValue              = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getDependencies"), NULL);
-  if (pValue != NULL) {
-    pValue  = PyUnicode_AsUTF8String(pValue);
-    ret_val = PyBytes_AsString(pValue);
-    Py_DECREF(pValue);
-  }
-  return ret_val; // return empty if no function is given, this is OK !
-};
 
-std::string PythonPlugin::getID() {
-  std::string ret_val = "";
-  pValue              = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
-  if (pValue != NULL) {
-    pValue  = PyUnicode_AsUTF8String(pValue);
-    ret_val = PyBytes_AsString(pValue);
-    Py_DECREF(pValue);
-  }
-  return ret_val;
-};
+
 
 bool PythonPlugin::addPyEvent(int key, const char *value) {
   char *   end_ptr;

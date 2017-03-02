@@ -77,8 +77,8 @@ class PythonPlugin : public PluginBase {
   bool reset(CaptureInstance *ci);
 
  private:
-  std::string plugName;
-  std::string plugInstanceName;
+  std::string plugID;
+  std::string plugDeps;
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
   static std::unordered_map<std::string, PythonPlugin *> plugins;

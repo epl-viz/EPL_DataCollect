@@ -7,6 +7,7 @@ class PluginA(Plugin.Plugin):
  
   def initialize(self): 
     print("hey")
+    return True
  
   def run(self): 
     print("PluginA running!!") 

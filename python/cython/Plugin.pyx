@@ -57,16 +57,6 @@ cdef class Plugin:
     """
     return "" #Dependencies can be empty if needed
 
-  cpdef getID(self):
-    """
-    \brief This method returns the unique ID of this plugin.
-
-    \returns the string of the ID
-
-    \version 0.5.0
-    """
-    return "" #Having no ID is not allowed. However this will be handled in C++.
-
   cpdef unload(self):
     """
     \brief This method releases the current plugin.

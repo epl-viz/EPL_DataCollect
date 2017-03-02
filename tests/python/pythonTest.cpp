@@ -43,19 +43,23 @@ TEST_CASE("Testing calling cython", "[python]") {
   std::cout << "\n\n";
 
   EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("PluginA");
-  std::cout << "plugin.init returns \t" << pyPlugin->initialize(NULL) << "\n";
-  std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
-  std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
-  std::cout << "plugin.run()..."
-            << "\n";
-  pyPlugin->run(new EPL_DataCollect::Cycle());
+  bool                                    ret      = pyPlugin->initialize(NULL);
 
-  std::cout << "\n----------------\n\n\t5 runs of Plugin A:";
+  if (ret) {
+    std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
+    std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
+    std::cout << "plugin.run()..."
+              << "\n";
+    pyPlugin->run(new EPL_DataCollect::Cycle());
 
-  EPL_DataCollect::Cycle *curCyc = new EPL_DataCollect::Cycle();
-  for (int i = 0; i < 5; i++) {
-    pyPlugin->run(curCyc);
+    std::cout << "\n----------------\n\n\t5 runs of Plugin A:";
+
+    EPL_DataCollect::Cycle *curCyc = new EPL_DataCollect::Cycle();
+    for (int i = 0; i < 5; i++) {
+      pyPlugin->run(curCyc);
+    }
+  } else {
+    std::cout << "INIT FAILED !";
   }
-
   std::cout << "\n\n";
 }
