@@ -32,7 +32,7 @@ cdef class Plugin:
 
     \version 0.5.0
     """
-    pass  #initialize can be empty
+    return True  #initialize can be empty
 
   cpdef run(self):
     """
