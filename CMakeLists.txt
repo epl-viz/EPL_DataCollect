@@ -152,6 +152,7 @@ if( NOT DISABLE_TESTS )
     CONFIGURE_COMMAND ""
     BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
+    BUILD_BYPRODUCTS  "Catch_Dummy_file_for_target"
   )
 
   ExternalProject_Add( FakeIt
@@ -161,7 +162,14 @@ if( NOT DISABLE_TESTS )
     CONFIGURE_COMMAND ""
     BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
+    BUILD_BYPRODUCTS  "FakeIt_Dummy_file_for_target"
   )
+
+  add_library( FakeIt_dummyLib UNKNOWN IMPORTED )
+  add_library( catch_dummyLib  UNKNOWN IMPORTED )
+
+  set_target_properties( FakeIt_dummyLib PROPERTIES IMPORTED_LOCATION "FakeIt_Dummy_file_for_target" )
+  set_target_properties( catch_dummyLib  PROPERTIES IMPORTED_LOCATION "Catch_Dummy_file_for_target" )
 
   ExternalProject_Get_Property( catch source_dir )
   set( CATCH_INCLUDE_DIR "${source_dir}/include" )
@@ -191,6 +199,9 @@ ExternalProject_Add( liblibwireshark
    "-DWireshark_DIR=${Wireshark_DIR}"
 #    -DDISABLE_TESTS=ON
 #    -DENABLE_CODE_COVERAGE=OFF
+  BUILD_BYPRODUCTS
+    "${LIBLIBW_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}libwireshark${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark${CMAKE_STATIC_LIBRARY_SUFFIX}"
 )
 
 add_library( libwireshark        SHARED IMPORTED )
@@ -277,10 +288,12 @@ foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 
 if( NOT DISABLE_TESTS )
+  add_dependencies( tests FakeIt_dummyLib catch_dummyLib )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
 add_dependencies( eplp_python_obj Plugin_cythonLib )
+add_dependencies( epl_DataCollect_obj liblibwireshark )
 
 ##################
 # Generate Files #
