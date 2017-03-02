@@ -9,9 +9,7 @@ cdef class Cycle:
   cdef CCycle.Cycle* _C_Cycle
 
   def __cinit__(self):
-    self._C_Cycle = CPlugin.PythonPlugin.getCurrentCycle()
-    if self._C_Cycle is NULL:
-      raise MemoryError()
+    pass
 
   cpdef int getNumNodes(self):
     return self._C_Cycle.getNumNodes()
@@ -56,3 +54,9 @@ cdef class Cycle:
     \returns number of CNs in the current cycle
     """
     return self._C_Cycle.getNumNodes()
+
+# creating a cycle from Cycle* ...
+cdef createCycle(CCycle.Cycle* curCycle):
+  cyc = Cycle()
+  cyc._C_Cycle = curCycle
+  return cyc

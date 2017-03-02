@@ -1,5 +1,6 @@
 cimport CCycle
 cimport CPlugin
+cimport Cycle
 import Cycle
 import importlib
 import sys
@@ -95,7 +96,7 @@ cdef class Plugin:
     \version 0.5.0
     \author Denis Megerle
     """
-    return Cycle.Cycle()
+    return Cycle.createCycle(CPlugin.PythonPlugin.getCurrentCycle())
 
   cpdef addEvent(self, key, value):
     """
@@ -178,6 +179,4 @@ cdef class Plugin:
   cdef CPlugin.PythonPlugin* getPythonPlugin(self):
     return CPlugin.PythonPlugin.getPythonPlugin(self.getID().encode('utf-8'))
 
-  cpdef testPrint(self, name):
-    self.getPythonPlugin().testPrint(name.encode('utf-8'))
   #####################################################################################END
