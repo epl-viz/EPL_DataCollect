@@ -280,7 +280,7 @@ foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 
 if( NOT DISABLE_TESTS )
-  add_dependencies( tests FakeIt catch )
+  add_dependencies( epl_DataCollect_obj FakeIt catch )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
