@@ -281,4 +281,62 @@ InputHandler *CaptureInstance::getInputHandler() noexcept { return &iHandler; }
  * \brief Returns a pointer to the start cycle
  */
 Cycle *CaptureInstance::getStartCycle() noexcept { return &startCycle; }
+
+
+/*!
+ * \brief Returns the current configuration of the COMPLETE capture instance
+ * \note This includes all child classes (InputHandler, ect.)
+ */
+CaptureInstance::Config CaptureInstance::getConfig() const noexcept {
+  Config newCfg   = cfg;
+  newCfg.smConfig = snapshotManager.getConfig();
+  newCfg.ihConfig = iHandler.getConfig();
+  return newCfg;
+}
+
+/*!
+ * \brief sets the config of the ENTIRE capture instance
+ * \note This includes all child classes (InputHandler, ect.)
+ * \param newCfg the new config
+ */
+void CaptureInstance::setConfig(CaptureInstance::Config newCfg) noexcept {
+  cfg = newCfg;
+  iHandler.setConfig(cfg.ihConfig);
+  snapshotManager.setConfig(cfg.smConfig);
+}
+
+
+/*!
+ * \brief Returns the current default node configuration
+ * This node configuration will be used for ALL autodetected nodes
+ */
+CaptureInstance::NodeConfig CaptureInstance::getDefaultNodeConfig() const noexcept { return defaultNodeCfg; }
+
+/*!
+ * \brief sets the default node configuration
+ * This node configuration will be used for ALL autodetected nodes
+ */
+void CaptureInstance::setDefaultNodeConfig(CaptureInstance::NodeConfig newCfg) noexcept { defaultNodeCfg = newCfg; }
+
+
+/*!
+ * \brief Returns the configuration of one node
+ * \param node   the ID of the node
+ * \warning If the node was not set yet, then the node will be initialized with the CURRENT default node config
+ */
+CaptureInstance::NodeConfig CaptureInstance::getNodeConfig(uint8_t node) noexcept {
+  if (nodeCfg.find(node) == nodeCfg.end())
+    nodeCfg[node] = defaultNodeCfg;
+
+  return nodeCfg[node];
+}
+
+/*!
+ * \brief Sets the node configuration of one node
+ * \param node   the ID of the node
+ * \param newCfg the new config
+ */
+void CaptureInstance::setNodeConfig(uint8_t node, CaptureInstance::NodeConfig newCfg) noexcept {
+  nodeCfg[node] = newCfg;
+}
 }

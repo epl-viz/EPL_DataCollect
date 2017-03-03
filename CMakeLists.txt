@@ -83,11 +83,11 @@ run_git()
 add_compiler(
   GNU MIN_VERSION "6.2"
   ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas"
-  DEBUG      "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
+  DEBUG      "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
   C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -std=c11"
-  C_DEBUG    "-O0 -Werror" ${COVERAGE_COMPILER_FLAG}
+  C_DEBUG    "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   C_RELEASE  "-O3"
 
   SANITIZE   "-fsanitize=${SANITIZERS}"
@@ -101,7 +101,7 @@ add_compiler(
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
              "-Wno-disabled-macro-expansion"
-  DEBUG      "-Werror"
+  DEBUG      "-Werror -fno-omit-frame-pointer"
   RELEASE    "-O2"
 
   C_ALL      "-Weverything -ftemplate-backtrace-limit=0  -std=c11"
@@ -110,7 +110,7 @@ add_compiler(
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
              "-Wno-disabled-macro-expansion"
-  C_DEBUG    "-Werror"
+  C_DEBUG    "-Werror -fno-omit-frame-pointer"
   C_RELEASE  "-O2"
 
   SANITIZE "-fsanitize=${SANITIZERS}"
@@ -152,7 +152,6 @@ if( NOT DISABLE_TESTS )
     CONFIGURE_COMMAND ""
     BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
-    BUILD_BYPRODUCTS  "Catch_Dummy_file_for_target"
   )
 
   ExternalProject_Add( FakeIt
@@ -162,14 +161,7 @@ if( NOT DISABLE_TESTS )
     CONFIGURE_COMMAND ""
     BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
-    BUILD_BYPRODUCTS  "FakeIt_Dummy_file_for_target"
   )
-
-  add_library( FakeIt_dummyLib UNKNOWN IMPORTED )
-  add_library( catch_dummyLib  UNKNOWN IMPORTED )
-
-  set_target_properties( FakeIt_dummyLib PROPERTIES IMPORTED_LOCATION "FakeIt_Dummy_file_for_target" )
-  set_target_properties( catch_dummyLib  PROPERTIES IMPORTED_LOCATION "Catch_Dummy_file_for_target" )
 
   ExternalProject_Get_Property( catch source_dir )
   set( CATCH_INCLUDE_DIR "${source_dir}/include" )
@@ -288,7 +280,7 @@ foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 
 if( NOT DISABLE_TESTS )
-  add_dependencies( tests FakeIt_dummyLib catch_dummyLib )
+  add_dependencies( tests FakeIt catch )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
@@ -325,7 +317,7 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "epan/ftypes/ftypes.h"
+  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "XDDParser.hpp" "epan/ftypes/ftypes.h"
   INDENT_STR "  "
   NAMESPACE  "EPL_DataCollect"
   ENUMS
@@ -333,7 +325,7 @@ enum2str_generate(
     "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
     "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
-    "CaptureInstance::CIstate"
+    "CaptureInstance::CIstate" "XDDParser::ErrorCode"
 
     "ftenum"
   BLACKLIST

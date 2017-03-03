@@ -36,6 +36,19 @@ using namespace constants;
 
 const std::string DATA_ROOT = EPL_DC_BUILD_DIR_ROOT + "/external/resources";
 
+TEST_CASE("Testing all XDD files", "[xml]") {
+  OD od;
+  od.~OD();
+  new (&od) OD;
+
+  std::string xddDir = EPL_DC_BUILD_DIR_ROOT + "/xdd/";
+
+  SECTION("302.xdd") { REQUIRE(XDDParser::parseXDD(&od, xddDir + "302.xdd") == XDDParser::SUCCESS); }
+  SECTION("401.xdd") { REQUIRE(XDDParser::parseXDD(&od, xddDir + "401.xdd") == XDDParser::SUCCESS); }
+  SECTION("402.xdd") { REQUIRE(XDDParser::parseXDD(&od, xddDir + "402.xdd") == XDDParser::SUCCESS); }
+  SECTION("406.xdd") { REQUIRE(XDDParser::parseXDD(&od, xddDir + "406.xdd") == XDDParser::SUCCESS); }
+}
+
 TEST_CASE("Testing XDD parser", "[xml]") {
   OD od;
 

@@ -45,7 +45,7 @@ namespace EPL_DataCollect {
 class SnapshotManager final {
  public:
   struct Config {
-    uint32_t saveInterval = 10;
+    uint32_t saveInterval = 25;
   };
 
  private:
@@ -66,7 +66,7 @@ class SnapshotManager final {
   SnapshotManager &operator=(const SnapshotManager &) = delete;
   SnapshotManager &operator=(SnapshotManager &&) = delete;
 
-  mockable void registerCycle(Cycle cycle) noexcept;
+  mockable void registerCycle(Cycle *cycle) noexcept;
   mockable Cycle getClosestCycle(uint32_t cycleNum) noexcept;
 
   mockable Config getConfig() const noexcept;

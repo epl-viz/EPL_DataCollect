@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from unknown by Convert::EDS::XDD -->
+HASH(0x1bdd410)
+<ISO15745ProfileContainer xmlns="http://www.ethernet-powerlink.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ethernet-powerlink.org Powerlink_Main.xsd">
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Device_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName>sample CiA 406 device device profile</ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>Device</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_Device_Powerlink" fileName="unknown.xdd" fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <DeviceIdentity>
+        <vendorName></vendorName>
+        <vendorID>0x0</vendorID>
+        <productName>sample device according to CiA 406 0x0</productName>
+        <version versionType="HW">1.00</version>
+        <version versionType="SW">1.00</version>
+        <version versionType="FW">1.00</version>
+      </DeviceIdentity>
+      <DeviceFunction>
+        <capabilities>
+          <characteristicsList>
+            <characteristic>
+              <characteristicName>
+                <label lang="en">Transfer rate</label>
+              </characteristicName>
+              <characteristicContent>
+                <label lang="en">100 MBit/s</label>
+              </characteristicContent>
+            </characteristic>
+          </characteristicsList>
+        </capabilities>
+      </DeviceFunction>
+    </ProfileBody>
+  </ISO15745Profile>
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Communication_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName></ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>CommunicationNetwork</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_CommunicationNetwork_Powerlink" fileName="unknown.xdd"
+     fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <ApplicationLayers>
+        <identity>
+          <vendorID>0x0</vendorID>
+        </identity>
+        <DataTypeList>
+          <defType dataType="0001"> <Boolean/> </defType>
+          <defType dataType="0002"> <Integer8/> </defType>
+          <defType dataType="0003"> <Integer16/> </defType>
+          <defType dataType="0004"> <Integer32/> </defType>
+          <defType dataType="0005"> <Unsigned8/> </defType>
+          <defType dataType="0006"> <Unsigned16/> </defType>
+          <defType dataType="0007"> <Unsigned32/> </defType>
+          <defType dataType="0008"> <Real32/> </defType>
+          <defType dataType="0009"> <Visible_String/> </defType>
+          <defType dataType="0010"> <Integer24/> </defType>
+          <defType dataType="0011"> <Real64/> </defType>
+          <defType dataType="0012"> <Integer40/> </defType>
+          <defType dataType="0013"> <Integer48/> </defType>
+          <defType dataType="0014"> <Integer56/> </defType>
+          <defType dataType="0015"> <Integer64/> </defType>
+          <defType dataType="000A"> <Octet_String/> </defType>
+          <defType dataType="000B"> <Unicode_String/> </defType>
+          <defType dataType="000C"> <Time_of_Day/> </defType>
+          <defType dataType="000D"> <Time_Diff/> </defType>
+          <defType dataType="000F"> <Domain/> </defType>
+          <defType dataType="0016"> <Unsigned24/> </defType>
+          <defType dataType="0018"> <Unsigned40/> </defType>
+          <defType dataType="0019"> <Unsigned48/> </defType>
+          <defType dataType="001A"> <Unsigned56/> </defType>
+          <defType dataType="001B"> <Unsigned64/> </defType>
+          <defType dataType="0401"> <MAC_ADDRESS/> </defType>
+          <defType dataType="0402"> <IP_ADDRESS/> </defType>
+          <defType dataType="0403"> <NETTIME/> </defType>
+        </DataTypeList>
+
+        <ObjectList>
+          <!-- Communication Profile Area (0x1000 - 0x1FFF): defined by EPSG 301 -->
+
+          <!-- Standardised Device Profile Area (0x6000 - 0x9FFF): may be used according to a CiA device profile.The profile to be used is given by NMT_DeviceType_U32 -->
+          <Object index="6000" name="Operating Parameters" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6001" name="Measuring Units per Revolution" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6002" name="Total Measuring Range in Measuring Units" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6003" name="Preset Value" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6004" name="Position Value" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="6005" name="Linear Encoder Measuring Step Settings" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Position Measuring Step" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Speed Measuring Step" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Speed Acceleration Step 0.1 m/s^2" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Jerk Step" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6010" name="Preset Value for Multi Sensor Devices" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Preset Value Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Preset Value Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6020" name="Position Value for Multi Sensor Devices" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Position Value Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Position Value Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6030" name="Speed Value" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Speed Value Channel 1" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Speed Value Channel 2" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6040" name="Acceleration value" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Acceleration value channel 1" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Acceleration value channel 2" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Acceleration value channel 3" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6050" name="Jerk value" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Jerk value channel 1" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Jerk value channel 2" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Jerk value channel 3" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6200" name="Cyclic Timer Value" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6300" name="Cam State Register" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam State Channel 1" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam State Channel 2" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6301" name="CAM Enable" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam Enable Channel 1" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam Enable Channel 2" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6302" name="Cam Polarity Register" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam Polarity Channel 1" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="02" name="Cam Polarity Channel 2" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6310" name="CAM 1 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 1 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 1 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6311" name="CAM 2 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 2 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 2 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6312" name="CAM 3 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 3 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 3 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6313" name="CAM 4 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 4 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 4 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6314" name="CAM 5 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 5 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 5 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6315" name="CAM 6 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 6 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 6 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6316" name="CAM 7 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 7 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 7 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6317" name="CAM 8 Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 8 Low Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 8 Low Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6320" name="Cam 1 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 1 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 1 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6321" name="Cam 2 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 2 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 2 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6322" name="Cam 3 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 3 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 3 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6323" name="Cam 4 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 4 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 4 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6324" name="Cam 5 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 5 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 5 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6325" name="Cam 6 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 6 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 6 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6326" name="Cam 7 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 7 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 7 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6327" name="Cam 8 High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 8 High Limit Channel 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 8 High Limit Channel 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6330" name="Cam 1 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 1 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 1 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6331" name="Cam 2 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 2 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 2 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6332" name="Cam 3 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 3 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 3 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6333" name="Cam 4 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 4 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 4 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6334" name="Cam 5 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 5 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 5 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6335" name="Cam 6 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 6 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 6 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6336" name="Cam 7 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 7 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 7 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6337" name="Cam 8 Hysteresis" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Channels" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Cam 8 Hysteresis Channel 1" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Cam 8 Hysteresis Channel 2" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6400" name="Area State Register" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available Work Areas" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Work Area State Channel 1" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Work Area State Channel 2" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6401" name="Work Area Low Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Work Areas" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Low Limit Work Area 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Low Limit Work Area 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6402" name="Work Area High Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of available Work Areas" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="High Limit Work Area 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="High Limit Work Area 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6500" name="Operating Status" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6501" name="Single-Turn Resolution / Measuring Step" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="6502" name="Number of distinguishable Revolutions" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6503" name="Alarms" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6504" name="Supported Alarms" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6505" name="Warnings" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6506" name="Supported Warnings" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="6507" name="Profile and Software Version" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="6508" name="Operating Time" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="6509" name="Offset Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="650A" name="Module Identification" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Available Manufacturer Offset Values" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Manufacturer Offset" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Manufacturer Minimal Position Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Manufacturer Maximal Position Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="650B" name="Serial Number" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="650C" name="Offset value for multi-sensor devices" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Offset value Channel 1" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Offset value Channel 2" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          </Object>
+        </ObjectList>
+
+      </ApplicationLayers>
+      <TransportLayers/>
+      <NetworkManagement>
+        <GeneralFeatures DLLFeatureMN="false" NMTBootTimeNotActive="9000000" NMTCycleTimeMin="400" NMTCycleTimeMax="4294967295" NMTErrorEntries="2" NWLIPSupport="false" PHYExtEPLPorts="2" PHYHubIntegrated="true" SDOServer="true" SDOMaxConnections="2" SDOMaxParallelConnections="2" SDOCmdWriteAllByIndex="false" SDOCmdReadAllByIndex="false" SDOCmdWriteByName="false" SDOCmdReadByName="false" SDOCmdWriteMultParam="false" NMTFlushArpEntry="false" NMTNetHostNameSet="false" PDORPDOChannels="3" PDORPDOChannelObjects="25" PDOSelfReceipt="false" PDOTPDOChannelObjects="25"/>
+        <CNFeatures DLLCNFeatureMultiplex="true" DLLCNPResChaining="true" NMTCNSoC2PReq="0"/>
+        <Diagnostic/>
+      </NetworkManagement>
+    </ProfileBody>
+  </ISO15745Profile>
+</ISO15745ProfileContainer>

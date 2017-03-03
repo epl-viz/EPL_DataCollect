@@ -35,7 +35,7 @@
 
 namespace EPL_DataCollect {
 
-CycleContainer::CycleContainer(CaptureInstance *ci) { captureInstance = ci; }
+CycleContainer::CycleContainer(CaptureInstance *ci) { parent = ci; }
 
 CycleContainer::~CycleContainer() {}
 
@@ -46,13 +46,13 @@ CycleContainer::~CycleContainer() {}
    * \param  cycleNum The ID of the cycle to get
    */
 Cycle CycleContainer::getCycle(uint32_t cycleNum) noexcept {
-  Cycle worker = captureInstance->getSnapshotManager()->getClosestCycle(cycleNum);
+  Cycle worker = parent->getSnapshotManager()->getClosestCycle(cycleNum);
 
   if (cycleNum == worker.getCycleNum())
     return worker;
 
 
-  CycleBuilder builder(captureInstance);
+  CycleBuilder builder(parent);
   return builder.seekCycle(cycleNum, std::move(worker));
 }
 
@@ -61,5 +61,5 @@ Cycle CycleContainer::getCycle(uint32_t cycleNum) noexcept {
  * \brief Returns the current cycle
  * \return The current Cycle
  */
-Cycle CycleContainer::pollCycle() const noexcept { return captureInstance->getCycleBuilder()->getCurrentCycle(); }
+Cycle CycleContainer::pollCycle() const noexcept { return parent->getCycleBuilder()->getCurrentCycle(); }
 }

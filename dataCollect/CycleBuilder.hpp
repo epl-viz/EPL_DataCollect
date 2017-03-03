@@ -91,5 +91,7 @@ class CycleBuilder {
 #endif
   mockable void buildNextCycle() noexcept;
   mockable void buildLoop() noexcept;
+
+  mockable void addNode(uint8_t nID) noexcept;
 };
 }

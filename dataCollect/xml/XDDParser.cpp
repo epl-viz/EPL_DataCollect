@@ -62,8 +62,8 @@ class XDDVisitorTypes : public XMLVisitor {
   XDDVisitorTypes() = delete;
   XDDVisitorTypes(OD *odPTR);
 
-  bool VisitEnter(const XMLElement &el, const XMLAttribute *attr) override;
-  bool VisitExit(const XMLElement &el) override;
+  bool VisitEnter(const XMLElement &el, const XMLAttribute *attr) noexcept override;
+  bool VisitExit(const XMLElement &el) noexcept override;
 
   inline bool getError() const noexcept { return error; }
 };
@@ -90,10 +90,10 @@ class XDDVisitorEntries : public XMLVisitor {
                    const XMLAttribute *PDOmapping,
                    const XMLAttribute *defaultValue = nullptr,
                    const XMLAttribute *lowLimit     = nullptr,
-                   const XMLAttribute *highLimit    = nullptr);
+                   const XMLAttribute *highLimit    = nullptr) noexcept;
 
-  bool VisitEnter(const XMLElement &el, const XMLAttribute *attr) override;
-  bool VisitExit(const XMLElement &el) override;
+  bool VisitEnter(const XMLElement &el, const XMLAttribute *attr) noexcept override;
+  bool VisitExit(const XMLElement &el) noexcept override;
 
   inline bool getError() const noexcept { return error; }
 };
@@ -116,7 +116,7 @@ XDDVisitorEntries::XDDVisitorEntries(OD *odPTR) {
   strSize.push(0);
 }
 
-bool XDDVisitorTypes::VisitEnter(const XMLElement &el, const XMLAttribute *) {
+bool XDDVisitorTypes::VisitEnter(const XMLElement &el, const XMLAttribute *) noexcept {
   if (error)
     return false;
 
@@ -186,7 +186,7 @@ void XDDVisitorEntries::setMiscData(ODEntryDescription *newEntry,
                                     const XMLAttribute *PDOmapping,
                                     const XMLAttribute *defaultValue,
                                     const XMLAttribute *lowLimit,
-                                    const XMLAttribute *highLimit) {
+                                    const XMLAttribute *highLimit) noexcept {
   if (accessType) {
     switch (hashFunc(accessType->Value())) {
       case "const"_h: newEntry->access = ObjectAccess::CONST; break;
@@ -240,7 +240,7 @@ void XDDVisitorEntries::setMiscData(ODEntryDescription *newEntry,
   }
 }
 
-bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
+bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) noexcept {
   if (error)
     return false;
 
@@ -399,7 +399,7 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) {
   return true;
 }
 
-bool XDDVisitorTypes::VisitExit(const tinyxml2::XMLElement &) {
+bool XDDVisitorTypes::VisitExit(const tinyxml2::XMLElement &) noexcept {
   if (error)
     return false;
 
@@ -408,7 +408,7 @@ bool XDDVisitorTypes::VisitExit(const tinyxml2::XMLElement &) {
   return true;
 }
 
-bool XDDVisitorEntries::VisitExit(const tinyxml2::XMLElement &) {
+bool XDDVisitorEntries::VisitExit(const tinyxml2::XMLElement &) noexcept {
   if (error)
     return false;
 

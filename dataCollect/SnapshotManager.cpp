@@ -37,11 +37,11 @@ namespace EPL_DataCollect {
  * The SnapshotManager MAY create a snapshot for this cycle
  * \param  cycle The cycle to register
  */
-void SnapshotManager::registerCycle(Cycle cycle) noexcept {
-  if (cycle.getCycleNum() >= lastSaved + cfg.saveInterval || cycle.getCycleNum() == 0) {
+void SnapshotManager::registerCycle(Cycle *cycle) noexcept {
+  if (cycle->getCycleNum() >= lastSaved + cfg.saveInterval || cycle->getCycleNum() == 0) {
     std::lock_guard<std::mutex> lk(dataMutex);
-    data.emplace(std::move(cycle));
-    lastSaved = cycle.getCycleNum();
+    data.emplace(*cycle);
+    lastSaved = cycle->getCycleNum();
   }
 }
 

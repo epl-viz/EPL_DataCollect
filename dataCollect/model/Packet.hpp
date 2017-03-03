@@ -77,8 +77,8 @@ class Packet {
   std::string wiresharkSTR = "";
   std::string miscData     = "<N/A>";
 
-  uint32_t nodeSource;
-  uint32_t nodeDest;
+  uint8_t nodeSource;
+  uint8_t nodeDest;
 
   TIME_POINT timeStamp;
 
@@ -112,8 +112,8 @@ class Packet {
   mockable plf::colony<PacketDiff> *getDiffs() noexcept;
   mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;
-  mockable uint32_t getSrcNode() const noexcept;
-  mockable uint32_t getDestNode() const noexcept;
+  mockable uint8_t getSrcNode() const noexcept;
+  mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
 
   mockable void addDiff(uint16_t index, ODEntryContainer entry) noexcept;

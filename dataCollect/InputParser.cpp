@@ -282,6 +282,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     case EPL_PREFIX ".pdo"_h:
     case EPL_PREFIX ".pdo.index"_h:
     case EPL_PREFIX ".pdo.subindex"_h:
+    case EPL_PREFIX ".pdo.data"_h:
 
     case "data"_h:
     case "data.len"_h:

@@ -41,6 +41,7 @@
 #include "SnapshotManager.hpp"
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 #include <vector>
 
 extern "C" {
@@ -67,6 +68,19 @@ class CaptureInstance {
  public:
   enum CIstate { SETUP, RUNNING, DONE, ERRORED };
 
+  struct Config {
+    SnapshotManager::Config smConfig;
+    InputHandler::Config    ihConfig;
+
+    std::string xddDir = constants::EPL_DC_BUILD_DIR_ROOT + "/xdd";
+  };
+
+  struct NodeConfig {
+    bool        autoDeduceSpecificProfile = true;
+    std::string baseProfile               = "302.xdd";
+    std::string specificProfile           = "";
+  };
+
  private:
   SnapshotManager snapshotManager;
   PluginManager   pluginManager;
@@ -82,12 +96,16 @@ class CaptureInstance {
   ws_capture_t *capture = nullptr;
   ws_dissect_t *dissect = nullptr;
 
+  Config     cfg;
+  NodeConfig defaultNodeCfg;
+  std::unordered_map<uint8_t, NodeConfig> nodeCfg;
+
   Cycle startCycle;
 
   mockable int setupLoop();
 
  public:
-  CaptureInstance() : cycleContainer(this), builder(this) {}
+  CaptureInstance() : cycleContainer(this), builder(this) { cfg = getConfig(); }
   virtual ~CaptureInstance();
 
   CaptureInstance(const CaptureInstance &) = delete;
@@ -118,6 +136,15 @@ class CaptureInstance {
 
   mockable CIstate getState() noexcept;
   mockable Cycle *getStartCycle() noexcept;
+
+  mockable Config getConfig() const noexcept;
+  mockable void setConfig(Config newCfg) noexcept;
+
+  mockable NodeConfig getDefaultNodeConfig() const noexcept;
+  mockable void setDefaultNodeConfig(NodeConfig newCfg) noexcept;
+
+  mockable NodeConfig getNodeConfig(uint8_t node) noexcept;
+  mockable void setNodeConfig(uint8_t node, NodeConfig newCfg) noexcept;
 };
 
 

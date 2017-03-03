@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from unknown by Convert::EDS::XDD -->
+HASH(0x38203e8)
+<ISO15745ProfileContainer xmlns="http://www.ethernet-powerlink.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ethernet-powerlink.org Powerlink_Main.xsd">
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Device_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName>sample CiA 401 device device profile</ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>Device</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_Device_Powerlink" fileName="unknown.xdd" fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <DeviceIdentity>
+        <vendorName></vendorName>
+        <vendorID>0x0</vendorID>
+        <productName>sample device according to CiA 401 0x0</productName>
+        <version versionType="HW">1.00</version>
+        <version versionType="SW">1.00</version>
+        <version versionType="FW">1.00</version>
+      </DeviceIdentity>
+      <DeviceFunction>
+        <capabilities>
+          <characteristicsList>
+            <characteristic>
+              <characteristicName>
+                <label lang="en">Transfer rate</label>
+              </characteristicName>
+              <characteristicContent>
+                <label lang="en">100 MBit/s</label>
+              </characteristicContent>
+            </characteristic>
+          </characteristicsList>
+        </capabilities>
+      </DeviceFunction>
+    </ProfileBody>
+  </ISO15745Profile>
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Communication_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName></ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>CommunicationNetwork</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_CommunicationNetwork_Powerlink" fileName="unknown.xdd"
+     fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <ApplicationLayers>
+        <identity>
+          <vendorID>0x0</vendorID>
+        </identity>
+        <DataTypeList>
+          <defType dataType="0001"> <Boolean/> </defType>
+          <defType dataType="0002"> <Integer8/> </defType>
+          <defType dataType="0003"> <Integer16/> </defType>
+          <defType dataType="0004"> <Integer32/> </defType>
+          <defType dataType="0005"> <Unsigned8/> </defType>
+          <defType dataType="0006"> <Unsigned16/> </defType>
+          <defType dataType="0007"> <Unsigned32/> </defType>
+          <defType dataType="0008"> <Real32/> </defType>
+          <defType dataType="0009"> <Visible_String/> </defType>
+          <defType dataType="0010"> <Integer24/> </defType>
+          <defType dataType="0011"> <Real64/> </defType>
+          <defType dataType="0012"> <Integer40/> </defType>
+          <defType dataType="0013"> <Integer48/> </defType>
+          <defType dataType="0014"> <Integer56/> </defType>
+          <defType dataType="0015"> <Integer64/> </defType>
+          <defType dataType="000A"> <Octet_String/> </defType>
+          <defType dataType="000B"> <Unicode_String/> </defType>
+          <defType dataType="000C"> <Time_of_Day/> </defType>
+          <defType dataType="000D"> <Time_Diff/> </defType>
+          <defType dataType="000F"> <Domain/> </defType>
+          <defType dataType="0016"> <Unsigned24/> </defType>
+          <defType dataType="0018"> <Unsigned40/> </defType>
+          <defType dataType="0019"> <Unsigned48/> </defType>
+          <defType dataType="001A"> <Unsigned56/> </defType>
+          <defType dataType="001B"> <Unsigned64/> </defType>
+          <defType dataType="0401"> <MAC_ADDRESS/> </defType>
+          <defType dataType="0402"> <IP_ADDRESS/> </defType>
+          <defType dataType="0403"> <NETTIME/> </defType>
+        </DataTypeList>
+
+        <ObjectList>
+          <!-- Communication Profile Area (0x1000 - 0x1FFF): defined by EPSG 301 -->
+
+          <!-- Standardised Device Profile Area (0x6000 - 0x9FFF): may be used according to a CiA device profile.The profile to be used is given by NMT_DeviceType_U32 -->
+          <Object index="6000" name="Read input 8 bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="digital Inputs 1-8" objectType="7" dataType="0005" accessType="ro" PDOmapping="yes" defaultValue="0x00" />
+            <SubObject subIndex="02" name="digital Inputs 9-16" objectType="7" dataType="0005" accessType="ro" PDOmapping="yes" defaultValue="0x00" />
+          </Object>
+          <Object index="6002" name="Polarity 8 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Polarity for digital Inputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="Polarity for digital Inputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6003" name="Filter Constant 8 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Enable Filter for digital Inputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="02" name="Enable Filter for digital Inputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6005" name="Enable Digital Input Interrupts" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+          <Object index="6006" name="Input Interrupt Mask 8 - any change" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Input Interrupt Mask any change for digital Inputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+            <SubObject subIndex="02" name="Input Interrupt Mask any change for digital Inputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+          </Object>
+          <Object index="6007" name="Input Interrupt Mask 8 - low to high" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Input Interrupt Mask low to high  for digital Inputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="Input Interrupt Mask low to high  for digital Inputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6008" name="Input Interrupt Mask 8 - high to low" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Input Interrupt Mask  high to low for digital Inputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="Input Interrupt Mask  high to low for digital Inputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6020" name="Read State 1 Input Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Digital Input 1" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Digital Input 16" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Digital Input 2" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Digital Input 3" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="04" name="Digital Input 4" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="05" name="Digital Input 5" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="06" name="Digital Input 6" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="07" name="Digital Input 7" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="08" name="Digital Input 8" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="09" name="Digital Input 9" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0A" name="Digital Input 10" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0B" name="Digital Input 11" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0C" name="Digital Input 12" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0D" name="Digital Input 13" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0E" name="Digital Input 14" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="0F" name="Digital Input 15" objectType="7" dataType="0001" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6030" name="Polarity 1 Input Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Polarity digital Input 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="01" name="Polarity digital Input 16" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Polarity digital Input 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Polarity digital Input 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Polarity digital Input 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Polarity digital Input 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Polarity digital Input 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Polarity digital Input 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Polarity digital Input 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="09" name="Polarity digital Input 9" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0A" name="Polarity digital Input 10" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0B" name="Polarity digital Input 11" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0C" name="Polarity digital Input 12" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0D" name="Polarity digital Input 13" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0E" name="Polarity digital Input 14" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0F" name="Polarity digital Input 15" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6038" name="Filter Constant 1 Input Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Enable Filter for digital Input 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="01" name="Enable Filter for digital Input 16" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Enable Filter for digital Input 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Enable Filter for digital Input 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Enable Filter for digital Input 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Enable Filter for digital Input 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Enable Filter for digital Input 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Enable Filter for digital Input 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Enable Filter for digital Input 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="09" name="Enable Filter for digital Input 9" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0A" name="Enable Filter for digital Input 10" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0B" name="Enable Filter for digital Input 11" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0C" name="Enable Filter for digital Input 12" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0D" name="Enable Filter for digital Input 13" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0E" name="Enable Filter for digital Input 14" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0F" name="Enable Filter for digital Input 15" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6050" name="Interrupt Mask 1 Input Line 1-128 - any change" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Input Interrupt Mask any change for digital Input 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask any change for digital Input 16" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="02" name="Input Interrupt Mask any change for digital Input 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="03" name="Input Interrupt Mask any change for digital Input 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="04" name="Input Interrupt Mask any change for digital Input 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="05" name="Input Interrupt Mask any change for digital Input 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="06" name="Input Interrupt Mask any change for digital Input 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="07" name="Input Interrupt Mask any change for digital Input 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="08" name="Input Interrupt Mask any change for digital Input 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="09" name="Input Interrupt Mask any change for digital Input 9" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0A" name="Input Interrupt Mask any change for digital Input 10" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0B" name="Input Interrupt Mask any change for digital Input 11" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0C" name="Input Interrupt Mask any change for digital Input 12" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0D" name="Input Interrupt Mask any change for digital Input 13" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0E" name="Input Interrupt Mask any change for digital Input 14" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="0F" name="Input Interrupt Mask any change for digital Input 15" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+          </Object>
+          <Object index="6060" name="Interrupt Mask 1 Input Line 1-128 - low to high" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Input Interrupt Mask low to high for digital Input 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="yes" defaultValue="0" />
+            <SubObject subIndex="01" name="Input Interrupt Mask low to high for digital Input 16" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Input Interrupt Mask low to high for digital Input 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Input Interrupt Mask low to high for digital Input 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Input Interrupt Mask low to high for digital Input 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Input Interrupt Mask low to high for digital Input 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Input Interrupt Mask low to high for digital Input 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Input Interrupt Mask low to high for digital Input 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Input Interrupt Mask low to high for digital Input 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="09" name="Input Interrupt Mask low to high for digital Input 9" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0A" name="Input Interrupt Mask low to high for digital Input 10" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0B" name="Input Interrupt Mask low to high for digital Input 11" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0C" name="Input Interrupt Mask low to high for digital Input 12" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0D" name="Input Interrupt Mask low to high for digital Input 13" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0E" name="Input Interrupt Mask low to high for digital Input 14" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0F" name="Input Interrupt Mask low to high for digital Input 15" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6070" name="Interrupt Mask 1 Input Line 1-128 - high to low" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x10" />
+            <SubObject subIndex="01" name="Input Interrupt Mask high to low for digital Input 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="01" name="Input Interrupt Mask high to low for digital Input 16" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Input Interrupt Mask high to low for digital Input 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Input Interrupt Mask high to low for digital Input 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Input Interrupt Mask high to low for digital Input 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Input Interrupt Mask high to low for digital Input 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Input Interrupt Mask high to low for digital Input 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Input Interrupt Mask high to low for digital Input 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Input Interrupt Mask high to low for digital Input 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="09" name="Input Interrupt Mask high to low for digital Input 9" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0A" name="Input Interrupt Mask high to low for digital Input 10" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0B" name="Input Interrupt Mask high to low for digital Input 11" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0C" name="Input Interrupt Mask high to low for digital Input 12" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0D" name="Input Interrupt Mask high to low for digital Input 13" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0E" name="Input Interrupt Mask high to low for digital Input 14" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="0F" name="Input Interrupt Mask high to low for digital Input 15" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6100" name="Read State 16 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="digital Inputs 1-16" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="6102" name="Polarity 16 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Polarity for digital Inputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="6103" name="Filter Constant 16 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Enable Filter for digital Inputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="6106" name="Input Interrupt Mask 16 Input Lines - any change" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask any change for digital Inputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0xFFFF" />
+          </Object>
+          <Object index="6107" name="Input Interrupt Mask 16 Input Lines - low to high" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask low to high  for digital Inputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="6108" name="Input Interrupt Mask 16 Input Lines - high to low" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask  high to low for digital Inputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="6120" name="Read State 32 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="digital Inputs 1-32" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6122" name="Polarity 32 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Polarity for digital Inputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6123" name="Filter Constant 32 Input Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Enable Filter for digital Inputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6126" name="Input Interrupt Mask 32 Input Lines - any change" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask any change for digital Inputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0xFFFFFFFF" />
+          </Object>
+          <Object index="6127" name="Input Interrupt Mask 32 Input Lines - low to high" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask low to high  for digital Inputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6128" name="Input Interrupt Mask 32 Input Lines - high to low" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Input Interrupt Mask  high to low for digital Inputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6200" name="Write output 8-bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="digital Outputs 1-8" objectType="7" dataType="0005" accessType="rww" PDOmapping="yes" defaultValue="0x00" />
+            <SubObject subIndex="02" name="digital Outputs 9-16" objectType="7" dataType="0005" accessType="rww" PDOmapping="yes" defaultValue="0x00" />
+          </Object>
+          <Object index="6202" name="Polarity 8 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Polarity for digital Outputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="Polarity for digital Outputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6206" name="Fault Mode 8 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Fault Mode for digital Outputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+            <SubObject subIndex="02" name="Fault Mode for digital Outputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+          </Object>
+          <Object index="6207" name="Fault State 8 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Fault State for digital Outputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="Fault State for digital Outputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6208" name="Filter Constant 8 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Enable Filter for digital Outputs 1-8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+            <SubObject subIndex="02" name="Enable Filter for digital Outputs 9-16" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0xFF" />
+          </Object>
+          <Object index="6220" name="Write State 1 Output Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x08" />
+            <SubObject subIndex="01" name="digital Output 1" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="02" name="digital Output 2" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="03" name="digital Output 3" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="04" name="digital Output 4" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="05" name="digital Output 5" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="06" name="digital Output 6" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="07" name="digital Output 7" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+            <SubObject subIndex="08" name="digital Output 8" objectType="7" dataType="0001" accessType="rww" PDOmapping="no" />
+          </Object>
+          <Object index="6240" name="Polarity 1 Output Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Polarity digital Output 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Polarity digital Output 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Polarity digital Output 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Polarity digital Output 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Polarity digital Output 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Polarity digital Output 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Polarity digital Output 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Polarity digital Output 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6250" name="Fault Mode 1 Output Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Fault Mode for digital Output 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="02" name="Fault Mode for digital Output 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="03" name="Fault Mode for digital Output 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="04" name="Fault Mode for digital Output 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="05" name="Fault Mode for digital Output 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="06" name="Fault Mode for digital Output 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="07" name="Fault Mode for digital Output 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="08" name="Fault Mode for digital Output 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+          </Object>
+          <Object index="6260" name="Fault State 1 Output Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Fault Mode for digital Output 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="02" name="Fault Mode for digital Output 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="03" name="Fault Mode for digital Output 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="04" name="Fault Mode for digital Output 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="05" name="Fault Mode for digital Output 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="06" name="Fault Mode for digital Output 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="07" name="Fault Mode for digital Output 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+            <SubObject subIndex="08" name="Fault Mode for digital Output 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          </Object>
+          <Object index="6270" name="Filter Constant 1 Output Line 1-128" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Enable Filter for digital Output 1" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="02" name="Enable Filter for digital Output 2" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="03" name="Enable Filter for digital Output 3" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="04" name="Enable Filter for digital Output 4" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="05" name="Enable Filter for digital Output 5" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="06" name="Enable Filter for digital Output 6" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="07" name="Enable Filter for digital Output 7" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+            <SubObject subIndex="08" name="Enable Filter for digital Output 8" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="1" />
+          </Object>
+          <Object index="6300" name="Write State 16 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="digital Outputs 1-16" objectType="7" dataType="0006" accessType="rww" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6302" name="Polarity 16 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Polarity for digital Outputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6306" name="Error mode output 16-bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Error mode for digital Outputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0xFFFF" />
+          </Object>
+          <Object index="6307" name="Error value output 16-bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Error value for digital Outputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6308" name="Filter Constant 16 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Enable Filter for digital Outputs 1-16" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0xFFFF" />
+          </Object>
+          <Object index="6320" name="Write State 32 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="digital Outputs 1-32" objectType="7" dataType="0007" accessType="rww" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6322" name="Polarity 32 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Polarity for digital Outputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6326" name="Error mode 32 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Error mode for digital Outputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0xFFFFFFFF" />
+          </Object>
+          <Object index="6327" name="Error value 32 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Error value for digital Outputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6328" name="Filter Constant 32 Output Lines" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Enable Filter for digital Outputs 1-32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0xFFFFFFFF" />
+          </Object>
+          <Object index="6400" name="Read Analog Input 8 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="8-Bit analog Input 1" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="8-Bit analog Input 2" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="03" name="8-Bit analog Input 3" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="04" name="8-Bit analog Input 4" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="05" name="8-Bit analog Input 5" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="06" name="8-Bit analog Input 6" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="07" name="8-Bit analog Input 7" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="08" name="8-Bit analog Input 8" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6401" name="Read Analog Input 16 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="16-Bit analog Input 1" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="02" name="16-Bit analog Input 2" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="03" name="16-Bit analog Input 3" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="04" name="16-Bit analog Input 4" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="05" name="16-Bit analog Input 5" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="06" name="16-Bit analog Input 6" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="07" name="16-Bit analog Input 7" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="08" name="16-Bit analog Input 8" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+          </Object>
+          <Object index="6402" name="Read Analog Input 32 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="32-Bit analog Input 1" objectType="7" dataType="0004" accessType="rwr" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6403" name="Read Analog Input - Converted" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Analog Input 1 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Analog Input 2 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="03" name="Analog Input 3 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="04" name="Analog Input 4 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="05" name="Analog Input 5 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="06" name="Analog Input 6 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="07" name="Analog Input 7 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="08" name="Analog Input 8 (converted)" objectType="7" dataType="0008" accessType="rwr" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="6404" name="Read Analog Input Manufacturer specific" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Analog Input 1 (manufacturer specific)" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Analog Input 2 (manufacturer specific)" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="6410" name="Write Analog Output 8 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="8-Bit analog Output 1" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="02" name="8-Bit analog Output 2" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="03" name="8-Bit analog Output 3" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="04" name="8-Bit analog Output 4" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="05" name="8-Bit analog Output 5" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="06" name="8-Bit analog Output 6" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="07" name="8-Bit analog Output 7" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+            <SubObject subIndex="08" name="8-Bit analog Output 8" objectType="7" dataType="0002" accessType="rww" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="6411" name="Write Analog Output 16 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x002" />
+            <SubObject subIndex="01" name="16-Bit analog Output 1" objectType="7" dataType="0003" accessType="rww" PDOmapping="yes" defaultValue="0x0000" />
+            <SubObject subIndex="02" name="16-Bit analog Output 2" objectType="7" dataType="0003" accessType="rww" PDOmapping="yes" defaultValue="0x0000" />
+          </Object>
+          <Object index="6412" name="Write Analog Output 32 Bit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="32-Bit analog Output 1" objectType="7" dataType="0004" accessType="rww" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="32-Bit analog Output 2" objectType="7" dataType="0004" accessType="rww" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6413" name="Write Analog Output Real" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Real analog Output 1" objectType="7" dataType="0008" accessType="rww" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Real analog Output 2" objectType="7" dataType="0008" accessType="rww" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="6414" name="Write Analog Output Manu" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analoque Output 1" objectType="7" dataType="0006" accessType="rww" PDOmapping="no" />
+          </Object>
+          <Object index="6421" name="Analog Input Interrupt Trigger Selection" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Trigger Selection Analog Input 1" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="02" name="Trigger Selection Analog Input 2" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="03" name="Trigger Selection Analog Input 3" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="04" name="Trigger Selection Analog Input 4" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="05" name="Trigger Selection Analog Input 5" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="06" name="Trigger Selection Analog Input 6" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="07" name="Trigger Selection Analog Input 7" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+            <SubObject subIndex="08" name="Trigger Selection Analog Input 8" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="7" />
+          </Object>
+          <Object index="6422" name="Analog Interrupt Source" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Interrupt Source Channels 1-32" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6423" name="Global Analog Interrupt Enable" objectType="7" dataType="0001" accessType="rw" PDOmapping="no" defaultValue="0" />
+          <Object index="6424" name="Analog Input Interrupt Upper Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Upper Limit Analog Input 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Upper Limit Analog Input 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="03" name="Upper Limit Analog Input 3" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="04" name="Upper Limit Analog Input 4" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="05" name="Upper Limit Analog Input 5" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="06" name="Upper Limit Analog Input 6" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="07" name="Upper Limit Analog Input 7" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="08" name="Upper Limit Analog Input 8" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6425" name="Analog Input Interrupt Lower Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x08" />
+            <SubObject subIndex="01" name="Lower Limit Analog Input 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Lower Limit Analog Input 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="03" name="Lower Limit Analog Input 3" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="04" name="Lower Limit Analog Input 4" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="05" name="Lower Limit Analog Input 5" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x000000000" />
+            <SubObject subIndex="06" name="Lower Limit Analog Input 6" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="07" name="Lower Limit Analog Input 7" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="08" name="Lower Limit Analog Input 8" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6426" name="Analog Input Interrupt Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Delta Limit Analog Input 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Delta Limit Analog Input 2" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="03" name="Delta Limit Analog Input 3" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="04" name="Delta Limit Analog Input 4" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="05" name="Delta Limit Analog Input 5" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="06" name="Delta Limit Analog Input 6" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="07" name="Delta Limit Analog Input 7" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="08" name="Delta Limit Analog Input 8" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6427" name="Analog Input Interrupt Negative Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Negative Delta Limit Analog Input 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6428" name="Analog Input Interrupt Positive Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Positive Delta Limit Analog Input 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6429" name="Analog Input Interrupt Real Upper Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Upper Limit Real Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642A" name="Analog Input Interrupt Real Lower Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Lower Limit Real Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642B" name="Analog Input Interrupt Real Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Delta Real Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Delta Real Analog Input 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642C" name="Analog Input Interrupt Real Negative Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Negative Delta Real Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Negative Delta Real Analog Input 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642D" name="Analog Input Interrupt Real Positive Delta" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Positive Delta Real Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642E" name="Analog Input Conversion Offset" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x08" />
+            <SubObject subIndex="01" name="Conversion Offset Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Conversion Offset Analog Input 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="03" name="Conversion Offset Analog Input 3" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="04" name="Conversion Offset Analog Input 4" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="05" name="Conversion Offset Analog Input 5" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="06" name="Conversion Offset Analog Input 6" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="07" name="Conversion Offset Analog Input 7" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="08" name="Conversion Offset Analog Input 8" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="642F" name="Analog Input Conversion Scaling" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x08" />
+            <SubObject subIndex="01" name="Conversion Scaling Analog Input 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="02" name="Conversion Scaling Analog Input 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="03" name="Conversion Scaling Analog Input 3" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="04" name="Conversion Scaling Analog Input 4" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="05" name="Conversion Scaling Analog Input 5" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="06" name="Conversion Scaling Analog Input 6" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="07" name="Conversion Scaling Analog Input 7" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="08" name="Conversion Scaling Analog Input 8" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+          </Object>
+          <Object index="6430" name="Analog Input SI" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Input 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6431" name="Analog Input Offset Integer" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Input 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6432" name="Analog Input Scaling Integer" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Input 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="1" />
+          </Object>
+          <Object index="6441" name="Analog Output Conversion Offset" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Conversion Offset Analog Output 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="02" name="Conversion Offset Analog Output 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="03" name="Conversion Offset Analog Output 3" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="04" name="Conversion Offset Analog Output 4" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="05" name="Conversion Offset Analog Output 5" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="06" name="Conversion Offset Analog Output 6" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="07" name="Conversion Offset Analog Output 7" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+            <SubObject subIndex="08" name="Conversion Offset Analog Output 8" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="6442" name="Analog Output Conversion Scaling" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x8" />
+            <SubObject subIndex="01" name="Conversion Scaling Analog Output 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="02" name="Conversion Scaling Analog Output 2" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="03" name="Conversion Scaling Analog Output 3" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="04" name="Conversion Scaling Analog Output 4" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="05" name="Conversion Scaling Analog Output 5" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="06" name="Conversion Scaling Analog Output 6" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="07" name="Conversion Scaling Analog Output 7" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+            <SubObject subIndex="08" name="Conversion Scaling Analog Output 8" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="1.0" />
+          </Object>
+          <Object index="6443" name="Analog Output Fault Mode" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x2" />
+            <SubObject subIndex="01" name="Fault Mode Analog Output 1" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x01" />
+            <SubObject subIndex="02" name="Fault Mode Analog Output 2" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x01" />
+          </Object>
+          <Object index="6444" name="Default Analog Output Fault State Unconverted" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Default Analog Output 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Default Analog Output 2" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="6445" name="Default Real Analog Output Fault State Unconverted" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Default Analog Output 1" objectType="7" dataType="0008" accessType="rw" PDOmapping="no" defaultValue="0.0" />
+          </Object>
+          <Object index="6446" name="Analog Output Offset Integer" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Output 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="6447" name="Analog Output Scaling Integer" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Output 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x1" />
+          </Object>
+          <Object index="6450" name="Analog Output SI" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x1" />
+            <SubObject subIndex="01" name="Analog Output 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+        </ObjectList>
+
+      </ApplicationLayers>
+      <TransportLayers/>
+      <NetworkManagement>
+        <GeneralFeatures DLLFeatureMN="false" NMTBootTimeNotActive="9000000" NMTCycleTimeMin="400" NMTCycleTimeMax="4294967295" NMTErrorEntries="2" NWLIPSupport="false" PHYExtEPLPorts="2" PHYHubIntegrated="true" SDOServer="true" SDOMaxConnections="2" SDOMaxParallelConnections="2" SDOCmdWriteAllByIndex="false" SDOCmdReadAllByIndex="false" SDOCmdWriteByName="false" SDOCmdReadByName="false" SDOCmdWriteMultParam="false" NMTFlushArpEntry="false" NMTNetHostNameSet="false" PDORPDOChannels="3" PDORPDOChannelObjects="25" PDOSelfReceipt="false" PDOTPDOChannelObjects="25"/>
+        <CNFeatures DLLCNFeatureMultiplex="true" DLLCNPResChaining="true" NMTCNSoC2PReq="0"/>
+        <Diagnostic/>
+      </NetworkManagement>
+    </ProfileBody>
+  </ISO15745Profile>
+</ISO15745ProfileContainer>

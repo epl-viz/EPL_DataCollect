@@ -44,7 +44,7 @@ class CaptureInstance;
   */
 class CycleContainer {
  private:
-  CaptureInstance *captureInstance;
+  CaptureInstance *parent;
 
  public:
   CycleContainer() = delete;

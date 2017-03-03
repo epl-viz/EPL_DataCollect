@@ -123,14 +123,14 @@ std::string Packet::getWiresharkString() const noexcept { return wiresharkSTR; }
  * \brief Returns the ID of the source (sending) node
  * \returns The ID of the source node as an unsigned integer
  */
-uint32_t Packet::getSrcNode() const noexcept { return nodeSource; }
+uint8_t Packet::getSrcNode() const noexcept { return nodeSource; }
 
 
 /*!
  * \brief Returns the ID of the destination (receiving) node
  * \returns The ID of the destination node as an unsigned integer
  */
-uint32_t Packet::getDestNode() const noexcept { return nodeDest; }
+uint8_t Packet::getDestNode() const noexcept { return nodeDest; }
 
 
 /*!

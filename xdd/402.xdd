@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from unknown by Convert::EDS::XDD -->
+HASH(0x2c5b330)
+<ISO15745ProfileContainer xmlns="http://www.ethernet-powerlink.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ethernet-powerlink.org Powerlink_Main.xsd">
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Device_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName>sample CiA 402 device device profile</ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>Device</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_Device_Powerlink" fileName="unknown.xdd" fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <DeviceIdentity>
+        <vendorName></vendorName>
+        <vendorID>0x0</vendorID>
+        <productName>sample device according to CiA 402 0x0</productName>
+        <version versionType="HW">1.00</version>
+        <version versionType="SW">1.00</version>
+        <version versionType="FW">1.00</version>
+      </DeviceIdentity>
+      <DeviceFunction>
+        <capabilities>
+          <characteristicsList>
+            <characteristic>
+              <characteristicName>
+                <label lang="en">Transfer rate</label>
+              </characteristicName>
+              <characteristicContent>
+                <label lang="en">100 MBit/s</label>
+              </characteristicContent>
+            </characteristic>
+          </characteristicsList>
+        </capabilities>
+      </DeviceFunction>
+    </ProfileBody>
+  </ISO15745Profile>
+  <ISO15745Profile>
+    <ProfileHeader>
+      <ProfileIdentification>Powerlink_Communication_Profile</ProfileIdentification>
+      <ProfileRevision>1</ProfileRevision>
+      <ProfileName></ProfileName>
+      <ProfileSource/>
+      <ProfileClassID>CommunicationNetwork</ProfileClassID>
+      <ISO15745Reference>
+        <ISO15745Part>4</ISO15745Part>
+        <ISO15745Edition>1</ISO15745Edition>
+        <ProfileTechnology>Powerlink</ProfileTechnology>
+      </ISO15745Reference>
+    </ProfileHeader>
+    <ProfileBody xsi:type="ProfileBody_CommunicationNetwork_Powerlink" fileName="unknown.xdd"
+     fileCreator="none" fileCreationDate="07-Feb-2016" fileCreationTime="04:23PM" fileModificationDate="07-Feb-2016" fileModificationTime="04:23PM" fileModifiedBy="none" fileVersion="01.00" supportedLanguages="en">
+      <ApplicationLayers>
+        <identity>
+          <vendorID>0x0</vendorID>
+        </identity>
+        <DataTypeList>
+          <defType dataType="0001"> <Boolean/> </defType>
+          <defType dataType="0002"> <Integer8/> </defType>
+          <defType dataType="0003"> <Integer16/> </defType>
+          <defType dataType="0004"> <Integer32/> </defType>
+          <defType dataType="0005"> <Unsigned8/> </defType>
+          <defType dataType="0006"> <Unsigned16/> </defType>
+          <defType dataType="0007"> <Unsigned32/> </defType>
+          <defType dataType="0008"> <Real32/> </defType>
+          <defType dataType="0009"> <Visible_String/> </defType>
+          <defType dataType="0010"> <Integer24/> </defType>
+          <defType dataType="0011"> <Real64/> </defType>
+          <defType dataType="0012"> <Integer40/> </defType>
+          <defType dataType="0013"> <Integer48/> </defType>
+          <defType dataType="0014"> <Integer56/> </defType>
+          <defType dataType="0015"> <Integer64/> </defType>
+          <defType dataType="000A"> <Octet_String/> </defType>
+          <defType dataType="000B"> <Unicode_String/> </defType>
+          <defType dataType="000C"> <Time_of_Day/> </defType>
+          <defType dataType="000D"> <Time_Diff/> </defType>
+          <defType dataType="000F"> <Domain/> </defType>
+          <defType dataType="0016"> <Unsigned24/> </defType>
+          <defType dataType="0018"> <Unsigned40/> </defType>
+          <defType dataType="0019"> <Unsigned48/> </defType>
+          <defType dataType="001A"> <Unsigned56/> </defType>
+          <defType dataType="001B"> <Unsigned64/> </defType>
+          <defType dataType="0401"> <MAC_ADDRESS/> </defType>
+          <defType dataType="0402"> <IP_ADDRESS/> </defType>
+          <defType dataType="0403"> <NETTIME/> </defType>
+        </DataTypeList>
+
+        <ObjectList>
+          <!-- Communication Profile Area (0x1000 - 0x1FFF): defined by EPSG 301 -->
+
+          <!-- Standardised Device Profile Area (0x6000 - 0x9FFF): may be used according to a CiA device profile.The profile to be used is given by NMT_DeviceType_U32 -->
+          <Object index="6007" name="Abort Connection Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="603F" name="Error Code" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6040" name="Controlword" objectType="7" dataType="0006" accessType="rw" PDOmapping="yes" />
+          <Object index="6041" name="Statusword" objectType="7" dataType="0006" accessType="ro" PDOmapping="yes" />
+          <Object index="6042" name="Vl Target Velocity" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6043" name="Vl Velocity Demand" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          <Object index="6044" name="Vl Control Effort" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" />
+          <Object index="6045" name="Vl Manipulated Velocity" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6046" name="Vl Velocity Min Max Amount" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Vl_Velocity_Min_Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl_Velocity_Max_Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6047" name="Vl Velocity Min Max" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000004" />
+            <SubObject subIndex="01" name="Vl Velocity Min Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl Velocity Max Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Vl Velocity Min Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Vl Velocity Max Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6048" name="Vl Velocity Acceleration" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Delta speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Delta time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6049" name="Vl Velocity Deceleration" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Delta speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Delta time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="604A" name="Vl Velocity Quick Stop" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Delta speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Delta time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          </Object>
+          <Object index="604B" name="Vl Setpoint Factor" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x0002" />
+            <SubObject subIndex="01" name="Vl Setpoint Factor Numerator" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0001" />
+            <SubObject subIndex="02" name="Vl Setpoint Factor Denominator" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0001" />
+          </Object>
+          <Object index="604C" name="Vl Dimension Factor" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Vl Dimension Factor Numerator" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Vl Dimension Factor Denominator" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="604D" name="Vl Pole Number" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          <Object index="604E" name="Vl Velocity Reference" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="604F" name="Vl Ramp Function Time" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6050" name="Vl Slow Down Time" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6051" name="Vl Quick Stop Time" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6052" name="Vl Nominal Percentage" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" />
+          <Object index="6053" name="Vl Percentage Demand" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          <Object index="6054" name="Vl Actual Percentage" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          <Object index="6055" name="Vl Manipulated Percentage" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" />
+          <Object index="6056" name="Vl Velocity Motor Min Max Amount" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Vl Velocity Motor Min Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl Velocity Motor Max Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6057" name="Vl Velocity Motor Min Max" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000004" />
+            <SubObject subIndex="01" name="Vl Velocity Motor Min Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl Velocity Motor Max Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Vl Velocity Motor Min Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Vl Velocity Motor Max Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6058" name="Vl Frequency Motor Min Max Amount" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Vl Frequency Motor Min Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl Frequency Motor Max Amount" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6059" name="Vl Frequency Motor Min Max" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000004" />
+            <SubObject subIndex="01" name="Vl Frequency Motor Min Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Vl Frequency Motor Max Pos" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Vl Frequency Motor Min Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Vl Frequency Motor Max Neg" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="605A" name="Quick Stop Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0002" />
+          <Object index="605B" name="Shutdown Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="605C" name="Disable Operation Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0001" />
+          <Object index="605D" name="Halt Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0001" />
+          <Object index="605E" name="Fault Reaction Option Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0002" />
+          <Object index="6060" name="Modes of Operation" objectType="7" dataType="0002" accessType="wo" PDOmapping="no" />
+          <Object index="6061" name="Modes of Operation Display" objectType="7" dataType="0002" accessType="ro" PDOmapping="no" />
+          <Object index="6062" name="Position Demand Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="6063" name="Position Actual Value*" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="6064" name="Position Actual Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="yes" />
+          <Object index="6065" name="Following Error Window" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6066" name="Following Error Time Out" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6067" name="Position Window" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6068" name="Position Window Time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6069" name="Velocity Sensor Actual Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="606A" name="Sensor Selection Code" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" />
+          <Object index="606B" name="Velocity Demand Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="606C" name="Velocity Actual Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="yes" />
+          <Object index="606D" name="Velocity Window" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="606E" name="Velocity Window Time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="606F" name="Velocity Threshold" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6070" name="Velocity Threshold Time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6071" name="Target Torque" objectType="7" dataType="0003" accessType="rw" PDOmapping="yes" defaultValue="0x0000" />
+          <Object index="6072" name="Max Torque" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6073" name="Max Current" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6074" name="Torque Demand Value" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6075" name="Motor Rated Current" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="6076" name="Motor Rated Torque" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="6077" name="Torque Actual Value" objectType="7" dataType="0003" accessType="ro" PDOmapping="yes" defaultValue="0x0000" />
+          <Object index="6078" name="Current Actual Value" objectType="7" dataType="0003" accessType="ro" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6079" name="DC Link Circuit Voltage" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="607A" name="Target Position" objectType="7" dataType="0004" accessType="rw" PDOmapping="yes" />
+          <Object index="607B" name="Position Range Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Min Position Range Limit" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x80000000" />
+            <SubObject subIndex="02" name="Max Position Range Limit" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x7FFFFFFF" />
+          </Object>
+          <Object index="607C" name="Home Offset" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="607D" name="Software Position Limit" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Min Software Position Limit" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x80000000" />
+            <SubObject subIndex="02" name="Max Software Position Limit" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x7FFFFFFF" />
+          </Object>
+          <Object index="607E" name="Polarity" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          <Object index="607F" name="Max Profile Velocity" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6080" name="Max Motor Speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6081" name="Profile Velocity in pp-mode" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6082" name="End Velocity" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="6083" name="Profile Acceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6084" name="Profile Deceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6085" name="Quick Stop Deceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6086" name="Motion Profile Type" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6087" name="Torque Slope" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          <Object index="6088" name="Torque Profile Type" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="6089" name="Position Notation Index" objectType="7" dataType="0002" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          <Object index="608A" name="Position Dimension Index" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          <Object index="608B" name="Velocity Notation Index" objectType="7" dataType="0002" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          <Object index="608C" name="Velocity Dimension Index" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          <Object index="608D" name="Acceleration Notation Index" objectType="7" dataType="0002" accessType="rw" PDOmapping="no" />
+          <Object index="608E" name="Acceleration Dimension Index" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          <Object index="608F" name="Position Encoder Resolution" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Encoder Increments" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Motor Revolutions" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6090" name="Velocity Encoder Resolution" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Encoder Increments / s" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Motor Revolutions / s" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6091" name="Gear Ratio" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Motor Revolutions" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Shaft Revolutions" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6092" name="Feed Constant" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Feed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Shaft Revolutions" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6093" name="Position Factor" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Numerator" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Feed Constant" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6094" name="Velocity Encoder Factor" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Numerator" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Divisor" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6095" name="Velocity Factor 1" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Numerator" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Divisor" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6096" name="Velocity Factor 2" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Numerator" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Divisor" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6097" name="Acceleration Factor" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Numerator" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Divisor" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000001" />
+          </Object>
+          <Object index="6098" name="Homing Method" objectType="7" dataType="0002" accessType="rw" PDOmapping="no" defaultValue="0x00" />
+          <Object index="6099" name="Homing Speeds" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000002" />
+            <SubObject subIndex="01" name="Fast Homing Speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Slow Homing Speed" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="609A" name="Homing Acceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="60C0" name="Interpolation Sub Mode Select" objectType="7" dataType="0003" accessType="rw" PDOmapping="no" defaultValue="0x0000" />
+          <Object index="60C1" name="Interpolation Data Record" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="01" name="Data Record 1" objectType="7" dataType="0004" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="60C2" name="Interpolation Time Period" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Elements" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Interpolation time units" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x01" />
+            <SubObject subIndex="02" name="Interpolation time index" objectType="7" dataType="0002" accessType="rw" PDOmapping="no" defaultValue="0xFD" />
+          </Object>
+          <Object index="60C3" name="Interpolation Sync Definition" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Syncronize on Group" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="02" name="IP Sync Every n Event" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x01" />
+          </Object>
+          <Object index="60C4" name="Interpolation Data Configuration" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x06" />
+            <SubObject subIndex="01" name="Maximum buffer size" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" defaultValue="0x00000001" />
+            <SubObject subIndex="02" name="Actual buffer size" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+            <SubObject subIndex="03" name="Buffer organization" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="04" name="Buffer position" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+            <SubObject subIndex="05" name="Size of data record" objectType="7" dataType="0005" accessType="wo" PDOmapping="no" defaultValue="0x01" />
+            <SubObject subIndex="06" name="Buffer clear" objectType="7" dataType="0005" accessType="wo" PDOmapping="no" defaultValue="0x00" />
+          </Object>
+          <Object index="60C5" name="Max Acceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="60C6" name="Max Deceleration" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="60F4" name="Following Error Actual Value" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="60F6" name="Torque Control Parameters" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x01" />
+            <SubObject subIndex="01" name="_manufacturer_specific_" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="60F7" name="Power Stage Parameters" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x01" />
+            <SubObject subIndex="01" name="_manufacturer_specific_" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          </Object>
+          <Object index="60F8" name="Max Slippage" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="60F9" name="Velocity Control Parameter Set" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" defaultValue="0x02" />
+            <SubObject subIndex="01" name="Gain" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Integration Time Constant" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="60FA" name="Control Effort" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="60FB" name="Position Control Parameter Set" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="_manufacture_specific_" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="60FC" name="Position Demand Value*" objectType="7" dataType="0004" accessType="ro" PDOmapping="no" />
+          <Object index="60FD" name="Digital Inputs" objectType="7" dataType="0007" accessType="ro" PDOmapping="yes" defaultValue="0x00000000" />
+          <Object index="60FE" name="Digital Outputs" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="Physical Outputs" objectType="7" dataType="0007" accessType="rw" PDOmapping="yes" defaultValue="0x00000000" />
+            <SubObject subIndex="02" name="Output Mask" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000000" />
+          </Object>
+          <Object index="60FF" name="Target Velocity" objectType="7" dataType="0004" accessType="rw" PDOmapping="yes" />
+          <Object index="6402" name="Motor Type" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" />
+          <Object index="6403" name="Motor Catalogue Number" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          <Object index="6404" name="Motor Manufacturer" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          <Object index="6405" name="Http Motor Catalog Address" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          <Object index="6407" name="Motor Service Period" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="6410" name="Motor Data" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="_manufacturer_specific_" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="6502" name="Supported Drive Modes" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          <Object index="6503" name="Drive Catalog Number" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" />
+          <Object index="6504" name="Drive Manufacturer" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" />
+          <Object index="6505" name="Http Drive Catalog Address" objectType="7" dataType="0009" accessType="rw" PDOmapping="no" defaultValue="0x0" />
+          <Object index="6510" name="Drive Data" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of Entries" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="01" name="_manufacturer_specific_" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+          </Object>
+        </ObjectList>
+
+      </ApplicationLayers>
+      <TransportLayers/>
+      <NetworkManagement>
+        <GeneralFeatures DLLFeatureMN="false" NMTBootTimeNotActive="9000000" NMTCycleTimeMin="400" NMTCycleTimeMax="4294967295" NMTErrorEntries="2" NWLIPSupport="false" PHYExtEPLPorts="2" PHYHubIntegrated="true" SDOServer="true" SDOMaxConnections="2" SDOMaxParallelConnections="2" SDOCmdWriteAllByIndex="false" SDOCmdReadAllByIndex="false" SDOCmdWriteByName="false" SDOCmdReadByName="false" SDOCmdWriteMultParam="false" NMTFlushArpEntry="false" NMTNetHostNameSet="false" PDORPDOChannels="3" PDORPDOChannelObjects="25" PDOSelfReceipt="false" PDOTPDOChannelObjects="25"/>
+        <CNFeatures DLLCNFeatureMultiplex="true" DLLCNPResChaining="true" NMTCNSoC2PReq="0"/>
+        <Diagnostic/>
+      </NetworkManagement>
+    </ProfileBody>
+  </ISO15745Profile>
+</ISO15745ProfileContainer>

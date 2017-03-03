@@ -227,3 +227,32 @@ TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") 
   REQUIRE(ci.stopRecording() == 1);
   REQUIRE(ci.getState() == CaptureInstance::ERRORED);
 }
+
+TEST_CASE("Testing CaptureInstance -- config", "[CaptureInstance]") {
+  CaptureInstance ci;
+
+  auto cfg                  = ci.getConfig();
+  cfg.ihConfig.eplFrameName = "TEST";
+  cfg.smConfig.saveInterval = 0xDEADBEAF;
+  ci.setConfig(cfg);
+
+  auto ihConfig = ci.getInputHandler()->getConfig();
+  auto smConfig = ci.getSnapshotManager()->getConfig();
+
+  REQUIRE(ihConfig.eplFrameName == "TEST");
+  REQUIRE(smConfig.saveInterval == 0xDEADBEAF);
+
+  auto def        = ci.getDefaultNodeConfig();
+  def.baseProfile = "1001";
+  ci.setDefaultNodeConfig(def);
+
+  auto prof1        = def;
+  prof1.baseProfile = "000";
+
+  ci.setNodeConfig(0, prof1);
+  auto prof2 = ci.getNodeConfig(0);
+  auto prof3 = ci.getNodeConfig(4);
+
+  REQUIRE(prof2.baseProfile == prof1.baseProfile);
+  REQUIRE(prof3.baseProfile == def.baseProfile);
+}

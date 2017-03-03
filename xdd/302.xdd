@@ -169,10 +169,48 @@
           <!-- Communication Profile Area (0x1000 - 0x1FFF): defined by EPSG 301 -->
           <Object index="1000" name="NMT_DeviceType_U32" objectType="7" dataType="0007" accessType="const" PDOmapping="no" defaultValue="0x00000000"/>
           <Object index="1001" name="ERR_ErrorRegister_U8" objectType="7" dataType="0005" accessType="ro" PDOmapping="optional" defaultValue="0"/>
+          <Object index="1002" name="Manufacturer status register" objectType="7" dataType="0007" accessType="ro" PDOmapping="yes" />
+          <Object index="1003" name="Pre-defined error field" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Number of errors" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="01" name="Standard error field" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Standard error field 2" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Standard error field 3" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="04" name="Standard error field 4" objectType="7" dataType="0007" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="1005" name="COB-ID SYNC" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0x00000080" />
           <Object index="1006" name="NMT_CycleLen_U32" objectType="7" dataType="0007" accessType="rw" PDOmapping="no"/>
+          <Object index="1007" name="Synchronous window length" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" defaultValue="0" />
           <Object index="1008" name="NMT_ManufactDevName_VS" objectType="7" dataType="0009" accessType="const" PDOmapping="no" defaultValue="openPOWERLINK device"/>
           <Object index="1009" name="NMT_ManufactHwVers_VS" objectType="7" dataType="0009" accessType="const" PDOmapping="no" defaultValue="1.00"/>
-          <Object index="100A" name="NMT_ManufactSwVers_VS" objectType="7" dataType="0009" accessType="const" PDOmapping="no" defaultValue="OPLK V2.4.1"/>
+          <Object index="100A" name="NMT_ManufactSwVers_VS" objectType="7" dataType="0009" accessType="const" PDOmapping="no" />
+          <Object index="100C" name="Guard time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0000h" />
+          <Object index="100D" name="Life time factor" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="00h" />
+          <Object index="1010" name="store parameters" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="save all parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="save communication parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="save application parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="save manufacturer defined parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="1011" name="restore default parameters" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="restore all default parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="restore communication default parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="restore application default parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="restore manufacturer defined default parameters" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="1012" name="COB-ID time stamp message" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="1013" name="high resolution time stamp" objectType="7" dataType="0007" accessType="rw" PDOmapping="yes" defaultValue="0" />
+          <Object index="1014" name="COB-ID emergency message" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          <Object index="1015" name="inhibit time EMCY" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0" />
+          <Object index="1016" name="Consumer heartbeat time" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Consumer heartbeat time" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Consumer heartbeat time 2" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Consumer heartbeat time 3" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Consumer heartbeat time 4" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="1017" name="Producer heartbeat time" objectType="7" dataType="0006" accessType="rw" PDOmapping="no" defaultValue="0 or profile-specific" />
           <Object index="1018" name="NMT_IdentityObject_REC" objectType="9">
             <SubObject subIndex="00" name="NumberOfEntries" objectType="7" dataType="0005" accessType="const" PDOmapping="no" defaultValue="4"/>
             <SubObject subIndex="01" name="VendorId_U32" objectType="7" dataType="0007" accessType="const" PDOmapping="no" defaultValue="0x00000000"/>
@@ -180,10 +218,46 @@
             <SubObject subIndex="03" name="RevisionNo_U32" objectType="7" dataType="0007" accessType="const" PDOmapping="no" defaultValue="0x00020004"/>
             <SubObject subIndex="04" name="SerialNo_U32" objectType="7" dataType="0007" accessType="const" PDOmapping="no"/>
           </Object>
+          <Object index="1019" name="Synchronous counter overflow value" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" defaultValue="0 or profile-specific" />
           <Object index="1020" name="CFM_VerifyConfiguration_REC" objectType="9">
             <SubObject subIndex="00" name="NumberOfEntries" objectType="7" dataType="0005" accessType="const" defaultValue="2"/>
             <SubObject subIndex="01" name="ConfDate_U32" objectType="7" dataType="0007" accessType="rw" defaultValue="0"/>
             <SubObject subIndex="02" name="ConfTime_U32" objectType="7" dataType="0007" accessType="rw" defaultValue="0"/>
+          </Object>
+          <Object index="1022" name="Store format" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          <Object index="1023" name="OS command" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Command" objectType="7" dataType="000A" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Status" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Reply" objectType="7" dataType="000A" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="1024" name="OS command mode" objectType="7" dataType="0005" accessType="wo" PDOmapping="no" />
+          <Object index="1025" name="OS debugger interface" objectType="9" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Command" objectType="7" dataType="000A" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Status" objectType="7" dataType="0005" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="03" name="Reply" objectType="7" dataType="000A" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="1026" name="OS prompt" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no"/>
+            <SubObject subIndex="01" name="StdIn" objectType="7" dataType="0005" accessType="wo" PDOmapping="yes" />
+            <SubObject subIndex="02" name="StdOut" objectType="7" dataType="0005" accessType="ro" PDOmapping="yes" />
+            <SubObject subIndex="03" name="StdErr" objectType="7" dataType="0005" accessType="ro" PDOmapping="yes" />
+          </Object>
+          <Object index="1027" name="Module list" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="number of connected modules" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Module 1" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+            <SubObject subIndex="02" name="Module 2 to Module 254" objectType="7" dataType="0006" accessType="ro" PDOmapping="no" />
+          </Object>
+          <Object index="1028" name="Emergency consumer" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Emergency consumer 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Emergency consumer 2 to 127" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="1029" name="Error behavior" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Communication error" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="profile- or manufacturer-specific error" objectType="7" dataType="0005" accessType="rw" PDOmapping="no" />
           </Object>
           <Object index="1030" name="NMT_InterfaceGroup_0h_REC" objectType="9">
             <SubObject subIndex="00" name="NumberOfEntries" objectType="7" dataType="0005" accessType="const" PDOmapping="no" defaultValue="9"/>
@@ -25620,6 +25694,520 @@
             <SubObject subIndex="01" name="Release_BOOL" objectType="7" dataType="0001" accessType="rw" defaultValue="false" PDOmapping="no" />
             <SubObject subIndex="02" name="CmdID_U8" objectType="7" dataType="0005" accessType="rw" defaultValue="255" PDOmapping="no"/>
             <SubObject subIndex="03" name="CmdTarget_U8" objectType="7" dataType="0005" accessType="rw" defaultValue="0" PDOmapping="no"/>
+          </Object>
+          <Object index="1FA0" name="Object scanner list" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index supported" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Scan 1" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="05" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="06" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="07" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="08" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="09" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="10" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="11" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="12" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="13" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="14" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="15" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="16" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="17" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="18" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="19" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="20" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="21" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="22" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="23" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="24" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="25" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="26" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="27" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="28" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="29" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="30" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="31" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="32" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="33" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="34" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="35" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="36" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="37" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="38" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="39" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="40" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="41" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="42" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="43" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="44" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="45" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="46" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="47" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="48" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="49" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="50" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="51" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="52" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="53" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="54" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="55" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="56" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="57" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="58" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="59" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="60" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="61" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="62" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="63" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="64" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="65" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="66" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="67" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="68" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="69" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="70" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="71" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="72" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="73" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="74" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="75" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="76" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="77" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="78" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="79" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="80" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="81" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="82" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="83" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="84" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="85" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="86" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="87" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="88" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="89" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="90" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="91" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="92" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="93" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="94" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="95" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="96" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="97" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="98" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="99" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9A" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9B" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9C" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9D" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9E" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9F" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AD" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AF" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BD" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BF" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CD" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CF" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DD" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DF" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="ED" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EF" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F0" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F1" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F2" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F3" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F4" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F5" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F6" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F7" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F8" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F9" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FA" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FB" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FC" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FD" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FE" name="Scan" objectType="7" dataType="0007" accessType="rw" PDOmapping="no" />
+          </Object>
+          <Object index="1FD0" name="Object dispatching list" objectType="8" dataType="0000" PDOmapping="no">
+            <SubObject subIndex="00" name="Highest sub-index support" objectType="7" dataType="0005" accessType="const" PDOmapping="no" />
+            <SubObject subIndex="01" name="Dispatch 1" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="02" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="03" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="04" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="05" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="06" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="07" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="08" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="09" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="0F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="10" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="11" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="12" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="13" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="14" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="15" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="16" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="17" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="18" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="19" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="1F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="20" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="21" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="22" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="23" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="24" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="25" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="26" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="27" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="28" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="29" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="2F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="30" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="31" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="32" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="33" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="34" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="35" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="36" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="37" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="38" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="39" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="3F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="40" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="41" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="42" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="43" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="44" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="45" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="46" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="47" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="48" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="49" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="4F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="50" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="51" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="52" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="53" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="54" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="55" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="56" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="57" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="58" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="59" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="5F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="60" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="61" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="62" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="63" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="64" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="65" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="66" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="67" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="68" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="69" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="6F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="70" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="71" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="72" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="73" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="74" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="75" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="76" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="77" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="78" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="79" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="7F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="80" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="81" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="82" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="83" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="84" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="85" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="86" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="87" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="88" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="89" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="8F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="90" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="91" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="92" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="93" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="94" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="95" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="96" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="97" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="98" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="99" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9A" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9B" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9C" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9D" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9E" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="9F" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="A9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AD" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="AF" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="B9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BD" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="BF" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="C9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CD" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="CF" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="D9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DD" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="DF" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="E9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="ED" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="EF" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F0" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F1" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F2" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F3" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F4" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F5" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F6" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F7" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F8" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="F9" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FA" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FB" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FC" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FD" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
+            <SubObject subIndex="FE" name="Dispatch" objectType="7" dataType="001B" accessType="rw" PDOmapping="no" />
           </Object>
 
           <!-- Manufacturer Specific Profile Area (0x2000 - 0x5FFF): may freely be used by the device manufacturer -->

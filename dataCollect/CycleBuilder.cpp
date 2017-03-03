@@ -30,7 +30,10 @@
 
 #include "CycleBuilder.hpp"
 #include "CaptureInstance.hpp"
+#include "EPLEnum2Str.hpp"
+#include "XDDParser.hpp"
 #include <chrono>
+#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -41,6 +44,35 @@ CycleBuilder::~CycleBuilder() {
 
   if (loopThread.joinable()) {
     loopThread.join();
+  }
+}
+
+void CycleBuilder::addNode(uint8_t nID) noexcept {
+  currentCycle.addNode(nID);
+
+  auto cfg = parent->getNodeConfig(nID);
+
+  std::string xddDir  = parent->getConfig().xddDir + '/';
+  std::string xddPath = xddDir + cfg.baseProfile;
+
+  std::cout << "[CycleBuilder] Adding Node " << static_cast<int>(nID) << std::endl;
+  std::cout << "[CycleBuilder]   -- Loading baseProfile " << xddPath << std::endl;
+
+  auto ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
+  if (ret != XDDParser::SUCCESS) {
+    std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
+              << static_cast<int>(nID) << std::endl;
+  }
+
+  if (!cfg.autoDeduceSpecificProfile && cfg.specificProfile != "") {
+    xddPath = xddDir + cfg.specificProfile;
+    std::cout << "[CycleBuilder]   -- Loading specific profile " << xddPath << std::endl;
+
+    ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
+    if (ret != XDDParser::SUCCESS) {
+      std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
+                << static_cast<int>(nID) << std::endl;
+    }
   }
 }
 
@@ -62,6 +94,59 @@ void CycleBuilder::buildNextCycle() noexcept {
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);
 
+
+  // Process packets
+  for (auto const &i : packets) {
+    auto src = i.getSrcNode();
+    auto dst = i.getDestNode();
+    if (currentCycle.getNode(src) == nullptr)
+      addNode(src);
+
+    if (dst != 255 && currentCycle.getNode(dst) == nullptr)
+      addNode(dst);
+
+    switch (i.getType()) {
+      case PacketType::ASYNC_SEND:
+        if (i.ASnd.get() == nullptr) {
+          std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! ASnd == nullptr" << std::endl;
+          break;
+        }
+
+        switch (i.ASnd->RequestedServiceID) {
+          case ASndServiceID::IDENT_RESPONSE:
+            if (i.IdentResponse.get() == nullptr) {
+              std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! IdentResponse == nullptr"
+                        << std::endl;
+              break;
+            }
+
+            if (i.IdentResponse->Profile >= 400 && parent->getNodeConfig(src).autoDeduceSpecificProfile) {
+              std::cout << "[CycleBuilder] Autodetected Node " << static_cast<int>(src) << " Profile "
+                        << i.IdentResponse->Profile << std::endl;
+
+              std::string xddPath = parent->getConfig().xddDir + '/';
+              xddPath += std::to_string(i.IdentResponse->Profile) + ".xdd";
+
+              auto ret = XDDParser::parseXDD(currentCycle.getNode(src)->getOD(), xddPath);
+              if (ret != XDDParser::SUCCESS) {
+                std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath
+                          << " for node " << static_cast<int>(src) << std::endl;
+              }
+            }
+
+            //! \todo Update Node vars
+
+            break;
+          default: break;
+        }
+
+
+        break;
+      default: break;
+    }
+  }
+
+
   parent->getPluginManager()->processCycle(&currentCycle);
 
 
@@ -71,6 +156,7 @@ void CycleBuilder::buildNextCycle() noexcept {
     currentCycle.events.emplace_back(i);
   }
 
+  // Remove old events
   while (true) {
     uint32_t toRemove = UINT32_MAX;
 
@@ -92,7 +178,7 @@ void CycleBuilder::buildNextCycle() noexcept {
     currentCycle.events.erase(currentCycle.events.begin() + toRemove);
   }
 
-  parent->getSnapshotManager()->registerCycle(currentCycle);
+  parent->getSnapshotManager()->registerCycle(&currentCycle);
 }
 
 
