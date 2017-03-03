@@ -97,15 +97,8 @@ testExec chmod -R a+rwx .
 
 msg "START TEST"
 
-testCheckFail() {
-  msg "Testing wrong CMD parameters"
-  ./bin/tests --asd-asdf &> /dev/null
-  (( $? != 0 )) && return 0
-  return 1
-}
-
-testExecNoRoot     make check
-testFail           make check
+testExecNoRoot     ./bin/tests
+testFail           ./bin/tests
 testExecNoRootFail ./bin/tests --asd-asdf
 
 if (( $ERROR_COUNT == 0 )); then
