@@ -73,6 +73,7 @@ inline void bindSTRING(parserData *d, field_info *fi, std::string &val);
 inline void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val);
 inline void bindIPV4(parserData *d, field_info *fi, std::string &val);
 inline void bindETHER(parserData *d, field_info *fi, std::string &val);
+inline void bindDIFF(parserData *d, field_info *fi, PacketDiff &val);
 
 // Bind Functions
 
@@ -83,7 +84,7 @@ void bindUINT8(parserData *d, field_info *fi, uint8_t &val) {
     return;
   }
 
-  val = static_cast<uint8_t>(fi->value.value.uinteger64);
+  val = static_cast<uint8_t>(fi->value.value.uinteger);
   DPRINT(d, fi, std::to_string(val), "");
 }
 
@@ -94,7 +95,7 @@ void bindUINT16(parserData *d, field_info *fi, uint16_t &val) {
     return;
   }
 
-  val = static_cast<uint16_t>(fi->value.value.uinteger64);
+  val = static_cast<uint16_t>(fi->value.value.uinteger);
   DPRINT(d, fi, std::to_string(val), "");
 }
 
@@ -105,7 +106,7 @@ void bindUINT32(parserData *d, field_info *fi, uint32_t &val) {
     return;
   }
 
-  val = static_cast<uint32_t>(fi->value.value.uinteger64);
+  val = static_cast<uint32_t>(fi->value.value.uinteger);
   DPRINT(d, fi, std::to_string(val), "");
 }
 
@@ -220,6 +221,56 @@ void bindETHER(parserData *d, field_info *fi, std::string &val) {
   DPRINT(d, fi, val, "");
 }
 
+/*!
+ * \note Special function ONLY for SDO CMD WriteByIndex
+ */
+void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
+  uint16_t i  = d->TempPDO.Index;
+  uint8_t  si = d->TempPDO.SubIndex;
+
+#if ENABLE_DEBUG_PRINT
+  std::string debugStr = std::to_string(i) + " -- ";
+  debugStr += std::to_string(static_cast<int>(si)) + " = ";
+#endif
+
+  switch (fi->hfinfo->type) {
+    case FT_FLOAT:
+    case FT_DOUBLE:
+      val = PacketDiff(i, si, fi->value.value.floating);
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.floating), "");
+      return;
+
+    case FT_BOOLEAN:
+    case FT_INT8:
+    case FT_INT16:
+    case FT_INT24:
+    case FT_INT32:
+    case FT_UINT8:
+    case FT_UINT16:
+    case FT_UINT24:
+    case FT_UINT32:
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger));
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
+      return;
+
+    case FT_INT40:
+    case FT_INT48:
+    case FT_INT56:
+    case FT_INT64:
+    case FT_UINT40:
+    case FT_UINT48:
+    case FT_UINT56:
+    case FT_UINT64:
+      val = PacketDiff(i, si, fi->value.value.uinteger64);
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
+      return;
+
+    default:
+      std::cerr << "[WS Parser] bindDIFF: '" << fi->hfinfo->name << "' is not a float or integer but "
+                << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
+  }
+}
+
 
 template <class E>
 inline void bindEnum(parserData *d, field_info *fi, E &val) {
@@ -229,12 +280,33 @@ inline void bindEnum(parserData *d, field_info *fi, E &val) {
 }
 
 
-void foreachEPLFunc(proto_tree *node, gpointer data) {
+void foreachPDOFunc(proto_tree *node, gpointer data) {
   parserData *d  = reinterpret_cast<parserData *>(data);
   field_info *fi = node->finfo;
 
-  auto test = node->tree_data->interesting_hfids;
-  (void)test;
+  if (!fi || !fi->hfinfo)
+    return;
+
+  header_field_info *hi = fi->hfinfo;
+
+  if (!hi->name || !hi->abbrev)
+    return;
+
+  switch (hashFunc(hi->abbrev)) {
+    case EPL_PREFIX ".pdo.index"_h: bindUINT16(d, fi, d->TempPDO.Index); break;
+    case EPL_PREFIX ".pdo.subindex"_h: bindUINT8(d, fi, d->TempPDO.SubIndex); break;
+    case EPL_PREFIX ".od.data"_h: bindDIFF(d, fi, d->TempPDO.Data); break;
+    case "data"_h: break;
+    default:
+      std::cerr << "[WiresharkParser] Unknown ID " << hi->abbrev << std::endl;
+      DPRINT(d, fi, "<UNDEF>", "<NOTFOUND>");
+  }
+}
+
+
+void foreachEPLFunc(proto_tree *node, gpointer data) {
+  parserData *d  = reinterpret_cast<parserData *>(data);
+  field_info *fi = node->finfo;
 
   if (!fi || !fi->hfinfo)
     return;
@@ -280,9 +352,15 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
 
     // IGONRE:
     case EPL_PREFIX ".pdo"_h:
-    case EPL_PREFIX ".pdo.index"_h:
-    case EPL_PREFIX ".pdo.subindex"_h:
-    case EPL_PREFIX ".pdo.data"_h:
+      DPRINT(d, fi, "PDO", "");
+
+      if (node->first_child != nullptr) {
+        ++d->currentLevel;
+        proto_tree_children_foreach(node, foreachPDOFunc, data);
+        --d->currentLevel;
+        d->diffs.emplace(d->TempPDO.Data);
+      }
+      return;
 
     case "data"_h:
     case "data.len"_h:
@@ -823,10 +901,16 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       break; // == FT_UINT8 -- BASE_HEX | BASE_EXT_STRING ("SDO Transfer Abort")
     case EPL_PREFIX ".asnd.sdo.cmd.data.index"_h:
       bindUINT16(d, fi, d->ASnd.SDO.CMD.ODIndex);
+      d->TempPDO.Index = d->ASnd.SDO.CMD.ODIndex;
       break; // == FT_UINT16 -- BASE_HEX ("OD Index")
     case EPL_PREFIX ".asnd.sdo.cmd.data.subindex"_h:
       bindUINT8(d, fi, d->ASnd.SDO.CMD.ODSubIndex);
+      d->TempPDO.SubIndex = d->ASnd.SDO.CMD.ODSubIndex;
       break; // == FT_UINT8 -- BASE_HEX ("OD SubIndex")
+    case EPL_PREFIX ".od.data"_h:
+      bindDIFF(d, fi, d->ASnd.SDO.CMD.data);
+      d->diffs.emplace(d->ASnd.SDO.CMD.data);
+      break; // == ??? -- BASE_HEX ("Data")
     case EPL_PREFIX ".asnd.sdo.cmd.data.mapping.index"_h:
       bindUINT16(d, fi, d->ASnd.SDO.CMD.MappingIndex);
       break; // == FT_UINT16 -- BASE_HEX ("Index")

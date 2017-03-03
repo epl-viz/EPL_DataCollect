@@ -32,11 +32,11 @@ using namespace EPL_DataCollect;
 using namespace fakeit;
 
 TEST_CASE("Testing Packet", "[Packet]") {
-  plf::colony<ODEntryContainer> ods;
-  ods.emplace(ODEntryContainer(ObjectDataType::INTEGER24));
-  ods.emplace(ODEntryContainer(ObjectDataType::BOOLEAN));
-  ods.emplace(ODEntryContainer(ObjectDataType::VISIBLE_STRING));
-  ods.emplace(ODEntryContainer(ObjectDataType::REAL64));
+  plf::colony<PacketDiff> ods;
+  ods.emplace(1, 0, 10ul);
+  ods.emplace(2, 0, 10.0);
+  ods.emplace(3, 1, 10ul);
+  ods.emplace(4, 0, 10ul);
 
   std::string wire  = "assdagagdagaerg";
   std::string other = "affbytsysrtharthathaeheeh";
@@ -53,7 +53,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   Packet p(&d);
 
   for (auto &i : ods) {
-    p.addDiff(1, i);
+    p.addDiff(i);
   }
 
   REQUIRE(p.getMiscData() == other);
@@ -65,13 +65,15 @@ TEST_CASE("Testing Packet", "[Packet]") {
 
   auto diffs = p.getDiffs();
   for (auto &it : ods) {
-    bool found = false;
+    (void)it;
+    bool found = true;
     for (auto &i : *diffs) {
-      REQUIRE(i.getIndex() == 1);
-      if (i.getEntry()->getDataType() == it->getDataType()) {
-        found = true;
-        break;
-      }
+      REQUIRE(i.getIndex() <= 4);
+      REQUIRE(i.getSubIndex() <= 1);
+      //       if (i.getEntry()->getDataType() == it->getDataType()) {
+      //         found = true;
+      //         break;
+      //       }
     }
 
     REQUIRE(found == true);

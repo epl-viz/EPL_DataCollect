@@ -29,10 +29,16 @@
  */
 
 #include "PacketDiff.hpp"
+#include "OD.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
-PacketDiff::PacketDiff(uint16_t index, ODEntryContainer entry) : odIndex(index), newEntry(std::move(entry)) {}
+PacketDiff::PacketDiff(uint16_t index, uint8_t sIndex, uint64_t entry)
+    : odIndex(index), subIndex(sIndex), valInt(entry) {}
+
+PacketDiff::PacketDiff(uint16_t index, uint8_t sIndex, double entry)
+    : odIndex(index), subIndex(sIndex), valReal(entry) {}
 
 PacketDiff::~PacketDiff() {}
 
@@ -43,8 +49,69 @@ PacketDiff::~PacketDiff() {}
 uint16_t PacketDiff::getIndex() const noexcept { return odIndex; }
 
 /*!
- * \brief Get The new OD Entry
- * \returns a pointer to the new ODEntry
+ * \brief Returns the subIndex
  */
-ODEntry *PacketDiff::getEntry() noexcept { return *newEntry; }
+uint8_t PacketDiff::getSubIndex() const noexcept { return subIndex; }
+
+/*!
+ * \brief Get The new OD Entry
+ * \returns a ODEntryContainer
+ */
+ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
+  ODEntry *entryPTR = od->getEntry(odIndex);
+
+  if (entryPTR) {
+    ODEntryContainer entry(entryPTR);
+    entry->setFromString(std::to_string(valInt));
+
+    switch (entry->getType()) {
+      case ObjectClassType::INTEGER: entry.getData<ODEntryInt>()->data   = static_cast<int64_t>(valInt); break;
+      case ObjectClassType::UNSIGNED: entry.getData<ODEntryUInt>()->data = valInt; break;
+      case ObjectClassType::BOOL: entry.getData<ODEntryBool>()->data     = valInt != 0; break;
+      case ObjectClassType::REAL: entry.getData<ODEntryReal>()->data     = valReal; break;
+      case ObjectClassType::STRING: entry.getData<ODEntryString>()->data = std::to_string(valInt); break;
+      case ObjectClassType::ARRAY_INTEGER:
+        entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(valInt);
+        break;
+      case ObjectClassType::ARRAY_UNSIGNED: entry.getData<ODEntryArrayUInt>()->data[subIndex] = valInt; break;
+      case ObjectClassType::ARRAY_BOOL: entry.getData<ODEntryArrayBool>()->data[subIndex]     = valInt != 0; break;
+      case ObjectClassType::ARRAY_REAL: entry.getData<ODEntryArrayReal>()->data[subIndex]     = valReal; break;
+      case ObjectClassType::COMPLEX:
+        auto desc = od->getODDesc()->getEntry(odIndex);
+        if (desc->subEntries.size() <= subIndex) {
+          ODEntryContainer fallback(ObjectDataType::UNSIGNED64, subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY);
+
+          if (subIndex == 0)
+            fallback.getData<ODEntryUInt>()->data = valInt;
+          else
+            fallback.getData<ODEntryArrayUInt>()->data[subIndex] = valInt;
+
+          entry.getData<ODEntryComplex>()->data[subIndex] = fallback->clone();
+        }
+        ODEntryContainer temp(desc->dataType);
+
+        switch (temp->getType()) {
+          case ObjectClassType::INTEGER: temp.getData<ODEntryInt>()->data   = static_cast<int64_t>(valInt); break;
+          case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
+          case ObjectClassType::BOOL: temp.getData<ODEntryBool>()->data     = valInt != 0; break;
+          case ObjectClassType::REAL: temp.getData<ODEntryReal>()->data     = valReal; break;
+          default: temp->setFromString(std::to_string(valInt), subIndex);
+        }
+
+        entry.getData<ODEntryComplex>()->data[subIndex] = temp->clone();
+        break;
+    }
+
+    return entry;
+  } else {
+    ODEntryContainer fallback(ObjectDataType::UNSIGNED64, subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY);
+
+    if (fallback->getType() == ObjectClassType::UNSIGNED)
+      fallback.getData<ODEntryUInt>()->data = valInt;
+    else if (fallback->getType() == ObjectClassType::ARRAY_UNSIGNED)
+      fallback.getData<ODEntryArrayUInt>()->data[subIndex] = valInt;
+
+    return fallback;
+  }
+}
 }

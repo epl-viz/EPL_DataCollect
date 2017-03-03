@@ -74,6 +74,7 @@ constexpr uint32_t calcSize() {
 class ODEntryContainer final {
  private:
   char data[internal::calcSize()]; //!< The data storage
+  bool movedFrom = false;
 
   template <class C>
   C *init(ObjectDataType type) noexcept;
@@ -84,6 +85,8 @@ class ODEntryContainer final {
 
   ODEntryContainer(ObjectClassType type, ObjectDataType dt);
   ODEntryContainer(ObjectDataType type, ObjectType ot = ObjectType::VAR);
+
+  ODEntryContainer(ODEntry *entry);
 
   ODEntryContainer(const ODEntryContainer &);
   ODEntryContainer(ODEntryContainer &&);

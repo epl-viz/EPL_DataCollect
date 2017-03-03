@@ -41,6 +41,8 @@
 
 namespace EPL_DataCollect {
 
+class CycleBuilder;
+
 /*!
   * class OD
   * \brief Representation of the Object Dictionary of a Node
@@ -68,6 +70,8 @@ class OD {
 
   mockable ODDescription *getODDesc() noexcept;
   mockable ODEntry *getEntry(uint16_t index) noexcept;
+
+  friend class CycleBuilder;
 
  private:
   mockable ODEntryContainer constructODEntry(ODEntryDescription *entryDesc) const noexcept;

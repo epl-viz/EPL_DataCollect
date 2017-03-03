@@ -205,20 +205,22 @@ TEST_CASE("Testing ODEntryString", "[ODEntry]") {
   REQUIRE(checkDouble(t.getNumericValue(), 0) == true);
   REQUIRE(t.clone().get() != nullptr);
 
+  ODEntryString *t2;
+
   // Test copying of complex stuff
   ODEntryContainer ct2(ct);
-  t = *ct2.getData<ODEntryString>();
-  REQUIRE(t.data == "Hello world");
+  t2 = ct2.getData<ODEntryString>();
+  REQUIRE(t2->data == "Hello world");
   ODEntryContainer ct3(std::move(ct));
-  t = *ct3.getData<ODEntryString>();
-  REQUIRE(t.data == "Hello world");
+  t2 = ct3.getData<ODEntryString>();
+  REQUIRE(t2->data == "Hello world");
 
   ct2 = ct3;
-  t   = *ct2.getData<ODEntryString>();
-  REQUIRE(t.data == "Hello world");
+  t2  = ct2.getData<ODEntryString>();
+  REQUIRE(t2->data == "Hello world");
   ct3 = std::move(ct2);
-  t   = *ct3.getData<ODEntryString>();
-  REQUIRE(t.data == "Hello world");
+  t2  = ct3.getData<ODEntryString>();
+  REQUIRE(t2->data == "Hello world");
 }
 
 TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {

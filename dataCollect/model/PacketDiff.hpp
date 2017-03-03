@@ -32,9 +32,10 @@
 
 #include "defines.hpp"
 #include "ODEntryContainer.hpp"
-#include <memory>
 
 namespace EPL_DataCollect {
+
+class OD;
 
 /*!
   * class PacketDiff
@@ -42,14 +43,17 @@ namespace EPL_DataCollect {
   */
 class PacketDiff {
  private:
-  uint16_t         odIndex;
-  ODEntryContainer newEntry;
+  uint16_t odIndex;
+  uint8_t  subIndex;
+  uint64_t valInt  = UINT64_MAX;
+  double   valReal = 0;
 
  public:
   PacketDiff() = delete;
   virtual ~PacketDiff();
 
-  PacketDiff(uint16_t index, ODEntryContainer entry);
+  PacketDiff(uint16_t index, uint8_t sIndex, uint64_t entry);
+  PacketDiff(uint16_t index, uint8_t sIndex, double entry);
 
   PacketDiff(const PacketDiff &) = default;
   PacketDiff(PacketDiff &&)      = default;
@@ -57,7 +61,8 @@ class PacketDiff {
   PacketDiff &operator=(const PacketDiff &) = default;
   PacketDiff &operator=(PacketDiff &&) = default;
 
-  uint16_t getIndex() const noexcept;
-  ODEntry *getEntry() noexcept;
+  uint16_t         getIndex() const noexcept;
+  uint8_t          getSubIndex() const noexcept;
+  ODEntryContainer getEntry(OD *desc) const noexcept;
 };
 }

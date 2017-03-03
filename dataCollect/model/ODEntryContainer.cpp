@@ -29,39 +29,46 @@
  */
 
 #include "ODEntryContainer.hpp"
+#include <iostream>
 #include <string.h>
 
 namespace EPL_DataCollect {
 
 ODEntryContainer::~ODEntryContainer() {
   // Manually call the destructor
-  reinterpret_cast<ODEntry *>(data)->~ODEntry();
+  if (!movedFrom)
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
 }
 
 ODEntryContainer::ODEntryContainer(const ODEntryContainer &c) {
-  memset(data, 0, internal::calcSize());
   reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
 }
+
 ODEntryContainer::ODEntryContainer(ODEntryContainer &&c) {
-  memset(data, 0, internal::calcSize());
   reinterpret_cast<ODEntry *>(c.data)->clone(data);
+  c.movedFrom = true;
 }
 
 ODEntryContainer &ODEntryContainer::operator=(const ODEntryContainer &c) {
-  memset(data, 0, internal::calcSize());
-  reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+  if (this != &c) {
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+    reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+  }
   return *this;
 }
 
 ODEntryContainer &ODEntryContainer::operator=(ODEntryContainer &&c) {
-  memset(data, 0, internal::calcSize());
-  reinterpret_cast<ODEntry *>(c.data)->clone(data);
+  if (this != &c) {
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+    reinterpret_cast<ODEntry *>(c.data)->clone(data);
+    c.movedFrom = true;
+  }
   return *this;
 }
 
-ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
-  memset(data, 0, internal::calcSize());
+ODEntryContainer::ODEntryContainer(ODEntry *entry) { entry->clone(data); }
 
+ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
   switch (type) {
     case ObjectClassType::INTEGER: init<ODEntryInt>(dt); return;
     case ObjectClassType::UNSIGNED: init<ODEntryUInt>(dt); return;

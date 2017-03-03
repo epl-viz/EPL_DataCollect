@@ -42,10 +42,23 @@ using namespace EPL_DataCollect;
 using namespace fakeit;
 
 
-TEST_CASE("Testing loading a cap", "[CycleBuilder]") {
+TEST_CASE("Testing loading a EPL_Example", "[CycleBuilder]") {
   CaptureInstance inst;
 
   std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+}
+
+TEST_CASE("Testing loading 1CN", "[CycleBuilder]") {
+  CaptureInstance inst;
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
   fs::path    filePath(file);
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));

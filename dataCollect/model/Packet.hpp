@@ -109,13 +109,13 @@ class Packet {
   bool operator==(const Packet &r) const;
 
   mockable PacketType getType() const noexcept;
-  mockable plf::colony<PacketDiff> *getDiffs() noexcept;
+  mockable const plf::colony<PacketDiff> *getDiffs() const noexcept;
   mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;
   mockable uint8_t getSrcNode() const noexcept;
   mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
 
-  mockable void addDiff(uint16_t index, ODEntryContainer entry) noexcept;
+  mockable void addDiff(PacketDiff diff) noexcept;
 };
 }

@@ -55,6 +55,7 @@ Packet::Packet(const parserData *const data) {
   wiresharkSTR = data->wsString;
   miscData     = data->wsOther;
   timeStamp    = data->tp;
+  diffs        = data->diffs;
 
   switch (type) {
     case PT::START_OF_CYCLE: SoC = std::make_shared<s_SoC>(data->SoC); break;
@@ -102,7 +103,7 @@ PacketType Packet::getType() const noexcept { return type; }
  * \brief Returns the changes of the packet in the OD
  * \returns The created diffs as a pointer to a plf::colony
  */
-plf::colony<PacketDiff> *Packet::getDiffs() noexcept { return &diffs; }
+const plf::colony<PacketDiff> *Packet::getDiffs() const noexcept { return &diffs; }
 
 
 /*!
@@ -141,8 +142,7 @@ Packet::TIME_POINT Packet::getTimeStamp() const noexcept { return timeStamp; }
 
 /*!
  * \brief Creates a new diff of data stored in 'entry' for the OD entry with given 'index' and adds it to the colony
- * \param index The index in the OD of the data that has been changed by the diff
- * \param entry The container of the data to create the diff for
+ * \param diff  The index in the OD of the data that has been changed by the diff
  */
-void Packet::addDiff(uint16_t index, ODEntryContainer entry) noexcept { diffs.emplace(index, std::move(entry)); }
+void Packet::addDiff(PacketDiff diff) noexcept { diffs.emplace(std::move(diff)); }
 }

@@ -31,9 +31,11 @@
 #pragma once
 
 #include "defines.hpp"
+#include "PacketDiff.hpp"
 #include "EPLEnums.h"
 #include <chrono>
 #include <epan/proto.h>
+#include <plf_colony.h>
 #include <type_traits>
 #include <vector>
 
@@ -55,7 +57,8 @@ namespace WiresharkParser {
 struct parserData final {
   std::string const *eplFrameName = nullptr;
 
-  std::vector<uint8_t> data;
+  std::vector<uint8_t>    data;
+  plf::colony<PacketDiff> diffs;
 
   PacketType                            pType       = PacketType::UNDEF;
   NMTState                              nmtState    = NMTState::OFF;
@@ -65,6 +68,15 @@ struct parserData final {
   uint8_t                               dst         = UINT8_MAX;
   uint16_t                              captureSize = UINT16_MAX;
   std::chrono::system_clock::time_point tp;
+
+  struct TempPDO {
+    uint16_t   Index    = UINT16_MAX;
+    uint8_t    SubIndex = UINT8_MAX;
+    PacketDiff Data     = PacketDiff(UINT16_MAX, UINT8_MAX, 0ul);
+
+    TempPDO()  = default;
+    ~TempPDO() = default;
+  } TempPDO;
 
   /* SoC data fields*/
   struct SoC final {
@@ -256,7 +268,7 @@ struct parserData final {
         uint8_t         DataPadding       = UINT8_MAX;
         uint8_t         TransferAbortCode = UINT8_MAX;
         uint16_t        ODIndex           = UINT16_MAX;
-        uint8_t         ODSubIndex        = UINT8_MAX;
+        uint8_t         ODSubIndex        = 0;
         uint16_t        MappingIndex      = UINT16_MAX;
         uint8_t         MappingSubIndex   = UINT8_MAX;
         uint16_t        MappingOffset     = UINT16_MAX;
@@ -270,6 +282,8 @@ struct parserData final {
         uint8_t              Reassembled              = UINT8_MAX;
         uint32_t             ReassembledLength        = UINT32_MAX;
         std::vector<uint8_t> ReassembledData;
+
+        PacketDiff data = PacketDiff(UINT16_MAX, UINT8_MAX, 0ul);
       } CMD;
     } SDO;
 
@@ -294,5 +308,6 @@ void debugFN(parserData *d, field_info *fi, std::string str);
 
 void foreachFunc(proto_tree *node, gpointer data);
 void foreachEPLFunc(proto_tree *node, gpointer data);
+void foreachPDOFunc(proto_tree *node, gpointer data);
 }
 }

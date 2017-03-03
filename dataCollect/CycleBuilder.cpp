@@ -105,6 +105,18 @@ void CycleBuilder::buildNextCycle() noexcept {
     if (dst != 255 && currentCycle.getNode(dst) == nullptr)
       addNode(dst);
 
+    Node *node = currentCycle.getNode(src);
+    OD *  od   = node->getOD();
+    for (auto const &j : *i.getDiffs()) {
+      if (j.getIndex() == UINT16_MAX)
+        continue;
+
+      ODEntryContainer entry = j.getEntry(od);
+      if (od->hasEntry(j.getIndex())) {
+        od->entries.at(j.getIndex()) = entry;
+      }
+    }
+
     switch (i.getType()) {
       case PacketType::ASYNC_SEND:
         if (i.ASnd.get() == nullptr) {
