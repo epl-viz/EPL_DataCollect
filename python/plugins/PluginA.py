@@ -2,6 +2,7 @@ import Cycle
 import Plugin
 import PluginAPI as api
 import PluginGUIAPI
+import Events
 
 class PluginA(Plugin.Plugin):
 
@@ -37,7 +38,7 @@ class PluginA(Plugin.Plugin):
 
     # event stuff
     print(cy.getActiveEvents())
-    print("ADDING AN EVENT !!! :", self.addEvent(0, "23"))
+    print("ADDING AN EVENT !!! :", self.addEvent(Events.EV_ENDCAP.value, "23"))
     print(cy.getActiveEvents())
 
 
