@@ -33,6 +33,7 @@
 #include "defines.hpp"
 
 #include "Cycle.hpp"
+#include "CycleBuilder.hpp"
 
 namespace EPL_DataCollect {
 
@@ -54,5 +55,6 @@ class CycleContainer {
 
   mockable Cycle getCycle(uint32_t cycleNum) noexcept;
   mockable Cycle pollCycle() const noexcept;
+  mockable CycleBuilder::Locker pollCyclePTR() noexcept;
 };
 }

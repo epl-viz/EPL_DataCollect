@@ -65,5 +65,12 @@ TEST_CASE("Testing loading 1CN", "[CycleBuilder]") {
 
   REQUIRE(inst.loadPCAP(file) == 0);
 
+  {
+    SLEEP(milliseconds, 2000);
+    auto ptr = inst.getCycleContainer()->pollCyclePTR();
+    REQUIRE(*ptr != nullptr);
+    std::cout << "Random polled Cycle: " << ptr->getCycleNum() << std::endl;
+  }
+
   inst.getCycleBuilder()->waitForLoopToFinish();
 }

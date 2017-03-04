@@ -31,6 +31,7 @@
 #pragma once
 
 #include "ODEntry.hpp"
+#include <string.h>
 
 
 namespace EPL_DataCollect {
@@ -155,51 +156,45 @@ constexpr ObjectClassType ODEntryComplexContainer::getOCTbyODT(ObjectType ot, Ob
 }
 
 
-ODEntryComplexContainer::~ODEntryComplexContainer() {
-  // Manually call the destructor
-  if (isInit)
-    reinterpret_cast<ODEntry *>(data)->~ODEntry();
-}
+ODEntryComplexContainer::~ODEntryComplexContainer() {}
 
 ODEntryComplexContainer::ODEntryComplexContainer(const ODEntryComplexContainer &c) {
   if (c.isInit)
-    reinterpret_cast<ODEntry *>(const_cast<ODEntryComplexContainer &>(c).data)->clone(data);
+    memcpy(data, c.data, internal::calcSizeComplex());
 }
 
 ODEntryComplexContainer::ODEntryComplexContainer(ODEntryComplexContainer &&c) {
   if (c.isInit)
-    reinterpret_cast<ODEntry *>(c.data)->clone(data);
+    memcpy(data, c.data, internal::calcSizeComplex());
 }
 
 ODEntryComplexContainer &ODEntryComplexContainer::operator=(const ODEntryComplexContainer &c) {
-  if (this != &c) {
-    if (isInit)
-      reinterpret_cast<ODEntry *>(data)->~ODEntry();
+  if (this != &c && c.isInit)
+    memcpy(data, c.data, internal::calcSizeComplex());
 
-    if (c.isInit)
-      reinterpret_cast<ODEntry *>(const_cast<ODEntryComplexContainer &>(c).data)->clone(data);
-  }
   return *this;
 }
 
 ODEntryComplexContainer &ODEntryComplexContainer::operator=(ODEntryComplexContainer &&c) {
-  if (this != &c) {
-    if (isInit)
-      reinterpret_cast<ODEntry *>(data)->~ODEntry();
+  if (this != &c && c.isInit)
+    memcpy(data, c.data, internal::calcSizeComplex());
 
-    if (c.isInit)
-      reinterpret_cast<ODEntry *>(c.data)->clone(data);
-  }
   return *this;
 }
 
-ODEntryComplexContainer::ODEntryComplexContainer(ODEntry *entry) { entry->clone(data); }
+ODEntryComplexContainer::ODEntryComplexContainer(ODEntry *entry) {
+  auto t = entry->getType();
+  if (t == ObjectClassType::INTEGER || t == ObjectClassType::UNSIGNED || t == ObjectClassType::BOOL ||
+      t == ObjectClassType::REAL)
+    entry->clone(data);
+}
 
 ODEntryComplexContainer &ODEntryComplexContainer::operator=(ODEntry *entry) {
-  if (isInit)
-    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+  auto t = entry->getType();
+  if (t == ObjectClassType::INTEGER || t == ObjectClassType::UNSIGNED || t == ObjectClassType::BOOL ||
+      t == ObjectClassType::REAL)
+    entry->clone(data);
 
-  entry->clone(data);
   return *this;
 }
 

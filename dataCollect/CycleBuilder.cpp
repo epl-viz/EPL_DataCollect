@@ -212,6 +212,7 @@ void CycleBuilder::buildLoop() noexcept {
 
   while (keepLoopAlive) {
     buildNextCycle();
+    std::lock_guard<std::recursive_mutex> sleep(sleepMutex);
 
     if (reachedEnd) {
       std::lock_guard<std::mutex> lk2(stopLoopSignal);
@@ -343,5 +344,15 @@ Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
 Cycle CycleBuilder::getCurrentCycle() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   return currentCycle;
+}
+
+/*!
+ * \brief Retruns a wrapper object for a Cycle pointer
+ * The returned object locks the CycleBuilder until it is destroyed
+ */
+CycleBuilder::Locker CycleBuilder::getCurrentCyclePTR() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  std::lock_guard<std::recursive_mutex> sleep(sleepMutex);
+  return Locker(sleepMutex, &currentCycle);
 }
 }

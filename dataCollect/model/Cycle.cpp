@@ -175,6 +175,7 @@ bool Cycle::addNode(uint8_t nodeID) {
   if (getNode(nodeID) != nullptr)
     return false;
 
+  ++nodeCount;
   nodes.insert({nodeID, Node(nodeID)});
   return true;
 }

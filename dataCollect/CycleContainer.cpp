@@ -62,4 +62,10 @@ Cycle CycleContainer::getCycle(uint32_t cycleNum) noexcept {
  * \return The current Cycle
  */
 Cycle CycleContainer::pollCycle() const noexcept { return parent->getCycleBuilder()->getCurrentCycle(); }
+
+/*!
+ * \brief Retruns a wrapper object for a Cycle pointer
+ * The returned object locks the CycleBuilder until it is destroyed
+ */
+CycleBuilder::Locker CycleContainer::pollCyclePTR() noexcept { return parent->getCycleBuilder()->getCurrentCyclePTR(); }
 }

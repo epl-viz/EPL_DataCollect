@@ -48,6 +48,26 @@ class CaptureInstance;
   * PluginManager
   */
 class CycleBuilder {
+ public:
+  class Locker {
+   private:
+    std::unique_lock<std::recursive_mutex> lk;
+    Cycle *                                c;
+
+   public:
+    Locker() = delete;
+    Locker(std::recursive_mutex &m, Cycle *cycle) : lk(m), c(cycle) {}
+
+    Locker(const Locker &) = delete;
+    Locker(Locker &&)      = default;
+
+    Locker &operator=(const Locker &) = delete;
+    Locker &operator=(Locker &&) = default;
+
+    inline Cycle *operator*() noexcept { return c; }
+    inline Cycle *operator->() noexcept { return c; }
+  };
+
  private:
   CaptureInstance *parent = nullptr;
 
@@ -59,6 +79,8 @@ class CycleBuilder {
   std::mutex              stopLoopSignal;
   std::condition_variable startLoopWait;
   std::condition_variable stopLoopWait;
+
+  std::recursive_mutex sleepMutex;
 
   bool isLoopRunning = false;
   bool keepLoopAlive = false;
@@ -85,6 +107,7 @@ class CycleBuilder {
 
   mockable Cycle seekCycle(uint32_t targetCycle, Cycle start) noexcept;
   mockable Cycle getCurrentCycle() noexcept;
+  mockable Locker getCurrentCyclePTR() noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
