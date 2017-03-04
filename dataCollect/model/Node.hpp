@@ -29,12 +29,10 @@
  * \todo Add more information on this representation of the Nodes and implement attribute accessors
  */
 
-
 #pragma once
 
-
-
 #include "defines.hpp"
+#include "InputHandler.hpp"
 #include "OD.hpp"
 
 namespace EPL_DataCollect {
@@ -46,11 +44,15 @@ class CycleBuilder;
   * \brief Representation of a Node in ethernetPOWERLINK
   */
 class Node {
+ public:
+  typedef struct WiresharkParser::parserData::ASnd::IdentResponse IDENT;
 
  private:
   OD         od;                           //!< \brief The Object dictionary of the Node
   NodeStatus status = NodeStatus::UNKNOWN; //!< \brief Current status of the Node
   uint8_t    id;                           //!< \brief The ID of this node
+
+  IDENT identity;
 
  public:
   Node() = delete;
@@ -70,10 +72,12 @@ class Node {
   mockable NodeStatus getStatus() const noexcept;
   mockable std::string getStatusStr() noexcept;
   mockable uint8_t getID() const noexcept;
+  mockable IDENT getIdentity() const noexcept { return identity; }
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif
   mockable void setStatus(NodeStatus newStatus) noexcept;
+  mockable void setIdentity(IDENT i) noexcept { identity = i; }
 };
 }

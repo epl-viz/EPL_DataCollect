@@ -132,6 +132,8 @@ void CycleBuilder::buildNextCycle() noexcept {
               break;
             }
 
+            node->setIdentity(*i.IdentResponse);
+
             auto nodeCfg = parent->getNodeConfig(src);
             if (i.IdentResponse->Profile >= 400 && nodeCfg.autoDeduceSpecificProfile) {
               std::cout << "[CycleBuilder] Autodetected Node " << static_cast<int>(src) << " Profile "
