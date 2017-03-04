@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
   Py_Initialize();
   std::string import_libs =
-        "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/build/lib')\n";
+        "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_CM_BINARY_DIR + "/lib')\n";
   std::string import_plugins =
         "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
   std::string import_tests_loadtests =
