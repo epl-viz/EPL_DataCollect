@@ -67,6 +67,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pName = PyUnicode_DecodeFSDefault(plugID.c_str());
 
   // check if module is present
+  PyRun_SimpleString("print(sys.path)");
   pModule = PyImport_Import(pName);
   Py_DECREF(pName);
   if (pModule == NULL) {
