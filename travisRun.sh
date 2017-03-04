@@ -97,8 +97,6 @@ testExec chmod -R a+rwx .
 
 msg "START TEST"
 
-testExec ls -l ../python/plugins
-testExec ls -l ../python/plugins/tests/loadtests
 testExecNoRoot     ./bin/tests
 testFail           ./bin/tests
 testExecNoRootFail ./bin/tests --asd-asdf
