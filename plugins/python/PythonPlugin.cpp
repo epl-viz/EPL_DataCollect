@@ -61,17 +61,16 @@ std::string PythonPlugin::getID() { return plugID; };
 std::string PythonPlugin::getDependencies() { return plugDeps; };
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
-  (void)ci; // TODO: init ci before
+  (void)ci;
 
   //** Python Initialization
   pName = PyUnicode_DecodeFSDefault(plugID.c_str());
 
   // check if module is present
-  PyRun_SimpleString("print(sys.path)");
   pModule = PyImport_Import(pName);
   Py_DECREF(pName);
   if (pModule == NULL) {
-    std::cerr << "Module\t'" + plugID + "'\t could not be loaded";
+    std::cerr << "Module\t'" + plugID + "'\t could not be loaded\n";
     return false;
   }
 
@@ -79,31 +78,31 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pDict  = PyModule_GetDict(pModule);
   pClass = PyDict_GetItemString(pDict, plugID.c_str());
   if (pClass == NULL) {
-    std::cerr << "Class of Plugin\t'" + plugID + "'\t could not be created";
+    std::cerr << "Class of Plugin\t'" + plugID + "'\t could not be created\n";
     return false;
   }
 
   if (!PyCallable_Check(pClass)) {
-    std::cerr << "Class\t'" + plugID + "'\t not callable";
+    std::cerr << "Class\t'" + plugID + "'\t not callable\n";
     return false;
   }
   pInstance = PyObject_CallObject(pClass, NULL);
 
   // check if instance could be created, and correct instance of super class Plugin
   if (pInstance == NULL) {
-    std::cerr << "Class instance of\t'" + plugID + "'\t could not be created";
+    std::cerr << "Class instance of\t'" + plugID + "'\t could not be created\n";
     return false;
   }
 
   if (strcmp(pInstance->ob_type->tp_base->tp_name, "Plugin.Plugin") != 0) {
-    std::cerr << "Plugin class\t'" + plugID + "'\t does not derive from correct parent class";
+    std::cerr << "Plugin class\t'" + plugID + "'\t does not derive from correct parent class\n";
     return false;
   }
 
   // check if (correct) getID() method is implemented
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
   if (pValue == NULL || strcmp(pValue->ob_type->tp_name, "str") != 0) {
-    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t is not or incorrectly implemented";
+    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t is not or incorrectly implemented\n";
     return false;
   }
 
@@ -111,7 +110,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   std::string id = PyBytes_AsString(pValue);
   Py_DECREF(pValue);
   if (id.compare(plugID) != 0) {
-    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t does not return class name";
+    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t does not return class name\n";
     return false;
   }
 
@@ -120,7 +119,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   Py_DECREF(pValue);
 
   if (strcmp(pValue->ob_type->tp_name, "str") != 0) {
-    std::cerr << "Plugin method getDependencies() of plugin\t'" + plugID + "'\t has incorrect return type";
+    std::cerr << "Plugin method getDependencies() of plugin\t'" + plugID + "'\t has incorrect return type\n";
     return false;
   }
   pValue   = PyUnicode_AsUTF8String(pValue);
@@ -128,14 +127,14 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
 
   // check if pluginID is already in storage, in this case no addition possible
   if (plugins.find(plugID) != plugins.end()) {
-    std::cerr << "Plugin with ID\t'" + plugID + "'\t already in database";
+    std::cerr << "Plugin with ID\t'" + plugID + "'\t already in database\n";
     return false;
   }
 
   // now check if the initialization of the plugin is successful in python
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL); // can't return NULL
   if (pValue != Py_True) {
-    std::cerr << "Plugin \t'" + plugID + "'\t Python initialization failed";
+    std::cerr << "Plugin \t'" + plugID + "'\t Python initialization failed\n";
     return false;
   }
   Py_DECREF(pValue);
@@ -143,8 +142,11 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
 
   //** instancing was successful, initing needed C++ stuff...
 
-  //   if (!registerCycleStorage<CSPythonPluginStorage>(plugID))
-  //     return false;   TODO: uncomment soon, have to init ci first !
+  if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
+    std::cerr << "Plugin \t'" + plugID + "'\t cycle storage not available\n";
+    return false;
+  }
+
   plugins[plugID] = this;
   return true;
 };

@@ -27,6 +27,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
+#include "PluginManager.hpp"
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
 #include <PythonPlugin.hpp>
@@ -37,29 +38,65 @@
 #pragma clang diagnostic pop
 
 using namespace fakeit;
+using namespace EPL_DataCollect;
+using namespace EPL_DataCollect::plugins;
+
+TEST_CASE("Loading python files", "[python]") {
+  std::cout << "\n";
+  auto pyPlugin_noFile             = std::make_shared<PythonPlugin>("Test_NOFILE");
+  auto pyPlugin_emptyFile          = std::make_shared<PythonPlugin>("Test_EmptyFile");
+  auto pyPlugin_classNotAvailable  = std::make_shared<PythonPlugin>("Test_ClassNotAvailable");
+  auto pyPlugin_classIllegalParent = std::make_shared<PythonPlugin>("Test_ClassIllegalParent");
+  auto pyPlugin_noIDMethod         = std::make_shared<PythonPlugin>("Test_NoIDMethod");
+  auto pyPlugin_illegalIDMethod    = std::make_shared<PythonPlugin>("Test_IllegalIDMethod");
+
+  auto            pyPlugin_minimalPlugin = std::make_shared<PythonPlugin>("Test_MinimalPlugin");
+  PluginManager   pm;
+  CaptureInstance ci;
+  pm.addPlugin(pyPlugin_minimalPlugin);
+
+
+  REQUIRE(pyPlugin_noFile->initialize(NULL) == FALSE);
+  REQUIRE(pyPlugin_emptyFile->initialize(NULL) == FALSE);
+  REQUIRE(pyPlugin_classNotAvailable->initialize(NULL) == FALSE);
+  REQUIRE(pyPlugin_classIllegalParent->initialize(NULL) == FALSE);
+  REQUIRE(pyPlugin_noIDMethod->initialize(NULL) == FALSE);
+  REQUIRE(pyPlugin_illegalIDMethod->initialize(NULL) == FALSE);
+  REQUIRE(pm.init(&ci) == TRUE);
+  std::cout << "\n";
+}
 
 TEST_CASE("Testing calling cython", "[python]") {
 
   std::cout << "\n\n";
 
-  EPL_DataCollect::plugins::PythonPlugin *pyPlugin = new EPL_DataCollect::plugins::PythonPlugin("PluginA");
-  bool                                    ret      = pyPlugin->initialize(NULL);
+  PluginManager   pm;
+  CaptureInstance ci;
+  Cycle           cy;
 
-  if (ret) {
-    std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
-    std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
-    std::cout << "plugin.run()..."
-              << "\n";
-    pyPlugin->run(new EPL_DataCollect::Cycle());
 
-    std::cout << "\n----------------\n\n\t5 runs of Plugin A:";
+  auto pyPlugin = std::make_shared<PythonPlugin>("PluginA");
+  pm.addPlugin(pyPlugin);
+  REQUIRE(pm.init(&ci) == TRUE);
+  pm.processCycle(&cy);
 
-    EPL_DataCollect::Cycle *curCyc = new EPL_DataCollect::Cycle();
-    for (int i = 0; i < 5; i++) {
-      pyPlugin->run(curCyc);
-    }
-  } else {
-    std::cout << "INIT FAILED !";
-  }
+  //   bool ret = pyPlugin->initialize(NULL);
+  //
+  //   if (ret) {
+  //     std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
+  //     std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
+  //     std::cout << "plugin.run()..."
+  //               << "\n";
+  //     pyPlugin->run(new EPL_DataCollect::Cycle());
+  //
+  //     std::cout << "\n----------------\n\n\t5 runs of Plugin A:";
+  //
+  //     EPL_DataCollect::Cycle *curCyc = new EPL_DataCollect::Cycle();
+  //     for (int i = 0; i < 5; i++) {
+  //       pyPlugin->run(curCyc);
+  //     }
+  //   } else {
+  //     std::cout << "INIT FAILED !";
+  //   }
   std::cout << "\n\n";
 }

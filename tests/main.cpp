@@ -40,8 +40,11 @@ int main(int argc, char *argv[]) {
         "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/build/lib')\n";
   std::string import_plugins =
         "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
+  std::string import_tests_loadtests =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests')\n";
   PyRun_SimpleString(import_libs.c_str());
   PyRun_SimpleString(import_plugins.c_str());
+  PyRun_SimpleString(import_tests_loadtests.c_str());
 
   Catch::Session session;
 
