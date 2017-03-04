@@ -30,12 +30,21 @@
 #include "PluginManager.hpp"
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
+#include <EvView.hpp>
 #include <PythonPlugin.hpp>
 #include <catch.hpp>
 #include <fakeit.hpp>
 #include <iostream>
 
 #pragma clang diagnostic pop
+
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 using namespace fakeit;
 using namespace EPL_DataCollect;
@@ -68,35 +77,33 @@ TEST_CASE("Loading python files", "[python]") {
 
 TEST_CASE("Testing calling cython", "[python]") {
 
-  std::cout << "\n\n";
+  std::cout << "\n";
 
   PluginManager   pm;
   CaptureInstance ci;
-  Cycle           cy;
-
 
   auto pyPlugin = std::make_shared<PythonPlugin>("PluginA");
   pm.addPlugin(pyPlugin);
   REQUIRE(pm.init(&ci) == TRUE);
+
+  Cycle cy = *ci.getStartCycle();
+
   pm.processCycle(&cy);
 
-  //   bool ret = pyPlugin->initialize(NULL);
-  //
-  //   if (ret) {
-  //     std::cout << "plugin.getID returns \t" << pyPlugin->getID() << "\n";
-  //     std::cout << "plugin.getDependencies returns \t" << pyPlugin->getDependencies() << "\n";
-  //     std::cout << "plugin.run()..."
-  //               << "\n";
-  //     pyPlugin->run(new EPL_DataCollect::Cycle());
-  //
-  //     std::cout << "\n----------------\n\n\t5 runs of Plugin A:";
-  //
-  //     EPL_DataCollect::Cycle *curCyc = new EPL_DataCollect::Cycle();
-  //     for (int i = 0; i < 5; i++) {
-  //       pyPlugin->run(curCyc);
-  //     }
-  //   } else {
-  //     std::cout << "INIT FAILED !";
-  //   }
-  std::cout << "\n\n";
+  std::cout << "\n";
+}
+
+TEST_CASE("Test loading with plugin", "[python]") {
+  CaptureInstance inst;
+  auto            pyPlugin = std::make_shared<PythonPlugin>("SimplePlugin");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
 }
