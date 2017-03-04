@@ -45,18 +45,7 @@ namespace plugins {
   */
 class CSPythonPluginStorage : public CycleStorageBase {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
   CSPythonPluginStorage();
-
-  /*!
-   * Empty Destructor
-   */
   virtual ~CSPythonPluginStorage();
 
   CSPythonPluginStorage(const CSPythonPluginStorage &) = default;
@@ -65,20 +54,7 @@ class CSPythonPluginStorage : public CycleStorageBase {
   CSPythonPluginStorage &operator=(const CSPythonPluginStorage &) = default;
   CSPythonPluginStorage &operator=(CSPythonPluginStorage &&) = default;
 
-  // Static Public attributes
-  //
-
-  // Public attributes
-  //
-
   std::unordered_map<std::string, std::string> map;
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
 
   double getNumericValue() override { return 0; }
 
