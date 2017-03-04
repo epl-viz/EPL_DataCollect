@@ -131,6 +131,15 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     return false;
   }
 
+  //** instancing was successful, initing needed C++ stuff...
+
+  if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
+    std::cerr << "Plugin \t'" + plugID + "'\t cycle storage not available\n";
+    return false;
+  }
+
+  plugins[plugID] = this;
+
   // now check if the initialization of the plugin is successful in python
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL); // can't return NULL
   if (pValue != Py_True) {
@@ -140,14 +149,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   Py_DECREF(pValue);
 
 
-  //** instancing was successful, initing needed C++ stuff...
 
-  if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
-    std::cerr << "Plugin \t'" + plugID + "'\t cycle storage not available\n";
-    return false;
-  }
-
-  plugins[plugID] = this;
   return true;
 };
 
@@ -158,7 +160,7 @@ void PythonPlugin::run(Cycle *cycle) {
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
   (void)ci;
-  return false;
+  return true;
 };
 
 PythonPlugin *PythonPlugin::getPythonPlugin(std::string name) { return plugins[name]; }
@@ -242,48 +244,65 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   return false;
 };
 
+bool PythonPlugin::setStorage(std::string index, std::string var) {
+  if (getCurrentCycle()->getCycleStorage(plugID) == nullptr) // that should actually not happen in the first place
+    return false;
 
-
-
-bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
-  // create IntStorage / str storage / boolStorage class and then call registerCycleStorage<IntStorage>("stringindex!")
-  // !!!
-  // typeAsStr is either "bool", "int", or "str" -> register appropriately
-  switch (typeAsInt) {
-    case 1: // adding int
-      break;
-    case 2: // adding string
-      break;
-  }
-  std::cout << "\nregging\t" + index + ":Type" + std::to_string(typeAsInt) + "\n";
+  auto *map     = dynamic_cast<CSPythonPluginStorage *>(getCurrentCycle()->getCycleStorage(plugID))->getMap();
+  (*map)[index] = var;
   return true;
 };
 
-bool PythonPlugin::setStorage(std::string index, std::string var) {
-  (void)index;
-  (void)var;
+std::string PythonPlugin::getStorage(std::string index) {
+  if (getCurrentCycle()->getCycleStorage(plugID) == nullptr) // that should actually not happen in the first place
+    return "";
+
+  auto *map = dynamic_cast<CSPythonPluginStorage *>(getCurrentCycle()->getCycleStorage(plugID))->getMap();
+  return (*map)[index];
+};
+
+
+bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
+  switch (typeAsInt) {
+    case 1: // adding int
+      return registerCycleStorage<PyStorageInt>(index);
+    case 2: // adding string
+      return registerCycleStorage<PyStorageStr>(index);
+  }
   return false;
 };
 
-std::string PythonPlugin::getStorage(std::string index) {
-  (void)index;
-  return std::string("IT IS false") + index;
-};
+
 
 std::string PythonPlugin::getData(std::string index) {
-  (void)index;
-  return ""; // have to return empty string !!! otherwise seg
+  if (getCurrentCycle()->getCycleStorage(index) == nullptr)
+    return "";
+  return getCurrentCycle()->getCycleStorage(index)->getStringRepresentation();
 };
 
 bool PythonPlugin::setDataStr(std::string index, std::string var) {
-  (void)index;
-  (void)var;
+  if (getCurrentCycle()->getCycleStorage(index) == nullptr)
+    return false;
+
+  auto *data = dynamic_cast<PyStorageStr *>(getCurrentCycle()->getCycleStorage(index));
+
+  if (data == nullptr)
+    return false;
+
+  data->data = var;
   return true;
 };
 
 bool PythonPlugin::setDataInt(std::string index, int var) {
-  (void)index;
-  (void)var;
+  if (getCurrentCycle()->getCycleStorage(index) == nullptr)
+    return false;
+
+  auto *data = dynamic_cast<PyStorageInt *>(getCurrentCycle()->getCycleStorage(index));
+
+  if (data == nullptr)
+    return false;
+
+  data->data = var;
   return true;
 };
 }

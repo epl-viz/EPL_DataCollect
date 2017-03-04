@@ -54,16 +54,18 @@ class PyStorage : public CycleStorageBase {
   PyStorage &operator=(PyStorage &&) = default;
 };
 
-class PyStorageInt : public PyStorage {
+class PyStorageInt final : public CycleStorageBase {
  public:
   int64_t data = 0;
 
-  double      getNumericValue() override { return data; }
+  double      getNumericValue() override { return static_cast<double>(data); }
   bool        isNumericValue() override { return true; }
   std::string getStringRepresentation() override;
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<PyStorageInt>(*this); }
 };
 
-class PyStorageStr : public PyStorage {
+class PyStorageStr final : public CycleStorageBase {
  public:
   std::string data = "";
 
@@ -71,6 +73,8 @@ class PyStorageStr : public PyStorage {
   double      getNumericValue() override { return 0; }
   bool        isNumericValue() override { return false; }
   std::string getStringRepresentation() override;
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<PyStorageStr>(*this); }
 };
 }
 }
