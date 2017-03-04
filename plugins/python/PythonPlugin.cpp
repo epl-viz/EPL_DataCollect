@@ -181,8 +181,8 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   char *   end_ptr;
   uint64_t var = strtoull(value, &end_ptr, 0);
 
-  switch (key) {
-    case 0: // add event STARTCAP
+  switch (static_cast<EvType>(key)) {
+    case EvType::VIEW_STARTCAP: // add event STARTCAP
       return addEvent(std::make_unique<EvView>(EvType::VIEW_STARTCAP,
                                                getID(),
                                                std::string("PluginEvent"),
@@ -190,7 +190,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                0,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 1: // add event ENDCAP
+    case EvType::VIEW_ENDCAP: // add event ENDCAP
       return addEvent(std::make_unique<EvView>(EvType::VIEW_ENDCAP,
                                                getID(),
                                                std::string("PluginEvent"),
@@ -198,7 +198,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                0,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 2: // add event highlight MN
+    case EvType::VIEW_EV_HIGHLIGHT_MN: // add event highlight MN
       if (value == end_ptr)
         return false;
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_MN,
@@ -208,7 +208,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                var,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 3: // add event highlight CN x (given by value)
+    case EvType::VIEW_EV_HIGHLIGHT_CN: // add event highlight CN x (given by value)
       if (value == end_ptr)
         return false;
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_CN,
@@ -218,7 +218,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                var,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 4: // add event jump to time (given by value)
+    case EvType::VIEW_EV_JUMPTOTIME: // add event jump to time (given by value)
       if (value == end_ptr)
         return false;
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_JUMPTOTIME,
@@ -228,7 +228,7 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                var,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 5: // add event highlight od entry (given by value)
+    case EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY: // add event highlight od entry (given by value)
       if (value == end_ptr)
         return false;
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY,
@@ -238,11 +238,11 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                var,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
-    case 6: // add event text
+    case EvType::VIEW_EV_TEXT: // add event text
       return addEvent(std::make_unique<EvPluginText>(
             getID(), std::string("PluginEvent"), std::string(value), 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    default: return false;
   }
-  return false;
 };
 
 bool PythonPlugin::setStorage(std::string index, std::string var) {
