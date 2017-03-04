@@ -79,7 +79,7 @@ cdef class Plugin:
 
     \version 0.5.0
     """
-    return Cycle.createCycle(CPlugin.PythonPlugin.getCurrentCycle())
+    return Cycle.createCycle(self.getPythonPlugin().getCurrentCycle())
 
   def getCycleByNum(self, number):
     """
@@ -135,7 +135,7 @@ cdef class Plugin:
   cpdef registerInt(self, index):
     return self.registerCycleStorage(index, int)
 
-  cpdef registerString(self, index):
+  cpdef registerStr(self, index):
     return self.registerCycleStorage(index, str)
 
   cpdef getStorage(self, index): #THIS METHOD returns stuff from the own storage of the plugin

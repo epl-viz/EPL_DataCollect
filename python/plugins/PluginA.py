@@ -5,20 +5,22 @@ import PluginGUIAPI
 
 class PluginA(Plugin.Plugin): 
  
-  def initialize(self): 
-    print("hey")
+  def initialize(self):
+    print("INITING PLUGIN", self.getID())
+    self.registerInt("MyIntStorage")
+    self.registerStr("MyStrStorage")
     return True
  
   def run(self): 
-    print("PluginA running!!") 
-    cy = self.getCycle() 
+    print("RUNNING PLUGIN", self.getID())
+    cy = self.getCycle()
     print("amount of CN!!!:", cy.getAmountOfCN())	
     print("NODE STATUS:", cy.getNodeStatus(23))
     print("GET OD ENTRY:", cy.getODEntry(1, "234432"))
     print("Number of Nodes currently active", cy.getNumNodes()) 
-    print("ADDING AN EVENT !!! :", self.addEvent(6, "asdf")) 
     print(cy.getActiveEvents())
-    self.registerInt("MYSTORAGE") 
+
+    print("ADDING AN EVENT !!! :", self.addEvent(6, "23")) 
     print(self.getStorage("WER"))
     print(self.setStorage("asdf", "bfdd"))
     print(self.getData("asdffff"))
@@ -31,6 +33,7 @@ class PluginA(Plugin.Plugin):
     print("higlightODEntry!!!", PluginGUIAPI.highlightODEntry(self, 2, 1.0))
     cy2 = self.getCycleByNum(3)
     print("cy props", cy, "| cy2 props", cy2)
+    print("RUNNING END PLUGIN", self.getID())
 
   def getID(self): 
     return "PluginA" 

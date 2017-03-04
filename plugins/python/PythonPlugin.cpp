@@ -34,6 +34,7 @@
 #include "EvPluginText.hpp"
 #include "EvView.hpp"
 #include "EventBase.hpp"
+#include "PyStorage.hpp"
 #include "EPLEnums.h"
 #include "Python.h"
 #include "iostream"
@@ -46,7 +47,6 @@ namespace plugins {
 // Constructors/Destructors
 //
 std::unordered_map<std::string, PythonPlugin *> PythonPlugin::plugins;
-Cycle *PythonPlugin::currentCycle;
 
 PythonPlugin::PythonPlugin() {}
 
@@ -69,54 +69,78 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   // check if module is present
   pModule = PyImport_Import(pName);
   Py_DECREF(pName);
-  if (pModule == NULL)
+  if (pModule == NULL) {
+    std::cerr << "Module\t'" + plugID + "'\t could not be loaded";
     return false;
+  }
 
   // check if correct class is available
   pDict  = PyModule_GetDict(pModule);
   pClass = PyDict_GetItemString(pDict, plugID.c_str());
-  if (pClass == NULL)
+  if (pClass == NULL) {
+    std::cerr << "Class of Plugin\t'" + plugID + "'\t could not be created";
     return false;
-
-  if (PyCallable_Check(pClass)) {
-    pInstance = PyObject_CallObject(pClass, NULL);
   }
 
-  // check if instance could be created, and correct instance of super class Plugin
-  if (pInstance == NULL)
+  if (!PyCallable_Check(pClass)) {
+    std::cerr << "Class\t'" + plugID + "'\t not callable";
     return false;
+  }
+  pInstance = PyObject_CallObject(pClass, NULL);
 
-  if (strcmp(pInstance->ob_type->tp_base->tp_name, "Plugin.Plugin") != 0)
+  // check if instance could be created, and correct instance of super class Plugin
+  if (pInstance == NULL) {
+    std::cerr << "Class instance of\t'" + plugID + "'\t could not be created";
     return false;
+  }
+
+  if (strcmp(pInstance->ob_type->tp_base->tp_name, "Plugin.Plugin") != 0) {
+    std::cerr << "Plugin class\t'" + plugID + "'\t does not derive from correct parent class";
+    return false;
+  }
 
   // check if (correct) getID() method is implemented
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
-  if (pValue == NULL || strcmp(pValue->ob_type->tp_name, "str") != 0)
+  if (pValue == NULL || strcmp(pValue->ob_type->tp_name, "str") != 0) {
+    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t is not or incorrectly implemented";
     return false;
+  }
 
   pValue         = PyUnicode_AsUTF8String(pValue);
   std::string id = PyBytes_AsString(pValue);
   Py_DECREF(pValue);
-  if (id.compare(plugID) != 0)
+  if (id.compare(plugID) != 0) {
+    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t does not return class name";
     return false;
-
-  // now check if the initialization of the plugin is successful in python
-  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL);
-  if (pValue != Py_True)
-    return false;
-  Py_DECREF(pValue);
+  }
 
   // retrieving dependencies
-  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getDependencies"), NULL); // can't be NULL
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getDependencies"), NULL); // can't return NULL
   Py_DECREF(pValue);
 
-  if (strcmp(pValue->ob_type->tp_name, "str") != 0)
+  if (strcmp(pValue->ob_type->tp_name, "str") != 0) {
+    std::cerr << "Plugin method getDependencies() of plugin\t'" + plugID + "'\t has incorrect return type";
     return false;
+  }
   pValue   = PyUnicode_AsUTF8String(pValue);
   plugDeps = PyBytes_AsString(pValue);
 
+  // check if pluginID is already in storage, in this case no addition possible
+  if (plugins.find(plugID) != plugins.end()) {
+    std::cerr << "Plugin with ID\t'" + plugID + "'\t already in database";
+    return false;
+  }
 
-  //** instancing was successful, initing needed stuff...
+  // now check if the initialization of the plugin is successful in python
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("initialize"), NULL); // can't return NULL
+  if (pValue != Py_True) {
+    std::cerr << "Plugin \t'" + plugID + "'\t Python initialization failed";
+    return false;
+  }
+  Py_DECREF(pValue);
+
+
+  //** instancing was successful, initing needed C++ stuff...
 
   //   if (!registerCycleStorage<CSPythonPluginStorage>(plugID))
   //     return false;   TODO: uncomment soon, have to init ci first !
@@ -126,7 +150,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
 
 void PythonPlugin::run(Cycle *cycle) {
   currentCycle = cycle;
-  PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("run"), NULL);
+  PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("run"), NULL); // can't fail so no checking
 };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
@@ -134,10 +158,16 @@ bool PythonPlugin::reset(CaptureInstance *ci) {
   return false;
 };
 
-Cycle *PythonPlugin::getCurrentCycle() { return currentCycle; }
-
 PythonPlugin *PythonPlugin::getPythonPlugin(std::string name) { return plugins[name]; }
 
+Cycle *PythonPlugin::getCurrentCycle() { return currentCycle; }
+
+Cycle *PythonPlugin::getCycleByNum(int number) {
+  if (workingCycle.getCycleNum() != static_cast<uint32_t>(number) && getCI() != nullptr) {
+    workingCycle = getCI()->getCycleContainer()->getCycle(static_cast<uint32_t>(number));
+  }
+  return &workingCycle;
+}
 
 
 
@@ -209,30 +239,20 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
   return false;
 };
 
-Cycle *PythonPlugin::getCycleByNum(int number) {
-  if (workingCycle.getCycleNum() != static_cast<uint32_t>(number) && getCI() != nullptr) {
-    workingCycle = getCI()->getCycleContainer()->getCycle(static_cast<uint32_t>(number));
-  }
-  return &workingCycle;
-}
 
-// to IMPLEMENT
+
 
 bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
-  (void)index;
-  (void)typeAsInt;
-
-  // TODO: IMPLEMENT THIS METHOD IS KEY
   // create IntStorage / str storage / boolStorage class and then call registerCycleStorage<IntStorage>("stringindex!")
   // !!!
   // typeAsStr is either "bool", "int", or "str" -> register appropriately
   switch (typeAsInt) {
-    case 1:
-      break; // adding int
-    case 2:
-      break; // adding string
+    case 1: // adding int
+      break;
+    case 2: // adding string
+      break;
   }
-  std::cout << "\nregging\t" + index + ":";
+  std::cout << "\nregging\t" + index + ":Type" + std::to_string(typeAsInt) + "\n";
   return true;
 };
 

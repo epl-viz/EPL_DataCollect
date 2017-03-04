@@ -17,13 +17,13 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     bool setDataStr(string, string)
     bool setDataInt(string, int)
     CCycle.Cycle* getCycleByNum(int)
-
-    @staticmethod
     CCycle.Cycle* getCurrentCycle()
+    CaptureInstance* getCI()
+
     @staticmethod
     PythonPlugin* getPythonPlugin(string)
 
-    CaptureInstance* getCI()
+
 
 ## Helper stuff that is not exposed directly to python
 cdef extern from "CaptureInstance.hpp" namespace "EPL_DataCollect":
