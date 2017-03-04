@@ -24,56 +24,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file OD.hpp
- * \brief Contains class OD
+ * \file ODEntryComplex.hpp
+ * \brief Contains class ODEntryComplex as well as its container class
  */
 
-
-#pragma once
-
-
-#include "defines.hpp"
-
-#include "ODDescription.hpp"
-#include "ODEntryContainer.hpp"
-#include <unordered_map>
-
+#include "ODEntryComplex.hpp"
 
 namespace EPL_DataCollect {
 
-class CycleBuilder;
 
-/*!
-  * class OD
-  * \brief Representation of the Object Dictionary of a Node
-  *
-  * Each entry in the Object Dictionary has, per definition, a specified 16-bit index.
-  * This class realizes this by providing a map that uses a 16-bit unsigned integer for keys and the class
-  * ODEntryContainer, which encapsules generic data, for values.
-  */
-class OD {
- private:
-  std::unordered_map<uint16_t, ODEntryContainer> entries; //!< \brief The entries in the Object Dictionary
-  std::shared_ptr<ODDescription> odDesc = std::make_shared<ODDescription>();
+ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(uint8_t si) {
+  if (*data[si] == nullptr)
+    return 0;
 
- public:
-  OD() = default;
-  virtual ~OD();
+  return data[si]->getNumericValue();
+}
 
-  OD(const OD &) = default;
-  OD(OD &&)      = default;
+void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
+  if (subIndex >= data.size())
+    return;
 
-  OD &operator=(const OD &) = default;
-  OD &operator=(OD &&) = default;
+  if (*data[subIndex] == nullptr)
+    data[subIndex].init(ObjectDataType::INTEGER64);
 
-  mockable bool hasEntry(uint16_t index) const noexcept;
+  data[subIndex]->setFromString(str);
+}
 
-  mockable ODDescription *getODDesc() noexcept;
-  mockable ODEntry *getEntry(uint16_t index) noexcept;
+std::string ODEntryComplex::toString() { return "Complex data"; }
+void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
+std::unique_ptr<ODEntry>         ODEntryComplex::clone() { return std::make_unique<ODEntryComplex>(*this); };
 
-  friend class CycleBuilder;
-
- private:
-  mockable ODEntryContainer constructODEntry(ODEntryDescription *entryDesc) const noexcept;
-};
+ODEntryComplex::ODEntryComplex(ObjectDataType dt) : ODEntry(ObjectClassType::COMPLEX, dt, false) {
+  data.resize(0xFF + 1);
+}
 }

@@ -134,7 +134,7 @@ TEST_CASE("Testing XDD parser", "[xml]") {
   ODEntryComplex *comp = dynamic_cast<ODEntryComplex *>(entry);
   REQUIRE(comp != nullptr);
   REQUIRE(comp->data.size() >= 5);
-  REQUIRE(comp->data[4].get() != nullptr);
+  REQUIRE(*comp->data[4] != nullptr);
   REQUIRE(comp->data[4]->getDataType() == ObjectDataType::UNSIGNED16);
-  REQUIRE(dynamic_cast<ODEntryUInt *>(comp->data[4].get())->data == 0x24);
+  REQUIRE(dynamic_cast<ODEntryUInt *>(*comp->data[4])->data == 0x24);
 }

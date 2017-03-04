@@ -297,29 +297,4 @@ class ODEntryArrayReal final : public ODEntry {
  private:
   void clone(void *pos) override;
 };
-
-
-class ODEntryComplex final : public ODEntry {
- public:
-  std::vector<std::unique_ptr<ODEntry>> data;
-
-  ODEntryComplex(const ODEntryComplex &);
-  ODEntryComplex(ODEntryComplex &&) = delete;
-
-  ODEntryComplex &operator=(const ODEntryComplex &) = delete;
-  ODEntryComplex &operator=(ODEntryComplex &&) = delete;
-
-  ODEntryComplex(ObjectDataType dt);
-  ODEntryComplex() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
-  void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString() override;
-
-  friend class ODEntryContainer;
-
-  std::unique_ptr<ODEntry> clone() override;
-
- private:
-  void clone(void *pos) override;
-};
 }

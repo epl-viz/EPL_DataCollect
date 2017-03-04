@@ -79,16 +79,11 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
       case ObjectClassType::COMPLEX:
         auto desc = od->getODDesc()->getEntry(odIndex);
         if (desc->subEntries.size() <= subIndex) {
-          ODEntryContainer fallback(ObjectDataType::UNSIGNED64, subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY);
-
-          if (subIndex == 0)
-            fallback.getData<ODEntryUInt>()->data = valInt;
-          else
-            fallback.getData<ODEntryArrayUInt>()->data[subIndex] = valInt;
-
-          entry.getData<ODEntryComplex>()->data[subIndex] = fallback->clone();
+          ODEntryComplexContainer fallback(ObjectDataType::UNSIGNED64);
+          fallback.getData<ODEntryUInt>()->data           = valInt;
+          entry.getData<ODEntryComplex>()->data[subIndex] = fallback;
         }
-        ODEntryContainer temp(desc->dataType);
+        ODEntryComplexContainer temp(desc->dataType);
 
         switch (temp->getType()) {
           case ObjectClassType::INTEGER: temp.getData<ODEntryInt>()->data   = static_cast<int64_t>(valInt); break;
@@ -98,7 +93,7 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
           default: temp->setFromString(std::to_string(valInt), subIndex);
         }
 
-        entry.getData<ODEntryComplex>()->data[subIndex] = temp->clone();
+        entry.getData<ODEntryComplex>()->data[subIndex] = temp;
         break;
     }
 

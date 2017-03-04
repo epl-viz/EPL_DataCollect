@@ -73,12 +73,7 @@ ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(uint8_t si) { return static_
 ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(uint8_t si) { return static_cast<ODEntry::REAL_TYPE>(data[si]); }
 ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(uint8_t si) { return data[si] ? 1 : 0; }
 ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(uint8_t si) { return data[si]; }
-ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(uint8_t si) {
-  if (data[si].get() == nullptr)
-    return 0;
 
-  return data[si]->getNumericValue();
-}
 
 inline bool strToBool(std::string str) {
   return str == "true" || str == "True" || str == "TRUE" || str == "1" || str == "ON" || str == "on";
@@ -93,15 +88,6 @@ void ODEntryArrayInt::setFromString(std::string str, uint8_t subIndex) { data[su
 void ODEntryArrayUInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stoul(str); }
 void ODEntryArrayBool::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = strToBool(str) ? 1 : 0; }
 void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stod(str); }
-void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
-  if (subIndex >= data.size())
-    return;
-
-  if (data[subIndex].get() == nullptr)
-    data[subIndex] = std::make_unique<ODEntryInt>(ObjectDataType::INTEGER64);
-
-  data[subIndex]->setFromString(str);
-}
 
 
 std::string ODEntryInt::toString() { return std::to_string(data); }
@@ -113,7 +99,6 @@ std::string ODEntryArrayInt::toString() { return "Int data array"; }
 std::string ODEntryArrayUInt::toString() { return "Unsigned int data array"; }
 std::string ODEntryArrayBool::toString() { return "Bool data array"; }
 std::string ODEntryArrayReal::toString() { return "Real data array"; }
-std::string ODEntryComplex::toString() { return "Complex data"; }
 
 
 void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); };
@@ -125,7 +110,6 @@ void ODEntryArrayInt::clone(void *pos) { new (pos) ODEntryArrayInt(*this); };
 void ODEntryArrayUInt::clone(void *pos) { new (pos) ODEntryArrayUInt(*this); };
 void ODEntryArrayBool::clone(void *pos) { new (pos) ODEntryArrayBool(*this); };
 void ODEntryArrayReal::clone(void *pos) { new (pos) ODEntryArrayReal(*this); };
-void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
 
 std::unique_ptr<ODEntry> ODEntryInt::clone() { return std::make_unique<ODEntryInt>(*this); };
 std::unique_ptr<ODEntry> ODEntryUInt::clone() { return std::make_unique<ODEntryUInt>(*this); };
@@ -136,23 +120,4 @@ std::unique_ptr<ODEntry> ODEntryArrayInt::clone() { return std::make_unique<ODEn
 std::unique_ptr<ODEntry> ODEntryArrayUInt::clone() { return std::make_unique<ODEntryArrayUInt>(*this); };
 std::unique_ptr<ODEntry> ODEntryArrayBool::clone() { return std::make_unique<ODEntryArrayBool>(*this); };
 std::unique_ptr<ODEntry> ODEntryArrayReal::clone() { return std::make_unique<ODEntryArrayReal>(*this); };
-std::unique_ptr<ODEntry> ODEntryComplex::clone() { return std::make_unique<ODEntryComplex>(*this); };
-
-
-ODEntryComplex::ODEntryComplex(const ODEntryComplex &c) : ODEntry(ObjectClassType::COMPLEX, c.getDataType(), false) {
-  for (auto &i : c.data) {
-    if (!i.get()) {
-      data.emplace_back(nullptr);
-      continue;
-    }
-
-    data.emplace_back(i->clone());
-  }
-}
-
-ODEntryComplex::ODEntryComplex(ObjectDataType dt) : ODEntry(ObjectClassType::COMPLEX, dt, false) {
-  data.resize(0xFF);
-  for (auto &i : data)
-    i = nullptr;
-}
 }

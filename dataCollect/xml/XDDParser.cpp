@@ -378,17 +378,8 @@ bool XDDVisitorEntries::VisitEnter(const XMLElement &el, const XMLAttribute *) n
 
       if (entry->getType() == ObjectClassType::COMPLEX) {
         ODEntryComplex *complex = dynamic_cast<ODEntryComplex *>(entry);
-        if (!complex->data[ODIndex].get()) {
-          ObjectClassType oct = ODEntryContainer::getOCTbyODT(ObjectType::VAR, ODDataType);
-
-          switch (oct) {
-            case ObjectClassType::INTEGER: complex->data[ODIndex]  = std::make_unique<ODEntryInt>(ODDataType); break;
-            case ObjectClassType::UNSIGNED: complex->data[ODIndex] = std::make_unique<ODEntryUInt>(ODDataType); break;
-            case ObjectClassType::BOOL: complex->data[ODIndex]     = std::make_unique<ODEntryBool>(ODDataType); break;
-            case ObjectClassType::REAL: complex->data[ODIndex]     = std::make_unique<ODEntryReal>(ODDataType); break;
-            case ObjectClassType::STRING: complex->data[ODIndex]   = std::make_unique<ODEntryString>(ODDataType); break;
-            default: break;
-          }
+        if (!complex->data[ODIndex].getIsInit()) {
+          complex->data[ODIndex].init(ODDataType);
         }
       }
 

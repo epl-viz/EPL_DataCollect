@@ -32,6 +32,7 @@
 
 #include "defines.hpp"
 #include "ODEntry.hpp"
+#include "ODEntryComplex.hpp"
 #include <type_traits>
 #include <vector>
 
@@ -74,30 +75,29 @@ constexpr uint32_t calcSize() {
 class ODEntryContainer final {
  private:
   char data[internal::calcSize()]; //!< The data storage
-  bool movedFrom = false;
 
   template <class C>
-  C *init(ObjectDataType type) noexcept;
+  inline C *init(ObjectDataType type) noexcept;
 
  public:
-  ODEntryContainer() = delete;
-  ~ODEntryContainer();
+  inline ODEntryContainer() = delete;
+  inline ~ODEntryContainer();
 
-  ODEntryContainer(ObjectClassType type, ObjectDataType dt);
-  ODEntryContainer(ObjectDataType type, ObjectType ot = ObjectType::VAR);
+  inline ODEntryContainer(ObjectClassType type, ObjectDataType dt);
+  inline ODEntryContainer(ObjectDataType type, ObjectType ot = ObjectType::VAR);
 
-  ODEntryContainer(ODEntry *entry);
+  inline ODEntryContainer(ODEntry *entry);
 
-  ODEntryContainer(const ODEntryContainer &);
-  ODEntryContainer(ODEntryContainer &&);
+  inline ODEntryContainer(const ODEntryContainer &);
+  inline ODEntryContainer(ODEntryContainer &&);
 
-  ODEntryContainer &operator=(const ODEntryContainer &);
-  ODEntryContainer &operator=(ODEntryContainer &&);
+  inline ODEntryContainer &operator=(const ODEntryContainer &);
+  inline ODEntryContainer &operator=(ODEntryContainer &&);
 
-  static constexpr ObjectClassType getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept;
+  inline static constexpr ObjectClassType getOCTbyODT(ObjectType ot, ObjectDataType dt) noexcept;
 
   template <class C>
-  C *getData() noexcept;
+  inline C *getData() noexcept;
 
   inline ODEntry *operator*() noexcept { return getData<ODEntry>(); }
   inline ODEntry *operator->() noexcept { return getData<ODEntry>(); }
@@ -185,4 +185,53 @@ constexpr ObjectClassType ODEntryContainer::getOCTbyODT(ObjectType ot, ObjectDat
     default: return ObjectClassType::COMPLEX;
   }
 }
+
+
+
+ODEntryContainer::~ODEntryContainer() {
+  // Manually call the destructor
+  reinterpret_cast<ODEntry *>(data)->~ODEntry();
+}
+
+ODEntryContainer::ODEntryContainer(const ODEntryContainer &c) {
+  reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+}
+
+ODEntryContainer::ODEntryContainer(ODEntryContainer &&c) { reinterpret_cast<ODEntry *>(c.data)->clone(data); }
+
+ODEntryContainer &ODEntryContainer::operator=(const ODEntryContainer &c) {
+  if (this != &c) {
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+    reinterpret_cast<ODEntry *>(const_cast<ODEntryContainer &>(c).data)->clone(data);
+  }
+  return *this;
+}
+
+ODEntryContainer &ODEntryContainer::operator=(ODEntryContainer &&c) {
+  if (this != &c) {
+    reinterpret_cast<ODEntry *>(data)->~ODEntry();
+    reinterpret_cast<ODEntry *>(c.data)->clone(data);
+  }
+  return *this;
+}
+
+ODEntryContainer::ODEntryContainer(ODEntry *entry) { entry->clone(data); }
+
+ODEntryContainer::ODEntryContainer(ObjectClassType type, ObjectDataType dt) {
+  switch (type) {
+    case ObjectClassType::INTEGER: init<ODEntryInt>(dt); return;
+    case ObjectClassType::UNSIGNED: init<ODEntryUInt>(dt); return;
+    case ObjectClassType::BOOL: init<ODEntryBool>(dt); return;
+    case ObjectClassType::REAL: init<ODEntryReal>(dt); return;
+    case ObjectClassType::STRING: init<ODEntryString>(dt); return;
+    case ObjectClassType::ARRAY_INTEGER: init<ODEntryArrayInt>(dt); return;
+    case ObjectClassType::ARRAY_UNSIGNED: init<ODEntryArrayUInt>(dt); return;
+    case ObjectClassType::ARRAY_BOOL: init<ODEntryArrayBool>(dt); return;
+    case ObjectClassType::ARRAY_REAL: init<ODEntryArrayReal>(dt); return;
+    case ObjectClassType::COMPLEX: init<ODEntryComplex>(dt); return;
+  }
+}
+
+ODEntryContainer::ODEntryContainer(ObjectDataType type, ObjectType ot)
+    : ODEntryContainer(getOCTbyODT(ot, type), type) {}
 }

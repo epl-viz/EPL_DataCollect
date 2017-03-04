@@ -59,10 +59,10 @@ ODEntry *OD::getEntry(uint16_t index) noexcept {
   // Check if entry has to be loaded in first
   if (!hasEntry(index)) {
     // Check if the OD Description contains the missing entry
-    if (!odDesc.exists(index))
+    if (!odDesc->exists(index))
       return nullptr; // The value does not exist
 
-    ODEntryDescription *entryDesc = odDesc.getEntry(index);      // Retrieve description for the entry
+    ODEntryDescription *entryDesc = odDesc->getEntry(index);     // Retrieve description for the entry
     ODEntryContainer    entry     = constructODEntry(entryDesc); // Construct requested ODEntryContainer
 
     entries.insert({index, entry}); // Write the ODEntry into the map
@@ -76,7 +76,7 @@ ODEntry *OD::getEntry(uint16_t index) noexcept {
  * \brief Returns a pointer to the OD Description
  * \returns The pointer to the OD Description
  */
-ODDescription *OD::getODDesc() noexcept { return &odDesc; }
+ODDescription *OD::getODDesc() noexcept { return odDesc.get(); }
 
 /*!
  * \brief Constructs an ODEntry wrapped into an ODEntryContainer from the given ODEntryDescription

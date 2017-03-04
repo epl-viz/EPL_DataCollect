@@ -125,14 +125,15 @@ void CycleBuilder::buildNextCycle() noexcept {
         }
 
         switch (i.ASnd->RequestedServiceID) {
-          case ASndServiceID::IDENT_RESPONSE:
+          case ASndServiceID::IDENT_RESPONSE: {
             if (i.IdentResponse.get() == nullptr) {
               std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! IdentResponse == nullptr"
                         << std::endl;
               break;
             }
 
-            if (i.IdentResponse->Profile >= 400 && parent->getNodeConfig(src).autoDeduceSpecificProfile) {
+            auto nodeCfg = parent->getNodeConfig(src);
+            if (i.IdentResponse->Profile >= 400 && nodeCfg.autoDeduceSpecificProfile) {
               std::cout << "[CycleBuilder] Autodetected Node " << static_cast<int>(src) << " Profile "
                         << i.IdentResponse->Profile << std::endl;
 
@@ -143,12 +144,16 @@ void CycleBuilder::buildNextCycle() noexcept {
               if (ret != XDDParser::SUCCESS) {
                 std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath
                           << " for node " << static_cast<int>(src) << std::endl;
+              } else {
+                nodeCfg.autoDeduceSpecificProfile = false;
+                parent->setNodeConfig(src, nodeCfg);
               }
             }
+          }
 
-            //! \todo Update Node vars
+          //! \todo Update Node vars
 
-            break;
+          break;
           default: break;
         }
 
