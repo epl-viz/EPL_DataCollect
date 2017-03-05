@@ -133,7 +133,9 @@ struct parserData final {
     uint8_t              RequestedServiceTarget = UINT8_MAX;
     std::vector<uint8_t> Data;
 
-    /* ASnd-->IdentResponse */
+    /* ASnd-->IdentResponse
+     * \sa EPSG DS 301 V1.3.0 page 267-269
+     */
     struct IdentResponse final {
       bool                 ExceptionNew             = false;
       bool                 ExceptionClear           = false;
