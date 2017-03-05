@@ -26,7 +26,6 @@
 /*!
  * \file PythonPlugin.hpp
  * \brief Contains class PythonPlugin
- * \todo IMPLEMENT
  */
 
 
