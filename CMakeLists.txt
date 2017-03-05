@@ -220,7 +220,7 @@ new_project_library(
     TinyXML2::TinyXML2
 )
 
-foreach( I IN ITEMS protocolValidator python timeSeries )
+foreach( I IN ITEMS protocolValidator python timeSeries defaultFilter )
   new_project_library(
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
@@ -241,7 +241,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared stdc++fs eplp_python_shared eplp_timeSeries_shared
+    DEPENDENCIES epl_DataCollect_shared stdc++fs eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared
   )
 endif( NOT DISABLE_TESTS )
 

@@ -24,35 +24,72 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file TimeSeriesBuilder.hpp
- * \brief Contains class TimeSeriesBuilder
- * \todo IMPLEMENT
+ * \file CSViewFilters.hpp
+ * \brief Contains class CSViewFilters
  */
 
 
 #pragma once
 
 #include "defines.hpp"
-#include "PluginBase.hpp"
+#include "CycleStorageBase.hpp"
+#include <unordered_map>
+#include <vector>
 
 namespace EPL_DataCollect {
-namespace plugins {
 
-/*!
-  * class TimeSeriesBuilder
-  * \brief Plugin to build time series
-  */
-class TimeSeriesBuilder final : public PluginBase {
+class CSViewFilters final : public CycleStorageBase {
  public:
-  TimeSeriesBuilder() = default;
-  virtual ~TimeSeriesBuilder();
+  enum FilterType { INCLUDE, EXCLUDE };
 
-  void run(Cycle *cycle) override;
-  std::string getDependencies() override;
-  std::string getID() override;
+  class Filter final {
+   private:
+    FilterType type;
+    std::unordered_map<uint16_t, bool> setMap;
+    std::string name;
 
-  bool initialize(CaptureInstance *ci) override;
-  bool reset(CaptureInstance *ci) override;
+   public:
+    Filter()  = delete;
+    ~Filter() = default;
+
+    Filter(FilterType t, std::string n) : type(t), name(n) {}
+
+    Filter(const Filter &) = default;
+    Filter(Filter &&)      = default;
+
+    Filter &operator=(const Filter &) = default;
+    Filter &operator=(Filter &&) = default;
+
+    inline std::string getName() const noexcept { return name; }
+    inline FilterType  getType() const noexcept { return type; }
+
+    bool includeIndex(uint16_t index) noexcept;
+
+    void setIndex(uint16_t index) noexcept;
+    void unSetIndex(uint16_t index) noexcept;
+    bool isSet(uint16_t index) noexcept;
+  };
+
+ private:
+  std::vector<Filter> filters;
+
+ public:
+  CSViewFilters() = default;
+  virtual ~CSViewFilters();
+
+  CSViewFilters(const CSViewFilters &) = default;
+  CSViewFilters(CSViewFilters &&)      = default;
+
+  CSViewFilters &operator=(const CSViewFilters &) = default;
+  CSViewFilters &operator=(CSViewFilters &&) = default;
+
+  double getNumericValue() override;
+  bool   isNumericValue() override;
+
+  std::unique_ptr<CycleStorageBase> clone() override;
+
+  uint32_t newFilter(FilterType type, std::string name) noexcept;
+  std::vector<Filter> getFilters() const noexcept;
+  Filter *getFilter(uint32_t id) const noexcept;
 };
-}
 }
