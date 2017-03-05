@@ -39,13 +39,13 @@ cdef class Cycle:
   def getODEntry(self, nodeNumber, odNumber):
     if not (isinstance(nodeNumber, int) and isinstance(odNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
       return
     if odNumber < 0x0000 or odNumber >= 0xFFFF:                           # od entry available
       return
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
-      return self._C_Cycle.getNode(nodeNumber).getOD().getEntry(odNumber).toString()
+      return odEntry.toString()
 
   def getAmountOfCN(self):
     """
