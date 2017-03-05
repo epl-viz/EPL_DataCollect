@@ -75,22 +75,6 @@ TEST_CASE("Loading python files", "[python]") {
   std::cout << std::endl;
 }
 
-TEST_CASE("Testing calling cython", "[python]") {
-  std::cout << std::endl;
-
-  PluginManager   pm;
-  CaptureInstance ci;
-
-  auto pyPlugin = std::make_shared<PythonPlugin>("PluginA");
-  pm.addPlugin(pyPlugin);
-  REQUIRE(pm.init(&ci) == TRUE);
-
-  Cycle cy = *ci.getStartCycle();
-
-  pm.processCycle(&cy);
-  std::cout << std::endl;
-}
-
 TEST_CASE("Test loading with plugin", "[python]") {
   CaptureInstance inst;
   auto            id       = inst.getEventLog()->getAppID();
@@ -163,4 +147,39 @@ TEST_CASE("GUI API calls exec", "[python]") {
   REQUIRE(evTypeCN == 144);
   REQUIRE(evTypeOD == 144);
   REQUIRE(evTypeMN == 1); // added only once cause of cycle range
+}
+
+TEST_CASE("Testing calling cython", "[python]") {
+  std::cout << std::endl;
+
+  PluginManager   pm;
+  CaptureInstance ci;
+
+  auto pyPlugin = std::make_shared<PythonPlugin>("PluginA");
+  pm.addPlugin(pyPlugin);
+  REQUIRE(pm.init(&ci) == TRUE);
+
+  Cycle cy = *ci.getStartCycle();
+
+  pm.processCycle(&cy);
+  std::cout << std::endl;
+}
+
+
+TEST_CASE("Plugin internal methods test", "[python]") {
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_PluginInternal");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+  REQUIRE(events.size() == 7);
 }
