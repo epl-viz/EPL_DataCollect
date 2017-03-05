@@ -21,6 +21,7 @@ class SimplePlugin(Plugin.Plugin):
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
       agui.highlightMN(self)
+    print(cy.getODEntry(1, 4102)) ## yeeeeey
 
     if cy.getCycleNum() == 100:
       self.unload()

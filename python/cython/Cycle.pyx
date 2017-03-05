@@ -45,7 +45,7 @@ cdef class Cycle:
       return
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
-      return odEntry.toString()
+      return self._C_Cycle.getNode(nodeNumber).getOD().getEntry(odNumber).toString()
 
   def getAmountOfCN(self):
     """
