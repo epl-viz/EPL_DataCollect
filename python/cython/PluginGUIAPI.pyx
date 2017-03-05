@@ -6,8 +6,7 @@ import Events
 specific events to highlight or start and stop the representations quickly.
 It therefore provides convenience methods that add events to the backend.
 
-:version: 0.9.0
-:author: Denis Megerle
+:version: 1.0.0
 """
 
 def startLive(plugin):
@@ -40,6 +39,18 @@ def stopLive(plugin):
     return plugin.addEvent(Events.EV_ENDCAP.value, "", "")
   return False
 
+def highlightMN(plugin):
+  """
+  \brief This method highlights the MN in the gui.
+
+  \param plugin the plugin currently used, has to be given
+
+  \returns a bool showing whether the node highlight is successful
+  """
+  if isinstance(plugin, Plugin.Plugin):
+    return plugin.addEvent(Events.EV_HIGHLIGHT_MN.value, "", "")
+  return False
+
 def highlightNode(plugin, node):
   """
   \brief This method highlights a specific in the graphical representation.
@@ -69,5 +80,5 @@ def highlightODEntry(plugin, entry, level):
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(entry, int) and isinstance(level, float):
     if 0.0 < level <= 1.0 and entry >= 0x0000 and entry <= 0xFFFF:
-      return plugin.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, str(entry) + " " + str(level), "")
+      return plugin.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, str(entry), str(level))
   return False

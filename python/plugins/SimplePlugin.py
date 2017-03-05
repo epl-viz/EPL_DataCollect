@@ -1,7 +1,7 @@
 import Cycle
 import Plugin
 import PluginAPI as api
-import PluginGUIAPI
+import PluginGUIAPI as agui
 import Events
 
 class SimplePlugin(Plugin.Plugin):
@@ -20,6 +20,8 @@ class SimplePlugin(Plugin.Plugin):
       data = int(self.getData("Counter"))
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
+      agui.highlightMN(self)
+
     if cy.getCycleNum() == 100:
       self.unload()
 
