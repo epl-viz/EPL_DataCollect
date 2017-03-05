@@ -46,7 +46,7 @@
 #define PLUGIN_INIT "initialize"
 #define PLUGIN_PARENT "Plugin.Plugin"
 #define PYTHON_STR "str"
-#define PLUGIN_EV "PluginEvent"
+// #define PLUGIN_EV "PluginEvent" // clang: macro not in use
 
 namespace EPL_DataCollect {
 namespace plugins {

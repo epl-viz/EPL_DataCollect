@@ -34,7 +34,7 @@ TEST_CASE("Initialization succeeds", "[Node]") {
   Node n(1);
 
   SECTION("Check for correct node ID") { REQUIRE(n.getID() == 1); }
-  SECTION("Test node status initialized to unknown") { REQUIRE(n.getStatus() == NodeStatus::UNKNOWN); }
+  SECTION("Test node status initialized to unknown") { REQUIRE(n.getStatus() == NMTState::OFF); }
   SECTION("Test OD Initialization") {
     REQUIRE(n.getOD() != nullptr);
     REQUIRE(n.getODDesc() != nullptr);
@@ -44,17 +44,17 @@ TEST_CASE("Initialization succeeds", "[Node]") {
 TEST_CASE("Changing Status works") {
   Node n(1);
 
-  SECTION("Test setting to starting") {
-    n.setStatus(NodeStatus::STARTING);
-    REQUIRE(n.getStatus() == NodeStatus::STARTING);
-    REQUIRE(n.getStatusStr() == "STARTING");
+  SECTION("Test setting to INITIALISING") {
+    n.setStatus(NMTState::INITIALISING);
+    REQUIRE(n.getStatus() == NMTState::INITIALISING);
+    REQUIRE(n.getStatusStr() == "INITIALISING");
   }
-  SECTION("Test setting to OK") {
-    n.setStatus(NodeStatus::OK);
-    REQUIRE(n.getStatus() == NodeStatus::OK);
+  SECTION("Test setting to OPERATIONAL") {
+    n.setStatus(NMTState::OPERATIONAL);
+    REQUIRE(n.getStatus() == NMTState::OPERATIONAL);
   }
-  SECTION("Test setting to error") {
-    n.setStatus(NodeStatus::ERROR);
-    REQUIRE(n.getStatus() == NodeStatus::ERROR);
+  SECTION("Test setting to STOPPED") {
+    n.setStatus(NMTState::STOPPED);
+    REQUIRE(n.getStatus() == NMTState::STOPPED);
   }
 }

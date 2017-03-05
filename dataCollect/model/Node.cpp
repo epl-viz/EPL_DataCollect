@@ -39,7 +39,7 @@ Node::~Node() {}
  * \brief Returns the status of the node
  * \return The current NodeStatus
  */
-NodeStatus Node::getStatus() const noexcept { return status; }
+NMTState Node::getStatus() const noexcept { return status; }
 
 std::string Node::getStatusStr() noexcept { return EPLEnum2Str::toStr(status); };
 
@@ -65,5 +65,11 @@ ODDescription *Node::getODDesc() noexcept { return od.getODDesc(); }
  * \brief Sets the node status
  * \param newStatus The new node status
  */
-void Node::setStatus(NodeStatus newStatus) noexcept { status = newStatus; }
+void Node::setStatus(NMTState newStatus) noexcept { status = newStatus; }
+
+/*!
+ * \brief Sets the node identity
+ * \param i The new node identity
+ */
+void Node::setIdentity(Node::IDENT i) noexcept { identity = i; }
 }

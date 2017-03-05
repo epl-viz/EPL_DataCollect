@@ -321,8 +321,8 @@ enum2str_generate(
   INDENT_STR "  "
   NAMESPACE  "EPL_DataCollect"
   ENUMS
-    "NodeStatus" "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping"
-    "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState" "AsyncSendPriority"
+    "EvType" "ObjectType" "ObjectCategory" "ObjectDataType" "ObjectAccess" "ObjectPDOMapping" "AsyncSendPriority"
+    "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState"
     "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
     "CaptureInstance::CIstate" "XDDParser::ErrorCode"

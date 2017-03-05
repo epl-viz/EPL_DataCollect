@@ -50,6 +50,7 @@ Packet::Packet(const parserData *const data) {
   }
 
   type         = data->pType;
+  state        = data->nmtState;
   nodeSource   = data->src;
   nodeDest     = data->dst;
   wiresharkSTR = data->wsString;
@@ -97,6 +98,12 @@ bool Packet::operator==(const Packet &r) const {
  * \return The packet type as a MessageType
  */
 PacketType Packet::getType() const noexcept { return type; }
+
+
+/*!
+ * \brief Returns the sent NMTState
+ */
+NMTState Packet::getState() const noexcept { return state; }
 
 
 /*!
