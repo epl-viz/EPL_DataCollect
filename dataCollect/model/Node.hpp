@@ -48,9 +48,9 @@ class Node {
   typedef struct WiresharkParser::parserData::ASnd::IdentResponse IDENT;
 
  private:
-  OD         od;                           //!< \brief The Object dictionary of the Node
-  NodeStatus status = NodeStatus::UNKNOWN; //!< \brief Current status of the Node
-  uint8_t    id;                           //!< \brief The ID of this node
+  OD       od;                     //!< \brief The Object dictionary of the Node
+  NMTState status = NMTState::OFF; //!< \brief Current status of the Node
+  uint8_t  id;                     //!< \brief The ID of this node
 
   IDENT identity;
 
@@ -69,7 +69,7 @@ class Node {
 
   mockable OD *getOD() noexcept;
   mockable ODDescription *getODDesc() noexcept;
-  mockable NodeStatus getStatus() const noexcept;
+  mockable NMTState getStatus() const noexcept;
   mockable std::string getStatusStr() noexcept;
   mockable uint8_t getID() const noexcept;
   mockable IDENT getIdentity() const noexcept { return identity; }
@@ -77,7 +77,7 @@ class Node {
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif
-  mockable void setStatus(NodeStatus newStatus) noexcept;
-  mockable void setIdentity(IDENT i) noexcept { identity = i; }
+  mockable void setStatus(NMTState newStatus) noexcept;
+  mockable void setIdentity(IDENT i) noexcept;
 };
 }

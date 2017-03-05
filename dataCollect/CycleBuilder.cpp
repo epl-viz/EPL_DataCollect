@@ -118,6 +118,8 @@ void CycleBuilder::buildNextCycle() noexcept {
     }
 
     switch (i.getType()) {
+      case PacketType::POLL_RESPONSE:
+      case PacketType::START_OF_ASYNC: node->status = i.getState(); break;
       case PacketType::ASYNC_SEND:
         if (i.ASnd.get() == nullptr) {
           std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! ASnd == nullptr" << std::endl;
@@ -125,6 +127,7 @@ void CycleBuilder::buildNextCycle() noexcept {
         }
 
         switch (i.ASnd->RequestedServiceID) {
+          case ASndServiceID::STATUS_RESPONSE: node->status = i.getState(); break;
           case ASndServiceID::IDENT_RESPONSE: {
             if (i.IdentResponse.get() == nullptr) {
               std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! IdentResponse == nullptr"

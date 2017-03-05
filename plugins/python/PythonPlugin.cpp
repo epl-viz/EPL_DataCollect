@@ -43,8 +43,8 @@
 
 #define PLUGIN_ID "getID"
 #define PLUGIN_RUN "run"
-#define PLUGIN_DEP "getDependencies"
-#define PLUGIN_INIT "initialize"
+// #define PLUGIN_DEP "getDependencies"
+// #define PLUGIN_INIT "initialize"
 
 namespace EPL_DataCollect {
 namespace plugins {

@@ -72,6 +72,7 @@ class Packet {
 
  private:
   PacketType              type = PacketType::UNDEF;
+  NMTState                state;
   plf::colony<PacketDiff> diffs;
 
   std::string wiresharkSTR = "";
@@ -109,6 +110,7 @@ class Packet {
   bool operator==(const Packet &r) const;
 
   mockable PacketType getType() const noexcept;
+  mockable NMTState getState() const noexcept;
   mockable const plf::colony<PacketDiff> *getDiffs() const noexcept;
   mockable std::string getMiscData() const noexcept;
   mockable std::string getWiresharkString() const noexcept;
