@@ -49,18 +49,18 @@ namespace plugins {
   */
 class PythonPlugin : public PluginBase {
  public:
+  static PythonPlugin *getPythonPlugin(std::string name);
+
   PythonPlugin();
   PythonPlugin(std::string pluginName);
   virtual ~PythonPlugin();
-
-  static PythonPlugin *getPythonPlugin(std::string name);
 
   void run(Cycle *cycle);
   std::string getDependencies();
   std::string getID();
 
   Cycle *getCurrentCycle();
-  Cycle *getCycleByNum(int number);
+  Cycle *getCycleByNum(unsigned int number);
 
   bool addPyEvent(int key, std::string value, std::string argument);
 
@@ -72,15 +72,21 @@ class PythonPlugin : public PluginBase {
   bool setDataStr(std::string index, std::string var);
   bool setDataInt(std::string index, int var);
 
+  void setRunning(bool newRunning);
+
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
 
  private:
+  static std::unordered_map<std::string, PythonPlugin *> plugins;
+
   std::string plugID;
   std::string plugDeps;
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
-  static std::unordered_map<std::string, PythonPlugin *> plugins;
+
+  bool running = true;
+
   Cycle *currentCycle;
   Cycle  workingCycle; // current working cycle, used if user wants a random cycle
 };
