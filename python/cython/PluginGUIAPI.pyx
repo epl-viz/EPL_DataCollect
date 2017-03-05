@@ -22,7 +22,7 @@ def startLive(plugin):
   \returns whether successful or not
   """
   if isinstance(plugin, Plugin.Plugin):
-    return plugin.addEvent(Events.EV_STARTCAP.value, "")  # empty string added for method
+    return plugin.addEvent(Events.EV_STARTCAP.value, "", "")  # empty string added for method
   return False
 
 def stopLive(plugin):
@@ -37,7 +37,7 @@ def stopLive(plugin):
   \returns whether successful or not
   """
   if isinstance(plugin, Plugin.Plugin):
-    return plugin.addEvent(Events.EV_ENDCAP.value, "")
+    return plugin.addEvent(Events.EV_ENDCAP.value, "", "")
   return False
 
 def highlightNode(plugin, node):
@@ -51,7 +51,7 @@ def highlightNode(plugin, node):
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(node, int):
     if node >= 0:
-      return plugin.addEvent(Events.EV_HIGHLIGHT_CN.value, str(node))
+      return plugin.addEvent(Events.EV_HIGHLIGHT_CN.value, str(node), "")
     return False
   return False
 
@@ -69,5 +69,5 @@ def highlightODEntry(plugin, entry, level):
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(entry, int) and isinstance(level, float):
     if 0.0 < level <= 1.0 and entry >= 0x0000 and entry <= 0xFFFF:
-      return plugin.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, str(entry) + " " + str(level))
+      return plugin.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, str(entry) + " " + str(level), "")
   return False

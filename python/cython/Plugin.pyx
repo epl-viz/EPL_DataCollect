@@ -95,7 +95,7 @@ cdef class Plugin:
     if isinstance(number, int):
       return Cycle.createCycle(self.getPythonPlugin().getCycleByNum(number))
 
-  def addEvent(self, key, value):
+  def addEvent(self, key, value, arg):
     """
     \brief This method adds an event to the current cycle. The event to be added is coded as a key (event type) and a string (additional event information). Events can be anything and will be added to the cycle.
 
@@ -106,11 +106,8 @@ cdef class Plugin:
 
     \version 0.5.0
     """
-    cdef char* c_value
-    if isinstance(key, int) and isinstance(value, str):
-      py_byte_string = value.encode('UTF-8')
-      c_value = py_byte_string
-      return self.getPythonPlugin().addPyEvent(key, c_value)
+    if isinstance(key, int) and isinstance(value, str) and isinstance(arg, str):
+      return self.getPythonPlugin().addPyEvent(key, value.encode('utf-8'), arg.encode('utf-8'))
     return False;
 
   cdef registerCycleStorage(self, index, type):

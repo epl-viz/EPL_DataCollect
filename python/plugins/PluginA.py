@@ -38,13 +38,13 @@ class PluginA(Plugin.Plugin):
 
     # event stuff
     print(cy.getActiveEvents())
-    print("ADDING AN EVENT !!! :", self.addEvent(Events.EV_ENDCAP.value, "23"))
+    print("ADDING AN EVENT !!! :", self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "str", ""))
     print(cy.getActiveEvents())
 
 
-    print("startlive!!!", PluginGUIAPI.startLive(self))
-    print("higlightNode!!!", PluginGUIAPI.highlightNode(self, 2))
-    print("higlightODEntry!!!", PluginGUIAPI.highlightODEntry(self, 2, 1.0))
+    #print("startlive!!!", PluginGUIAPI.startLive(self))
+    #print("higlightNode!!!", PluginGUIAPI.highlightNode(self, 2))
+    #print("higlightODEntry!!!", PluginGUIAPI.highlightODEntry(self, 2, 1.0))
     cy2 = self.getCycleByNum(3)
     print("cy props", cy, "| cy2 props", cy2)
     print("RUNNING END PLUGIN", self.getID())
