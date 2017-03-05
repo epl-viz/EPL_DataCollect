@@ -112,8 +112,10 @@ void CycleBuilder::buildNextCycle() noexcept {
         continue;
 
       ODEntryContainer entry = j.getEntry(od);
-      if (od->hasEntry(j.getIndex())) {
-        od->entries.at(j.getIndex()) = entry;
+      uint16_t         index = j.getIndex();
+      if (od->hasEntry(index)) {
+        od->entries.at(index) = entry;
+        od->writtenValues.emplace(index);
       }
     }
 

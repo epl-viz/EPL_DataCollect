@@ -56,6 +56,7 @@ bool ODDescription::setEntry(uint16_t index, ODEntryDescription desc) noexcept {
   if (exists(index))
     return false;
 
+  entriesList.emplace(index);
   entries.insert({index, desc});
   return true;
 }
@@ -114,4 +115,6 @@ ODDescription::MAP &ODDescription::getEntries() noexcept { return entries; }
  * \brief Returns the types map used for parsing XDDs
  */
 ODDescription::TYPES_MAP *ODDescription::getTypesMap() noexcept { return &typesMap; }
+
+plf::colony<uint16_t> ODDescription::getEntriesList() noexcept { return entriesList; }
 }

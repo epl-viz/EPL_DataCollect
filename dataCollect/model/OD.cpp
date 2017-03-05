@@ -30,6 +30,7 @@
 
 #include "OD.hpp"
 #include "EPLEnum2Str.hpp"
+#include <algorithm>
 #include <iostream>
 
 namespace EPL_DataCollect {
@@ -89,5 +90,10 @@ ODEntryContainer OD::constructODEntry(ODEntryDescription *entryDesc) const noexc
   ObjectClassType oct = ODEntryContainer::getOCTbyODT(ot, odt); // Convert data type to class type
 
   return ODEntryContainer(oct, odt);
+}
+
+plf::colony<uint16_t> OD::getWrittenValues() noexcept {
+  std::unique(writtenValues.begin(), writtenValues.end());
+  return writtenValues;
 }
 }

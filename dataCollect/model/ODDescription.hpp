@@ -32,6 +32,7 @@
 
 #include "defines.hpp"
 #include "ODEntryDescription.hpp"
+#include <plf_colony.h>
 #include <unordered_map>
 
 namespace EPL_DataCollect {
@@ -56,6 +57,8 @@ class ODDescription final {
   MAP       entries;
   TYPES_MAP typesMap;
 
+  plf::colony<uint16_t> entriesList;
+
   mockable MAP &getEntries() noexcept;
 
  public:
@@ -74,6 +77,7 @@ class ODDescription final {
   mockable bool overrideEntry(uint16_t index, ODEntryDescription desc) noexcept;
   mockable ODEntryDescription *getEntry(uint16_t index) noexcept;
   mockable void applyDesc(ODDescription &desc) noexcept;
+  mockable plf::colony<uint16_t> getEntriesList() noexcept;
 
   mockable TYPES_MAP *getTypesMap() noexcept;
 };

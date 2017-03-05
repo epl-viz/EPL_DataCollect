@@ -32,6 +32,8 @@ using namespace EPL_DataCollect;
 TEST_CASE("Fetching ODEntries works", "[OD]") {
   OD od;
 
+  REQUIRE(od.getWrittenValues().size() == 0);
+
   SECTION("Unknown entry returns a nullptr") { REQUIRE(od.getEntry(0) == nullptr); }
   // TODO: Add section correctly returning an entry
 }

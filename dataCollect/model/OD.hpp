@@ -36,6 +36,7 @@
 
 #include "ODDescription.hpp"
 #include "ODEntryContainer.hpp"
+#include <plf_colony.h>
 #include <unordered_map>
 
 
@@ -56,6 +57,8 @@ class OD {
   std::unordered_map<uint16_t, ODEntryContainer> entries; //!< \brief The entries in the Object Dictionary
   std::shared_ptr<ODDescription> odDesc = std::make_shared<ODDescription>();
 
+  plf::colony<uint16_t> writtenValues;
+
  public:
   OD() = default;
   virtual ~OD();
@@ -70,6 +73,7 @@ class OD {
 
   mockable ODDescription *getODDesc() noexcept;
   mockable ODEntry *getEntry(uint16_t index) noexcept;
+  mockable plf::colony<uint16_t> getWrittenValues() noexcept;
 
   friend class CycleBuilder;
 

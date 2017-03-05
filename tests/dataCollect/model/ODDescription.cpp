@@ -60,6 +60,7 @@ TEST_CASE("Test ODDescription", "[Model]") {
     REQUIRE(d1.getEntry(100)->name == "Entry 0");
     REQUIRE(d1.getEntry(101)->name == "Entry 2");
     REQUIRE(d1.getEntry(500) == nullptr);
+    REQUIRE(d1.getEntriesList().size() == 2);
   }
 
   SECTION("Override Entries") {
