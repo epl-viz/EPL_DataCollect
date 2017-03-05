@@ -47,7 +47,7 @@ TEST_CASE("Changing Status works") {
   SECTION("Test setting to INITIALISING") {
     n.setStatus(NMTState::INITIALISING);
     REQUIRE(n.getStatus() == NMTState::INITIALISING);
-    REQUIRE(n.getStatusStr() == "STARTING");
+    REQUIRE(n.getStatusStr() == "INITIALISING");
   }
   SECTION("Test setting to OPERATIONAL") {
     n.setStatus(NMTState::OPERATIONAL);
