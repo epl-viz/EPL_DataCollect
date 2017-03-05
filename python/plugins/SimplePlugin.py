@@ -20,6 +20,8 @@ class SimplePlugin(Plugin.Plugin):
       data = int(self.getData("Counter"))
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
+    if cy.getCycleNum() == 100:
+      self.unload()
 
   def getID(self):
     return "SimplePlugin"

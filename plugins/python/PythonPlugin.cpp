@@ -46,7 +46,7 @@
 #define PLUGIN_INIT "initialize"
 #define PLUGIN_PARENT "Plugin.Plugin"
 #define PYTHON_STR "str"
-// #define PLUGIN_EV "PluginEvent" // clang: macro not in use
+#define PLUGIN_EV "PluginEvent"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -229,7 +229,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
     case EvType::VIEW_STARTCAP: // add event STARTCAP
       return addEvent(std::make_unique<EvView>(EvType::VIEW_STARTCAP,
                                                getID(),
-                                               std::string("PluginEvent"),
+                                               std::string(PLUGIN_EV),
                                                std::string("Starting live view..."),
                                                0,
                                                getCurrentCycle(),
@@ -237,7 +237,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
     case EvType::VIEW_ENDCAP: // add event ENDCAP
       return addEvent(std::make_unique<EvView>(EvType::VIEW_ENDCAP,
                                                getID(),
-                                               std::string("PluginEvent"),
+                                               std::string(PLUGIN_EV),
                                                std::string("Stopping live view..."),
                                                0,
                                                getCurrentCycle(),
@@ -258,7 +258,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
       } catch (std::invalid_argument ia) { return false; }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_CN,
                                                getID(),
-                                               std::string("PluginEvent"),
+                                               std::string(PLUGIN_EV),
                                                std::string("Highlighting CN\t" + value),
                                                val,
                                                getCurrentCycle(),
@@ -274,7 +274,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
       }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_JUMPTOTIME,
                                                getID(),
-                                               std::string("PluginEvent"),
+                                               std::string(PLUGIN_EV),
                                                std::string("Jump to time\t" + value),
                                                val,
                                                getCurrentCycle(),
@@ -293,7 +293,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
       }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY,
                                                getID(),
-                                               std::string("PluginEvent"),
+                                               std::string(PLUGIN_EV),
                                                argument,
                                                val,
                                                getCurrentCycle(),

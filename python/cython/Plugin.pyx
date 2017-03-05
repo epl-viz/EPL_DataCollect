@@ -6,8 +6,6 @@ import importlib
 import sys
 from libcpp.string cimport string
 
-#INFO: cython cannot get char* from function hence a lot of code copy to get char*.
-
 cdef class Plugin:
   """
   \brief This class represents a custom user plugin base.
@@ -15,7 +13,7 @@ cdef class Plugin:
   Plugins use the run method, which run each cycle allowing the user to check for
   data each cycle.
 
-  \version 0.5.0
+  \version 1.0.0
   """
 
   def __cinit__(self):
@@ -30,7 +28,7 @@ cdef class Plugin:
     at each cycle and for adding the ID and dependencies.
     By default this will return nothing, since not initializing a plugin is legit.
 
-    \version 0.5.0
+    \version 1.0.0
     """
     return True  #initialize can be empty
 
@@ -41,9 +39,9 @@ cdef class Plugin:
     this method runs to slow it will be stopped and rerun to prevent slowing down of
     the program.
 
-    \version 0.5.0
+    \version 1.0.0
     """
-    pass
+    pass  #if no run implemented
 
   cpdef getDependencies(self):
     """
@@ -55,7 +53,7 @@ cdef class Plugin:
 
     \version 0.5.0
     """
-    return "" #Dependencies can be empty if needed
+    return "" #Dependencies can be empty if not needed
 
   cpdef unload(self):
     """
@@ -63,9 +61,9 @@ cdef class Plugin:
     Essentially it overrides the run method to stop the plugin from running each
     cycle.
 
-    \version 0.5.0
+    \version 1.0.0
     """
-    pass  ##TODO: implement
+    self.getPythonPlugin().setRunning(False)
 
   ########################################################################################
 
@@ -77,7 +75,7 @@ cdef class Plugin:
 
     \returns the python cycle representation
 
-    \version 0.5.0
+    \version 1.0.0
     """
     return Cycle.createCycle(self.getPythonPlugin().getCurrentCycle())
 
@@ -90,7 +88,7 @@ cdef class Plugin:
 
     \returns the python cycle representation
 
-    \version 0.5.0
+    \version 1.0.0
     """
     if isinstance(number, int):
       return Cycle.createCycle(self.getPythonPlugin().getCycleByNum(number))
@@ -101,10 +99,11 @@ cdef class Plugin:
 
     \param key Key of Events, using the EventEnum class for further information
     \param value String of additional information, formation depends on specific event. Formatted as pythondict.
+    \param arg string of arguments
 
     \returns a bool stating whether the event has been added
 
-    \version 0.5.0
+    \version 1.0.0
     """
     if isinstance(key, int) and isinstance(value, str) and isinstance(arg, str):
       return self.getPythonPlugin().addPyEvent(key, value.encode('utf-8'), arg.encode('utf-8'))
@@ -116,7 +115,7 @@ cdef class Plugin:
 
     \returns a bool whether the storage has been added or not
 
-    \version 0.5.0
+    \version 1.0.0
     """
     cdef int c_type
 
