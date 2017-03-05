@@ -72,7 +72,7 @@ class Node {
   mockable NMTState getStatus() const noexcept;
   mockable std::string getStatusStr() noexcept;
   mockable uint8_t getID() const noexcept;
-  mockable IDENT getIdentity() const noexcept { return identity; }
+  mockable IDENT getIdentity() const noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:

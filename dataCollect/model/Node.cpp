@@ -44,6 +44,12 @@ NMTState Node::getStatus() const noexcept { return status; }
 std::string Node::getStatusStr() noexcept { return EPLEnum2Str::toStr(status); };
 
 /*!
+ * \brief Retrieves the identity of this node
+ * \return The identity of this node
+ */
+Node::IDENT Node::getIdentity() const noexcept { return identity; }
+
+/*!
  * \brief Returns the ID of the node
  * \return The node ID
  */
