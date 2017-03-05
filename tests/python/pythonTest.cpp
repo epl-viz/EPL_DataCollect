@@ -111,8 +111,8 @@ TEST_CASE("Test loading with plugin", "[python]") {
 
 TEST_CASE("GUI API calls exec", "[python]") {
   CaptureInstance inst;
-  auto            id       = inst.getEventLog()->getAppID();
-  auto            pyPluginValidCalls = std::make_shared<PythonPlugin>("Test_VALIDGUIAPICalls");
+  auto            id                   = inst.getEventLog()->getAppID();
+  auto            pyPluginValidCalls   = std::make_shared<PythonPlugin>("Test_VALIDGUIAPICalls");
   auto            pyPluginInvalidCalls = std::make_shared<PythonPlugin>("Test_INVALIDGUIAPICalls");
   inst.getPluginManager()->addPlugin(pyPluginValidCalls);
   inst.getPluginManager()->addPlugin(pyPluginInvalidCalls);
@@ -128,36 +128,29 @@ TEST_CASE("GUI API calls exec", "[python]") {
   auto events = inst.getEventLog()->pollEvents(id);
 
   int evTypeStartCap = 0;
-  int evTypeEndCap = 0;
-  int evTypeMN = 0;
-  int evTypeCN = 0;
-  int evTypeOD = 0;
+  int evTypeEndCap   = 0;
+  int evTypeMN       = 0;
+  int evTypeCN       = 0;
+  int evTypeOD       = 0;
 
-  for(auto ev : events) {
+  for (auto ev : events) {
     switch (ev->getType()) {
-      case EvType::VIEW_STARTCAP:
-        evTypeStartCap++;
-        break;
-      case EvType::VIEW_ENDCAP:
-        evTypeEndCap++;
-        break;
-      case EvType::VIEW_EV_HIGHLIGHT_MN:
-        evTypeMN++;
-        break;
+      case EvType::VIEW_STARTCAP: evTypeStartCap++; break;
+      case EvType::VIEW_ENDCAP: evTypeEndCap++; break;
+      case EvType::VIEW_EV_HIGHLIGHT_MN: evTypeMN++; break;
       case EvType::VIEW_EV_HIGHLIGHT_CN:
         evTypeCN++;
-        if(ev->getEventFlags() != 1) {
+        if (ev->getEventFlags() != 1) {
           FAIL("invalid flag in cn higlight event");
         }
         break;
       case EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY:
         evTypeOD++;
-        if(ev->getEventFlags() != 0x1000 || ev->getDescription().compare(std::string("10"))) {
+        if (ev->getEventFlags() != 0x1000 || ev->getDescription().compare(std::string("10"))) {
           FAIL("illegal event flags / description in highlight od entry event");
         }
         break;
-      default:
-        break;
+      default: break;
     }
   }
 
