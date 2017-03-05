@@ -105,8 +105,22 @@ void CycleBuilder::buildNextCycle() noexcept {
     if (dst != 255 && currentCycle.getNode(dst) == nullptr)
       addNode(dst);
 
+    uint8_t updateTargetNode = src;
+
+    // Check if the DESTINATION is changed
+    if (i.getType() == PacketType::ASYNC_SEND) {
+      if (i.ASnd.get() == nullptr) {
+        std::cerr << "[CycleBuilder] Internal error! Invalid parsed packet! ASnd == nullptr" << std::endl;
+        break;
+      }
+
+      if (i.ASnd->RequestedServiceID == ASndServiceID::SDO)
+        updateTargetNode = dst;
+    }
+
+    // Update OD entries
     Node *node = currentCycle.getNode(src);
-    OD *  od   = node->getOD();
+    OD *  od   = currentCycle.getNode(updateTargetNode)->getOD();
     for (auto const &j : *i.getDiffs()) {
       if (j.getIndex() == UINT16_MAX)
         continue;
@@ -119,6 +133,7 @@ void CycleBuilder::buildNextCycle() noexcept {
       }
     }
 
+    // Handle other packet stuff
     switch (i.getType()) {
       case PacketType::POLL_RESPONSE:
       case PacketType::START_OF_ASYNC: node->status = i.getState(); break;

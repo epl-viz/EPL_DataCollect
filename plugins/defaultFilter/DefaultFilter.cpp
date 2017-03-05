@@ -42,8 +42,8 @@ static const uint16_t toInclude[] = {
 };
 
 void DefaultFilter::run(Cycle *cycle) {
-  CSViewFilters *filters = dynamic_cast<CSViewFilters *>(cycle->getCycleStorage(EPL_DC_PLUGIN_VIEW_FILTERS_CSID));
-  auto *defFilter = filters->getFilter(filterID);
+  CSViewFilters *filters   = dynamic_cast<CSViewFilters *>(cycle->getCycleStorage(EPL_DC_PLUGIN_VIEW_FILTERS_CSID));
+  auto *         defFilter = filters->getFilter(filterID);
 
   for (auto const &i : cycle->getPackets())
     for (auto const &j : *i.getDiffs())
@@ -64,7 +64,7 @@ bool DefaultFilter::initialize(CaptureInstance *ci) {
   if (!filters)
     return false;
 
-  filterID = filters->newFilter(CSViewFilters::INCLUDE, "Default");
+  filterID        = filters->newFilter(CSViewFilters::INCLUDE, "Default");
   auto *defFilter = filters->getFilter(filterID);
 
   for (auto i : toInclude)
