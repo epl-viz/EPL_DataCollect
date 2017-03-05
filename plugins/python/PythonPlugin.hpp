@@ -62,7 +62,7 @@ class PythonPlugin : public PluginBase {
   Cycle *getCurrentCycle();
   Cycle *getCycleByNum(int number);
 
-  bool addPyEvent(int key, const char *);
+  bool addPyEvent(int key, std::string value, std::string argument);
 
   bool registerPyCycleStorage(std::string index, int typeAsInt);
   bool setStorage(std::string index, std::string var);

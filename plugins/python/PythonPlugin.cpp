@@ -41,6 +41,11 @@
 #include <memory>
 #include <string>
 
+#define PLUGIN_ID "getID"
+#define PLUGIN_RUN "run"
+#define PLUGIN_DEP "getDependencies"
+#define PLUGIN_INIT "initialize"
+
 namespace EPL_DataCollect {
 namespace plugins {
 
@@ -61,13 +66,12 @@ std::string PythonPlugin::getID() { return plugID; };
 std::string PythonPlugin::getDependencies() { return plugDeps; };
 
 bool PythonPlugin::initialize(CaptureInstance *ci) {
-  (void)ci;
+  (void)ci; // has already been inited by runInitialize(...) before
 
   //** Python Initialization
   pName = PyUnicode_DecodeFSDefault(plugID.c_str());
 
   // check if module is present
-  PyRun_SimpleString("print(sys.path)");
   pModule = PyImport_Import(pName);
   Py_DECREF(pName);
   if (pModule == NULL) {
@@ -101,9 +105,10 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   }
 
   // check if (correct) getID() method is implemented
-  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("getID"), NULL);
+  pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_ID), NULL);
   if (pValue == NULL || strcmp(pValue->ob_type->tp_name, "str") != 0) {
-    std::cerr << "Plugin method getID() of plugin\t'" + plugID + "'\t is not or incorrectly implemented\n";
+    std::cerr << "Plugin method\t" << PLUGIN_ID
+              << "\tof plugin\t'" + plugID + "'\t is not or incorrectly implemented\n";
     return false;
   }
 
@@ -148,15 +153,12 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     return false;
   }
   Py_DECREF(pValue);
-
-
-
   return true;
 };
 
 void PythonPlugin::run(Cycle *cycle) {
   currentCycle = cycle;
-  PyObject_CallMethod(pInstance, reinterpret_cast<const char *>("run"), NULL); // can't fail so no checking
+  PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_RUN), NULL); // can't fail so no checking
 };
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
@@ -177,10 +179,9 @@ Cycle *PythonPlugin::getCycleByNum(int number) {
 
 
 
-bool PythonPlugin::addPyEvent(int key, const char *value) {
-  char *   end_ptr;
-  uint64_t var = strtoull(value, &end_ptr, 0);
-
+bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) {
+  int val;
+  int arg;
   switch (static_cast<EvType>(key)) {
     case EvType::VIEW_STARTCAP: // add event STARTCAP
       return addEvent(std::make_unique<EvView>(EvType::VIEW_STARTCAP,
@@ -199,48 +200,64 @@ bool PythonPlugin::addPyEvent(int key, const char *value) {
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_HIGHLIGHT_MN: // add event highlight MN
-      if (value == end_ptr)
-        return false;
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_MN,
                                                getID(),
                                                std::string("PluginEvent"),
-                                               std::string("Starting live capture..."),
-                                               var,
+                                               std::string("Highlighting MN..."),
+                                               0,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_HIGHLIGHT_CN: // add event highlight CN x (given by value)
-      if (value == end_ptr)
-        return false;
+      try {
+        val = std::stoi(value);
+        if (val < 0)
+          return false;
+      } catch (std::invalid_argument ia) { return false; }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_CN,
                                                getID(),
                                                std::string("PluginEvent"),
-                                               std::string("Starting live capture..."),
-                                               var,
+                                               std::string("Highlighting CN\t" + value),
+                                               val,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_JUMPTOTIME: // add event jump to time (given by value)
-      if (value == end_ptr)
+      try {
+        val = std::stoi(value);
+        if (val < 0)
+          return false;
+      } catch (std::invalid_argument ia) {
+        std::cerr << "Invalid event argument" << std::endl;
         return false;
+      }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_JUMPTOTIME,
                                                getID(),
                                                std::string("PluginEvent"),
-                                               std::string("Starting live capture..."),
-                                               var,
+                                               std::string("Jump to time\t" + value),
+                                               val,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY: // add event highlight od entry (given by value)
-      if (value == end_ptr)
+      try {
+        val = std::stoi(value);
+        arg = std::stoi(argument);
+        if (val < 0x0000 || val > 0xFFFF)
+          return false;
+        if (arg < 0 || val > 100)
+          return false;
+      } catch (std::invalid_argument ia) {
+        std::cerr << "Invalid event argument" << std::endl;
         return false;
+      }
       return addEvent(std::make_unique<EvView>(EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY,
                                                getID(),
                                                std::string("PluginEvent"),
                                                std::string("Starting live capture..."),
-                                               var,
+                                               val,
                                                getCurrentCycle(),
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_TEXT: // add event text
       return addEvent(std::make_unique<EvPluginText>(
-            getID(), std::string("PluginEvent"), std::string(value), 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+            getID(), std::string("PluginEvent"), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
     default: return false;
   }
 };
