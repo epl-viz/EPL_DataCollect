@@ -285,7 +285,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
         arg = std::stoi(argument);
         if (val < 0x0000 || val > 0xFFFF)
           return false;
-        if (arg < 0 || val > 100)
+        if (arg < 0 || arg > 100)
           return false;
       } catch (std::invalid_argument ia) {
         std::cerr << "Invalid event argument" << std::endl;

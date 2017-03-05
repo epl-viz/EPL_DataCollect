@@ -108,3 +108,66 @@ TEST_CASE("Test loading with plugin", "[python]") {
   auto events = inst.getEventLog()->pollEvents(id);
   std::cout << "EVT SIZE:" << events.size() << std::endl;
 }
+
+TEST_CASE("GUI API calls exec", "[python]") {
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPluginValidCalls = std::make_shared<PythonPlugin>("Test_VALIDGUIAPICalls");
+  auto            pyPluginInvalidCalls = std::make_shared<PythonPlugin>("Test_INVALIDGUIAPICalls");
+  inst.getPluginManager()->addPlugin(pyPluginValidCalls);
+  inst.getPluginManager()->addPlugin(pyPluginInvalidCalls);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+
+  int evTypeStartCap = 0;
+  int evTypeEndCap = 0;
+  int evTypeMN = 0;
+  int evTypeCN = 0;
+  int evTypeOD = 0;
+
+  for(auto ev : events) {
+    switch (ev->getType()) {
+      case EvType::VIEW_STARTCAP:
+        evTypeStartCap++;
+        break;
+      case EvType::VIEW_ENDCAP:
+        evTypeEndCap++;
+        break;
+      case EvType::VIEW_EV_HIGHLIGHT_MN:
+        evTypeMN++;
+        break;
+      case EvType::VIEW_EV_HIGHLIGHT_CN:
+        evTypeCN++;
+        if(ev->getEventFlags() != 1) {
+          FAIL("invalid flag in cn higlight event");
+        }
+        break;
+      case EvType::VIEW_EV_HIGHLIGHT_OD_ENTRY:
+        evTypeOD++;
+        if(ev->getEventFlags() != 0x1000 || ev->getDescription().compare(std::string("10"))) {
+          FAIL("illegal event flags / description in highlight od entry event");
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  auto *firstEv = events.at(0);
+
+  REQUIRE(firstEv->getType() == EvType::VIEW_EV_HIGHLIGHT_MN);
+  REQUIRE(events.size() == 577);
+  REQUIRE(evTypeStartCap == 144);
+  REQUIRE(evTypeEndCap == 144);
+  REQUIRE(evTypeCN == 144);
+  REQUIRE(evTypeOD == 144);
+  REQUIRE(evTypeMN == 1); // added only once cause of cycle range
+}

@@ -18,7 +18,7 @@ class PluginA(Plugin.Plugin):
     cy = self.getCycle()
     print("amount of CN!!!:", cy.getAmountOfCN())
     print("NODE STATUS:", cy.getNodeStatus(23))
-    print("GET OD ENTRY:", cy.getODEntry(1, "234432"))
+    #print("GET OD ENTRY:", cy.getODEntry(1, "234432"))
     print("Number of Nodes currently active", cy.getNumNodes())
 
 

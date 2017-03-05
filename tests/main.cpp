@@ -42,9 +42,22 @@ int main(int argc, char *argv[]) {
         "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
   std::string import_tests_loadtests =
         "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests')\n";
+  std::string import_tests_cycleaccesstests =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/cycleaccesstests')\n";
+  std::string import_tests_pluginguiapitests =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginguiapitests')\n";
+  std::string import_tests_pluginapitests =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginapitests')\n";
+  std::string import_tests_pluginclasstests =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginclasstests')\n";
+
   PyRun_SimpleString(import_libs.c_str());
   PyRun_SimpleString(import_plugins.c_str());
   PyRun_SimpleString(import_tests_loadtests.c_str());
+  PyRun_SimpleString(import_tests_cycleaccesstests.c_str());
+  PyRun_SimpleString(import_tests_pluginguiapitests.c_str());
+  PyRun_SimpleString(import_tests_pluginapitests.c_str());
+  PyRun_SimpleString(import_tests_pluginclasstests.c_str());
 
   Catch::Session session;
 

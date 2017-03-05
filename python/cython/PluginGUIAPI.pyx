@@ -61,7 +61,7 @@ def highlightNode(plugin, node):
   \returns a bool showing whether the node highlight is successful
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(node, int):
-    if node >= 0:
+    if node >= 0 and node < plugin.getCycle().getNumNodes():
       return plugin.addEvent(Events.EV_HIGHLIGHT_CN.value, str(node), "")
     return False
   return False
@@ -74,11 +74,11 @@ def highlightODEntry(plugin, entry, level):
 
   \param plugin the plugin currently used, has to be given
   \param ODEntry entry : The entry to be highlighted.
-  \param unsigned int level : The level of highlighting to be used in the graphical representations, a float in (0.0, 1.0]
+  \param unsigned int level : The level of highlighting to be used in the graphical representations, a int between 0 and 100
 
   \returns true if highlighting was added successful.
   """
-  if isinstance(plugin, Plugin.Plugin) and isinstance(entry, int) and isinstance(level, float):
-    if 0.0 < level <= 1.0 and entry >= 0x0000 and entry <= 0xFFFF:
+  if isinstance(plugin, Plugin.Plugin) and isinstance(entry, int) and isinstance(level,int):
+    if 0 < level <= 100 and entry >= 0x0000 and entry <= 0xFFFF:
       return plugin.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, str(entry), str(level))
   return False

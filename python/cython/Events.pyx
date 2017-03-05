@@ -1,3 +1,5 @@
+#Representation of Events to be used in the plugin
+
 cdef extern from "EPLEnums.h" namespace "EPL_DataCollect::EvType":
   cdef enum EvType "EPL_DataCollect::EvType":
     PLUGIN_OTHER,
