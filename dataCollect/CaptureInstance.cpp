@@ -92,17 +92,6 @@ int CaptureInstance::setupLoop() {
 
 
 /*!
- * \brief Loads the specified XDD file
- * \param  path the xdd file to load
- * \todo IMPLEMENT
- */
-void CaptureInstance::loadXDD(std::string path) noexcept {
-  std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  (void)path;
-}
-
-
-/*!
  * \brief starts recording on the specified ethernet device
  *
  * A list of available devices can be obtained with getDevices()
@@ -116,6 +105,20 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
   if (state != SETUP) {
     std::cerr << "[CaptureInstance] (startRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
+  }
+
+  auto list  = getDevices();
+  bool found = false;
+  for (auto const &i : list) {
+    if (i == interface) {
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    std::cerr << "[CaptureInstance] (startRecording) Interface '" << interface << "' does not exist!" << std::endl;
+    return 11;
   }
 
   capture = ws_capture_open_live(interface.c_str(), 0, nullptr, nullptr, nullptr);

@@ -87,6 +87,7 @@ class Cycle {
   mockable ODEntry *getODEntry(uint8_t node, uint16_t entry) noexcept;
   mockable CycleStorageBase *getCycleStorage(std::string id) noexcept;
   mockable bool registerCycleStorage(std::string id, std::unique_ptr<CycleStorageBase> ptr) noexcept;
+  mockable std::vector<uint8_t> getNodeList() const noexcept;
 
   bool operator==(const Cycle &b) const;
 

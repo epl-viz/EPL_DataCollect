@@ -106,8 +106,8 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.stopRecording() == -1);
     REQUIRE(ci.getState() == CaptureInstance::DONE);
 #else
-    REQUIRE(ci.startRecording("") == -2);
-    REQUIRE(ci.getState() == CaptureInstance::ERRORED);
+    REQUIRE(ci.startRecording("") == 11);
+    REQUIRE(ci.getState() == CaptureInstance::SETUP);
 #endif
   }
 
@@ -141,18 +141,9 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xC].get(), [](PluginBase *) {}));
 
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
-    REQUIRE(ci.startRecording("") == 1);
-    REQUIRE(ci.startRecording("") == -1);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 1);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == -1);
     REQUIRE(ci.getState() == CaptureInstance::ERRORED);
-  }
-
-  SECTION("Testing adding CycleStorage") {
-    REQUIRE(ci.registerCycleStorage<CSTest1>("A") == true);
-    REQUIRE(ci.registerCycleStorage<CSTest1>("B") == true);
-    REQUIRE(ci.registerCycleStorage<CSTest1>("A") == false);
-    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
-    REQUIRE(ci.stopRecording() == 0);
-    REQUIRE(ci.registerCycleStorage<CSTest1>("C") == false);
   }
 
   SECTION("Testing the stubs") {
@@ -160,8 +151,18 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.getPluginManager() != nullptr);
     REQUIRE(ci.getCycleContainer() != nullptr);
     REQUIRE(ci.getDevices().size() <= UINT32_MAX);
-    ci.loadXDD("");
   }
+}
+
+TEST_CASE("Testing adding CycleStorage", "[CaptureInstance]") {
+  CaptureInstance ci;
+
+  REQUIRE(ci.registerCycleStorage<CSTest1>("A") == true);
+  REQUIRE(ci.registerCycleStorage<CSTest1>("B") == true);
+  REQUIRE(ci.registerCycleStorage<CSTest1>("A") == false);
+  REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
+  REQUIRE(ci.stopRecording() == 0);
+  REQUIRE(ci.registerCycleStorage<CSTest1>("C") == false);
 }
 
 TEST_CASE("Testing CaptureInstance -- plugin init error", "[CaptureInstance]") {

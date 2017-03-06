@@ -90,9 +90,10 @@ TEST_CASE("Fetching non existant values fails", "[Cycle]") {
 
 TEST_CASE("OD Entries are fetched correctly") {
   Cycle c;
-  SECTION("Test getODEntry() returning nullptr on non existant node") { REQUIRE(c.getODEntry(200, 0) == nullptr); }
+  REQUIRE(c.getODEntry(200, 0) == nullptr);
   c.addNode(200);
-  SECTION("Test getODEntry() returning nullptr on non existant values") { REQUIRE(c.getODEntry(200, 0) == nullptr); }
+  REQUIRE(c.getODEntry(200, 0) == nullptr);
+  REQUIRE(c.getNodeList().size() == 1);
 
   Node *         n      = c.getNode(200);
   OD *           od     = n->getOD();

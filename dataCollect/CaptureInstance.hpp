@@ -115,8 +115,6 @@ class CaptureInstance {
   CaptureInstance &operator=(CaptureInstance &&) = delete;
 
 
-  mockable void loadXDD(std::string path) noexcept;
-
   mockable int startRecording(std::string interface) noexcept;
   mockable int stopRecording() noexcept;
   mockable int loadPCAP(std::string file) noexcept;

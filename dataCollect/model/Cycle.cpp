@@ -180,6 +180,18 @@ bool Cycle::addNode(uint8_t nodeID) {
   return true;
 }
 
+/*!
+ * \brief Returns a list of node IDs
+ */
+std::vector<uint8_t> Cycle::getNodeList() const noexcept {
+  std::vector<uint8_t> list;
+
+  for (auto const &i : nodes)
+    list.emplace_back(i.first);
+
+  return list;
+}
+
 bool Cycle::operator==(const Cycle &b) const {
   return events == b.events && /*packets == b.packets && nodes == b.nodes &&*/ nodeCount == b.nodeCount &&
          cycleNum == b.cycleNum;
