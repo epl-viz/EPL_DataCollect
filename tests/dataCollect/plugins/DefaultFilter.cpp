@@ -26,6 +26,7 @@
 
 #include <CaptureInstance.hpp>
 #include <DefaultFilter.hpp>
+#include "EPLEnums.h"
 #include <catch.hpp>
 
 #if __cplusplus <= 201402L
@@ -64,7 +65,7 @@ TEST_CASE("Testing DefaultFilter", "[plugin][filter]") {
 
   auto f = *filters.begin();
   REQUIRE(f.getName() == "Default");
-  REQUIRE(f.getType() == CSViewFilters::INCLUDE);
+  REQUIRE(f.getType() == FilterType::INCLUDE);
   REQUIRE(f.includeIndex(0x1001) == true);
   f.unSetIndex(0x1001);
   REQUIRE(f.includeIndex(0x1001) == false);

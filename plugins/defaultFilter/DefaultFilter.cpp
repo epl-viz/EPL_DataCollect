@@ -31,6 +31,7 @@
 
 #include "DefaultFilter.hpp"
 #include "CSViewFilters.hpp"
+#include "EPLEnums.h"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -64,7 +65,7 @@ bool DefaultFilter::initialize(CaptureInstance *ci) {
   if (!filters)
     return false;
 
-  filterID        = filters->newFilter(CSViewFilters::INCLUDE, "Default");
+  filterID        = filters->newFilter(FilterType::INCLUDE, "Default");
   auto *defFilter = filters->getFilter(filterID);
 
   for (auto i : toInclude)
