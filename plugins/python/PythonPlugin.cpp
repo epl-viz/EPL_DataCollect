@@ -403,10 +403,12 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   plugDeps = PyBytes_AsString(pValue);
 
   //** instancing was successful, initing needed C++ stuff...
+  // cycle storage for plugin
   if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
     std::cerr << "Plugin \t'" << plugID << "'\t cycle storage not available" << std::endl;
     return false;
   }
+  // aswell as cycle storage for the plugin global filter if it's not there
   if (ci->getStartCycle()->getCycleStorage(FILTER_NAME) == nullptr) {
     // id filter not found
     if (!registerCycleStorage<CSViewFilters>(FILTER_NAME)) {

@@ -1,5 +1,6 @@
 import Plugin
 import Events
+import Filters
 
 class Test_PluginInternal(Plugin.Plugin):
   def getID(self):
@@ -83,3 +84,10 @@ class Test_PluginInternal(Plugin.Plugin):
       print("ERROR event should not be added", self)
     if self.addEvent(Events.EV_TEXT.value, None, ""):
       print("ERROR event should not be added", self)
+
+    if self.addFilter(Filters.INCLUDING.value, None):
+      print("ERROR filter should not have been added", self)
+    if self.addFilter(None, "asdf"):
+      print("ERROR filter should not have been added", self)
+    if not self.addFilter(Filters.INCLUDING.value, "asdf"):
+      print("ERROR filter should have been added", self)

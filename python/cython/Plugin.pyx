@@ -137,15 +137,43 @@ cdef class Plugin:
     return self.registerCycleStorage(index, str)
 
   cpdef getStorage(self, index): #THIS METHOD returns stuff from the own storage of the plugin
+    """
+    \brief This method allows the user to get Data from the plugin internal storage as string
+
+    \param key The key of the data as str
+
+    \returns the data as str
+    """
     if isinstance(index, str):
       return self.getPythonPlugin().getStorage(index.encode('utf-8')).decode() #returning None type if not found !
 
   cpdef setStorage(self, index, var):
+    """
+    \brief This method allows the user to save a var at an index, plugin internal.
+
+    \param key The key this data shall be associated with.
+    \param data Data to be added as a string
+
+    \returns whether the data has been successfully added
+    """
     if isinstance(index, str) and isinstance(var, str):
       return self.getPythonPlugin().setStorage(index.encode('utf-8'), var.encode('utf-8'))
     return False
 
   cpdef getData(self, index):
+    """
+    \brief This method allows the user to get specific data. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface. This data is program global !
+
+    \param key The key this data is associated with
+
+    \returns the data as str
+    """
+    if isinstance(index, str):
+      data = self.getPythonPlugin().getData(index.encode('utf-8'))
+      return data.decode()
+    # return None if not available
+
+  cpdef setData(self, index, var):
     """
     \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.
 
@@ -155,12 +183,6 @@ cdef class Plugin:
     \returns whether the data has been successfully added
     """
     if isinstance(index, str):
-      data = self.getPythonPlugin().getData(index.encode('utf-8'))
-      return data.decode()
-    # return None if not available
-
-  cpdef setData(self, index, var):
-    if isinstance(index, str):
       if isinstance(var, str):
         return self.getPythonPlugin().setDataStr(index.encode('utf-8'), var.encode('utf-8'))
       elif isinstance(var, int):
@@ -168,12 +190,20 @@ cdef class Plugin:
     return False
 
   cpdef addFilter(self, typeEnum, filters):
+    """
+    \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.
+
+    \param typeEnum enum type integer of filter
+    \param filters filters to be added as a string
+
+    \returns whether the data has been successfully added
+    """
     if isinstance(filters, str) and isinstance(typeEnum, int):
       return self.getPythonPlugin().addViewFilter(typeEnum, filters.encode('utf-8'))
     return False
   ########################################################################################
 
-  #Private elper method getting the corresponding pythonplugin############################
+  #Private helper method getting the corresponding pythonplugin############################
   cdef CPlugin.PythonPlugin* getPythonPlugin(self):
     return CPlugin.PythonPlugin.getPythonPlugin(self.getID().encode('utf-8'))
 
