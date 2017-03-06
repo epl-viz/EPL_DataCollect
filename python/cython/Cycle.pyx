@@ -28,7 +28,7 @@ cdef class Cycle:
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
     for event in eventVector:
-      pyEvent = (event.getTypeAsString(), event.getName(), event.getDescription(), event.getEventFlags())
+      pyEvent = (event.getTypeAsString().decode(), event.getName().decode(), event.getDescription().decode(), event.getEventFlags())
       listOfEvents.append(pyEvent)
     return listOfEvents
 
@@ -49,6 +49,9 @@ cdef class Cycle:
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
       return odEntry.toString().decode()
+
+  def getODEntry_Sub(self, nodeNumber, odNumber, subindex):
+    return
 
   def getAmountOfCN(self):
     """
