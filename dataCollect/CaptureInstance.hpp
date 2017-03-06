@@ -103,6 +103,7 @@ class CaptureInstance {
   Cycle startCycle;
 
   mockable int setupLoop();
+  mockable int errorCleanup(int retVal);
 
  public:
   CaptureInstance() : cycleContainer(this), builder(this) { cfg = getConfig(); }

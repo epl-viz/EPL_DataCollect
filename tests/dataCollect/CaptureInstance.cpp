@@ -152,6 +152,8 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.getCycleContainer() != nullptr);
     REQUIRE(ci.getDevices().size() <= UINT32_MAX);
   }
+
+  ci.stopRecording();
 }
 
 TEST_CASE("Testing adding CycleStorage", "[CaptureInstance]") {
@@ -192,7 +194,7 @@ TEST_CASE("Testing CaptureInstance -- plugin init error", "[CaptureInstance]") {
   pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
 
   REQUIRE(ci.getState() == CaptureInstance::SETUP);
-  REQUIRE(ci.startRecording("") == 1);
+  REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 1);
   REQUIRE(ci.getState() == CaptureInstance::ERRORED);
 }
 

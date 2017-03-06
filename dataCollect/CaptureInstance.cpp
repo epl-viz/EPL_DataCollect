@@ -65,15 +65,11 @@ CaptureInstance::~CaptureInstance() {
  */
 int CaptureInstance::setupLoop() {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  if (!pluginManager.init(this)) {
-    state = ERRORED;
-    return 1;
-  }
+  if (!pluginManager.init(this))
+    return errorCleanup(1);
 
-  if (dissect == nullptr) {
-    state = ERRORED;
-    return -2;
-  }
+  if (dissect == nullptr)
+    return errorCleanup(-2);
 
   startCycle.cycleNum = UINT32_MAX; // Build from start
 
@@ -81,13 +77,25 @@ int CaptureInstance::setupLoop() {
   iHandler.startLoop();
 
   if (!builder.startLoop(startCycle)) {
-    state = ERRORED;
     std::cerr << "[CaptureInstance] (startRecording) Failed to start build loop" << std::endl;
-    return 100;
+    return errorCleanup(100);
   }
 
   state = RUNNING;
   return 0;
+}
+
+int CaptureInstance::errorCleanup(int retVal) {
+  if (dissect)
+    ws_dissect_free(dissect);
+
+  if (capture)
+    ws_capture_close(capture);
+
+  state = ERRORED;
+  iHandler.setDissector(nullptr);
+
+  return retVal;
 }
 
 
@@ -128,6 +136,7 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
+    ws_capture_close(capture);
     return 13;
   }
 
@@ -211,6 +220,7 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
+    ws_capture_close(capture);
     return 13;
   }
 
