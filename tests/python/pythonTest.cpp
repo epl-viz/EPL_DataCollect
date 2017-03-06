@@ -167,6 +167,23 @@ TEST_CASE("Testing PluginAPI class", "[python]") {
   std::cout << std::endl;
 }
 
+TEST_CASE("Cycle class access test", "[python]") {
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_CycleAccess");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+}
+
 TEST_CASE("Testing calling cython", "[python]") {
   std::cout << std::endl;
 
@@ -199,21 +216,4 @@ TEST_CASE("Test loading with plugin", "[python]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
   std::cout << "EVT SIZE:" << events.size() << std::endl;
-}
-
-TEST_CASE("Cycle class access test", "[python]") {
-  CaptureInstance inst;
-  auto            id       = inst.getEventLog()->getAppID();
-  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_CycleAccess");
-  inst.getPluginManager()->addPlugin(pyPlugin);
-
-  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN.pcapng";
-  fs::path    filePath(file);
-  REQUIRE(fs::exists(filePath));
-  REQUIRE(fs::is_regular_file(filePath));
-
-  REQUIRE(inst.loadPCAP(file) == 0);
-
-  inst.getCycleBuilder()->waitForLoopToFinish();
-  auto events = inst.getEventLog()->pollEvents(id);
 }

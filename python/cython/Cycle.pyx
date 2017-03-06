@@ -15,6 +15,9 @@ cdef class Cycle:
     return self._C_Cycle.getNumNodes()
 
   cpdef int getCycleNum(self):
+    """
+    \returns number of the current cycle
+    """
     return self._C_Cycle.getCycleNum()
 
   cdef void updateCycle(self, CCycle.Cycle* newCycle):  ## maybe implement this since it increases speed
