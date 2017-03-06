@@ -87,15 +87,15 @@ std::string TimeSeries::getCSID() const noexcept { return csID; }
  * \param  data The new data point
  */
 void TimeSeries::addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept {
-  if (!data) {
-    std::cerr << "[TimeSeries] addDataPoint [OD] invalid pointer" << std::endl;
-    return;
-  }
+  double val = 0;
+
+  if (data)
+    val = data->getNumericValue(odSubIndex);
 
   if (cycleNum >= tsData.size())
     tsData.resize(cycleNum + 1);
 
-  tsData[cycleNum] = data->getNumericValue(odSubIndex);
+  tsData[cycleNum] = val;
 }
 
 
@@ -104,15 +104,15 @@ void TimeSeries::addDataPoint(uint32_t cycleNum, ODEntry *data) noexcept {
  * \param  data The new data point
  */
 void TimeSeries::addDataPoint(uint32_t cycleNum, CycleStorageBase *data) noexcept {
-  if (!data) {
-    std::cerr << "[TimeSeries] addDataPoint [CycleStorage] invalid pointer" << std::endl;
-    return;
-  }
+  double val = 0;
+
+  if (data)
+    val = data->getNumericValue();
 
   if (cycleNum >= tsData.size())
     tsData.resize(cycleNum + 1);
 
-  tsData[cycleNum] = data->getNumericValue();
+  tsData[cycleNum] = val;
 }
 }
 }

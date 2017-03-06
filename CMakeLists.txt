@@ -49,8 +49,9 @@ set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_C_STANDARD            11 )
 set( CMAKE_C_STANDARD_REQUIRED   ON )
 
-option( DISABLE_TESTS        "Disables all tests"          OFF )
-option( ENABLE_CODE_COVERAGE "Enables code coverage tests" OFF )
+option( DISABLE_TESTS        "Disables all tests"            OFF )
+option( ENABLE_CODE_COVERAGE "Enables code coverage tests"   OFF )
+option( ENABLE_MOCKING       "Force enables mocking support" OFF )
 
 list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 
@@ -61,6 +62,10 @@ set( PLF_COLONY_DIR       "${PROJECT_SOURCE_DIR}/external/plf_colony/" )
 
 set( CM_ENABLE_MOCKING 0 )
 set( CM_BUILD_DIR_ROOT "${PROJECT_SOURCE_DIR}" )
+
+if( ENABLE_MOCKING )
+  set( CM_ENABLE_MOCKING 1 )
+endif( ENABLE_MOCKING )
 
 if( NOT DEFINED CM_DISSECTOR_EPL_ID_PREFIX )
   set( CM_DISSECTOR_EPL_ID_PREFIX "epl-xdd" )

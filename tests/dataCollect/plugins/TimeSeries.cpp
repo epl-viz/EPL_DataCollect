@@ -24,6 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <CSTimeSeriesPtr.hpp>
 #include <CaptureInstance.hpp>
 #include <TimeSeries.hpp>
 #include <TimeSeriesBuilder.hpp>
@@ -39,10 +40,21 @@ namespace fs = std::filesystem;
 
 using namespace EPL_DataCollect;
 using namespace EPL_DataCollect::plugins;
+using namespace EPL_DataCollect::constants;
 
 TEST_CASE("Testing TimeSeries plugin -- no data", "[plugin][TimeSeries]") {
   CaptureInstance ci;
   ci.getPluginManager()->addPlugin(std::make_shared<TimeSeriesBuilder>());
+
+  auto ts = std::make_shared<TimeSeries>(0, 0, 0);
+  ci.registerCycleStorage<CSTimeSeriesPtr>(EPL_DC_PLUGIN_TIME_SERIES_CSID);
+  auto *           base = ci.getStartCycle()->getCycleStorage(EPL_DC_PLUGIN_TIME_SERIES_CSID);
+  CSTimeSeriesPtr *csTS = dynamic_cast<CSTimeSeriesPtr *>(base);
+
+  REQUIRE(base != nullptr);
+  REQUIRE(csTS != nullptr);
+
+  csTS->addTS(ts);
 
   std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
   fs::path    filePath(file);

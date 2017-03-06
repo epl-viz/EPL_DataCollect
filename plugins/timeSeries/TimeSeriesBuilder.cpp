@@ -54,7 +54,13 @@ void TimeSeriesBuilder::run(Cycle *cycle) {
     if (i->isCustomEntry()) {
       i->addDataPoint(cycleNum, cycle->getCycleStorage(i->getCSID()));
     } else {
-      i->addDataPoint(cycleNum, cycle->getNode(i->getNodeID())->getOD()->getEntry(i->getIndex()));
+      ODEntry *entry = nullptr;
+      auto *node = cycle->getNode(i->getNodeID());
+      if(node) {
+        entry = node->getOD()->getEntry(i->getIndex());
+      }
+
+      i->addDataPoint(cycleNum, entry);
     }
   }
 }

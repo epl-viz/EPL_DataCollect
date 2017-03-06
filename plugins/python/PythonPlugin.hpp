@@ -35,9 +35,9 @@
 #include "CSPythonPluginStorage.hpp"
 #include "Cycle.hpp"
 #include "PluginBase.hpp"
-#include "Python.h"
 
 struct _object;
+typedef struct _object PyObject;
 
 namespace EPL_DataCollect {
 namespace plugins {
