@@ -320,8 +320,9 @@ bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
   switch (static_cast<FilterType>(filterType)) {
     case FilterType::INCLUDE: return _filter->newFilter(FilterType::INCLUDE, filter);
     case FilterType::EXCLUDE: return _filter->newFilter(FilterType::EXCLUDE, filter);
-    default: return false;
   }
+
+  return false;
 };
 
 
