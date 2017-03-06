@@ -63,6 +63,7 @@ static const std::string EPL_DC_INSTALL_PREFIX    = "@CMAKE_INSTALL_PREFIX@";
 static const std::string EPL_DC_BUILD_DIR_ROOT    = "@CM_BUILD_DIR_ROOT@";
 static const std::string EPL_DC_CM_BINARY_DIR     = "@PROJECT_BINARY_DIR@";
 static const std::string EPL_DC_WS_PLUGINS_DIR    = "@CM_WS_PLUGINS_DIR@";
+static const std::string EPL_DC_WS_LIB_DIR        = "@Wireshark_LIB_DIR@";
 static const std::string EPL_DC_PLUGIN_PROTO_NAME = "@CM_PLUGIN_PROTO_NAME@";
 
 static const std::string EPL_DC_PLUGIN_TIME_SERIES_CSID  = "eplDC.timeSeries";

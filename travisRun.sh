@@ -98,6 +98,7 @@ testExec chmod -R a+rwx .
 
 msg "START TEST"
 
+export LD_LIBRARY_PATH="/usr/lib"
 testExecNoRoot     ./bin/tests
 testFail           ./bin/tests
 testExecNoRootFail ./bin/tests --asd-asdf

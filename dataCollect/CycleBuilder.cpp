@@ -129,7 +129,6 @@ void CycleBuilder::buildNextCycle() noexcept {
       uint16_t         index = j.getIndex();
       if (od->hasEntry(index)) {
         od->entries.at(index) = entry;
-        od->writtenValues.emplace(index);
       }
     }
 
