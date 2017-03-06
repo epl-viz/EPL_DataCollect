@@ -232,7 +232,8 @@ class ODEntryComplex final : public ODEntry {
   ODEntryComplex() = delete;
   REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString() override;
+  std::string toString(uint8_t subIndex = 0) override;
+  int getArraySize() override;
 
   friend class ODEntryContainer;
 

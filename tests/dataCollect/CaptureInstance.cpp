@@ -159,7 +159,7 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.getEventLog() != nullptr);
     REQUIRE(ci.getPluginManager() != nullptr);
     REQUIRE(ci.getCycleContainer() != nullptr);
-    REQUIRE(ci.getDevices().size() >= 0);
+    REQUIRE(ci.getDevices().size() <= UINT32_MAX);
     ci.loadXDD("");
   }
 }

@@ -50,7 +50,8 @@ void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
   data[subIndex]->setFromString(str);
 }
 
-std::string ODEntryComplex::toString() { return "Complex data"; }
+int         ODEntryComplex::getArraySize() { return data.size(); }
+std::string ODEntryComplex::toString(uint8_t si) { return *data[si] != nullptr ? data[si]->toString() : "<N/A>"; }
 void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
 std::unique_ptr<ODEntry>         ODEntryComplex::clone() { return std::make_unique<ODEntryComplex>(*this); };
 

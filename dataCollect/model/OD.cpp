@@ -66,6 +66,7 @@ ODEntry *OD::getEntry(uint16_t index) noexcept {
     ODEntryDescription *entryDesc = odDesc->getEntry(index);     // Retrieve description for the entry
     ODEntryContainer    entry     = constructODEntry(entryDesc); // Construct requested ODEntryContainer
 
+    writtenValues.insert(index);
     entries.insert({index, entry}); // Write the ODEntry into the map
   }
 
@@ -93,7 +94,9 @@ ODEntryContainer OD::constructODEntry(ODEntryDescription *entryDesc) const noexc
 }
 
 plf::colony<uint16_t> OD::getWrittenValues() noexcept {
-  std::unique(writtenValues.begin(), writtenValues.end());
+  std::sort(writtenValues.begin(), writtenValues.end());
+  auto it = std::unique(writtenValues.begin(), writtenValues.end());
+  writtenValues.erase(it, writtenValues.end());
   return writtenValues;
 }
 }

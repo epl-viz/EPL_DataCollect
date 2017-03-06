@@ -90,34 +90,44 @@ void ODEntryArrayBool::setFromString(std::string str, uint8_t subIndex) { data[s
 void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stod(str); }
 
 
-std::string ODEntryInt::toString() { return std::to_string(data); }
-std::string ODEntryUInt::toString() { return std::to_string(data); }
-std::string ODEntryBool::toString() { return data ? "true" : "false"; }
-std::string ODEntryReal::toString() { return std::to_string(data); }
-std::string ODEntryString::toString() { return data; }
-std::string ODEntryArrayInt::toString() { return "Int data array"; }
-std::string ODEntryArrayUInt::toString() { return "Unsigned int data array"; }
-std::string ODEntryArrayBool::toString() { return "Bool data array"; }
-std::string ODEntryArrayReal::toString() { return "Real data array"; }
+std::string ODEntryInt::toString(uint8_t) { return std::to_string(data); }
+std::string ODEntryUInt::toString(uint8_t) { return std::to_string(data); }
+std::string ODEntryBool::toString(uint8_t) { return data ? "true" : "false"; }
+std::string ODEntryReal::toString(uint8_t) { return std::to_string(data); }
+std::string ODEntryString::toString(uint8_t) { return data; }
+std::string ODEntryArrayInt::toString(uint8_t si) { return std::to_string(data[si]); }
+std::string ODEntryArrayUInt::toString(uint8_t si) { return std::to_string(data[si]); }
+std::string ODEntryArrayBool::toString(uint8_t si) { return data[si] ? "true" : "false"; }
+std::string ODEntryArrayReal::toString(uint8_t si) { return std::to_string(data[si]); }
 
 
-void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); };
-void ODEntryUInt::clone(void *pos) { new (pos) ODEntryUInt(*this); };
-void ODEntryBool::clone(void *pos) { new (pos) ODEntryBool(*this); };
-void ODEntryReal::clone(void *pos) { new (pos) ODEntryReal(*this); };
-void ODEntryString::clone(void *pos) { new (pos) ODEntryString(*this); };
-void ODEntryArrayInt::clone(void *pos) { new (pos) ODEntryArrayInt(*this); };
-void ODEntryArrayUInt::clone(void *pos) { new (pos) ODEntryArrayUInt(*this); };
-void ODEntryArrayBool::clone(void *pos) { new (pos) ODEntryArrayBool(*this); };
-void ODEntryArrayReal::clone(void *pos) { new (pos) ODEntryArrayReal(*this); };
+void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); }
+void ODEntryUInt::clone(void *pos) { new (pos) ODEntryUInt(*this); }
+void ODEntryBool::clone(void *pos) { new (pos) ODEntryBool(*this); }
+void ODEntryReal::clone(void *pos) { new (pos) ODEntryReal(*this); }
+void ODEntryString::clone(void *pos) { new (pos) ODEntryString(*this); }
+void ODEntryArrayInt::clone(void *pos) { new (pos) ODEntryArrayInt(*this); }
+void ODEntryArrayUInt::clone(void *pos) { new (pos) ODEntryArrayUInt(*this); }
+void ODEntryArrayBool::clone(void *pos) { new (pos) ODEntryArrayBool(*this); }
+void ODEntryArrayReal::clone(void *pos) { new (pos) ODEntryArrayReal(*this); }
 
-std::unique_ptr<ODEntry> ODEntryInt::clone() { return std::make_unique<ODEntryInt>(*this); };
-std::unique_ptr<ODEntry> ODEntryUInt::clone() { return std::make_unique<ODEntryUInt>(*this); };
-std::unique_ptr<ODEntry> ODEntryBool::clone() { return std::make_unique<ODEntryBool>(*this); };
-std::unique_ptr<ODEntry> ODEntryReal::clone() { return std::make_unique<ODEntryReal>(*this); };
-std::unique_ptr<ODEntry> ODEntryString::clone() { return std::make_unique<ODEntryString>(*this); };
-std::unique_ptr<ODEntry> ODEntryArrayInt::clone() { return std::make_unique<ODEntryArrayInt>(*this); };
-std::unique_ptr<ODEntry> ODEntryArrayUInt::clone() { return std::make_unique<ODEntryArrayUInt>(*this); };
-std::unique_ptr<ODEntry> ODEntryArrayBool::clone() { return std::make_unique<ODEntryArrayBool>(*this); };
-std::unique_ptr<ODEntry> ODEntryArrayReal::clone() { return std::make_unique<ODEntryArrayReal>(*this); };
+std::unique_ptr<ODEntry> ODEntryInt::clone() { return std::make_unique<ODEntryInt>(*this); }
+std::unique_ptr<ODEntry> ODEntryUInt::clone() { return std::make_unique<ODEntryUInt>(*this); }
+std::unique_ptr<ODEntry> ODEntryBool::clone() { return std::make_unique<ODEntryBool>(*this); }
+std::unique_ptr<ODEntry> ODEntryReal::clone() { return std::make_unique<ODEntryReal>(*this); }
+std::unique_ptr<ODEntry> ODEntryString::clone() { return std::make_unique<ODEntryString>(*this); }
+std::unique_ptr<ODEntry> ODEntryArrayInt::clone() { return std::make_unique<ODEntryArrayInt>(*this); }
+std::unique_ptr<ODEntry> ODEntryArrayUInt::clone() { return std::make_unique<ODEntryArrayUInt>(*this); }
+std::unique_ptr<ODEntry> ODEntryArrayBool::clone() { return std::make_unique<ODEntryArrayBool>(*this); }
+std::unique_ptr<ODEntry> ODEntryArrayReal::clone() { return std::make_unique<ODEntryArrayReal>(*this); }
+
+int ODEntryInt::getArraySize() { return -1; }
+int ODEntryUInt::getArraySize() { return -1; }
+int ODEntryBool::getArraySize() { return -1; }
+int ODEntryReal::getArraySize() { return -1; }
+int ODEntryString::getArraySize() { return -1; }
+int ODEntryArrayInt::getArraySize() { return static_cast<int>(data.size()); }
+int ODEntryArrayUInt::getArraySize() { return static_cast<int>(data.size()); }
+int ODEntryArrayBool::getArraySize() { return static_cast<int>(data.size()); }
+int ODEntryArrayReal::getArraySize() { return static_cast<int>(data.size()); }
 }
