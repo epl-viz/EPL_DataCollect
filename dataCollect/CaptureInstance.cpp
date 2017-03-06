@@ -107,7 +107,6 @@ void CaptureInstance::loadXDD(std::string path) noexcept {
  *
  * A list of available devices can be obtained with getDevices()
  * \param  interface The network device to use for the live capture
- * \todo IMPLEMENT
  * \sa setupLoop for return values
  */
 int CaptureInstance::startRecording(std::string interface) noexcept {
@@ -118,6 +117,18 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
     std::cerr << "[CaptureInstance] (startRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
     return -1;
   }
+
+  capture = ws_capture_open_live(interface.c_str(), 0, nullptr, nullptr, nullptr);
+  if (capture == nullptr) {
+    return 12;
+  }
+
+  dissect = ws_dissect_capture(capture);
+  if (dissect == nullptr) {
+    return 13;
+  }
+
+  SLEEP(seconds, 1); //! \todo Remove this sleep once the issue is resolved
 
   return setupLoop();
 }

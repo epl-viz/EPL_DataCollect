@@ -94,14 +94,14 @@ msg "START BUILD"
 
 testExec cmake -DENABLE_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/EPL -DWireshark_DIR=/EPL ..
 testExec make
+testExec ln -s /EPL/bin/dumpcap ./bin
 testExec chmod -R a+rwx .
 
 msg "START TEST"
 
-export LD_LIBRARY_PATH="/usr/lib"
-testExecNoRoot     ./bin/tests
-testFail           ./bin/tests
-testExecNoRootFail ./bin/tests --asd-asdf
+testExecNoRoot     LD_LIBRARY_PATH="/usr/lib" ./bin/tests
+testFail           LD_LIBRARY_PATH="/usr/lib" ./bin/tests
+testExecNoRootFail LD_LIBRARY_PATH="/usr/lib" ./bin/tests --asd-asdf
 
 if (( $ERROR_COUNT == 0 )); then
   msg "Installing files"
