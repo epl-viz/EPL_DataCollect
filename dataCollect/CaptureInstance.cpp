@@ -36,6 +36,11 @@
 #include <ws_capture.h>
 #include <ws_dissect.h>
 
+#include <arpa/inet.h>
+#include <capchild/capture_session.h>
+#include <caputils/capture_ifinfo.h>
+#include <netinet/in.h>
+
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -207,22 +212,29 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   std::vector<std::string>              devList;
 
-#if 0
-  ws_capture_interface *interf;
-  int                   numDev = ws_capture_list_interfaces(&interf);
+  GList *interf;
+  int    err;
+  char * errInfo;
 
-  if (numDev < 0) {
-    std::cerr << "[CaptureInstance] failed to get a list of interfaces. Did you create an Init object?" << std::endl;
+  interf = capture_interface_list(&err, &errInfo, nullptr);
+
+  if (!interf) {
+    if (err == 0)
+      std::cerr << "[CaptureInstance] (getDevices) There are no interfaces on which a capture can be done" << std::endl;
+    else {
+      std::cerr << "[CaptureInstance] (getDevices) " << errInfo << std::endl;
+      g_free(errInfo);
+    }
     return devList;
   }
 
-  for (int i = 0; i < numDev; ++i) {
-    devList.emplace_back(interf->interface);
-    interf = interf->next;
-  }
+  do {
+    if_info_t *if_info = reinterpret_cast<if_info_t *>(interf->data);
+    devList.emplace_back(if_info->name);
 
-  ws_capture_free_interfaces(interf);
-#endif
+  } while ((interf = interf->next));
+
+  free_interface_list(interf);
 
   return devList;
 }

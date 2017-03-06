@@ -137,6 +137,7 @@ set( CM_WS_PLUGINS_DIR "${Wireshark_INSTALL_DIR}/${Wireshark_PLUGIN_INSTALL_DIR}
 message( STATUS "Wireshark version:     ${Wireshark_VERSION_STRING}" )
 message( STATUS "Wireshark install dir: ${Wireshark_INSTALL_DIR}" )
 message( STATUS "Wireshark plugins dir: ${CM_WS_PLUGINS_DIR}" )
+link_directories( ${Wireshark_LIB_DIR} )
 
 if( NOT DISABLE_TESTS )
   set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )
@@ -216,7 +217,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads stdc++fs
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild
     TinyXML2::TinyXML2
 )
 
