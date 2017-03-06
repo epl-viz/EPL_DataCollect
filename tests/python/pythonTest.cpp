@@ -27,6 +27,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
+#include "CSViewFilters.hpp"
+#include "DefaultFilter.hpp"
 #include "PluginManager.hpp"
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
@@ -149,21 +151,20 @@ TEST_CASE("Plugin internal methods test", "[python]") {
   REQUIRE(events.size() == 7);
 }
 
-TEST_CASE("Cycle class access test", "[python]") {
-  CaptureInstance inst;
-  auto            id       = inst.getEventLog()->getAppID();
-  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_CycleAccess");
-  inst.getPluginManager()->addPlugin(pyPlugin);
+TEST_CASE("Testing PluginAPI class", "[python]") {
+  std::cout << std::endl;
 
-  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN.pcapng";
-  fs::path    filePath(file);
-  REQUIRE(fs::exists(filePath));
-  REQUIRE(fs::is_regular_file(filePath));
+  PluginManager   pm;
+  CaptureInstance ci;
 
-  REQUIRE(inst.loadPCAP(file) == 0);
+  auto pyPlugin = std::make_shared<PythonPlugin>("Test_AddFilter");
+  pm.addPlugin(pyPlugin);
+  REQUIRE(pm.init(&ci) == TRUE);
 
-  inst.getCycleBuilder()->waitForLoopToFinish();
-  auto events = inst.getEventLog()->pollEvents(id);
+  Cycle cy = *ci.getStartCycle();
+
+  pm.processCycle(&cy);
+  std::cout << std::endl;
 }
 
 TEST_CASE("Testing calling cython", "[python]") {
@@ -198,4 +199,21 @@ TEST_CASE("Test loading with plugin", "[python]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
   std::cout << "EVT SIZE:" << events.size() << std::endl;
+}
+
+TEST_CASE("Cycle class access test", "[python]") {
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_CycleAccess");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
 }
