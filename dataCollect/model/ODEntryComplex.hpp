@@ -161,17 +161,22 @@ ODEntryComplexContainer::~ODEntryComplexContainer() {}
 ODEntryComplexContainer::ODEntryComplexContainer(const ODEntryComplexContainer &c) {
   if (c.isInit)
     memcpy(data, c.data, internal::calcSizeComplex());
+
+  isInit = c.isInit;
 }
 
 ODEntryComplexContainer::ODEntryComplexContainer(ODEntryComplexContainer &&c) {
   if (c.isInit)
     memcpy(data, c.data, internal::calcSizeComplex());
+
+  isInit = c.isInit;
 }
 
 ODEntryComplexContainer &ODEntryComplexContainer::operator=(const ODEntryComplexContainer &c) {
   if (this != &c && c.isInit)
     memcpy(data, c.data, internal::calcSizeComplex());
 
+  isInit = c.isInit;
   return *this;
 }
 
@@ -179,6 +184,7 @@ ODEntryComplexContainer &ODEntryComplexContainer::operator=(ODEntryComplexContai
   if (this != &c && c.isInit)
     memcpy(data, c.data, internal::calcSizeComplex());
 
+  isInit = c.isInit;
   return *this;
 }
 

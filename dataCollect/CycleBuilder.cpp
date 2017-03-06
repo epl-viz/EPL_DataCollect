@@ -116,19 +116,25 @@ void CycleBuilder::buildNextCycle() noexcept {
 
       if (i.ASnd->RequestedServiceID == ASndServiceID::SDO)
         updateTargetNode = dst;
+    } else if (i.getType() == PacketType::POLL_REQUEST) {
+      updateTargetNode = dst;
     }
 
     // Update OD entries
     Node *node = currentCycle.getNode(src);
     OD *  od   = currentCycle.getNode(updateTargetNode)->getOD();
     for (auto const &j : *i.getDiffs()) {
-      if (j.getIndex() == UINT16_MAX)
+      uint16_t index = j.getIndex();
+      if (index == UINT16_MAX)
         continue;
 
       ODEntryContainer entry = j.getEntry(od);
-      uint16_t         index = j.getIndex();
+
       if (od->hasEntry(index)) {
         od->entries.at(index) = entry;
+      } else {
+        std::cout << "[CycleBuilder] Entry " << std::hex << index << " of Node " << std::dec
+                  << static_cast<int>(updateTargetNode) << " does not exist" << std::endl;
       }
     }
 

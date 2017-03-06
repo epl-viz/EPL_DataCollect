@@ -29,6 +29,8 @@
  */
 
 #include "ODEntryComplex.hpp"
+#include "EPLEnum2Str.hpp"
+#include <iostream>
 
 namespace EPL_DataCollect {
 
@@ -51,7 +53,13 @@ void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
 }
 
 int         ODEntryComplex::getArraySize() { return static_cast<int>(data.size()); }
-std::string ODEntryComplex::toString(uint8_t si) { return *data[si] != nullptr ? data[si]->toString() : "<N/A>"; }
+std::string ODEntryComplex::toString(uint8_t si) {
+  if (*data[si]) {
+    return data[si]->toString();
+  } else {
+    return "<N/A>";
+  }
+}
 void ODEntryComplex::clone(void *pos) { new (pos) ODEntryComplex(*this); };
 std::unique_ptr<ODEntry>         ODEntryComplex::clone() { return std::make_unique<ODEntryComplex>(*this); };
 
