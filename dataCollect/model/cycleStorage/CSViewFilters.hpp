@@ -33,6 +33,7 @@
 
 #include "defines.hpp"
 #include "CycleStorageBase.hpp"
+#include "EPLEnums.h"
 #include <unordered_map>
 #include <vector>
 
@@ -40,8 +41,6 @@ namespace EPL_DataCollect {
 
 class CSViewFilters final : public CycleStorageBase {
  public:
-  enum FilterType { INCLUDE, EXCLUDE };
-
   class Filter final {
    private:
     FilterType type;

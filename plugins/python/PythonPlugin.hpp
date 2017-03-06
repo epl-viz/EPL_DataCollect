@@ -71,6 +71,8 @@ class PythonPlugin : public PluginBase {
   bool setDataStr(std::string index, std::string var);
   bool setDataInt(std::string index, int var);
 
+  bool addViewFilter(int filterType, std::string filter);
+
   void setRunning(bool newRunning);
 
   bool initialize(CaptureInstance *ci);

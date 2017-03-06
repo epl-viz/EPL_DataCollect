@@ -1,5 +1,4 @@
-cimport CCycle
-cimport CPlugin
+import Plugin
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 """
@@ -9,10 +8,9 @@ It interacts with the backend and modifies / adds events and additional user
 data.
 
 :version: 0.0.1
-:author: Denis Megerle
 """
 
-def addFilter(filters):
+def addFilter(plugin, typeEnum, filters):
   """
   \brief This method adds a filter for specific ODs or other data.
 
@@ -20,7 +18,6 @@ def addFilter(filters):
 
   \return whether the filter addition has been successful
   """
-
-  ## TODO: implement ## -> just create stdstring vector in PythonPlugin and create addFilter method in Pythonplugin, add filter "asdf asfdff asdffe",
-  #Trenner sind " "
-  pass
+  if isinstance(plugin, Plugin.Plugin) and isinstance(typeEnum, int):
+    return plugin.addFilter(typeEnum, filters)
+  return False;

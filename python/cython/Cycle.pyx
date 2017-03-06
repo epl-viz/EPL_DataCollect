@@ -15,6 +15,9 @@ cdef class Cycle:
     return self._C_Cycle.getNumNodes()
 
   cpdef int getCycleNum(self):
+    """
+    \returns number of the current cycle
+    """
     return self._C_Cycle.getCycleNum()
 
   cdef void updateCycle(self, CCycle.Cycle* newCycle):  ## maybe implement this since it increases speed
@@ -34,7 +37,7 @@ cdef class Cycle:
       return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
       return
-    return self._C_Cycle.getNode(nodeNumber).getStatusStr()
+    return self._C_Cycle.getNode(nodeNumber).getStatusStr().decode()
 
   def getODEntry(self, nodeNumber, odNumber):
     if not (isinstance(nodeNumber, int) and isinstance(odNumber, int)):   # numbers have to be integer
@@ -45,7 +48,7 @@ cdef class Cycle:
       return
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
-      return odEntry.toString()
+      return odEntry.toString().decode()
 
   def getAmountOfCN(self):
     """

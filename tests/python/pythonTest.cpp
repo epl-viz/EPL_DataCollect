@@ -27,6 +27,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
+#include "CSViewFilters.hpp"
+#include "DefaultFilter.hpp"
 #include "PluginManager.hpp"
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
@@ -147,6 +149,22 @@ TEST_CASE("Plugin internal methods test", "[python]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
   REQUIRE(events.size() == 7);
+}
+
+TEST_CASE("Testing PluginAPI class", "[python]") {
+  std::cout << std::endl;
+
+  PluginManager   pm;
+  CaptureInstance ci;
+
+  auto pyPlugin = std::make_shared<PythonPlugin>("Test_AddFilter");
+  pm.addPlugin(pyPlugin);
+  REQUIRE(pm.init(&ci) == TRUE);
+
+  Cycle cy = *ci.getStartCycle();
+
+  pm.processCycle(&cy);
+  std::cout << std::endl;
 }
 
 TEST_CASE("Cycle class access test", "[python]") {

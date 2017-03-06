@@ -29,6 +29,7 @@
  */
 
 #include "PythonPlugin.hpp"
+#include "CSViewFilters.hpp"
 #include "Cycle.hpp"
 #include "EvPluginText.hpp"
 #include "EvView.hpp"
@@ -47,6 +48,7 @@
 #define PLUGIN_PARENT "Plugin.Plugin"
 #define PYTHON_STR "str"
 #define PLUGIN_EV "PluginEvent"
+#define FILTER_NAME "ViewFilter"
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -305,6 +307,23 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
   }
 };
 
+/**
+ * @brief Adding a filter based on filter type
+ *
+ * @param filterType p_filterType: as enum
+ * @param filter p_filter: filter as string
+ * @return bool whether successful
+ */
+bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
+  auto *_filter = dynamic_cast<CSViewFilters *>(getCurrentCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+
+  switch (static_cast<FilterType>(filterType)) {
+    case FilterType::INCLUDE: return _filter->newFilter(FilterType::INCLUDE, filter);
+    case FilterType::EXCLUDE: return _filter->newFilter(FilterType::EXCLUDE, filter);
+    default: return false;
+  }
+};
+
 
 // plugin main methods
 /**
@@ -384,9 +403,18 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   plugDeps = PyBytes_AsString(pValue);
 
   //** instancing was successful, initing needed C++ stuff...
+  // cycle storage for plugin
   if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
     std::cerr << "Plugin \t'" << plugID << "'\t cycle storage not available" << std::endl;
     return false;
+  }
+  // aswell as cycle storage for the plugin global filter if it's not there
+  if (ci->getStartCycle()->getCycleStorage(FILTER_NAME) == nullptr) {
+    // id filter not found
+    if (!registerCycleStorage<CSViewFilters>(FILTER_NAME)) {
+      std::cerr << "Plugin \t'" << plugID << "'\t filter could not be added" << std::endl;
+      return false;
+    }
   }
 
   plugins[plugID] = this;

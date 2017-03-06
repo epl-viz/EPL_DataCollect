@@ -3,6 +3,7 @@ import Plugin
 import PluginAPI as api
 import PluginGUIAPI as agui
 import Events
+import Filters
 
 class SimplePlugin(Plugin.Plugin):
 
@@ -21,10 +22,11 @@ class SimplePlugin(Plugin.Plugin):
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
       agui.highlightMN(self)
-    #print("GETTING ENTRY:", cy.getODEntry(240, 0x1006)) ## yeeeeey
-
-    if cy.getCycleNum() == 100:
+      print("ADDING FILTER", self.addFilter(1, "asdf"))
+    #print("STATE", cy.getNodeStatus(1))
+    if cy.getODEntry(1, 0x1006) == "100000":
       self.unload()
+    print("FILTER SETTING:", self.addFilter(Filters.EXCLUDING.value, "to add"))
 
   def getID(self):
     return "SimplePlugin"
