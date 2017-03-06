@@ -128,9 +128,11 @@ cdef class Plugin:
       return self.getPythonPlugin().registerPyCycleStorage(index.encode('utf-8'), c_type)
     return False;
 
+  # internal method
   cpdef registerInt(self, index):
     return self.registerCycleStorage(index, int)
 
+  # internal method
   cpdef registerStr(self, index):
     return self.registerCycleStorage(index, str)
 
@@ -163,6 +165,11 @@ cdef class Plugin:
         return self.getPythonPlugin().setDataStr(index.encode('utf-8'), var.encode('utf-8'))
       elif isinstance(var, int):
         return self.getPythonPlugin().setDataInt(index.encode('utf-8'), var)
+    return False
+
+  cpdef addFilter(self, typeEnum, filters):
+    if isinstance(filters, str) and isinstance(typeEnum, int):
+      return self.getPythonPlugin().addViewFilter(typeEnum, filters.encode('utf-8'))
     return False
   ########################################################################################
 
