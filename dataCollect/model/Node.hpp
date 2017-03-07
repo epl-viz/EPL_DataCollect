@@ -74,6 +74,18 @@ class Node {
   mockable uint8_t getID() const noexcept;
   mockable IDENT getIdentity() const noexcept;
 
+  mockable std::string getDeviceType() noexcept;
+  mockable std::string getIPAddress() noexcept;
+  mockable std::string getSubnetMask() noexcept;
+  mockable std::string getDefaultGateway() noexcept;
+  mockable std::string getHostName() noexcept;
+  mockable uint32_t getProfile() noexcept;
+  mockable uint32_t getVendorId() noexcept;
+  mockable uint32_t getProductCode() noexcept;
+  mockable uint32_t getRevisionNumber() noexcept;
+  mockable uint32_t getSerialNumber() noexcept;
+  mockable uint32_t getResponseTime() noexcept;
+
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif

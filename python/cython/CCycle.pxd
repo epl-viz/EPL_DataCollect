@@ -24,6 +24,17 @@ cdef extern from "Node.hpp" namespace "EPL_DataCollect":
     OD* getOD()
     int getID()
     string getStatusStr()
+    string getDeviceType()
+    string getIPAddress()
+    string getSubnetMask()
+    string getDefaultGateway()
+    string getHostName()
+    unsigned int getProfile()
+    unsigned int getVendorId()
+    unsigned int getProductCode()
+    unsigned int getRevisionNumber()
+    unsigned int getSerialNumber()
+    unsigned int getResponseTime()
 
 
 cdef extern from "OD.hpp" namespace "EPL_DataCollect":

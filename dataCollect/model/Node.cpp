@@ -78,4 +78,17 @@ void Node::setStatus(NMTState newStatus) noexcept { status = newStatus; }
  * \param i The new node identity
  */
 void Node::setIdentity(Node::IDENT i) noexcept { identity = i; }
+
+std::string Node::getDeviceType() noexcept { return identity.DeviceType; }
+
+std::string Node::getIPAddress() noexcept { return identity.IPAddress; }
+std::string Node::getSubnetMask() noexcept { return identity.SubnetMask; }
+std::string Node::getDefaultGateway() noexcept { return identity.DefaultGateway; }
+std::string Node::getHostName() noexcept { return identity.HostName; }
+uint32_t    Node::getProfile() noexcept { return static_cast<uint32_t>(identity.Profile); }
+uint32_t    Node::getVendorId() noexcept { return identity.VendorId; }
+uint32_t    Node::getProductCode() noexcept { return identity.ProductCode; }
+uint32_t    Node::getRevisionNumber() noexcept { return identity.RevisionNumber; }
+uint32_t    Node::getSerialNumber() noexcept { return identity.SerialNumber; }
+uint32_t    Node::getResponseTime() noexcept { return identity.ResponseTime; }
 }

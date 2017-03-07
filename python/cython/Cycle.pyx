@@ -105,6 +105,86 @@ cdef class Cycle:
     """
     return self._C_Cycle.getNumNodes()
 
+  ## getter methods for getting the commonly used node stuff, None if the node is not available !
+  # str returned by:
+  def getDeviceType(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getDeviceType().decode()
+
+  def getIPAddress(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getIPAddress().decode()
+
+  def getSubnetMask(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getSubnetMask().decode()
+
+  def getDefaultGateway(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getDefaultGateway().decode()
+
+  def getHostName(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getHostName().decode()
+
+  # int returned by:
+  def getProfile(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getProfile()
+
+  def getVendorId(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getVendorId()
+
+  def getProductCode(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getProductCode()
+
+  def getRevisionNumber(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getRevisionNumber()
+
+  def getSerialNumber(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getSerialNumber()
+
+  def getResponseTime(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    return self._C_Cycle.getNode(nodeNumber).getResponseTime()
+
 # creating a cycle from Cycle* ...
 cdef createCycle(CCycle.Cycle* curCycle):
   cyc = Cycle()
