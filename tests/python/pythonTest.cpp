@@ -251,5 +251,6 @@ TEST_CASE("And another one..., testing multiple cns this time", "[python]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
+
   REQUIRE(events.size() == 0);
 }
