@@ -97,6 +97,9 @@ void CycleBuilder::buildNextCycle() noexcept {
 
   // Process packets
   for (auto const &i : packets) {
+    if (i.getType() == PacketType::UNDEF)
+      continue;
+
     auto src = i.getSrcNode();
     auto dst = i.getDestNode();
     if (currentCycle.getNode(src) == nullptr)
