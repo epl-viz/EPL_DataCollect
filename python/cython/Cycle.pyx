@@ -34,12 +34,12 @@ cdef class Cycle:
     \brief getting the active events of the cycle, note that this is mostly empty and only contains data of python plugins.
           This method is used if you try to get old cycles and check for their events
 
-    \returns touple (string type as str, name of event, description, integer flag)
+    \returns touple (type as int, string type as str, name of event, description, integer flag)
     """
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
     for event in eventVector:
-      pyEvent = (event.getTypeAsString().decode(), event.getName().decode(), event.getDescription().decode(), event.getEventFlags())
+      pyEvent = (<int>event.getType(), event.getTypeAsString().decode(), event.getName().decode(), event.getDescription().decode(), event.getEventFlags())
       listOfEvents.append(pyEvent)
     return listOfEvents
 

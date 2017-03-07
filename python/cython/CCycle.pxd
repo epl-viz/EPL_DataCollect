@@ -2,6 +2,7 @@ from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
 from libcpp.unordered_map cimport unordered_map
+cimport CEvents
 
 #Cycle specific declarations
 #################################################################################
@@ -42,6 +43,7 @@ cdef extern from "EventBase.hpp" namespace "EPL_DataCollect":
     string getDescription()
     string getPluginID()
     int getEventFlags()
+    CEvents.EvType getType()
 
 
 cdef extern from "CycleStorageBase.hpp" namespace "EPL_DataCollect":
