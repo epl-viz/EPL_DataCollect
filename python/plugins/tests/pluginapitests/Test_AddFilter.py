@@ -1,6 +1,6 @@
 import Plugin
 import Filters
-import PluginGUIAPI as agui
+import PluginAPI as agui
 import unittest
 
 PYTHON_PRE = "[Python]"
@@ -26,10 +26,7 @@ class Test_AddFilter(Plugin.Plugin, unittest.TestCase):
     if agui.addFilter(self, Filters.INCLUDING.value, 2):
       print(PYTHON_PRE, "ERROR filter should not have been added", self)
       self.fail(ERROR_MSG)
-    if agui.addFilter(self, 99999999, "asdf"):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
 
-    if not agui.addFilter(self, Filters.INCLUDING.value, "correct"):
+    if not self.addFilter(0, "correct"):
       print(PYTHON_PRE, "ERROR filter should have been added", self)
       self.fail(ERROR_MSG)

@@ -115,9 +115,6 @@ class Test_PluginInternal(Plugin.Plugin, unittest.TestCase):
     if self.addFilter(Filters.INCLUDING.value, None):
       print(PYTHON_PRE, "ERROR filter should not have been added", self)
       self.fail(ERROR_MSG)
-    if self.addFilter(None, "asdf"):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
     if (not self.addFilter(Filters.INCLUDING.value, "asdf")) and cy.getCycleNum() != 0:
       print(PYTHON_PRE, "ERROR filter should have been added", self)
       self.fail(ERROR_MSG)

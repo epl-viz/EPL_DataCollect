@@ -40,6 +40,7 @@
 #include "iostream"
 #include <memory>
 #include <string>
+#include <frameobject.h>
 
 #define PLUGIN_ID "getID"
 #define PLUGIN_RUN "run"
@@ -442,6 +443,13 @@ void PythonPlugin::run(Cycle *cycle) {
   if (cycle != nullptr)
     currentCycle = cycle;
   PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_RUN), NULL); // can't fail so no checking
+
+  // if exception occured, print stack trace and stop plugin from running
+  if (PyErr_Occurred() != NULL) {
+    running = false;
+    PyErr_Print();
+  }
+
 };
 
 /**

@@ -237,20 +237,19 @@ TEST_CASE("Test loading with plugin sample", "[python]") {
 }
 
 TEST_CASE("And another one..., testing multiple cns this time", "[python]") {
-  //   CaptureInstance inst;
-  //   auto            id       = inst.getEventLog()->getAppID();
-  //   auto            pyPlugin = std::make_shared<PythonPlugin>("Test_MultipleCN");
-  //   inst.getPluginManager()->addPlugin(pyPlugin);
-  //
-  //   std::string file = constants::EPL_DC_BUILD_DIR_ROOT +
-  //   "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
-  //   fs::path    filePath(file);
-  //   REQUIRE(fs::exists(filePath));
-  //   REQUIRE(fs::is_regular_file(filePath));
-  //
-  //   REQUIRE(inst.loadPCAP(file) == 0);
-  //
-  //   inst.getCycleBuilder()->waitForLoopToFinish();
-  //   auto events = inst.getEventLog()->pollEvents(id);
-  //   std::cout << "EVT SIZE:" << events.size() << std::endl;
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPlugin = std::make_shared<PythonPlugin>("Test_PythonException");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+  REQUIRE(events.size() == 0);
 }

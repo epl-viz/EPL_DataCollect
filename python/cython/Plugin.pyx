@@ -189,17 +189,17 @@ cdef class Plugin:
         return self.getPythonPlugin().setDataInt(index.encode('utf-8'), var)
     return False
 
-  cpdef addFilter(self, typeEnum, filters):
+  cpdef addFilter(self, typeEnu, filters):
     """
-    \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface.
+    \brief This method allows the user to add specific data to cycles. Other data can be added to any cycle, that might be processed by other parts of the program, like the user interface. Currently only INCLUDING filter are supported
 
     \param typeEnum enum type integer of filter
     \param filters filters to be added as a string
 
     \returns whether the data has been successfully added
     """
-    if isinstance(filters, str) and isinstance(typeEnum, int):
-      return self.getPythonPlugin().addViewFilter(typeEnum, filters.encode('utf-8'))
+    if isinstance(filters, str):
+      return self.getPythonPlugin().addViewFilter(0, filters.encode('utf-8'))
     return False
   ########################################################################################
 
