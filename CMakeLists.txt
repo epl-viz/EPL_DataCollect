@@ -222,7 +222,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads stdc++fs
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static caputils capchild
     TinyXML2::TinyXML2
 )
 
