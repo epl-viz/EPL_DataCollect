@@ -72,7 +72,7 @@ struct parserData final {
   struct TempPDO {
     uint16_t   Index    = UINT16_MAX;
     uint8_t    SubIndex = UINT8_MAX;
-    PacketDiff Data     = PacketDiff(UINT16_MAX, UINT8_MAX, 0ul);
+    PacketDiff Data     = PacketDiff(UINT16_MAX, UINT8_MAX, UINT64_C(0));
 
     TempPDO()  = default;
     ~TempPDO() = default;
@@ -285,7 +285,7 @@ struct parserData final {
         uint32_t             ReassembledLength        = UINT32_MAX;
         std::vector<uint8_t> ReassembledData;
 
-        PacketDiff data = PacketDiff(UINT16_MAX, UINT8_MAX, 0ul);
+        PacketDiff data = PacketDiff(UINT16_MAX, UINT8_MAX, UINT64_C(0));
       } CMD;
     } SDO;
 
