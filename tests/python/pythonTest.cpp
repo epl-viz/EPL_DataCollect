@@ -218,21 +218,20 @@ TEST_CASE("Test loading with plugin simple plugin", "[python]") {
   std::cout << "EVT SIZE:" << events.size() << std::endl;
 }
 
-// TEST_CASE("Test loading with plugin sample", "[python]") {
-//   CaptureInstance inst;
-//   auto            id       = inst.getEventLog()->getAppID();
-//   auto            pyPlugin = std::make_shared<PythonPlugin>("Sample_Functions");
-//   inst.getPluginManager()->addPlugin(pyPlugin);
-//
-//   std::string file = constants::EPL_DC_BUILD_DIR_ROOT +
-//   "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
-//   fs::path    filePath(file);
-//   REQUIRE(fs::exists(filePath));
-//   REQUIRE(fs::is_regular_file(filePath));
-//
-//   REQUIRE(inst.loadPCAP(file) == 0);
-//
-//   inst.getCycleBuilder()->waitForLoopToFinish();
-//   auto events = inst.getEventLog()->pollEvents(id);
-//   std::cout << "EVT SIZE:" << events.size() << std::endl;
-// }
+TEST_CASE("Test loading with plugin sample", "[python]") {
+  CaptureInstance inst;
+  auto            id       = inst.getEventLog()->getAppID();
+  auto            pyPlugin = std::make_shared<PythonPlugin>("Sample_Functions");
+  inst.getPluginManager()->addPlugin(pyPlugin);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+  std::cout << "EVT SIZE:" << events.size() << std::endl;
+}

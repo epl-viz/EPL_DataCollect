@@ -13,7 +13,7 @@ class SimplePlugin(Plugin.Plugin):
 
   def run(self):
     cy = self.getCycle()
-    if cy.getCycleNum() % 5 == 0:
+    if cy.getCycleNum() % 100 == 0:
       print("Cycle Number:", cy.getCycleNum())
       print("AmountOfCN:", cy.getAmountOfCN())
       print("Evt added:", self.addEvent(0, "0", ""))
@@ -22,11 +22,10 @@ class SimplePlugin(Plugin.Plugin):
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
       agui.highlightMN(self)
-      print("ADDING FILTER", self.addFilter(1, "asdf"))
-    #print("STATE", cy.getNodeStatus(1))
+      print("ADDING FILTER", self.addFilter(1, "#filter#"))
+
     if cy.getODEntry(1, 0x1006) == "100000":
       self.unload()
-    print("FILTER SETTING:", self.addFilter(Filters.EXCLUDING.value, "to add"))
 
   def getID(self):
     return "SimplePlugin"
