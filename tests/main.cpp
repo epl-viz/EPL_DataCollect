@@ -51,6 +51,9 @@ int main(int argc, char *argv[]) {
   std::string import_tests_pluginclasstests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
                                               "/python/plugins/tests/pluginclasstests')\n";
 
+  std::string import_samples = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
+                                              "/python/plugins/samples')\n";
+
   PyRun_SimpleString(import_libs.c_str());
   PyRun_SimpleString(import_plugins.c_str());
   PyRun_SimpleString(import_tests_loadtests.c_str());
@@ -58,6 +61,7 @@ int main(int argc, char *argv[]) {
   PyRun_SimpleString(import_tests_pluginguiapitests.c_str());
   PyRun_SimpleString(import_tests_pluginapitests.c_str());
   PyRun_SimpleString(import_tests_pluginclasstests.c_str());
+  PyRun_SimpleString(import_samples.c_str());
 
   Catch::Session session;
 
