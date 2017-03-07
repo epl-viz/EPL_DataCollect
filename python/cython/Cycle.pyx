@@ -12,6 +12,11 @@ cdef class Cycle:
     pass
 
   cpdef int getNumNodes(self):
+    """
+    \brief This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+
+    \returns number of CNs in the current cycle
+    """
     return self._C_Cycle.getNumNodes()
 
   cpdef int getCycleNum(self):
@@ -25,6 +30,12 @@ cdef class Cycle:
       self._C_Cycle = newCycle
 
   def getActiveEvents(self):
+    """
+    \brief getting the active events of the cycle, note that this is mostly empty and only contains data of python plugins.
+          This method is used if you try to get old cycles and check for their events
+
+    \returns touple (string type as str, name of event, description, integer flag)
+    """
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
     for event in eventVector:
@@ -33,6 +44,14 @@ cdef class Cycle:
     return listOfEvents
 
   def getNodeStatus(self, nodeNumber):
+    """
+    \brief returns status of Node as str None if node not available, otherwise
+            { OFF, PRE_OPERATIONAL_2, READY, OPERATIONAL... (the POWERLINK states)}
+
+    \param nodeNumber number of the node
+
+    \returns str representation of od entry
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
@@ -40,6 +59,14 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getStatusStr().decode()
 
   def getODEntry(self, nodeNumber, odNumber):
+    """
+    \brief This method returns the ODEntry, subindex 0 as string represented. None if not available, standard values are 0 or ""<N/A>" on complex types
+
+    \param nodeNumber number of the node
+    \param odNumber number of the ODEntry
+
+    \returns str representation of od entry
+    """
     if not (isinstance(nodeNumber, int) and isinstance(odNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -48,10 +75,27 @@ cdef class Cycle:
       return
     cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
     if (odEntry != NULL):
-      return odEntry.toString().decode()
+      return odEntry.toString(0).decode()
 
   def getODEntry_Sub(self, nodeNumber, odNumber, subindex):
-    return
+    """
+    \brief This method returns the ODEntry, subindex as string represented. None if not available, standard values are 0 or ""<N/A>" on complex types
+
+    \param nodeNumber number of the node
+    \param odNumber number of the ODEntry
+    \param subindex subindex number
+
+    \returns str representation of od entry
+    """
+    if not (isinstance(nodeNumber, int) and isinstance(odNumber, int) and isinstance(subindex, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0:                # and in correct size
+      return
+    if odNumber < 0x0000 or odNumber >= 0xFFFF:                           # od entry available
+      return
+    cdef CCycle.ODEntry* odEntry = self._C_Cycle.getODEntry(nodeNumber, odNumber)
+    if (odEntry != NULL):
+      return odEntry.toString(subindex).decode()
 
   def getAmountOfCN(self):
     """

@@ -32,7 +32,7 @@ cdef extern from "OD.hpp" namespace "EPL_DataCollect":
 
 cdef extern from "ODEntry.hpp" namespace "EPL_DataCollect":
   cdef cppclass ODEntry:
-    string toString()
+    string toString(unsigned int)
 
 
 cdef extern from "EventBase.hpp" namespace "EPL_DataCollect":
