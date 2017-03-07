@@ -53,4 +53,4 @@ class PluginA(Plugin.Plugin):
     return "PluginA"
 
   def getDependencies(self):
-    return "PluginA Deps"
+    return "PluginA"

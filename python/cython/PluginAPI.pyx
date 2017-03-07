@@ -7,7 +7,7 @@ for user plugins.
 It interacts with the backend and modifies / adds events and additional user
 data.
 
-:version: 0.0.1
+:version: 1.0.0
 """
 
 def addFilter(plugin, typeEnum, filters):
