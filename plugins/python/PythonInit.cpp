@@ -51,7 +51,7 @@ PythonInit::~PythonInit() { Py_Finalize(); }
 void PythonInit::addPath(std::string path) {
   std::string temp = "sys.path.append('";
   temp += path;
-  temp += ")'\n";
+  temp += "')\n";
   PyRun_SimpleString(temp.c_str());
 }
 }
