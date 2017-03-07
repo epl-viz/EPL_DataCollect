@@ -133,6 +133,7 @@ find_package( PythonLibs   3.5 REQUIRED )
 find_package( TinyXML2     4.0 REQUIRED )
 find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
+find_package( PCAP             REQUIRED )
 find_package( PkgConfig        REQUIRED )
 pkg_search_module(GLIB REQUIRED glib-2.0)
 
@@ -222,7 +223,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads stdc++fs
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild ${PCAP_LIBRARIES}
     TinyXML2::TinyXML2
 )
 
