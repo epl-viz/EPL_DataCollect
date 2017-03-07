@@ -11,51 +11,19 @@ class Test_INVALIDGUIAPICalls(Plugin.Plugin, unittest.TestCase):
 
   def run(self):
     cy = self.getCycle()
-    if gui.startLive(None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.startLive("this is not good"):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.stopLive(None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.stopLive("this is not good"):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightMN(None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightMN("this is not good"):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode(None, None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode(None, "this is not good"):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode("this is not good", None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode(None, 2):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode(self, -1):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightNode(self, 99999999):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightODEntry(None, None, None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightODEntry(None, "asdf", None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightODEntry(self, None, None):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
-    if gui.highlightODEntry(self, 0x10000, 50):
-      print(PYTHON_PRE, "ERROR, should not add ev", self)
-      self.fail(ERROR_MSG)
+    self.assertFalse(gui.startLive(None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.startLive("this is not good"), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.stopLive(None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.stopLive("this is not good"), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightMN(None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightMN("this is not good"), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode(None, None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode(None, "this is not good"), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode("this is not good", None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode(None, 2), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode(self, -1), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightNode(self, 99999999), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightODEntry(None, None, None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightODEntry(None, "asdf", None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightODEntry(self, None, None), PYTHON_PRE + "ERROR, should not add ev")
+    self.assertFalse(gui.highlightODEntry(self, 0x10000, 50), PYTHON_PRE + "ERROR, should not add ev")

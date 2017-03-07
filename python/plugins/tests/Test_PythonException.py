@@ -9,6 +9,7 @@ class Test_PythonException(Plugin.Plugin, unittest.TestCase):       # name your 
     return True                             # register your cyclestorages and needed data here
 
   def run(self):                          # (optional, but without it well...) run method
+    print("AN EXCEPTION WITH TRACEBACK SHOULD BE THROWN")
     i = int(23, 23, 23, 23, 23)
     if self.getCycle().getCycleNum() > 1:
       self.fail("[python] ERROR exceptions should stop the specific plugin !")
