@@ -28,29 +28,19 @@ class Test_PluginInternal(Plugin.Plugin, unittest.TestCase):
   def run(self):
     # getting cycle...
     cy = self.getCycle()
-    if cy is None:
-      print(PYTHON_PRE, "ERROR cycle has not been retrieved", self)
-      self.fail(ERROR_MSG)
+    self.assertNotEqual(cy, None, PYTHON_PRE + "ERROR cycle has not been retrieved")
 
     # storage cases
-    if self.getStorage(None) is not None:
-      print(PYTHON_PRE, "ERROR a storage shouldnt have been retrieved", self)
-      self.fail(ERROR_MSG)
-    if self.getStorage("here") is None:
-      print(PYTHON_PRE, "ERROR a storage should have been retrieved", self)
-      self.fail(ERROR_MSG)
-    if self.setStorage(None, None) or self.setStorage(2, None):
-      print(PYTHON_PRE, "ERROR a storage should not have been set", self)
-      self.fail(ERROR_MSG)
-    if self.setStorage("AData", 2):
-      print(PYTHON_PRE, "ERROR a storage should not have been set", self)
-      self.fail(ERROR_MSG)
+    self.assertEqual(self.getStorage(None), None, PYTHON_PRE + "ERROR a storage shouldnt have been retrieved")
+    self.assertNotEqual(self.getStorage("here"), None, PYTHON_PRE + "ERROR a storage should have been retrieved")
+    self.assertFalse(self.setStorage(None, None), PYTHON_PRE + "ERROR a storage should not have been set")
+    self.assertFalse(self.setStorage(2, None), PYTHON_PRE + "ERROR a storage should not have been set")
+    self.assertFalse(self.setStorage("AData", 2), PYTHON_PRE + "ERROR a storage should not have been set")
 
     if cy.getCycleNum() == 50:
-      self.setStorage("DataStore", "MyD")
-    if cy.getCycleNum() == 100 and not (self.getStorage("DataStore") == "MyD"):
-      print(PYTHON_PRE, "ERROR data not set", self)
-      self.fail(ERROR_MSG)
+      self.assertTrue(self.setStorage("DataStore", "MyD"))
+    if cy.getCycleNum() == 100:
+      self.assertEqual(self.getStorage("DataStore"), "MyD", PYTHON_PRE + "ERROR data not set")
 
     # data cases
     if not self.setData("MyIntStorage", 2):
