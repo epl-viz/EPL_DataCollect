@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
   std::string import_tests_pluginclasstests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
                                               "/python/plugins/tests/pluginclasstests')\n";
 
-  std::string import_samples = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
-                                              "/python/plugins/samples')\n";
+  std::string import_samples =
+        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/samples')\n";
 
   PyRun_SimpleString(import_libs.c_str());
   PyRun_SimpleString(import_plugins.c_str());
