@@ -62,8 +62,8 @@ class Node {
   Node(const Node &) = default;
   Node(Node &&)      = default;
 
-  Node &operator=(const Node &) = delete;
-  Node &operator=(Node &&) = delete;
+  Node &operator=(const Node &) = default;
+  Node &operator=(Node &&) = default;
 
   friend CycleBuilder;
 

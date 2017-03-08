@@ -49,9 +49,10 @@ set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_C_STANDARD            11 )
 set( CMAKE_C_STANDARD_REQUIRED   ON )
 
-option( DISABLE_TESTS        "Disables all tests"            OFF )
-option( ENABLE_CODE_COVERAGE "Enables code coverage tests"   OFF )
-option( ENABLE_MOCKING       "Force enables mocking support" OFF )
+option( DISABLE_TESTS        "Disables all tests"                     OFF )
+option( ENABLE_CODE_COVERAGE "Enables code coverage tests"            OFF )
+option( ENABLE_MOCKING       "Force enables mocking support"          OFF )
+option( USE_CLANG_LIBCXX     "Build with libc++ instead of stdlibc++" OFF )
 
 list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 
@@ -83,11 +84,21 @@ if( ENABLE_CODE_COVERAGE )
   set( COVERAGE_COMPILER_FLAG "--coverage" )
 endif( ENABLE_CODE_COVERAGE )
 
+if( USE_CLANG_LIBCXX )
+  set( GCC_STDLIB_FLAGS   "-nodefaultlibs -lc++ -lc++abi" )
+  set( CLANG_STDLIB_FLAGS "-stdlib=libc++" )
+  set( FS_LIB c++experimental )
+else( USE_CLANG_LIBCXX )
+  set( GCC_STDLIB_FLAGS   "" )
+  set( CLANG_STDLIB_FLAGS "" )
+   set( FS_LIB stdc++fs )
+endif( USE_CLANG_LIBCXX )
+
 run_git()
 
 add_compiler(
   GNU MIN_VERSION "6.2"
-  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas"
+  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas ${GCC_STDLIB_FLAGS}"
   DEBUG      "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
@@ -100,8 +111,8 @@ add_compiler(
 
 add_compiler(
   Clang MIN_VERSION 3.9
-  ALL        "-Weverything -ftemplate-backtrace-limit=0"
-             "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded"
+  ALL        "-Weverything -ftemplate-backtrace-limit=0 "
+             "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded ${CLANG_STDLIB_FLAGS}"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
@@ -222,7 +233,7 @@ new_project_library(
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
-    Threads::Threads stdc++fs
+    Threads::Threads ${FS_LIB}
     ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static caputils capchild ${PCAP_LIBRARIES}
     TinyXML2::TinyXML2
 )
@@ -232,7 +243,7 @@ foreach( I IN ITEMS protocolValidator python timeSeries defaultFilter )
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-    DEPENDENCIES epl_DataCollect_shared stdc++fs Plugin_cythonLib
+    DEPENDENCIES epl_DataCollect_shared Plugin_cythonLib
   )
 endforeach( I IN ITEMS protocolValidator python timeSeries )
 
@@ -240,7 +251,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/python"
   NAME         "eplp_pythonLibs"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.python.txt"
-  DEPENDENCIES epl_DataCollect_shared stdc++fs ${PYTHON_LIBRARIES}
+  DEPENDENCIES epl_DataCollect_shared ${PYTHON_LIBRARIES}
 )
 
 if( NOT DISABLE_TESTS )
@@ -248,7 +259,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared stdc++fs eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared
+    DEPENDENCIES epl_DataCollect_shared eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared
   )
 endif( NOT DISABLE_TESTS )
 
