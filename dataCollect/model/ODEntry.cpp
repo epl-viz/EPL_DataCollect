@@ -62,17 +62,18 @@ ObjectDataType ODEntry::getDataType() const noexcept { return dataType; }
  */
 bool ODEntry::isNumericValue() const noexcept { return isNumerical; }
 
+#define CI(x) return (si < 0 || si >= static_cast<int>(data.size())) ? 0 : x;
+#define CS(x) return (si < 0 || si >= static_cast<int>(data.size())) ? "<N/A>" : x;
 
-
-ODEntry::REAL_TYPE ODEntryInt::getNumericValue(uint8_t) { return static_cast<ODEntry::REAL_TYPE>(data); }
-ODEntry::REAL_TYPE ODEntryUInt::getNumericValue(uint8_t) { return static_cast<ODEntry::REAL_TYPE>(data); }
-ODEntry::REAL_TYPE ODEntryBool::getNumericValue(uint8_t) { return data ? 1 : 0; }
-ODEntry::REAL_TYPE ODEntryReal::getNumericValue(uint8_t) { return data; }
-ODEntry::REAL_TYPE ODEntryString::getNumericValue(uint8_t) { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(uint8_t si) { return static_cast<ODEntry::REAL_TYPE>(data[si]); }
-ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(uint8_t si) { return static_cast<ODEntry::REAL_TYPE>(data[si]); }
-ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(uint8_t si) { return data[si] ? 1 : 0; }
-ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(uint8_t si) { return data[si]; }
+ODEntry::REAL_TYPE ODEntryInt::getNumericValue(int) { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryUInt::getNumericValue(int) { return static_cast<ODEntry::REAL_TYPE>(data); }
+ODEntry::REAL_TYPE ODEntryBool::getNumericValue(int) { return data ? 1 : 0; }
+ODEntry::REAL_TYPE ODEntryReal::getNumericValue(int) { return data; }
+ODEntry::REAL_TYPE ODEntryString::getNumericValue(int) { return 0; }
+ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[si])); }
+ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[si])); }
+ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(int si) { CI(data[si] ? 1 : 0); }
+ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(int si) { CI(data[si]); }
 
 
 inline bool strToBool(std::string str) {
@@ -90,15 +91,15 @@ void ODEntryArrayBool::setFromString(std::string str, uint8_t subIndex) { data[s
 void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stod(str); }
 
 
-std::string ODEntryInt::toString(uint8_t) { return std::to_string(data); }
-std::string ODEntryUInt::toString(uint8_t) { return std::to_string(data); }
-std::string ODEntryBool::toString(uint8_t) { return data ? "true" : "false"; }
-std::string ODEntryReal::toString(uint8_t) { return std::to_string(data); }
-std::string ODEntryString::toString(uint8_t) { return data; }
-std::string ODEntryArrayInt::toString(uint8_t si) { return std::to_string(data[si]); }
-std::string ODEntryArrayUInt::toString(uint8_t si) { return std::to_string(data[si]); }
-std::string ODEntryArrayBool::toString(uint8_t si) { return data[si] ? "true" : "false"; }
-std::string ODEntryArrayReal::toString(uint8_t si) { return std::to_string(data[si]); }
+std::string ODEntryInt::toString(int) { return std::to_string(data); }
+std::string ODEntryUInt::toString(int) { return std::to_string(data); }
+std::string ODEntryBool::toString(int) { return data ? "true" : "false"; }
+std::string ODEntryReal::toString(int) { return std::to_string(data); }
+std::string ODEntryString::toString(int) { return data; }
+std::string ODEntryArrayInt::toString(int si) { return std::to_string(data[si]); }
+std::string ODEntryArrayUInt::toString(int si) { return std::to_string(data[si]); }
+std::string ODEntryArrayBool::toString(int si) { return data[si] ? "true" : "false"; }
+std::string ODEntryArrayReal::toString(int si) { return std::to_string(data[si]); }
 
 
 void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); }

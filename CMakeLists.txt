@@ -243,7 +243,7 @@ foreach( I IN ITEMS protocolValidator python timeSeries defaultFilter )
     PATH         "${PROJECT_SOURCE_DIR}/plugins/${I}"
     NAME         "eplp_${I}"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.lib.txt"
-    DEPENDENCIES epl_DataCollect_shared Plugin_cythonLib
+    DEPENDENCIES epl_DataCollect_shared
   )
 endforeach( I IN ITEMS protocolValidator python timeSeries )
 
@@ -251,7 +251,7 @@ new_project_library(
   PATH         "${PROJECT_SOURCE_DIR}/python"
   NAME         "eplp_pythonLibs"
   TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.python.txt"
-  DEPENDENCIES epl_DataCollect_shared ${PYTHON_LIBRARIES}
+  DEPENDENCIES epl_DataCollect_shared eplp_python_shared ${PYTHON_LIBRARIES}
 )
 
 if( NOT DISABLE_TESTS )
@@ -302,7 +302,6 @@ if( NOT DISABLE_TESTS )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
-add_dependencies( eplp_python_obj Plugin_cythonLib )
 add_dependencies( epl_DataCollect_obj liblibwireshark )
 
 ##################

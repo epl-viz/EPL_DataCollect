@@ -35,7 +35,10 @@
 namespace EPL_DataCollect {
 
 
-ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(uint8_t si) {
+ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(int si) {
+  if (si < 0 || si >= static_cast<int>(data.size()))
+    return 0;
+
   if (*data[si] == nullptr)
     return 0;
 
@@ -53,7 +56,10 @@ void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
 }
 
 int         ODEntryComplex::getArraySize() { return static_cast<int>(data.size()); }
-std::string ODEntryComplex::toString(uint8_t si) {
+std::string ODEntryComplex::toString(int si) {
+  if (si < 0 || si >= static_cast<int>(data.size()))
+    return "<N/A>";
+
   if (*data[si]) {
     return data[si]->toString();
   } else {

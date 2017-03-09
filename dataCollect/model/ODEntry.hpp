@@ -72,12 +72,12 @@ class ODEntry {
    * \brief Returns a numeric Representation of the Entry
    * \return double
    */
-  virtual REAL_TYPE getNumericValue(uint8_t subIndex = 0) = 0;
+  virtual REAL_TYPE getNumericValue(int subIndex = -1) = 0;
   virtual void setFromString(std::string str, uint8_t subIndex = 0) = 0;
-  virtual std::string toString(uint8_t subIndex = 0) = 0;
-  virtual void clone(void *pos)                      = 0;
-  virtual std::unique_ptr<ODEntry> clone()           = 0;
-  virtual int                      getArraySize()    = 0;
+  virtual std::string toString(int subIndex = -1) = 0;
+  virtual void clone(void *pos)                   = 0;
+  virtual std::unique_ptr<ODEntry> clone()        = 0;
+  virtual int                      getArraySize() = 0;
 };
 
 
@@ -95,9 +95,9 @@ class ODEntryInt final : public ODEntry {
 
   ODEntryInt(ObjectDataType dt) : ODEntry(ObjectClassType::INTEGER, dt, true) {}
   ODEntryInt() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -120,9 +120,9 @@ class ODEntryUInt final : public ODEntry {
 
   ODEntryUInt(ObjectDataType dt) : ODEntry(ObjectClassType::UNSIGNED, dt, true) {}
   ODEntryUInt() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -145,9 +145,9 @@ class ODEntryBool final : public ODEntry {
 
   ODEntryBool(ObjectDataType dt) : ODEntry(ObjectClassType::BOOL, dt, true) {}
   ODEntryBool() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -170,9 +170,9 @@ class ODEntryReal final : public ODEntry {
 
   ODEntryReal(ObjectDataType dt) : ODEntry(ObjectClassType::REAL, dt, true) {}
   ODEntryReal() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -195,9 +195,9 @@ class ODEntryString final : public ODEntry {
 
   ODEntryString(ObjectDataType dt) : ODEntry(ObjectClassType::STRING, dt, false) {}
   ODEntryString() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -220,9 +220,9 @@ class ODEntryArrayInt final : public ODEntry {
 
   ODEntryArrayInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_INTEGER, dt, false) { data.resize(0xFF + 1); }
   ODEntryArrayInt() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -245,9 +245,9 @@ class ODEntryArrayUInt final : public ODEntry {
 
   ODEntryArrayUInt(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_UNSIGNED, dt, false) { data.resize(0xFF + 1); }
   ODEntryArrayUInt() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -270,9 +270,9 @@ class ODEntryArrayBool final : public ODEntry {
 
   ODEntryArrayBool(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_BOOL, dt, false) { data.resize(0xFF + 1); }
   ODEntryArrayBool() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
@@ -295,9 +295,9 @@ class ODEntryArrayReal final : public ODEntry {
 
   ODEntryArrayReal(ObjectDataType dt) : ODEntry(ObjectClassType::ARRAY_REAL, dt, false) { data.resize(0xFF + 1); }
   ODEntryArrayReal() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;

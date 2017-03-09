@@ -236,9 +236,9 @@ class ODEntryComplex final : public ODEntry {
 
   ODEntryComplex(ObjectDataType dt);
   ODEntryComplex() = delete;
-  REAL_TYPE getNumericValue(uint8_t subIndex = 0) override;
+  REAL_TYPE getNumericValue(int subIndex = -1) override;
   void setFromString(std::string str, uint8_t subIndex = 0) override;
-  std::string toString(uint8_t subIndex = 0) override;
+  std::string toString(int subIndex = -1) override;
   int getArraySize() override;
 
   friend class ODEntryContainer;
