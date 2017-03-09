@@ -39,10 +39,10 @@ ODEntry::REAL_TYPE ODEntryComplex::getNumericValue(int si) {
   if (si < 0 || si >= static_cast<int>(data.size()))
     return 0;
 
-  if (*data[si] == nullptr)
+  if (*data[static_cast<size_t>(si)] == nullptr)
     return 0;
 
-  return data[si]->getNumericValue();
+  return data[static_cast<size_t>(si)]->getNumericValue();
 }
 
 void ODEntryComplex::setFromString(std::string str, uint8_t subIndex) {
@@ -60,8 +60,8 @@ std::string ODEntryComplex::toString(int si) {
   if (si < 0 || si >= static_cast<int>(data.size()))
     return "<N/A>";
 
-  if (*data[si]) {
-    return data[si]->toString();
+  if (*data[static_cast<size_t>(si)]) {
+    return data[static_cast<size_t>(si)]->toString();
   } else {
     return "<N/A>";
   }

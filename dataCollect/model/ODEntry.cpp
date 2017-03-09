@@ -62,18 +62,22 @@ ObjectDataType ODEntry::getDataType() const noexcept { return dataType; }
  */
 bool ODEntry::isNumericValue() const noexcept { return isNumerical; }
 
-#define CI(x) return (si < 0 || si >= static_cast<int>(data.size())) ? 0 : x;
-#define CS(x) return (si < 0 || si >= static_cast<int>(data.size())) ? "<N/A>" : x;
+#define CI(x)                          \
+  size_t SI = static_cast<size_t>(si); \
+  return (si < 0 || si >= static_cast<int>(data.size())) ? 0 : x;
+#define CS(x)                          \
+  size_t SI = static_cast<size_t>(si); \
+  return (si < 0 || si >= static_cast<int>(data.size())) ? "<N/A>" : x;
 
 ODEntry::REAL_TYPE ODEntryInt::getNumericValue(int) { return static_cast<ODEntry::REAL_TYPE>(data); }
 ODEntry::REAL_TYPE ODEntryUInt::getNumericValue(int) { return static_cast<ODEntry::REAL_TYPE>(data); }
 ODEntry::REAL_TYPE ODEntryBool::getNumericValue(int) { return data ? 1 : 0; }
 ODEntry::REAL_TYPE ODEntryReal::getNumericValue(int) { return data; }
 ODEntry::REAL_TYPE ODEntryString::getNumericValue(int) { return 0; }
-ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[si])); }
-ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[si])); }
-ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(int si) { CI(data[si] ? 1 : 0); }
-ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(int si) { CI(data[si]); }
+ODEntry::REAL_TYPE ODEntryArrayInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[SI])); }
+ODEntry::REAL_TYPE ODEntryArrayUInt::getNumericValue(int si) { CI(static_cast<ODEntry::REAL_TYPE>(data[SI])); }
+ODEntry::REAL_TYPE ODEntryArrayBool::getNumericValue(int si) { CI(data[SI] ? 1 : 0); }
+ODEntry::REAL_TYPE ODEntryArrayReal::getNumericValue(int si) { CI(data[SI]); }
 
 
 inline bool strToBool(std::string str) {
@@ -96,10 +100,10 @@ std::string ODEntryUInt::toString(int) { return std::to_string(data); }
 std::string ODEntryBool::toString(int) { return data ? "true" : "false"; }
 std::string ODEntryReal::toString(int) { return std::to_string(data); }
 std::string ODEntryString::toString(int) { return data; }
-std::string ODEntryArrayInt::toString(int si) { return std::to_string(data[si]); }
-std::string ODEntryArrayUInt::toString(int si) { return std::to_string(data[si]); }
-std::string ODEntryArrayBool::toString(int si) { return data[si] ? "true" : "false"; }
-std::string ODEntryArrayReal::toString(int si) { return std::to_string(data[si]); }
+std::string ODEntryArrayInt::toString(int si) { CS(std::to_string(data[SI])); }
+std::string ODEntryArrayUInt::toString(int si) { CS(std::to_string(data[SI])); }
+std::string ODEntryArrayBool::toString(int si) { CS(data[SI] ? "true" : "false"); }
+std::string ODEntryArrayReal::toString(int si) { CS(std::to_string(data[SI])); }
 
 
 void ODEntryInt::clone(void *pos) { new (pos) ODEntryInt(*this); }
