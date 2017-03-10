@@ -32,6 +32,7 @@
 
 #include "defines.hpp"
 #include "ODEntryDescription.hpp"
+#include <mutex>
 #include <plf_colony.h>
 #include <unordered_map>
 
@@ -58,6 +59,7 @@ class ODDescription final {
   TYPES_MAP typesMap;
 
   plf::colony<uint16_t> entriesList;
+  std::recursive_mutex  accessMutex;
 
   mockable MAP &getEntries() noexcept;
 

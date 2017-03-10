@@ -38,7 +38,8 @@ namespace EPL_DataCollect {
  * \returns Whether the entry description is already set
  */
 bool ODDescription::exists(uint16_t index) noexcept {
-  auto found = entries.find(index);
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  auto                                  found = entries.find(index);
   if (found == entries.end())
     return false;
 
@@ -53,6 +54,7 @@ bool ODDescription::exists(uint16_t index) noexcept {
  * \returns false when the entry already exists
  */
 bool ODDescription::setEntry(uint16_t index, ODEntryDescription desc) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (exists(index))
     return false;
 
@@ -69,6 +71,7 @@ bool ODDescription::setEntry(uint16_t index, ODEntryDescription desc) noexcept {
  * \returns false when the entry does not exist
  */
 bool ODDescription::overrideEntry(uint16_t index, ODEntryDescription desc) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (!exists(index))
     return false;
 
@@ -83,6 +86,7 @@ bool ODDescription::overrideEntry(uint16_t index, ODEntryDescription desc) noexc
  * \returns nullptr if the entry does not exist
  */
 ODEntryDescription *ODDescription::getEntry(uint16_t index) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (!exists(index))
     return nullptr;
 
@@ -96,6 +100,7 @@ ODEntryDescription *ODDescription::getEntry(uint16_t index) noexcept {
  * \todo Use c++17 merge
  */
 void ODDescription::applyDesc(ODDescription &desc) noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
   for (auto &i : desc.getEntries()) {
     if (exists(i.first)) {
       overrideEntry(i.first, i.second);
@@ -109,12 +114,21 @@ void ODDescription::applyDesc(ODDescription &desc) noexcept {
  * \brief Returns a map of entries of the Object Dictionary Description
  * \returns The entries of the OD Description as a map
  */
-ODDescription::MAP &ODDescription::getEntries() noexcept { return entries; }
+ODDescription::MAP &ODDescription::getEntries() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return entries;
+}
 
 /*!
  * \brief Returns the types map used for parsing XDDs
  */
-ODDescription::TYPES_MAP *ODDescription::getTypesMap() noexcept { return &typesMap; }
+ODDescription::TYPES_MAP *ODDescription::getTypesMap() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return &typesMap;
+}
 
-plf::colony<uint16_t> ODDescription::getEntriesList() noexcept { return entriesList; }
+plf::colony<uint16_t> ODDescription::getEntriesList() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return entriesList;
+}
 }
