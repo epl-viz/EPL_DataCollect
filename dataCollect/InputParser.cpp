@@ -32,6 +32,8 @@
 #include "EPLEnum2Str.hpp"
 #include <StringHash.hpp>
 #include <epan/address_types.h>
+#include <epan/ftypes/ftypes-int.h>
+#include <epan/ftypes/ftypes.h>
 #include <epan/print.h>
 #include <epan/proto.h>
 #include <epan/to_str.h>
@@ -162,8 +164,18 @@ void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val) {
     return;
   }
 
-  val.resize(static_cast<size_t>(fi->length));
-  memcpy(val.data(), fi->value.value.bytes, static_cast<size_t>(fi->length));
+  size_t length = 0;
+  if (fi->value.ftype->len != nullptr) {
+    length = static_cast<size_t>(fi->value.ftype->len(&fi->value));
+  } else {
+    length = static_cast<size_t>(fi->value.ftype->wire_size);
+  }
+
+  length /= 2; // length represents the length of a HEX STRING in wireshark (for some reason.....)
+
+  val.resize(length);
+
+  memcpy(val.data(), fi->value.value.bytes, length);
   DPRINT(d, fi, std::to_string(fi->length) + " Bytes", "");
 }
 
@@ -261,7 +273,7 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
     case FT_UINT48:
     case FT_UINT56:
     case FT_UINT64:
-      val = PacketDiff(i, si, (uint64_t)fi->value.value.uinteger64);
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger64));
       DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
       return;
 

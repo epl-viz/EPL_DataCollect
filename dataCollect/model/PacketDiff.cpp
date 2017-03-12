@@ -77,7 +77,13 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
       case ObjectClassType::ARRAY_REAL: entry.getData<ODEntryArrayReal>()->data[subIndex]     = valReal; break;
       case ObjectClassType::COMPLEX:
         auto                    desc = od->getODDesc()->getEntry(odIndex);
-        ODEntryComplexContainer temp(desc->subEntries[subIndex].dataType);
+        ODEntryComplexContainer temp;
+
+        if (subIndex < desc->subEntries.size()) {
+          temp.init(desc->subEntries[subIndex].dataType);
+        } else {
+          temp.init(ObjectDataType::UNSIGNED64);
+        }
 
         switch (temp->getType()) {
           case ObjectClassType::INTEGER: temp.getData<ODEntryInt>()->data   = static_cast<int64_t>(valInt); break;
