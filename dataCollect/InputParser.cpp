@@ -261,7 +261,7 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
     case FT_UINT48:
     case FT_UINT56:
     case FT_UINT64:
-      val = PacketDiff(i, si, fi->value.value.uinteger64);
+      val = PacketDiff(i, si, (uint64_t)fi->value.value.uinteger64);
       DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
       return;
 

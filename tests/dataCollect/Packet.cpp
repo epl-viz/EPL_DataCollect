@@ -33,10 +33,10 @@ using namespace fakeit;
 
 TEST_CASE("Testing Packet", "[Packet]") {
   plf::colony<PacketDiff> ods;
-  ods.emplace(1, 0, 10ul);
+  ods.emplace(1, 0, UINT64_C(10));
   ods.emplace(2, 0, 10.0);
-  ods.emplace(3, 1, 10ul);
-  ods.emplace(4, 0, 10ul);
+  ods.emplace(3, 1, UINT64_C(10));
+  ods.emplace(4, 0, UINT64_C(10));
 
   std::string wire  = "assdagagdagaerg";
   std::string other = "affbytsysrtharthathaeheeh";
