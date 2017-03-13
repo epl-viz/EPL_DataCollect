@@ -74,6 +74,13 @@ TEST_CASE("Loading python files", "[python]") {
   REQUIRE(pyPlugin_noIDMethod->initialize(NULL) == FALSE);
   REQUIRE(pyPlugin_illegalIDMethod->initialize(NULL) == FALSE);
   REQUIRE(pm.init(&ci) == TRUE);
+  REQUIRE(pyPlugin_noFile->getRunning() == FALSE);
+  REQUIRE(pyPlugin_emptyFile->getRunning() == FALSE);
+  REQUIRE(pyPlugin_classNotAvailable->getRunning() == FALSE);
+  REQUIRE(pyPlugin_classIllegalParent->getRunning() == FALSE);
+  REQUIRE(pyPlugin_noIDMethod->getRunning() == FALSE);
+  REQUIRE(pyPlugin_illegalIDMethod->getRunning() == FALSE);
+  REQUIRE(pyPlugin_minimalPlugin->getRunning() == TRUE);
   std::cout << std::endl;
 }
 
@@ -131,6 +138,8 @@ TEST_CASE("GUI API calls exec", "[python]") {
   REQUIRE(evTypeCN == 144);
   REQUIRE(evTypeOD == 144);
   REQUIRE(evTypeMN == 1); // added only once cause of cycle range
+  REQUIRE(pyPluginValidCalls->getRunning() == TRUE);
+  REQUIRE(pyPluginInvalidCalls->getRunning() == TRUE);
 }
 
 TEST_CASE("Plugin internal methods test", "[python]") {
@@ -149,6 +158,7 @@ TEST_CASE("Plugin internal methods test", "[python]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
   REQUIRE(events.size() == 7);
+  REQUIRE(pyPlugin->getRunning() == TRUE);
 }
 
 TEST_CASE("Testing PluginAPI class", "[python]") {
@@ -164,6 +174,7 @@ TEST_CASE("Testing PluginAPI class", "[python]") {
   Cycle cy = *ci.getStartCycle();
 
   pm.processCycle(&cy);
+  REQUIRE(pyPlugin->getRunning() == TRUE);
   std::cout << std::endl;
 }
 
@@ -182,6 +193,7 @@ TEST_CASE("Cycle class access test", "[python]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
+  REQUIRE(pyPlugin->getRunning() == TRUE);
 }
 
 TEST_CASE("Testing calling cython", "[python]") {
@@ -197,6 +209,8 @@ TEST_CASE("Testing calling cython", "[python]") {
   Cycle cy = *ci.getStartCycle();
 
   pm.processCycle(&cy);
+
+  REQUIRE(pyPlugin->getRunning() == TRUE);
   std::cout << std::endl;
 }
 
@@ -215,6 +229,7 @@ TEST_CASE("Test loading with plugin simple plugin", "[python]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
+  REQUIRE(pyPlugin->getRunning() == FALSE);
   std::cout << "EVT SIZE:" << events.size() << std::endl;
 }
 
@@ -233,10 +248,11 @@ TEST_CASE("Test loading with plugin sample", "[python]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
+  REQUIRE(pyPlugin->getRunning() == FALSE);
   std::cout << "EVT SIZE:" << events.size() << std::endl;
 }
 
-TEST_CASE("And another one..., testing multiple cns this time", "[python]") {
+TEST_CASE("Testing a python exception this time...", "[python]") {
   CaptureInstance inst;
   auto            id       = inst.getEventLog()->getAppID();
   auto            pyPlugin = std::make_shared<PythonPlugin>("Test_PythonException");
@@ -253,4 +269,5 @@ TEST_CASE("And another one..., testing multiple cns this time", "[python]") {
   auto events = inst.getEventLog()->pollEvents(id);
 
   REQUIRE(events.size() == 0);
+  REQUIRE(pyPlugin->getRunning() == FALSE);
 }
