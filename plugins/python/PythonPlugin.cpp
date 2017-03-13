@@ -323,8 +323,6 @@ bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
     case FilterType::EXCLUDE: return _filter->newFilter(FilterType::EXCLUDE, filter);
     default: return false;
   }
-
-  return false;
 };
 
 
