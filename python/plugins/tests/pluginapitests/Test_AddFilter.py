@@ -1,6 +1,6 @@
 import Plugin
 import Filters
-import PluginAPI as agui
+import PluginAPI as api
 import unittest
 
 PYTHON_PRE = "[Python]"
@@ -11,22 +11,13 @@ class Test_AddFilter(Plugin.Plugin, unittest.TestCase):
     return "Test_AddFilter"
 
   def run(self):
-    if agui.addFilter(self, None, None):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
-    if agui.addFilter(self, None, "None"):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
-    if agui.addFilter(self, "None", None):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
-    if agui.addFilter(self, Filters.INCLUDING.value, None):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
-    if agui.addFilter(self, Filters.INCLUDING.value, 2):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
+    self.assertFalse(api.addFilter(self, None, None), PYTHON_PRE + "ERROR filter should not have been added")
+    self.assertFalse(api.addFilter(self, None, "None"), PYTHON_PRE + "ERROR filter should not have been added")
+    self.assertFalse(api.addFilter(self, "None", None), PYTHON_PRE + "ERROR filter should not have been added")
+    self.assertFalse(api.addFilter(self, Filters.INCLUDING.value, None), PYTHON_PRE + "ERROR filter should not have been added")
+    self.assertFalse(api.addFilter(self, Filters.INCLUDING.value, 2), PYTHON_PRE + "ERROR filter should not have been added")
+    self.assertFalse(api.addFilter(self, 9999, 2), PYTHON_PRE + "ERROR filter should not have been added")
 
-    if not self.addFilter(0, "correct"):
-      print(PYTHON_PRE, "ERROR filter should have been added", self)
-      self.fail(ERROR_MSG)
+    if self.getCycle().getCycleNum() == 42:
+      self.assertTrue(api.addFilter(self, Filters.INCLUDING.value, "correct"), PYTHON_PRE + "ERROR filter should have been added")
+      self.assertTrue(api.addFilter(self, Filters.EXCLUDING.value, "stillCorrect"), PYTHON_PRE + "ERROR filter should have been added")

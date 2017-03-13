@@ -12,6 +12,7 @@ class Test_CycleAccess(Plugin.Plugin, unittest.TestCase):
 
   def run(self):
     cy = self.getCycle()
+
     # node addition in cycle 64 !
     if cy.getCycleNum() < 64:
       self.assertEqual(cy.getAmountOfCN(), 1, PYTHON_PRE + "ERROR invalid amount of CNs")
@@ -42,3 +43,61 @@ class Test_CycleAccess(Plugin.Plugin, unittest.TestCase):
     if cy.getCycleNum() == 150:
       self.assertEqual(len(self.getCycleByNum(100).getActiveEvents()), 1, PYTHON_PRE + "ERROR amount of events")
 
+    # metadata methods
+    self.assertEqual(cy.getDeviceType(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getDeviceType(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getIPAddress(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getIPAddress(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getSubnetMask(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getSubnetMask(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getDefaultGateway(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getDefaultGateway(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getHostName(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getHostName(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getProfile(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getProfile(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getVendorId(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getVendorId(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getProductCode(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getProductCode(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getRevisionNumber(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getRevisionNumber(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getSerialNumber(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getSerialNumber(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getResponseTime(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getResponseTime(99999), None, PYTHON_PRE + "ERROR should be None")
+
+    if cy.getCycleNum() > 100:
+      self.assertNotEqual(cy.getDeviceType(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getIPAddress(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getSubnetMask(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getDefaultGateway(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getHostName(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getProfile(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getVendorId(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getProductCode(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getRevisionNumber(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getSerialNumber(1), None, PYTHON_PRE + "ERROR should not be None")
+      self.assertNotEqual(cy.getResponseTime(1), None, PYTHON_PRE + "ERROR should not be None")
+
+    # packet methods
+    self.assertEqual(cy.getPacketSrc(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketSrc(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketDest(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketDest(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketType(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketType(99999), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketTime(-1), None, PYTHON_PRE + "ERROR should be None")
+    self.assertEqual(cy.getPacketTime(99999), None, PYTHON_PRE + "ERROR should be None")
+
+    if cy.getCycleNum() == 91:  # an async here
+      self.assertEqual(cy.getPacketSrc(1), 1, PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketDest(1), 255, PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketType(1), "ASYNC_SEND", PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketTime(1), 1486476688917882511, PYTHON_PRE + "ERROR wrong return value")
+
+    if cy.getCycleNum() == 200: # random poll response
+      self.assertEqual(cy.getPacketSrc(1), 1, PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketDest(1), 255, PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketType(1), "POLL_RESPONSE", PYTHON_PRE + "ERROR wrong return value")
+      self.assertEqual(cy.getPacketTime(1), 1486476699817974623, PYTHON_PRE + "ERROR wrong return value")

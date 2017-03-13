@@ -43,68 +43,45 @@ class Test_PluginInternal(Plugin.Plugin, unittest.TestCase):
       self.assertEqual(self.getStorage("DataStore"), "MyD", PYTHON_PRE + "ERROR data not set")
 
     # data cases
-    if not self.setData("MyIntStorage", 2):
-      print(PYTHON_PRE, "ERROR data not set", self)
-      self.fail(ERROR_MSG)
+    self.assertTrue(self.setData("MyIntStorage", 2), PYTHON_PRE + "ERROR data not set")
 
-    if not int(self.getData("MyIntStorage")) == 2:
-      print(PYTHON_PRE, "ERROR setting data before", self)
-      self.fail(ERROR_MSG)
-    if not self.getData("abc") is "":
-      print(PYTHON_PRE, "ERROR retrieving data", self)
-      self.fail(ERROR_MSG)
-    if not self.getData(None) is None:
-      print(PYTHON_PRE, "ERROR should have none", self)
-      self.fail(ERROR_MSG)
+    self.assertEqual(int(self.getData("MyIntStorage")), 2, PYTHON_PRE + "ERROR setting data before")
+    self.assertEqual(self.getData("abc"), "", PYTHON_PRE + "ERROR retrieving data")
+    self.assertEqual(self.getData(None), None, PYTHON_PRE + "ERROR should have none")
 
     # event adding
-    if not self.addEvent(Events.EV_STARTCAP.value, "", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_ENDCAP.value, "", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_HIGHLIGHT_MN.value, "2", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_HIGHLIGHT_CN.value, "2", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "0x1000", "10"):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_JUMPTOTIME.value, "100", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
-    if not self.addEvent(Events.EV_TEXT.value, "This is a sample text", ""):
-      print(PYTHON_PRE, "ERROR adding ev", self)
-      self.fail(ERROR_MSG)
+    self.assertTrue(self.addEvent(Events.EV_STARTCAP.value, "", ""), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_ENDCAP.value, "", ""), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_HIGHLIGHT_MN.value, "2", ""), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_HIGHLIGHT_CN.value, "2", ""), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "0x1000", "10"), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_JUMPTOTIME.value, "100", ""), PYTHON_PRE + "ERROR adding ev")
+    self.assertTrue(self.addEvent(Events.EV_TEXT.value, "This is a sample text", ""), PYTHON_PRE + "ERROR adding ev")
 
-    if self.addEvent(Events.EV_STARTCAP.value, None, ""):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_ENDCAP.value, None, None):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_HIGHLIGHT_MN.value, None, ""):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_HIGHLIGHT_CN.value, "a", ""):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "-1", "10"):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_JUMPTOTIME.value, "-1", ""):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
-    if self.addEvent(Events.EV_TEXT.value, None, ""):
-      print(PYTHON_PRE, "ERROR event should not be added", self)
-      self.fail(ERROR_MSG)
+    self.assertFalse(self.addEvent(Events.EV_STARTCAP.value, None, ""), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_ENDCAP.value, None, None), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_HIGHLIGHT_MN.value, None, ""), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_HIGHLIGHT_CN.value, "a", ""), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "-1", "10"), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_JUMPTOTIME.value, "-1", ""), PYTHON_PRE + "ERROR event should not be added")
+    self.assertFalse(self.addEvent(Events.EV_TEXT.value, None, ""), PYTHON_PRE + "ERROR event should not be added")
 
-    if self.addFilter(Filters.INCLUDING.value, None):
-      print(PYTHON_PRE, "ERROR filter should not have been added", self)
-      self.fail(ERROR_MSG)
-    if (not self.addFilter(Filters.INCLUDING.value, "asdf")) and cy.getCycleNum() != 0:
-      print(PYTHON_PRE, "ERROR filter should have been added", self)
-      self.fail(ERROR_MSG)
+    # filter adding
+    #if cy.getCycleNum() == 100:
+      #self.assertTrue(self.addFilter(Filters.INCLUDING.value, "test"), PYTHON_PRE + "ERROR filter should have been added")
+      #self.assertTrue(self.addFilter(Filters.EXCLUDING.value, "test2"), PYTHON_PRE + "ERROR filter should have been added")
+
+    if cy.getCycleNum() == 110:
+      self.assertFalse(self.addFilter(None, None), PYTHON_PRE + "ERROR filter should not have been added")
+      self.assertFalse(self.addFilter(400, None), PYTHON_PRE + "ERROR filter should not have been added")
+      self.assertFalse(self.addFilter(None, "asdf"), PYTHON_PRE + "ERROR filter should not have been added")
+      self.assertFalse(self.addFilter(Filters.INCLUDING.value, None), PYTHON_PRE + "ERROR filter should not have been added")
+      self.assertFalse(self.addFilter(Filters.INCLUDING.value, 23), PYTHON_PRE + "ERROR filter should not have been added")
+
+    # getting rand cycle
+    if cy.getCycleNum() == 283: # last cycle
+      self.assertEqual(self.getCycleByNum(100).getCycleNum(), 100, PYTHON_PRE + "ERROR cycle num illegal")
+      self.assertNotEqual(self.getCycleByNum(-1).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
+      self.assertNotEqual(self.getCycleByNum(9999999).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
+      self.assertNotEqual(self.getCycleByNum(0).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
+      self.assertNotEqual(self.getCycleByNum(-134408).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
