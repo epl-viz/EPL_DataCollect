@@ -110,7 +110,7 @@ std::string Packet::getTypeStr() const noexcept { return EPLEnum2Str::toStr(getT
  * \brief Returns the packet time as long int
  * \return The packet type as a long int
  */
-uint64_t Packet::getTime() const noexcept {
+int64_t Packet::getTime() const noexcept {
   return std::chrono::duration_cast<std::chrono::nanoseconds>(getTimeStamp().time_since_epoch()).count();
 }
 

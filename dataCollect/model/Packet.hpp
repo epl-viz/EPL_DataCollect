@@ -118,7 +118,7 @@ class Packet {
   mockable uint8_t getSrcNode() const noexcept;
   mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
-  mockable uint64_t getTime() const noexcept;
+  mockable int64_t getTime() const noexcept;
 
   mockable void addDiff(PacketDiff diff) noexcept;
 };
