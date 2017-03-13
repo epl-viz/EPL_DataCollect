@@ -3,13 +3,11 @@ import Events
 import Filters
 
 class Sample_Functions(Plugin.Plugin):
-  sum = 0
-
   def getID(self):
     return "Sample_Functions"
 
   def initialize(self):
-    if not self.registerInt("MyIntStorage"):  # register needed variables here (these are available for all plugins)
+    if not self.registerInt("sum"):  # register needed variables here (these are available for all plugins)
       return False
     if not self.registerStr("MyStrStorage"):  # same, return False if the register was unsuccessful so we know that the plugin could not be inited
       return False
@@ -57,12 +55,12 @@ class Sample_Functions(Plugin.Plugin):
     except (TypeError, ValueError):
       pass  ## not an int here, meaning the odentry is either not inited or
 
-    self.sum = self.sum + i
+    self.setData("sum", int(self.getData("sum")) + i)     # don't need to try catch data that has been registered as int !
 
     if cy.getCycleNum() == 200:
-      print("Sum of 0x6200 up to cycle [", cy.getCycleNum(), "]", self.sum)
+      print("Sum of 0x6200 up to cycle [", cy.getCycleNum(), "]", self.getData("sum"))
 
-    if self.sum >= 2000:  # as soon as the sum gets over 2000, this plugin will stop
+    if int(self.getData("sum")) >= 2000:  # as soon as the sum gets over 2000, this plugin will stop
       self.unload()
 
 
