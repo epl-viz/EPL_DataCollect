@@ -74,6 +74,7 @@ class PythonPlugin : public PluginBase {
   bool addViewFilter(int filterType, std::string filter);
 
   void setRunning(bool newRunning);
+  bool getRunning();
 
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
@@ -86,7 +87,7 @@ class PythonPlugin : public PluginBase {
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
 
-  bool running = true;
+  bool running = false;
 
   Cycle *currentCycle;
   Cycle  workingCycle; // current working cycle, used if user wants a random cycle

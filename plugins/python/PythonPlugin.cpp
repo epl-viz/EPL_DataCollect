@@ -428,6 +428,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     return false;
   }
   Py_DECREF(pValue);
+  running = true;
   return true;
 };
 
@@ -458,6 +459,13 @@ void PythonPlugin::run(Cycle *cycle) {
  * @param newRunning p_newRunning: new value of running
  */
 void PythonPlugin::setRunning(bool newRunning) { running = newRunning; }
+
+/**
+ * @brief Getting running
+ *
+ * @return bool running state
+ */
+bool PythonPlugin::getRunning() { return running; }
 
 bool PythonPlugin::reset(CaptureInstance *ci) {
   (void)ci;
