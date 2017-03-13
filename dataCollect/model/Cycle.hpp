@@ -80,6 +80,7 @@ class Cycle {
 
   mockable std::vector<EventBase *> getActiveEvents() const noexcept;
   mockable std::vector<Packet> getPackets() const noexcept;
+  mockable Packet *getPacket(uint8_t ofNode) noexcept;
   mockable uint32_t getCycleNum() const noexcept;
   mockable uint8_t getNumNodes() const noexcept;
 

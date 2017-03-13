@@ -80,6 +80,13 @@ std::vector<EventBase *> Cycle::getActiveEvents() const noexcept { return events
  */
 std::vector<Packet> Cycle::getPackets() const noexcept { return packets; }
 
+Packet *Cycle::getPacket(uint8_t ofNode) noexcept {
+  for (uint8_t i = 0; i < packets.size(); i++) {
+    if (packets[i].getSrcNode() == ofNode)
+      return &packets[i];
+  }
+  return nullptr;
+};
 
 /*!
  * \brief Returns the cycle number of this Cycle

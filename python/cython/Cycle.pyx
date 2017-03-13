@@ -185,6 +185,43 @@ cdef class Cycle:
       return
     return self._C_Cycle.getNode(nodeNumber).getResponseTime()
 
+  # packet specific methods, returning None if no package of this type in cycle
+  def getPacketSrc(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    if self._C_Cycle.getPacket(nodeNumber) == NULL:
+      return
+    return self._C_Cycle.getPacket(nodeNumber).getSrcNode()
+
+  def getPacketDest(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    if self._C_Cycle.getPacket(nodeNumber) == NULL:
+      return
+    return self._C_Cycle.getPacket(nodeNumber).getDestNode()
+
+  def getPacketTime(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    if self._C_Cycle.getPacket(nodeNumber) == NULL:
+      return
+    return self._C_Cycle.getPacket(nodeNumber).getTime()
+
+  def getPacketType(self, nodeNumber):
+    if not (isinstance(nodeNumber, int)):   # numbers have to be integer
+      return
+    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+      return
+    if self._C_Cycle.getPacket(nodeNumber) == NULL:
+      return
+    return self._C_Cycle.getPacket(nodeNumber).getTypeStr().decode()
+
 # creating a cycle from Cycle* ...
 cdef createCycle(CCycle.Cycle* curCycle):
   cyc = Cycle()

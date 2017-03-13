@@ -15,6 +15,7 @@ cdef extern from "Cycle.hpp" namespace "EPL_DataCollect":
     Node* getNode(int)
     CycleStorageBase* getCycleStorage(string)
     ODEntry* getODEntry(int, int)
+    Packet* getPacket(int)
 
     bool registerCycleStorage(string, CycleStorageBase)
 
@@ -61,3 +62,10 @@ cdef extern from "CycleStorageBase.hpp" namespace "EPL_DataCollect":
   cdef cppclass CycleStorageBase:
     CycleStorageBase() except +
     string getStringRepresentation()
+
+cdef extern from "Packet.hpp" namespace "EPL_DataCollect":
+  cdef cppclass Packet:
+    int getSrcNode()
+    int getDestNode()
+    string getTypeStr()
+    long getTime()

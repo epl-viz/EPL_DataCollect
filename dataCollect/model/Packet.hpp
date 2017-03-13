@@ -110,6 +110,7 @@ class Packet {
   bool operator==(const Packet &r) const;
 
   mockable PacketType getType() const noexcept;
+  mockable std::string getTypeStr() const noexcept;
   mockable NMTState getState() const noexcept;
   mockable const plf::colony<PacketDiff> *getDiffs() const noexcept;
   mockable std::string getMiscData() const noexcept;
@@ -117,6 +118,7 @@ class Packet {
   mockable uint8_t getSrcNode() const noexcept;
   mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
+  mockable uint64_t getTime() const noexcept;
 
   mockable void addDiff(PacketDiff diff) noexcept;
 };

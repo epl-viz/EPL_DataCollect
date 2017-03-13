@@ -29,6 +29,7 @@
  */
 
 #include "Packet.hpp"
+#include <EPLEnum2Str.hpp>
 
 namespace EPL_DataCollect {
 
@@ -99,6 +100,19 @@ bool Packet::operator==(const Packet &r) const {
  */
 PacketType Packet::getType() const noexcept { return type; }
 
+/*!
+ * \brief Returns the packet type as str
+ * \return The packet type as a str
+ */
+std::string Packet::getTypeStr() const noexcept { return EPLEnum2Str::toStr(getType()); }
+
+/*!
+ * \brief Returns the packet time as long int
+ * \return The packet type as a long int
+ */
+uint64_t Packet::getTime() const noexcept {
+  return std::chrono::duration_cast<std::chrono::nanoseconds>(getTimeStamp().time_since_epoch()).count();
+}
 
 /*!
  * \brief Returns the sent NMTState
