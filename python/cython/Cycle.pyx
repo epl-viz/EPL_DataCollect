@@ -54,7 +54,9 @@ cdef class Cycle:
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getStatusStr().decode()
 
@@ -110,35 +112,45 @@ cdef class Cycle:
   def getDeviceType(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getDeviceType().decode()
 
   def getIPAddress(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getIPAddress().decode()
 
   def getSubnetMask(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getSubnetMask().decode()
 
   def getDefaultGateway(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getDefaultGateway().decode()
 
   def getHostName(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getHostName().decode()
 
@@ -146,42 +158,54 @@ cdef class Cycle:
   def getProfile(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getProfile()
 
   def getVendorId(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getVendorId()
 
   def getProductCode(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getProductCode()
 
   def getRevisionNumber(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getRevisionNumber()
 
   def getSerialNumber(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getSerialNumber()
 
   def getResponseTime(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
+      return
+    if self._C_Cycle.getNode(nodeNumber) == NULL:
       return
     return self._C_Cycle.getNode(nodeNumber).getResponseTime()
 
@@ -189,7 +213,7 @@ cdef class Cycle:
   def getPacketSrc(self, nodeNumber):
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
-    if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
+    if nodeNumber < 0:                # and in correct size
       return
     if self._C_Cycle.getPacket(nodeNumber) == NULL:
       return
