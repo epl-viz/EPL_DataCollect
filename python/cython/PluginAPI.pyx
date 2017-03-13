@@ -18,6 +18,6 @@ def addFilter(plugin, typeEnum, filters):
 
   \return whether the filter addition has been successful
   """
-  if isinstance(plugin, Plugin.Plugin):
-    return plugin.addFilter(0, filters)
+  if isinstance(plugin, Plugin.Plugin) and isinstance(typeEnum, int):
+    return plugin.addFilter(typeEnum, filters)
   return False;

@@ -198,8 +198,8 @@ cdef class Plugin:
 
     \returns whether the data has been successfully added
     """
-    if isinstance(filters, str):
-      return self.getPythonPlugin().addViewFilter(0, filters.encode('utf-8'))
+    if isinstance(filters, str) and isinstance(typeEnu, int):
+      return self.getPythonPlugin().addViewFilter(typeEnu, filters.encode('utf-8'))
     return False
   ########################################################################################
 

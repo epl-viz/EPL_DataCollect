@@ -53,7 +53,7 @@ def highlightMN(plugin):
 
 def highlightNode(plugin, node):
   """
-  \brief This method highlights a specific in the graphical representation.
+  \brief This method highlights a specific CN in the graphical representation.
 
   \param plugin the plugin currently used, has to be given
   \param Node node : The node to be highlighted in the graphical representation.
