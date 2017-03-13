@@ -36,10 +36,16 @@ class Sample_Functions(Plugin.Plugin):
       print("Adding Event:", self.addEvent(Events.EV_TEXT.value, "some text to be added...", "")) # provide text as str in first argument
 
     if cy.getCycleNum() % 20 == 0:
-      print("in cycle", cy.getCycleNum(), "od 0x6200 sub 1 is", cy.getODEntry_Sub(1, 0x6200, 1))   # provide node, entry and subindex
+      try:
+        print("in cycle", cy.getCycleNum(), "od 0x6200 sub 1 is", cy.getODEntry_Sub(1, 0x6200, 1))   # provide node, entry and subindex
+      except TypeError:
+        pass
+      print("also, profile is", cy.getProfile(1))
 
     if cy.getCycleNum() == 200:               # 50 cycles later what events have been thrown at cycle 150 ?
-      print("Active Events at cycle 200", self.getCycleByNum(150).getActiveEvents())    # now printing out the events active
+      print("Active Events at cycle 200")    # now printing out the events active
+      for ev in self.getCycleByNum(150).getActiveEvents():
+        print(ev)
 
     if cy.getCycleNum() % 50 == 0:
       print("in cycle", cy.getCycleNum(), "IP Adr of Node 1", cy.getIPAddress(1)) # lots of get methods can be used for nodes
@@ -48,7 +54,7 @@ class Sample_Functions(Plugin.Plugin):
     i = 0
     try:
       i = int(cy.getODEntry_Sub(1, 0x6200, 1))
-    except ValueError:
+    except (TypeError, ValueError):
       pass  ## not an int here, meaning the odentry is either not inited or
 
     self.sum = self.sum + i

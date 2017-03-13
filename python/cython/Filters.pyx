@@ -6,5 +6,5 @@ cdef extern from "EPLEnums.h" namespace "EPL_DataCollect::FilterType":
     EXCLUDE,
 
 cpdef enum Filters:
-  INCLUDING = 0
-  EXCLUDING = 1
+  INCLUDING = <int>FilterType.INCLUDE
+  EXCLUDING = <int>FilterType.EXCLUDE
