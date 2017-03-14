@@ -44,7 +44,7 @@ namespace plugins {
   */
 class ProtocolValidator : public PluginBase {
  public:
-  ProtocolValidator() = default;
+  ProtocolValidator();
   virtual ~ProtocolValidator();
 
   void run(Cycle *cycle);
@@ -54,6 +54,8 @@ class ProtocolValidator : public PluginBase {
   bool initialize(CaptureInstance *ci);
   bool reset(CaptureInstance *ci);
 
+
+  void shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle);
 
  private:
   std::string pluginID = "ProtocolValidator";

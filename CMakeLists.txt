@@ -259,7 +259,7 @@ if( NOT DISABLE_TESTS )
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
-    DEPENDENCIES epl_DataCollect_shared eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared
+    DEPENDENCIES epl_DataCollect_shared eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared eplp_protocolValidator_shared
   )
 endif( NOT DISABLE_TESTS )
 

@@ -1,3 +1,4 @@
+
 /* Copyright (c) 2017, EPL-Vizards
  * All rights reserved.
  *
@@ -23,57 +24,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*!
- * \file ProtocolValidator.cpp
- * \brief Contains class ProtocolValidator
- * \todo IMPLEMENT
- */
 
-#include "ProtocolValidator.hpp"
-#include "EvPluginText.hpp"
-#include "Packet.hpp"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+
+#include "CSViewFilters.hpp"
+#include "DefaultFilter.hpp"
+#include "PluginManager.hpp"
+#include <CaptureInstance.hpp>
+#include <Cycle.hpp>
 #include <EvView.hpp>
-#include "EPLEnums.h"
+#include <PythonPlugin.hpp>
+#include <catch.hpp>
+#include <fakeit.hpp>
 #include <iostream>
 
-#define PROTOCOL_VAL "ProtocolValidatorEvent"
-#define CASE_NO_EPL_PACKET "Packet is not a EPL packet"
+#pragma clang diagnostic pop
 
-namespace EPL_DataCollect {
-namespace plugins {
+#if __cplusplus <= 201402L
+#include <ProtocolValidator.hpp>
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
-ProtocolValidator::ProtocolValidator() {}
+using namespace fakeit;
+using namespace EPL_DataCollect;
+using namespace EPL_DataCollect::plugins;
 
-ProtocolValidator::~ProtocolValidator() {}
+TEST_CASE("Protocol Validator Plugin", "[ProtocolValidator]") {
+  std::cout << std::endl;
+  CaptureInstance inst;
+  auto            id              = inst.getEventLog()->getAppID();
+  auto            validatorPlugin = std::make_shared<ProtocolValidator>();
+  inst.getPluginManager()->addPlugin(validatorPlugin);
 
-std::string ProtocolValidator::getID() { return pluginID; }
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
 
-std::string ProtocolValidator::getDependencies() { return ""; }
+  REQUIRE(inst.loadPCAP(file) == 0);
 
-bool ProtocolValidator::initialize(CaptureInstance *ci) {
-  (void)ci;
-  return true;
-
-} // no init necessary
-
-bool ProtocolValidator::reset(CaptureInstance *ci) {
-  (void)ci;
-  return true;
-
-} // no reset necessary
-
-void ProtocolValidator::run(Cycle *cycle) {
-  for (auto packet : cycle->getPackets()) {
-    // checking if it's a EPL packet in the first place
-    if (packet.getType() == PacketType::UNDEF) {
-      shootValidatorEvent(CASE_NO_EPL_PACKET, packet.getTime(), cycle);
-    }
-  }
-}
-
-void ProtocolValidator::shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle) {
-  addEvent(std::make_unique<EvPluginText>(
-        getID(), std::string(PROTOCOL_VAL), message, flag, cycle, EventBase::INDEX_MAP()));
-}
-}
+  inst.getCycleBuilder()->waitForLoopToFinish();
+  auto events = inst.getEventLog()->pollEvents(id);
+  std::cout << std::endl;
 }
