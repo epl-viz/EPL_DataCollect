@@ -44,69 +44,19 @@ namespace plugins {
   */
 class ProtocolValidator : public PluginBase {
  public:
-  // Constructors/Destructors
-  //
-
-
-  /*!
-   * Empty Constructor
-   */
-  ProtocolValidator();
-
-  /*!
-   * Empty Destructor
-   */
+  ProtocolValidator() = default;
   virtual ~ProtocolValidator();
 
-  // Static Public attributes
-  //
+  void run(Cycle *cycle);
+  std::string getDependencies();
+  std::string getID();
 
-  // Public attributes
-  //
+  bool initialize(CaptureInstance *ci);
+  bool reset(CaptureInstance *ci);
 
-
-  // Public attribute accessor methods
-  //
-
-
-  // Public attribute accessor methods
-  //
-
-
- protected:
-  // Static Protected attributes
-  //
-
-  // Protected attributes
-  //
-
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- public:
-  // Protected attribute accessor methods
-  //
-
- protected:
- private:
-  // Static Private attributes
-  //
-
-  // Private attributes
-  //
-
- public:
-  // Private attribute accessor methods
-  //
 
  private:
- public:
-  // Private attribute accessor methods
-  //
-
- private:
+  std::string pluginID = "ProtocolValidator";
 };
 }
 }

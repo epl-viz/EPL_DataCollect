@@ -34,23 +34,18 @@
 namespace EPL_DataCollect {
 namespace plugins {
 
-// Constructors/Destructors
-//
-
-ProtocolValidator::ProtocolValidator() {}
-
 ProtocolValidator::~ProtocolValidator() {}
 
-//
-// Methods
-//
+std::string ProtocolValidator::getID() { return pluginID; }
 
+std::string ProtocolValidator::getDependencies() { return ""; }
 
-// Accessor methods
-//
+bool ProtocolValidator::initialize(CaptureInstance *ci) { return true; } // no init necessary
 
+bool ProtocolValidator::reset(CaptureInstance *ci) { return true; } // no reset necessary
 
-// Other methods
-//
+void ProtocolValidator::run(Cycle *cycle) {
+  // TODO protocol validation
+}
 }
 }
