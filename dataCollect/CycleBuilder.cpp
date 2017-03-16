@@ -108,9 +108,11 @@ void CycleBuilder::buildNextCycle() noexcept {
       addNode(src);
 
     enum {
-        NODEID_DYNAMIC = 0, NODEID_MN = 240,
-        NODEID_DIAGNOSTIC = 253, NODEID_LEGACY_ETHERNET_ROUTER = 254,
-        NODEID_BROADCAST  = 255
+      NODEID_DYNAMIC                = 0,
+      NODEID_MN                     = 240,
+      NODEID_DIAGNOSTIC             = 253,
+      NODEID_LEGACY_ETHERNET_ROUTER = 254,
+      NODEID_BROADCAST              = 255
     };
 
     if (dst != NODEID_BROADCAST && dst != NODEID_DYNAMIC && currentCycle.getNode(dst) == nullptr)
@@ -132,24 +134,24 @@ void CycleBuilder::buildNextCycle() noexcept {
     }
 
     // Update OD entries
-    Node *node = currentCycle.getNode(src);
+    Node *node       = currentCycle.getNode(src);
     Node *targetNode = currentCycle.getNode(updateTargetNode);
     if (targetNode) {
-        OD *od   = targetNode->getOD();
-        for (auto const &j : *i.getDiffs()) {
-          uint16_t index = j.getIndex();
-          if (index == UINT16_MAX)
-            continue;
+      OD *od = targetNode->getOD();
+      for (auto const &j : *i.getDiffs()) {
+        uint16_t index = j.getIndex();
+        if (index == UINT16_MAX)
+          continue;
 
-          ODEntryContainer entry = j.getEntry(od);
+        ODEntryContainer entry = j.getEntry(od);
 
-          if (od->hasEntry(index)) {
-            od->entries.at(index) = entry;
-          } else {
-            std::cout << "[CycleBuilder] Entry " << std::hex << index << " of Node " << std::dec
-                      << static_cast<int>(updateTargetNode) << " does not exist" << std::endl;
-          }
+        if (od->hasEntry(index)) {
+          od->entries.at(index) = entry;
+        } else {
+          std::cout << "[CycleBuilder] Entry " << std::hex << index << " of Node " << std::dec
+                    << static_cast<int>(updateTargetNode) << " does not exist" << std::endl;
         }
+      }
     }
 
     // Handle other packet stuff
