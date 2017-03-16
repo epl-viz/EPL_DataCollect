@@ -29,6 +29,7 @@
 #include <TimeSeries.hpp>
 #include <TimeSeriesBuilder.hpp>
 #include <catch.hpp>
+#include <iostream>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
@@ -63,4 +64,28 @@ TEST_CASE("Testing TimeSeries plugin -- no data", "[plugin][TimeSeries]") {
 
   ci.loadPCAP(file);
   ci.getCycleBuilder()->waitForLoopToFinish();
+}
+
+TEST_CASE("Testing TimeSeries plugin -- with data", "[plugin][TimeSeries]") {
+  CaptureInstance ci;
+  ci.getPluginManager()->addPlugin(std::make_shared<TimeSeriesBuilder>());
+
+  auto ts = std::make_shared<TimeSeries>(1, 0x6200, 1);
+  ci.registerCycleStorage<CSTimeSeriesPtr>(EPL_DC_PLUGIN_TIME_SERIES_CSID);
+  auto *           base = ci.getStartCycle()->getCycleStorage(EPL_DC_PLUGIN_TIME_SERIES_CSID);
+  CSTimeSeriesPtr *csTS = dynamic_cast<CSTimeSeriesPtr *>(base);
+
+  REQUIRE(base != nullptr);
+  REQUIRE(csTS != nullptr);
+
+  csTS->addTS(ts);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  ci.loadPCAP(file);
+  ci.getCycleBuilder()->waitForLoopToFinish();
+  REQUIRE(ts->tsData.size() == 288);
 }
