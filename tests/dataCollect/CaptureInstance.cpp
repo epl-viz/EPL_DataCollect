@@ -106,6 +106,7 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.stopRecording() == -1);
     REQUIRE(ci.getState() == CaptureInstance::DONE);
 #else
+    REQUIRE(ci.getCurrentFilePath() == "");
     REQUIRE(ci.startRecording("") == 11);
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
 #endif
@@ -227,6 +228,7 @@ TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") 
   REQUIRE(ci.getState() == CaptureInstance::SETUP);
   REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
   REQUIRE(ci.getState() == CaptureInstance::RUNNING);
+  REQUIRE(ci.getCurrentFilePath() != "");
   REQUIRE(ci.stopRecording() == 1);
   REQUIRE(ci.getState() == CaptureInstance::ERRORED);
 }

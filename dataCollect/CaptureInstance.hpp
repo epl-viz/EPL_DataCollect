@@ -132,6 +132,7 @@ class CaptureInstance {
   mockable InputHandler *getInputHandler() noexcept;
 
   mockable CycleBuilder *getCycleBuilder() noexcept;
+  mockable std::string getCurrentFilePath() noexcept;
 
   mockable CIstate getState() noexcept;
   mockable Cycle *getStartCycle() noexcept;

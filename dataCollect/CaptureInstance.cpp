@@ -263,6 +263,13 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
   return devList;
 }
 
+std::string CaptureInstance::getCurrentFilePath() noexcept {
+  if (!capture)
+    return "";
+
+  return ws_capture_filename(capture);
+}
+
 
 /*!
  * \brief Returns a pointer to the EventLog
