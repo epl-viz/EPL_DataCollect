@@ -268,6 +268,6 @@ TEST_CASE("Testing a python exception this time...", "[python]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
 
-  REQUIRE(events.size() == 0);
+  REQUIRE(events.size() == 1);
   REQUIRE(pyPlugin->getRunning() == FALSE);
 }
