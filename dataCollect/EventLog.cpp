@@ -112,6 +112,9 @@ void EventLog::addEvent(std::unique_ptr<EventBase> ev) noexcept {
   uint32_t endRange;
   ev->getCycleRange(&evStart, &evEnd);
 
+  if (evStart < nextCycle)
+    return;
+
   auto it = latestEvents.begin();
   while (it != latestEvents.end()) {
     auto i = *it;
@@ -135,4 +138,6 @@ void EventLog::addEvent(std::unique_ptr<EventBase> ev) noexcept {
   events.emplace_back(std::move(ev));
   latestEvents.insert(events.back().get());
 }
+
+void EventLog::setNextCycle(uint32_t cycle) { nextCycle = cycle > nextCycle ? cycle : nextCycle; }
 }

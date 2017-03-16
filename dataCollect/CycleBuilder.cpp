@@ -96,6 +96,8 @@ void CycleBuilder::buildNextCycle() noexcept {
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);
 
+  parent->getEventLog()->setNextCycle(nextCycleNum);
+
 
   // Process packets
   for (auto const &i : packets) {

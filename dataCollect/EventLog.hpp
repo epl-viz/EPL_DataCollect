@@ -40,6 +40,8 @@
 
 namespace EPL_DataCollect {
 
+class CycleBuilder;
+
 /*!
   * class EventLog
   * \brief Container for all events of a CaptureInstance
@@ -72,6 +74,11 @@ class EventLog {
   plf::colony<EventBase *> latestEvents;
 
   uint32_t nextAppID = 0;
+  uint32_t nextCycle = 0;
+
+  void setNextCycle(uint32_t cycle);
+
+  friend class CycleBuilder;
 
  public:
   EventLog() = default;
