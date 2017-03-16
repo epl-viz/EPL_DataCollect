@@ -54,6 +54,8 @@ class Node {
 
   IDENT identity;
 
+  std::vector<std::string> xddFiles;
+
  public:
   Node() = delete;
   Node(uint8_t nodeID) : id(nodeID) {}
@@ -73,6 +75,7 @@ class Node {
   mockable std::string getStatusStr() noexcept;
   mockable uint8_t getID() const noexcept;
   mockable IDENT getIdentity() const noexcept;
+  mockable std::vector<std::string> getXDDFiles() const noexcept;
 
   mockable std::string getDeviceType() noexcept;
   mockable std::string getIPAddress() noexcept;

@@ -79,7 +79,8 @@ void Node::setStatus(NMTState newStatus) noexcept { status = newStatus; }
  */
 void Node::setIdentity(Node::IDENT i) noexcept { identity = i; }
 
-std::string Node::getDeviceType() noexcept { return identity.DeviceType; }
+std::vector<std::string> Node::getXDDFiles() const noexcept { return xddFiles; }
+std::string              Node::getDeviceType() noexcept { return identity.DeviceType; }
 
 std::string Node::getIPAddress() noexcept { return identity.IPAddress; }
 std::string Node::getSubnetMask() noexcept { return identity.SubnetMask; }

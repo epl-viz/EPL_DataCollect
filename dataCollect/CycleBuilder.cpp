@@ -63,6 +63,7 @@ void CycleBuilder::addNode(uint8_t nID) noexcept {
     std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
               << static_cast<int>(nID) << std::endl;
   }
+  currentCycle.getNode(nID)->xddFiles.emplace_back(xddPath);
 
   if (!cfg.autoDeduceSpecificProfile && cfg.specificProfile != "") {
     xddPath = xddDir + cfg.specificProfile;
@@ -73,6 +74,7 @@ void CycleBuilder::addNode(uint8_t nID) noexcept {
       std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
                 << static_cast<int>(nID) << std::endl;
     }
+    currentCycle.getNode(nID)->xddFiles.emplace_back(xddPath);
   }
 }
 
@@ -177,6 +179,7 @@ void CycleBuilder::buildNextCycle() noexcept {
               } else {
                 nodeCfg.autoDeduceSpecificProfile = false;
                 parent->setNodeConfig(src, nodeCfg);
+                currentCycle.getNode(src)->xddFiles.emplace_back(xddPath);
               }
             }
           }
