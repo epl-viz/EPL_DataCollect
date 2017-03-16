@@ -68,10 +68,11 @@ TestStorage::~TestStorage() {}
 TEST_CASE("Standard return values work", "[Cycle]") {
   Cycle c;
 
-  SECTION("Test getNumNodes()") { REQUIRE(c.getNumNodes() == 0); }
-  SECTION("Test getCycleNum()") { REQUIRE(c.getCycleNum() == UINT32_MAX); }
-  SECTION("Test getPackets()") { REQUIRE(c.getPackets().empty() == true); }
-  SECTION("Test getActiveEvents()") { REQUIRE(c.getActiveEvents().empty() == true); }
+  REQUIRE(c.getNumNodes() == 0);
+  REQUIRE(c.getCycleNum() == UINT32_MAX);
+  REQUIRE(c.getPackets().empty() == true);
+  REQUIRE(c.getActiveEvents().empty() == true);
+  REQUIRE(c.getAllCycleStorage()->size() == 0);
 }
 
 TEST_CASE("Fetching non existant values fails", "[Cycle]") {

@@ -199,6 +199,8 @@ std::vector<uint8_t> Cycle::getNodeList() const noexcept {
   return list;
 }
 
+Cycle::CS_MAP *Cycle::getAllCycleStorage() noexcept { return &cycleStorages; }
+
 bool Cycle::operator==(const Cycle &b) const {
   return events == b.events && /*packets == b.packets && nodes == b.nodes &&*/ nodeCount == b.nodeCount &&
          cycleNum == b.cycleNum;

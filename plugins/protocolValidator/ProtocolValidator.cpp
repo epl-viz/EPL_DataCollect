@@ -66,7 +66,7 @@ void ProtocolValidator::run(Cycle *cycle) {
   for (auto packet : cycle->getPackets()) {
     // checking if it's a EPL packet in the first place
     if (packet.getType() == PacketType::UNDEF) {
-      shootValidatorEvent(CASE_NO_EPL_PACKET, packet.getTime(), cycle);
+      shootValidatorEvent(CASE_NO_EPL_PACKET, static_cast<uint64_t>(packet.getTime()), cycle);
     }
   }
 }
