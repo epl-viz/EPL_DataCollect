@@ -482,7 +482,7 @@ void PythonPlugin::run(Cycle *cycle) {
 
   // if exception occured, print stack trace and stop plugin from running
   if (PyErr_Occurred() != NULL) {
-    addPyEvent(static_cast<int>(EvType::VIEW_EV_TEXT), ERROR_PYTHON_RUNTIME_ERROR(plugID), "");
+    addPyEvent(static_cast<int>(EvType::VIEW_EV_TEXT), ERROR_PYTHON_RUNTIME_ERROR(plugID), "ERROR STACK");
     running = false;
     PyErr_Print();
   }
