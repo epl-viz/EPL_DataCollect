@@ -26,7 +26,6 @@
 /*!
  * \file ProtocolValidator.hpp
  * \brief Contains class ProtocolValidator
- * \todo IMPLEMENT
  */
 
 
@@ -34,6 +33,7 @@
 
 #include "defines.hpp"
 #include "PluginBase.hpp"
+#include "CSValidatorPluginStorage.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
