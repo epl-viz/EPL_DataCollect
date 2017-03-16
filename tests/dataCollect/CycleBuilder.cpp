@@ -41,6 +41,31 @@ namespace fs = std::filesystem;
 using namespace EPL_DataCollect;
 using namespace fakeit;
 
+TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
+  CaptureInstance inst;
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng.gz";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+}
+
+TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
+  CaptureInstance inst;
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-SomeCollisions-ThenMapping.pcapng";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+}
 
 TEST_CASE("Testing loading a EPL_Example", "[CycleBuilder]") {
   CaptureInstance inst;
