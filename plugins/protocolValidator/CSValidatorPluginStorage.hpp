@@ -64,7 +64,7 @@ class CSValidatorPluginStorage : public CycleStorageBase {
 
   /*!
    * Set the value of map
-   * \param new_var the new value of map
+   * \param new_nodeStatus the new value of map
    */
   void setMap(std::unordered_map<uint8_t, NMTState> new_nodeStatus) { nodeStatus = new_nodeStatus; }
 

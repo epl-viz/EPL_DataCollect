@@ -54,13 +54,13 @@
 #define ERROR_MODULE_NOT_LOADED(id) "Module [" + id + "] could not be loaded"
 #define ERROR_CLASS_NOT_CREATED(id) "Class of [" + id + "] could not be created"
 #define ERROR_CLASS_NOT_CALLABLE(id) "Class [" + id + "] not callable"
-#define ERROR_CLASS_INSTANCE_NOT_CREATED(id) "Class instance of [" + id + "] could not be created"
+// #define ERROR_CLASS_INSTANCE_NOT_CREATED(id) "Class instance of [" + id + "] could not be created"
 #define ERROR_CLASS_PARENT_ILLEGAL(id) \
   "Plugin class [" + id + "does not derive from correct parent class [" + PLUGIN_PARENT "]"
 #define ERROR_PLUGIN_ID_ILLEGAL(id) \
   "Plugin method [" + std::string(PLUGIN_ID) + "] of plugin [" + id + "] not or incorrectly implemented"
-#define ERROR_PLUGIN_DEP_ILLEGAL(id) \
-  "Plugin method [" + std::string(PLUGIN_DEP) + "] of plugin [" + id + "] has incorrect return type"
+/* #define ERROR_PLUGIN_DEP_ILLEGAL(id) \
+  "Plugin method [" + std::string(PLUGIN_DEP) + "] of plugin [" + id + "] has incorrect return type"*/
 #define ERROR_CYCLE_STORAGE_MISS(id) "Plugin [" + id + "] cycle storage not available"
 #define ERROR_FILTER_STORAGE_MISS(id) "Plugin [" + id + "] filter could not be added"
 #define ERROR_PYTHON_INIT_FAIL(id) "Plugin [" + id + "] Python initialization failed"
