@@ -40,9 +40,32 @@ namespace fs = std::filesystem;
 
 using namespace EPL_DataCollect;
 using namespace fakeit;
+using namespace constants;
 
 TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   CaptureInstance inst;
+
+  auto instCfg                  = inst.getConfig();
+  auto cfg                      = inst.getDefaultNodeConfig();
+  cfg.autoDeduceSpecificProfile = false;
+
+  instCfg.xddDir = EPL_DC_BUILD_DIR_ROOT + "/external/resources/profiles/printer";
+
+  cfg.baseProfile = "steppercn4cn_1.xdc";
+  inst.setNodeConfig(1, cfg);
+
+  cfg.baseProfile = "steppercn4cn_2.xdc";
+  inst.setNodeConfig(2, cfg);
+
+  cfg.baseProfile = "steppercn4cn_3.xdc";
+  inst.setNodeConfig(3, cfg);
+
+  cfg.baseProfile = "steppercn4cn_4.xdc";
+  inst.setNodeConfig(4, cfg);
+
+  cfg.baseProfile = "00000000_POWERLINK_CiA302-4_MN.xdc";
+  inst.setNodeConfig(240, cfg);
+  inst.setConfig(instCfg);
 
   std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng.gz";
   fs::path    filePath(file);
@@ -57,8 +80,9 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
 TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
   CaptureInstance inst;
 
-  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-SomeCollisions-ThenMapping.pcapng";
-  fs::path    filePath(file);
+  std::string file =
+        constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-SomeCollisions-ThenMapping.pcapng";
+  fs::path filePath(file);
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
