@@ -45,19 +45,6 @@ using namespace constants;
 TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   CaptureInstance inst;
 
-  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng.gz";
-  fs::path    filePath(file);
-  REQUIRE(fs::exists(filePath));
-  REQUIRE(fs::is_regular_file(filePath));
-
-  REQUIRE(inst.loadPCAP(file) == 0);
-
-  inst.getCycleBuilder()->waitForLoopToFinish();
-}
-
-TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
-  CaptureInstance inst;
-
   auto instCfg                  = inst.getConfig();
   auto cfg                      = inst.getDefaultNodeConfig();
   cfg.autoDeduceSpecificProfile = false;
@@ -79,6 +66,19 @@ TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
   cfg.baseProfile = "00000000_POWERLINK_CiA302-4_MN.xdc";
   inst.setNodeConfig(240, cfg);
   inst.setConfig(instCfg);
+
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng.gz";
+  fs::path    filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
+}
+
+TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
+  CaptureInstance inst;
 
   std::string file =
         constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-SomeCollisions-ThenMapping.pcapng";
