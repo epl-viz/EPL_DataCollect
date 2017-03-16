@@ -55,6 +55,7 @@ class CSValidatorPluginStorage : public CycleStorageBase {
   CSValidatorPluginStorage &operator=(CSValidatorPluginStorage &&) = default;
 
   std::unordered_map<uint8_t, NMTState> nodeStatus;
+  std::unordered_map<uint8_t, int64_t> pReqTimes; // mapping the last poll request
 
   double getNumericValue() override { return 0; }
 
@@ -71,7 +72,9 @@ class CSValidatorPluginStorage : public CycleStorageBase {
    * Get the value of map
    * \return the value of map
    */
-  std::unordered_map<uint8_t, NMTState> *getMap() { return &nodeStatus; }
+  std::unordered_map<uint8_t, NMTState> *getNodeStatus() { return &nodeStatus; }
+
+  std::unordered_map<uint8_t, int64_t> *getpReqTimes() { return &pReqTimes; }
 
 
 

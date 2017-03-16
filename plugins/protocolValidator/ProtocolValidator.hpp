@@ -32,8 +32,8 @@
 #pragma once
 
 #include "defines.hpp"
-#include "PluginBase.hpp"
 #include "CSValidatorPluginStorage.hpp"
+#include "PluginBase.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {

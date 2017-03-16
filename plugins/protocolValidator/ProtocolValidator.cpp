@@ -30,18 +30,20 @@
  */
 
 #include "ProtocolValidator.hpp"
+#include "EPLEnum2Str.hpp"
 #include "EvPluginText.hpp"
 #include "Packet.hpp"
 #include <EvView.hpp>
 #include "EPLEnums.h"
 #include <iostream>
-#include "EPLEnum2Str.hpp"
 
 #define PROTOCOL_VAL "ProtocolValidatorEvent"
 #define CASE_NO_EPL_PACKET "Packet is not a EPL packet"
-#define CASE_STATUS_CHANGE(id, former, later) "Node [" + id + "] changes state from\t[" + former + "] to state\t[" + later + "]"
+#define CASE_STATUS_CHANGE(id, former, later) \
+  "Node [" + id + "] changes state from\t[" + former + "] to \t[" + later + "]"
+#define CASE_PREQ_INVALID_TIMES(id, delay) "PReq Delay to node [" + id + "] too big with\t" + delay + "ns delay"
 #define CYCLE_TIME_ENTRY 0x1006
-#define MN 240
+#define CYCLE_TOLERANCE 3
 
 
 namespace EPL_DataCollect {
@@ -67,33 +69,50 @@ bool ProtocolValidator::reset(CaptureInstance *ci) {
 } // no reset necessary
 
 void ProtocolValidator::run(Cycle *cycle) {
+  auto *_nmtstati = dynamic_cast<CSValidatorPluginStorage *>(cycle->getCycleStorage(pluginID))->getNodeStatus();
+  auto *_preqs    = dynamic_cast<CSValidatorPluginStorage *>(cycle->getCycleStorage(pluginID))->getpReqTimes();
+
+  // for each node check for status changes
+  for (uint8_t nodeID : cycle->getNodeList()) {
+    if ((*_nmtstati)[nodeID] != cycle->getNode(nodeID)->getStatus()) {
+      std::string temp = CASE_STATUS_CHANGE(
+            std::to_string(nodeID), EPLEnum2Str::toStr((*_nmtstati)[nodeID]), cycle->getNode(nodeID)->getStatusStr());
+      shootValidatorEvent(temp, 0, cycle);
+      (*_nmtstati)[nodeID] = cycle->getNode(nodeID)->getStatus();
+    }
+  }
+
   for (auto packet : cycle->getPackets()) {
     // checking if it's a EPL packet in the first place
     if (packet.getType() == PacketType::UNDEF) {
       shootValidatorEvent(CASE_NO_EPL_PACKET, static_cast<uint64_t>(packet.getTime()), cycle);
     }
 
-    auto *_nmtstati     = dynamic_cast<CSValidatorPluginStorage *>(cycle->getCycleStorage(pluginID))->getMap();
-
-    // for each node check for status changes
-    for (uint8_t nodeID : cycle->getNodeList()) {
-      if ((*_nmtstati)[nodeID] != cycle->getNode(nodeID)->getStatus()) {
-        std::string temp = CASE_STATUS_CHANGE(std::to_string(nodeID), EPLEnum2Str::toStr((*_nmtstati)[nodeID]),cycle->getNode(nodeID)->getStatusStr());
-        shootValidatorEvent(temp, 0, cycle);
-        (*_nmtstati)[nodeID] = cycle->getNode(nodeID)->getStatus();
+    // checking if time between poll requests is fine
+    if (packet.getType() == PacketType::POLL_REQUEST) {
+      int cycle_len = static_cast<int>(
+            cycle->getNode(packet.getDestNode())->getOD()->getEntry(CYCLE_TIME_ENTRY)->getNumericValue());
+      // cycle length not set just skip
+      if (cycle_len != 0) {
+        // check if preq has been sent before, if not set time
+        if ((*_preqs)[packet.getDestNode()] == 0) {
+          (*_preqs)[packet.getDestNode()] = packet.getTime();
+        } else {
+          if (packet.getTime() - (*_preqs)[packet.getDestNode()] >
+              CYCLE_TOLERANCE * cycle_len * 1000) { // convert to nanoseconds
+            std::string temp =
+                  CASE_PREQ_INVALID_TIMES(std::to_string(packet.getDestNode()),
+                                          std::to_string(packet.getTime() - (*_preqs)[packet.getDestNode()]));
+            shootValidatorEvent(temp, 0, cycle);
+          }
+        }
+        (*_preqs)[packet.getDestNode()] = packet.getTime();
       }
     }
-
-    //std::cout << "entry is there" << cycle->getNode(nodeID)->getOD()->getEntry(CYCLE_TIME_ENTRY)->toString() << std::endl;
-
-
-
-
   }
 }
 
 void ProtocolValidator::shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle) {
-  std::cout << "SHOOTING with {" << message << "}" << std::endl;
   addEvent(std::make_unique<EvPluginText>(
         getID(), std::string(PROTOCOL_VAL), message, flag, cycle, EventBase::INDEX_MAP()));
 }
