@@ -55,7 +55,7 @@ class ProtocolValidator : public PluginBase {
   bool reset(CaptureInstance *ci);
 
 
-  void shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle);
+  void shootValidatorEvent(std::string message, Cycle *cycle);
 
  private:
   std::string pluginID = "ProtocolValidator";

@@ -77,7 +77,7 @@ void ProtocolValidator::run(Cycle *cycle) {
     if ((*_nmtstati)[nodeID] != cycle->getNode(nodeID)->getStatus()) {
       std::string temp = CASE_STATUS_CHANGE(
             std::to_string(nodeID), EPLEnum2Str::toStr((*_nmtstati)[nodeID]), cycle->getNode(nodeID)->getStatusStr());
-      shootValidatorEvent(temp, 0, cycle);
+      shootValidatorEvent(temp, cycle);
       (*_nmtstati)[nodeID] = cycle->getNode(nodeID)->getStatus();
     }
   }
@@ -85,7 +85,7 @@ void ProtocolValidator::run(Cycle *cycle) {
   for (auto packet : cycle->getPackets()) {
     // checking if it's a EPL packet in the first place
     if (packet.getType() == PacketType::UNDEF) {
-      shootValidatorEvent(CASE_NO_EPL_PACKET, static_cast<uint64_t>(packet.getTime()), cycle);
+      shootValidatorEvent(CASE_NO_EPL_PACKET, cycle);
     }
 
     // checking if time between poll requests is fine
@@ -103,7 +103,7 @@ void ProtocolValidator::run(Cycle *cycle) {
             std::string temp =
                   CASE_PREQ_INVALID_TIMES(std::to_string(packet.getDestNode()),
                                           std::to_string(packet.getTime() - (*_preqs)[packet.getDestNode()]));
-            shootValidatorEvent(temp, 0, cycle);
+            shootValidatorEvent(temp, cycle);
           }
         }
         (*_preqs)[packet.getDestNode()] = packet.getTime();
@@ -112,9 +112,9 @@ void ProtocolValidator::run(Cycle *cycle) {
   }
 }
 
-void ProtocolValidator::shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle) {
+void ProtocolValidator::shootValidatorEvent(std::string message, Cycle *cycle) {
   addEvent(std::make_unique<EvPluginText>(
-        getID(), std::string(PROTOCOL_VAL), message, flag, cycle, EventBase::INDEX_MAP()));
+        getID(), std::string(PROTOCOL_VAL), message, cycle->getCycleNum(), cycle, EventBase::INDEX_MAP()));
 }
 }
 }
