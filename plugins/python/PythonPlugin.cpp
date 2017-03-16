@@ -51,6 +51,21 @@
 #define PLUGIN_EV "PluginEvent"
 #define FILTER_NAME "ViewFilter"
 
+#define ERROR_MODULE_NOT_LOADED(id) "Module [" + id + "] could not be loaded"
+#define ERROR_CLASS_NOT_CREATED(id) "Class of [" + id + "] could not be created"
+#define ERROR_CLASS_NOT_CALLABLE(id) "Class [" + id + "] not callable"
+#define ERROR_CLASS_INSTANCE_NOT_CREATED(id) "Class instance of [" + id + "] could not be created"
+#define ERROR_CLASS_PARENT_ILLEGAL(id) \
+  "Plugin class [" + id + "does not derive from correct parent class [" + PLUGIN_PARENT "]"
+#define ERROR_PLUGIN_ID_ILLEGAL(id) \
+  "Plugin method [" + std::string(PLUGIN_ID) + "] of plugin [" + id + "] not or incorrectly implemented"
+#define ERROR_PLUGIN_DEP_ILLEGAL(id) \
+  "Plugin method [" + std::string(PLUGIN_DEP) + "] of plugin [" + id + "] has incorrect return type"
+#define ERROR_CYCLE_STORAGE_MISS(id) "Plugin [" + id + "] cycle storage not available"
+#define ERROR_FILTER_STORAGE_MISS(id) "Plugin [" + id + "] filter could not be added"
+#define ERROR_PYTHON_INIT_FAIL(id) "Plugin [" + id + "] Python initialization failed"
+#define ERROR_PYTHON_RUNTIME_ERROR(id) "Python runtime error in [" + id + "] occured"
+
 namespace EPL_DataCollect {
 namespace plugins {
 
@@ -327,6 +342,17 @@ bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
 };
 
 
+/**
+ * @brief Adding simple message for views
+ *
+ * @param message p_message: to forward
+ */
+void PythonPlugin::addSimpleTextEvent(std::string message) {
+  addEvent(std::make_unique<EvPluginText>(
+        getID(), std::string("PluginEvent"), message, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+}
+
+
 // plugin main methods
 /**
  * @brief Loads and checks the current plugin. Make sure that pythons sys.path is set to
@@ -337,6 +363,8 @@ bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
  */
 bool PythonPlugin::initialize(CaptureInstance *ci) {
   (void)ci; // has already been inited by runInitialize(...) before
+  if (ci == nullptr)
+    return false;
 
   //** Python Initialization
   pName = PyUnicode_DecodeFSDefault(plugID.c_str());
@@ -345,7 +373,8 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pModule = PyImport_Import(pName);
   Py_DECREF(pName);
   if (pModule == NULL) {
-    std::cerr << "Module\t'" << plugID << "'\t could not be loaded" << std::endl;
+    std::cerr << ERROR_MODULE_NOT_LOADED(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_MODULE_NOT_LOADED(plugID));
     return false;
   }
 
@@ -353,33 +382,36 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pDict  = PyModule_GetDict(pModule);
   pClass = PyDict_GetItemString(pDict, plugID.c_str());
   if (pClass == NULL) {
-    std::cerr << "Class of Plugin\t'" << plugID << "'\t could not be created" << std::endl;
+    std::cerr << ERROR_CLASS_NOT_CREATED(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_CLASS_NOT_CREATED(plugID));
     return false;
   }
 
   if (!PyCallable_Check(pClass)) {
-    std::cerr << "Class\t'" << plugID << "'\t not callable" << std::endl;
+    std::cerr << ERROR_CLASS_NOT_CALLABLE(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_CLASS_NOT_CALLABLE(plugID));
     return false;
   }
   pInstance = PyObject_CallObject(pClass, NULL);
 
   // check if instance could be created, and correct instance of super class Plugin
   if (pInstance == NULL) {
-    std::cerr << "Class instance of\t'" << plugID << "'\t could not be created" << std::endl;
+    std::cerr << ERROR_CLASS_NOT_CREATED(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_CLASS_NOT_CREATED(plugID));
     return false;
   }
 
   if (strcmp(pInstance->ob_type->tp_base->tp_name, PLUGIN_PARENT) != 0) {
-    std::cerr << "Plugin class\t'" << plugID << "'\t does not derive from correct parent class\t" << PLUGIN_PARENT
-              << std::endl;
+    std::cerr << ERROR_CLASS_PARENT_ILLEGAL(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_CLASS_PARENT_ILLEGAL(plugID));
     return false;
   }
 
   // check if (correct) getID() method is implemented
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_ID), NULL);
   if (pValue == NULL || strcmp(pValue->ob_type->tp_name, PYTHON_STR) != 0) {
-    std::cerr << "Plugin method\t" << PLUGIN_ID << "\tof plugin\t'" << plugID << "'\t is not or incorrectly implemented"
-              << std::endl;
+    std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
 
@@ -387,8 +419,8 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   std::string id = PyBytes_AsString(pValue);
   Py_DECREF(pValue);
   if (id.compare(plugID) != 0) {
-    std::cerr << "Plugin method" << PLUGIN_ID << "\tof plugin\t'" << plugID << "'\t does not return class name"
-              << std::endl;
+    std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
 
@@ -397,8 +429,8 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   Py_DECREF(pValue);
 
   if (strcmp(pValue->ob_type->tp_name, "str") != 0) {
-    std::cerr << "Plugin method\t" << PLUGIN_DEP << "\tof plugin\t'" << plugID << "'\t has incorrect return type"
-              << std::endl;
+    std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
   pValue   = PyUnicode_AsUTF8String(pValue);
@@ -407,14 +439,16 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   //** instancing was successful, initing needed C++ stuff...
   // cycle storage for plugin
   if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
-    std::cerr << "Plugin \t'" << plugID << "'\t cycle storage not available" << std::endl;
+    std::cerr << ERROR_CYCLE_STORAGE_MISS(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_CYCLE_STORAGE_MISS(plugID));
     return false;
   }
   // aswell as cycle storage for the plugin global filter if it's not there
   if (ci->getStartCycle()->getCycleStorage(FILTER_NAME) == nullptr) {
     // id filter not found
     if (!registerCycleStorage<CSViewFilters>(FILTER_NAME)) {
-      std::cerr << "Plugin \t'" << plugID << "'\t filter could not be added" << std::endl;
+      std::cerr << ERROR_FILTER_STORAGE_MISS(plugID) << std::endl;
+      addSimpleTextEvent(ERROR_FILTER_STORAGE_MISS(plugID));
       return false;
     }
   }
@@ -424,7 +458,8 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   // now check if the initialization of the plugin is successful in python
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_INIT), NULL); // can't return NULL
   if (pValue != Py_True) {
-    std::cerr << "Plugin \t'" << plugID << "'\t Python initialization failed" << std::endl;
+    std::cerr << ERROR_PYTHON_INIT_FAIL(plugID) << std::endl;
+    addSimpleTextEvent(ERROR_PYTHON_INIT_FAIL(plugID));
     return false;
   }
   Py_DECREF(pValue);
@@ -447,6 +482,7 @@ void PythonPlugin::run(Cycle *cycle) {
 
   // if exception occured, print stack trace and stop plugin from running
   if (PyErr_Occurred() != NULL) {
+    addPyEvent(static_cast<int>(EvType::VIEW_EV_TEXT), ERROR_PYTHON_RUNTIME_ERROR(plugID), "");
     running = false;
     PyErr_Print();
   }

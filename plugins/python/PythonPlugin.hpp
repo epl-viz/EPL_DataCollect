@@ -91,6 +91,8 @@ class PythonPlugin : public PluginBase {
 
   Cycle *currentCycle;
   Cycle  workingCycle; // current working cycle, used if user wants a random cycle
+
+  void addSimpleTextEvent(std::string message);
 };
 }
 }

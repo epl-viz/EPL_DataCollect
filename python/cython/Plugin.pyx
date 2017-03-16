@@ -1,6 +1,7 @@
 cimport CCycle
 cimport CPlugin
 cimport Cycle
+cimport CEvents
 import Cycle
 import importlib
 import sys
@@ -63,6 +64,7 @@ cdef class Plugin:
 
     \version 1.0.0
     """
+    self.addEvent(<int>CEvents.VIEW_EV_TEXT, "Unloading plugin" + self.getID(), "")
     self.getPythonPlugin().setRunning(False)
 
   ########################################################################################
