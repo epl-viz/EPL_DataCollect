@@ -24,41 +24,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file ProtocolValidator.hpp
- * \brief Contains class ProtocolValidator
+ * \file CSValidatorPluginStorage.cpp
+ * \brief Contains class CSValidatorPluginStorage
  */
 
-
-#pragma once
-
-#include "defines.hpp"
-#include "PluginBase.hpp"
 #include "CSValidatorPluginStorage.hpp"
 
 namespace EPL_DataCollect {
 namespace plugins {
 
-/*!
-  * class ProtocolValidator
-  * \brief Plugin for validating the ethernetPOWERLINK protocol
-  */
-class ProtocolValidator : public PluginBase {
- public:
-  ProtocolValidator();
-  virtual ~ProtocolValidator();
+CSValidatorPluginStorage::CSValidatorPluginStorage() {}
 
-  void run(Cycle *cycle);
-  std::string getDependencies();
-  std::string getID();
+CSValidatorPluginStorage::~CSValidatorPluginStorage() {}
 
-  bool initialize(CaptureInstance *ci);
-  bool reset(CaptureInstance *ci);
-
-
-  void shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle);
-
- private:
-  std::string pluginID = "ProtocolValidator";
-};
 }
 }
+

@@ -24,41 +24,59 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*!
- * \file ProtocolValidator.hpp
- * \brief Contains class ProtocolValidator
+ * \file CSValidatorPluginStorage.hpp
+ * \brief Contains class CSValidatorPluginStorage
  */
 
 
 #pragma once
 
 #include "defines.hpp"
-#include "PluginBase.hpp"
-#include "CSValidatorPluginStorage.hpp"
+#include "CycleStorageBase.hpp"
+#include <unordered_map>
+#include "EPLEnums.h"
 
 namespace EPL_DataCollect {
 namespace plugins {
 
 /*!
-  * class ProtocolValidator
-  * \brief Plugin for validating the ethernetPOWERLINK protocol
+  * class CSValidatorPluginStorage
+  * \brief Structure used to store data describing the state of a plugin (validator plugin)
   */
-class ProtocolValidator : public PluginBase {
+class CSValidatorPluginStorage : public CycleStorageBase {
  public:
-  ProtocolValidator();
-  virtual ~ProtocolValidator();
+  CSValidatorPluginStorage();
+  virtual ~CSValidatorPluginStorage();
 
-  void run(Cycle *cycle);
-  std::string getDependencies();
-  std::string getID();
+  CSValidatorPluginStorage(const CSValidatorPluginStorage &) = default;
+  CSValidatorPluginStorage(CSValidatorPluginStorage &&)      = default;
 
-  bool initialize(CaptureInstance *ci);
-  bool reset(CaptureInstance *ci);
+  CSValidatorPluginStorage &operator=(const CSValidatorPluginStorage &) = default;
+  CSValidatorPluginStorage &operator=(CSValidatorPluginStorage &&) = default;
+
+  std::unordered_map<uint8_t, NMTState> nodeStatus;
+
+  double getNumericValue() override { return 0; }
+
+  bool isNumericValue() override { return false; }
 
 
-  void shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle);
+  /*!
+   * Set the value of map
+   * \param new_var the new value of map
+   */
+  void setMap(std::unordered_map<uint8_t, NMTState> new_nodeStatus) { nodeStatus = new_nodeStatus; }
 
- private:
-  std::string pluginID = "ProtocolValidator";
+  /*!
+   * Get the value of map
+   * \return the value of map
+   */
+  std::unordered_map<uint8_t, NMTState> *getMap() { return &nodeStatus; }
+
+
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<CSValidatorPluginStorage>(*this); }
 };
 }
 }
+

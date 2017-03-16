@@ -35,9 +35,14 @@
 #include <EvView.hpp>
 #include "EPLEnums.h"
 #include <iostream>
+#include "EPLEnum2Str.hpp"
 
 #define PROTOCOL_VAL "ProtocolValidatorEvent"
 #define CASE_NO_EPL_PACKET "Packet is not a EPL packet"
+#define CASE_STATUS_CHANGE(id, former, later) "Node [" + id + "] changes state from\t[" + former + "] to state\t[" + later + "]"
+#define CYCLE_TIME_ENTRY 0x1006
+#define MN 240
+
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -52,9 +57,8 @@ std::string ProtocolValidator::getDependencies() { return ""; }
 
 bool ProtocolValidator::initialize(CaptureInstance *ci) {
   (void)ci;
-  return true;
-
-} // no init necessary
+  return registerCycleStorage<CSValidatorPluginStorage>(pluginID);
+}
 
 bool ProtocolValidator::reset(CaptureInstance *ci) {
   (void)ci;
@@ -68,10 +72,28 @@ void ProtocolValidator::run(Cycle *cycle) {
     if (packet.getType() == PacketType::UNDEF) {
       shootValidatorEvent(CASE_NO_EPL_PACKET, static_cast<uint64_t>(packet.getTime()), cycle);
     }
+
+    auto *_nmtstati     = dynamic_cast<CSValidatorPluginStorage *>(cycle->getCycleStorage(pluginID))->getMap();
+
+    // for each node check for status changes
+    for (uint8_t nodeID : cycle->getNodeList()) {
+      if ((*_nmtstati)[nodeID] != cycle->getNode(nodeID)->getStatus()) {
+        std::string temp = CASE_STATUS_CHANGE(std::to_string(nodeID), EPLEnum2Str::toStr((*_nmtstati)[nodeID]),cycle->getNode(nodeID)->getStatusStr());
+        shootValidatorEvent(temp, 0, cycle);
+        (*_nmtstati)[nodeID] = cycle->getNode(nodeID)->getStatus();
+      }
+    }
+
+    //std::cout << "entry is there" << cycle->getNode(nodeID)->getOD()->getEntry(CYCLE_TIME_ENTRY)->toString() << std::endl;
+
+
+
+
   }
 }
 
 void ProtocolValidator::shootValidatorEvent(std::string message, uint64_t flag, Cycle *cycle) {
+  std::cout << "SHOOTING with {" << message << "}" << std::endl;
   addEvent(std::make_unique<EvPluginText>(
         getID(), std::string(PROTOCOL_VAL), message, flag, cycle, EventBase::INDEX_MAP()));
 }

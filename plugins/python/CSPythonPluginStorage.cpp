@@ -34,23 +34,9 @@
 namespace EPL_DataCollect {
 namespace plugins {
 
-// Constructors/Destructors
-//
-
 CSPythonPluginStorage::CSPythonPluginStorage() {}
 
 CSPythonPluginStorage::~CSPythonPluginStorage() {}
 
-//
-// Methods
-//
-
-
-// Accessor methods
-//
-
-
-// Other methods
-//
 }
 }
