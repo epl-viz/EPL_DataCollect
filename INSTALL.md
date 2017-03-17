@@ -83,10 +83,12 @@ cd "$BUILD_ROOT"
 wget http://downloads.sourceforge.net/qwt/qwt-6.1.3.tar.bz2
 tar -xf qwt-6.1.3.tar.bz2
 cd qwt-6.1.3
+sed -i 's/^.*local\/qwt-.*$//g' qwtconfig.pri
 sed -i 's/QWT_CONFIG[^Q]*QwtDesigner//g' qwtconfig.pri
+sed -i "s/\$\$\[QT_INSTALL_PREFIX\]/${PREFIX//\//\\/}/g" qwtconfig.pri
 qmake qwt.pro
 make -j$(nproc)
-make INSTALL_ROOT="${PREFIX}" install
+make install
 ```
 
 # Builing EPL-Viz
@@ -100,7 +102,13 @@ cd EPL_DataCollect
 git submodule update --init --recursive
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DWireshark_DIR="${PREFIX}/lib/wireshark" -DPCAP_HINTS="${PREFIX}" -DCMAKE_C_COMPILER=$(which gcc-6) -DCMAKE_CXX_COMPILER=$(which g++-6) ..
+cmake \
+  -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+  -DWireshark_DIR="${PREFIX}/lib/wireshark" \
+  -DPCAP_HINTS="${PREFIX}" \
+  -DTinyXML2_ROOT="${PREFIX}" \
+  -DCMAKE_C_COMPILER=$(which gcc-6) \
+  -DCMAKE_CXX_COMPILER=$(which g++-6) ..
 make -j$(nproc)
 make install
 ```
@@ -114,7 +122,16 @@ cd EPL-Viz
 git submodule update --init --recursive
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DWireshark_DIR="${PREFIX}/lib/wireshark" -DPCAP_HINTS="${PREFIX}" -DCMAKE_C_COMPILER=$(which gcc-6) -DCMAKE_CXX_COMPILER=$(which g++-6) ..
+cmake \
+  -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+  -DUSE_SYSTEM_PACKETS=ON \
+  -DWireshark_DIR="${PREFIX}/lib/wireshark" \
+  -DPCAP_HINTS="${PREFIX}" \
+  -DQWT_ROOT="${PREFIX}" \
+  -DTinyXML2_ROOT="${PREFIX}" \
+  -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+  -DCMAKE_C_COMPILER=$(which gcc-6) \
+  -DCMAKE_CXX_COMPILER=$(which g++-6) ..
 make -j$(nproc)
 make install
 ```
