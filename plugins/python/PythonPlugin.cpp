@@ -331,16 +331,38 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
  * @return bool whether successful
  */
 bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
-  auto *_filter = dynamic_cast<CSViewFilters *>(getCurrentCycle()->getCycleStorage(FILTER_NAME)); // can't be null
-
-  switch (static_cast<FilterType>(filterType)) {
-    case FilterType::INCLUDE: return _filter->newFilter(FilterType::INCLUDE, filter);
-    case FilterType::EXCLUDE: return _filter->newFilter(FilterType::EXCLUDE, filter);
-  }
-
+  (void) filterType;
+  (void) filter;
   return false;
 };
 
+void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
+  auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+
+  if (filterID == UINT16_MAX)
+    return;
+
+  _filters->getFilter(filterID)->setIndex(filterEntry);
+}
+
+bool PythonPlugin::requestFilter(int filterType) {
+  auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+
+  // one filter is already set
+  if (filterID != UINT16_MAX)
+    return false;
+
+  // if not set one
+  switch(static_cast<FilterType>(filterType)) {
+    case FilterType::INCLUDE:
+      filterID = _filters->newFilter(FilterType::INCLUDE, std::string(FILTER_NAME) + plugID + ":INCLUDE");
+      return true;
+    case FilterType::EXCLUDE:
+      filterID = _filters->newFilter(FilterType::EXCLUDE, std::string(FILTER_NAME) + plugID + ":EXCLUDE");
+      return true;
+  }
+  return false;
+}
 
 /**
  * @brief Adding simple message for views
@@ -452,6 +474,7 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
       return false;
     }
   }
+  filterID = UINT16_MAX;
 
   plugins[plugID] = this;
 
@@ -459,7 +482,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_INIT), NULL); // can't return NULL
   if (pValue != Py_True) {
     std::cerr << ERROR_PYTHON_INIT_FAIL(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_PYTHON_INIT_FAIL(plugID));
     return false;
   }
   Py_DECREF(pValue);

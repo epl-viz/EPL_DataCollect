@@ -203,6 +203,17 @@ cdef class Plugin:
     if isinstance(filters, str) and isinstance(typeEnu, int):
       return self.getPythonPlugin().addViewFilter(typeEnu, filters.encode('utf-8'))
     return False
+
+  cpdef requestFilter(self, typeEnu):
+    """
+    \brief Requesting a filter of specific type (FiltersEnum)
+    """
+    if isinstance(typeEnu, int):
+      return self.getPythonPlugin().requestFilter(typeEnu)
+
+  cpdef addFilterEntry(self, filter):
+    if isinstance(filter, int):
+      self.getPythonPlugin().addFilterEntry(filter);
   ########################################################################################
 
   #Private helper method getting the corresponding pythonplugin############################

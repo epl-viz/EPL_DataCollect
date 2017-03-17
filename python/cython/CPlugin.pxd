@@ -22,6 +22,8 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     bool setDataStr(string, string)
     bool setDataInt(string, int)
 
+    bool requestFilter(int)
+    void addFilterEntry(int)
     bool addViewFilter(int, string)
 
     CCycle.Cycle* getCycleByNum(int)
