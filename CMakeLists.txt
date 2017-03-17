@@ -196,30 +196,8 @@ set( LIBLIBW_LIB_DIR     "${LIBLIBW_INSTALL_DIR}/lib" )
 
 set( LIBLIBW_INCLUDE_DIRS "${LIBLIBW_INSTALL_DIR}/include/libwireshark" )
 
-ExternalProject_Add( liblibwireshark
-  SOURCE_DIR        "${PROJECT_SOURCE_DIR}/external/liblibwireshark"
-  PREFIX            "${LIBLIBW_PREFIX}"
-  CMAKE_ARGS
-#    "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}"
-#    "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}"
-#    "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
-#    "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
-   "-DCMAKE_INSTALL_PREFIX=${LIBLIBW_INSTALL_DIR}"
-   "-DENABLE_EXAMPLES=OFF"
-   "-DWireshark_DIR=${Wireshark_DIR}"
-   "-DPCAP_HINTS=${PCAP_HINTS}"
-   "-DPCAP_ROOT_DIR=${PCAP_HINTS}"
-#    -DDISABLE_TESTS=ON
-#    -DENABLE_CODE_COVERAGE=OFF
-  BUILD_BYPRODUCTS
-    "${LIBLIBW_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}libwireshark${CMAKE_SHARED_LIBRARY_SUFFIX}"
-    "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark${CMAKE_STATIC_LIBRARY_SUFFIX}"
-)
-
-add_library( libwireshark        SHARED IMPORTED )
-add_library( libwireshark_static STATIC IMPORTED )
-set_target_properties( libwireshark        PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}libwireshark${CMAKE_SHARED_LIBRARY_SUFFIX}" )
-set_target_properties( libwireshark_static PROPERTIES IMPORTED_LOCATION "${LIBLIBW_LIB_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}libwireshark${CMAKE_STATIC_LIBRARY_SUFFIX}" )
+# Build external dependencies
+add_subdirectory( "${PROJECT_SOURCE_DIR}/external" )
 
 ####################
 # Generate subdirs #
@@ -236,7 +214,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads ${FS_LIB}
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark_static caputils capchild ${PCAP_LIBRARIES}
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild ${PCAP_LIBRARIES}
     TinyXML2::TinyXML2
 )
 
@@ -305,7 +283,7 @@ if( NOT DISABLE_TESTS )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 
-add_dependencies( epl_DataCollect_obj liblibwireshark )
+#add_dependencies( epl_DataCollect_obj liblibwireshark )
 
 ##################
 # Generate Files #
