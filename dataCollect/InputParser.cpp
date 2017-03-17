@@ -254,14 +254,22 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
 
     case FT_BOOLEAN:
     case FT_INT8:
+    case FT_UINT8:
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L8);
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
+      return;
+
     case FT_INT16:
+    case FT_UINT16:
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L16);
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
+      return;
+
     case FT_INT24:
     case FT_INT32:
-    case FT_UINT8:
-    case FT_UINT16:
     case FT_UINT24:
     case FT_UINT32:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger));
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L32);
       DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
       return;
 
@@ -273,7 +281,7 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
     case FT_UINT48:
     case FT_UINT56:
     case FT_UINT64:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger64));
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger64), PacketDiff::L64);
       DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
       return;
 
