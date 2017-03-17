@@ -23,6 +23,11 @@ class Test_PluginInternal(Plugin.Plugin, unittest.TestCase):
     self.assertTrue(self.registerStr("MyStrStorage"))
     self.assertFalse(self.registerStr("MyStrStorage"))
     self.assertFalse(self.registerStr("MyIntStorage"))
+
+    self.assertTrue(self.requestFilter(Filters.INCLUDING.value))
+    self.assertFalse(self.requestFilter(999999))
+    self.assertFalse(self.requestFilter(Filters.EXCLUDING.value))
+
     return True
 
   def run(self):
@@ -65,23 +70,3 @@ class Test_PluginInternal(Plugin.Plugin, unittest.TestCase):
     self.assertFalse(self.addEvent(Events.EV_HIGHLIGHT_OD_ENTRY.value, "-1", "10"), PYTHON_PRE + "ERROR event should not be added")
     self.assertFalse(self.addEvent(Events.EV_JUMPTOTIME.value, "-1", ""), PYTHON_PRE + "ERROR event should not be added")
     self.assertFalse(self.addEvent(Events.EV_TEXT.value, None, ""), PYTHON_PRE + "ERROR event should not be added")
-
-    # filter adding
-    #if cy.getCycleNum() == 100:
-      #self.assertTrue(self.addFilter(Filters.INCLUDING.value, "test"), PYTHON_PRE + "ERROR filter should have been added")
-      #self.assertTrue(self.addFilter(Filters.EXCLUDING.value, "test2"), PYTHON_PRE + "ERROR filter should have been added")
-
-    if cy.getCycleNum() == 110:
-      self.assertFalse(self.addFilter(None, None), PYTHON_PRE + "ERROR filter should not have been added")
-      self.assertFalse(self.addFilter(400, None), PYTHON_PRE + "ERROR filter should not have been added")
-      self.assertFalse(self.addFilter(None, "asdf"), PYTHON_PRE + "ERROR filter should not have been added")
-      self.assertFalse(self.addFilter(Filters.INCLUDING.value, None), PYTHON_PRE + "ERROR filter should not have been added")
-      self.assertFalse(self.addFilter(Filters.INCLUDING.value, 23), PYTHON_PRE + "ERROR filter should not have been added")
-
-    # getting rand cycle
-    if cy.getCycleNum() == 283: # last cycle
-      self.assertEqual(self.getCycleByNum(100).getCycleNum(), 100, PYTHON_PRE + "ERROR cycle num illegal")
-      self.assertNotEqual(self.getCycleByNum(-1).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
-      self.assertNotEqual(self.getCycleByNum(9999999).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
-      self.assertNotEqual(self.getCycleByNum(0).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")
-      self.assertNotEqual(self.getCycleByNum(-134408).getCycleNum(), None, PYTHON_PRE + "ERROR cycle should be retrieved")

@@ -10,6 +10,7 @@ class Sample_Filter(Plugin.Plugin):
     if not api.requestFilter(self, Filters.INCLUDING.value):
       return False
     api.addFilter(self, 0x6000)
+    api.addFilter(self, 0x1006)
     return True
 
   def run(self):

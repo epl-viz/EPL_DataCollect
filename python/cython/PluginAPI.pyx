@@ -15,12 +15,9 @@ def addFilter(plugin, filter):
   \brief This method adds a filter for specific ODs or other data.
 
   \param filters : Ints to be filtered
-
-  \return whether the filter addition has been successful
   """
   if isinstance(plugin, Plugin.Plugin):
-    return plugin.addFilterEntry(filter)
-  return False;
+    plugin.addFilterEntry(filter)
 
 def requestFilter(plugin, filterEnu):
   if isinstance(plugin, Plugin.Plugin) and isinstance(filterEnu, int):

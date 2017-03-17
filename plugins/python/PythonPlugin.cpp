@@ -324,18 +324,11 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
 };
 
 /**
- * @brief Adding a filter based on filter type
+ * @brief Adding a filter entry based on filter type
  *
- * @param filterType p_filterType: as enum
- * @param filter p_filter: filter as string
- * @return bool whether successful
+ * @param filterENtry of type int
+ *
  */
-bool PythonPlugin::addViewFilter(int filterType, std::string filter) {
-  (void) filterType;
-  (void) filter;
-  return false;
-};
-
 void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
   auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
 
@@ -345,6 +338,13 @@ void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
   _filters->getFilter(filterID)->setIndex(filterEntry);
 }
 
+/**
+ * @brief Adding a filter based on filter type
+ *
+ * @param filterType p_filterType: as enum
+ *
+ * @return bool whether successful
+ */
 bool PythonPlugin::requestFilter(int filterType) {
   auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
 

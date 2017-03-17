@@ -73,7 +73,6 @@ class PythonPlugin : public PluginBase {
 
   bool requestFilter(int filterType);
   void addFilterEntry(uint16_t filterEntry);
-  bool addViewFilter(int filterType, std::string filter);
 
   void setRunning(bool newRunning);
   bool getRunning();

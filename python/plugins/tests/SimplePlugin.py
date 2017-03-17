@@ -22,7 +22,6 @@ class SimplePlugin(Plugin.Plugin):
       self.setData("Counter", data + 1)
       print("Evt with enum added:", self.addEvent(Events.EV_STARTCAP.value, "0", ""))
       agui.highlightMN(self)
-      print("ADDING FILTER", self.addFilter(1, "#filter#"))
 
     if cy.getODEntry(1, 0x1006) == "100000":
       self.unload()
