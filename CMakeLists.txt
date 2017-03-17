@@ -256,6 +256,7 @@ include_directories( SYSTEM
   ${GLIB_INCLUDE_DIRS}
   ${PLF_COLONY_DIR}
   ${TinyXML2_INCLUDE_DIRS}
+  ${PROJECT_SOURCE_DIR}/external/liblibwireshark/
 )
 
 include_directories(
