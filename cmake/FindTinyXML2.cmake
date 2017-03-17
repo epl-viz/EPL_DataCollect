@@ -31,7 +31,7 @@ find_path(
   TinyXML2_INC
     NAMES tinyxml2.h
     HINTS
-      ${TinyXML2_ROOT}
+      ${TinyXML2_ROOT}/include
       ENV TinyXML2_ROOT
 )
 
@@ -39,7 +39,7 @@ find_library(
   TinyXML2_LIB
     NAMES tinyxml2
     HINTS
-      ${TinyXML2_ROOT}
+      ${TinyXML2_ROOT}/lib
       ENV TinyXML2_ROOT
 )
 
