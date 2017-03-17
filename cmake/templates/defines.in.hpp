@@ -66,7 +66,8 @@ static const std::string EPL_DC_WS_PLUGINS_DIR    = "@CM_WS_PLUGINS_DIR@";
 static const std::string EPL_DC_WS_LIB_DIR        = "@Wireshark_LIB_DIR@";
 static const std::string EPL_DC_PLUGIN_PROTO_NAME = "@CM_PLUGIN_PROTO_NAME@";
 
-static const std::string EPL_DC_PLUGIN_TIME_SERIES_CSID  = "eplDC.timeSeries";
-static const std::string EPL_DC_PLUGIN_VIEW_FILTERS_CSID = "view.filters";
+static const std::string EPL_DC_PLUGIN_TIME_SERIES_CSID         = "eplDC.timeSeries";
+static const std::string EPL_DC_PLUGIN_VIEW_FILTERS_CSID        = "view.filters";
+static const std::string EPL_DC_PLUGIN_VIEW_FILTER_DEFAULT_CSID = "view.filters.default";
 }
 }

@@ -52,7 +52,7 @@ void DefaultFilter::run(Cycle *cycle) {
 }
 
 std::string DefaultFilter::getDependencies() { return ""; }
-std::string DefaultFilter::getID() { return EPL_DC_PLUGIN_TIME_SERIES_CSID; }
+std::string DefaultFilter::getID() { return EPL_DC_PLUGIN_VIEW_FILTER_DEFAULT_CSID; }
 
 bool DefaultFilter::initialize(CaptureInstance *ci) {
   if (!ci->getStartCycle()->getCycleStorage(EPL_DC_PLUGIN_VIEW_FILTERS_CSID))
