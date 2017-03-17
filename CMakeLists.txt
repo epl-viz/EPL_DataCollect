@@ -208,6 +208,7 @@ ExternalProject_Add( liblibwireshark
    "-DENABLE_EXAMPLES=OFF"
    "-DWireshark_DIR=${Wireshark_DIR}"
    "-DPCAP_HINTS=${PCAP_HINTS}"
+   "-DPCAP_ROOT_DIR=${PCAP_HINTS}"
 #    -DDISABLE_TESTS=ON
 #    -DENABLE_CODE_COVERAGE=OFF
   BUILD_BYPRODUCTS
