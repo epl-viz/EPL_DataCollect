@@ -67,7 +67,7 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   inst.setNodeConfig(240, cfg);
   inst.setConfig(instCfg);
 
-  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng.gz";
+  std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/170119_wall_complete.pcapng";
   fs::path    filePath(file);
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
