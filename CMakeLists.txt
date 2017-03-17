@@ -277,6 +277,7 @@ include_directories( SYSTEM
   ${LIBLIBW_INCLUDE_DIRS}
   ${GLIB_INCLUDE_DIRS}
   ${PLF_COLONY_DIR}
+  ${TinyXML2_INCLUDE_DIRS}
 )
 
 include_directories(
