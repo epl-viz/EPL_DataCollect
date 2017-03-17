@@ -326,7 +326,7 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
 /**
  * @brief Adding a filter entry based on filter type
  *
- * @param filterENtry of type int
+ * @param filterEntry of type int
  *
  */
 void PythonPlugin::addFilterEntry(uint16_t filterEntry) {

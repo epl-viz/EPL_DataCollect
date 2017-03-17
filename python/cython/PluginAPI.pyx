@@ -20,6 +20,11 @@ def addFilter(plugin, filter):
     plugin.addFilterEntry(filter)
 
 def requestFilter(plugin, filterEnu):
+  """
+  \brief Requesting a filter of given type
+
+  \param filterEnu filter type as int
+  """
   if isinstance(plugin, Plugin.Plugin) and isinstance(filterEnu, int):
     return plugin.requestFilter(filterEnu)
   return False
