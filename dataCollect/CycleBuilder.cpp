@@ -35,6 +35,8 @@
 #include <chrono>
 #include <iostream>
 
+using namespace std::chrono;
+
 namespace EPL_DataCollect {
 
 CycleBuilder::~CycleBuilder() {
@@ -91,7 +93,7 @@ void CycleBuilder::buildNextCycle() noexcept {
     return;
   }
 
-  std::vector<Packet> packets = parent->getInputHandler()->getCyclePackets(nextCycleNum);
+  std::vector<Packet> packets = parent->getInputHandler()->getCyclePackets(nextCycleNum, seconds(10));
 
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);

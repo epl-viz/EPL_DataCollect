@@ -232,12 +232,14 @@ bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeo
     if (system_clock::now() - start > timeout)
       break;
 
+    {
+      std::lock_guard<std::mutex> cLk(cyclesMutex);
+      if (cd->flags & DONE)
+        return true;
+    }
+
     std::unique_lock<std::mutex> lk(wait);
     waitForDoneWorkSignal.wait_until(lk, start + timeout);
-
-    std::lock_guard<std::mutex> cLk(cyclesMutex);
-    if (cd->flags & DONE)
-      return true;
   }
 
   return false;
@@ -366,6 +368,8 @@ InputHandler::CompletedCycle *InputHandler::updateQueue(InputHandler::CompletedC
     ++lastCheckedForPrefetch;
   }
 
+  std::unique_lock<std::mutex> qLk(buildQueueMutex);
+  waitForWorkSignal.notify_all();
   return newCD;
 }
 
