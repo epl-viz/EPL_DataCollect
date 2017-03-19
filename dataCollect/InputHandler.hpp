@@ -65,6 +65,8 @@ namespace EPL_DataCollect {
   */
 class InputHandler {
  public:
+  // Section Input handler complex data types
+
   typedef std::chrono::system_clock::time_point TP;
 
   static const uint8_t DONE            = 0b00000001; //!< \brief The cycle is completely processed
@@ -104,10 +106,78 @@ class InputHandler {
     std::string eplFrameName = "Ethernet POWERLINK+XDD";
   };
 
+  /*!
+   * \brief Contains metadata for a packet
+   *
+   * flags bit field: has 8 indeces, should be accessed with writeFiled and getFiled
+   *
+   * | Index |             Description             |            Packet Type           |
+   * | ----- | ----------------------------------- | -------------------------------- |
+   * | 0     | Source                              | All                              |
+   * | 1     | Destination                         | All                              |
+   * | 2     | PacketType                          | All                              |
+   * | 3     | NMTState                            | PRes, SoA, IdentResp, StatusResp |
+   * | 4     | ASndServiceID / SoARequestServiceID | ASnd / SoA                       |
+   * | 5     | NMTCommand / SDOCommandID           | NMTCmd / SDO                     |
+   * | 6     | RESERVED                            |                                  |
+   * | 7     | RESERVED                            |                                  |
+   *
+   */
+  struct PacketMetadata final {
+    enum Index : uint8_t { SOURCE = 0, DESTINATION = 1, PACKET_TYPE = 2, NMT_STATE = 3, SERVICE_ID = 4, COMMAND = 5 };
+
+    uint64_t offset   = 0;
+    uint64_t flags    = 0;
+    uint32_t cycleNum = UINT32_MAX;
+
+    PacketMetadata() = default;
+    PacketMetadata(uint64_t o) : offset(o) {}
+
+    inline void writeFiled(uint8_t index, uint8_t data) {
+      if (index >= 8)
+        return;
+
+      flags &= ~(static_cast<uint64_t>(0xFF) << index * 8); // Clear before setting
+      flags |= static_cast<uint64_t>(data) << index * 8;
+    }
+
+    template <class TD>
+    inline void writeFiled(Index index, TD data) {
+      writeFiled(static_cast<uint8_t>(index), static_cast<uint8_t>(data));
+    }
+
+    inline uint8_t getFiled(uint8_t index) {
+      if (index >= 8)
+        return 0;
+
+      return static_cast<uint8_t>((flags & (static_cast<uint64_t>(0xFF) << index * 8)) >> index * 8);
+    }
+  };
+
+  class Locker {
+   private:
+    std::unique_lock<std::recursive_mutex> lk;
+    std::vector<PacketMetadata> *          c;
+
+   public:
+    Locker() = delete;
+    Locker(std::recursive_mutex &m, std::vector<PacketMetadata> *data) : lk(m), c(data) {}
+
+    Locker(const Locker &) = delete;
+    Locker(Locker &&)      = default;
+
+    Locker &operator=(const Locker &) = delete;
+    Locker &operator=(Locker &&) = default;
+
+    inline std::vector<PacketMetadata> &operator*() noexcept { return *c; }
+    inline std::vector<PacketMetadata> *operator->() noexcept { return c; }
+  };
+
  private:
   // This data may only be accessed in parsing functions (parsePacket, parseCycle, setDissector)
   struct {
     std::recursive_mutex parserLocker;
+    std::recursive_mutex offsetMapLocker;
 
     ws_dissect_t *              dissect = nullptr;
     WiresharkParser::parserData workingData;
@@ -117,8 +187,7 @@ class InputHandler {
 
     Packet latestSoC = Packet(nullptr);
 
-    // TODO remove this vector and use the next offset instead
-    std::vector<uint64_t> packetOffsetMap;
+    std::vector<PacketMetadata> packetOffsetMap;
   } pData;
 
   std::mutex accessMutex;
@@ -179,5 +248,7 @@ class InputHandler {
   mockable void setConfig(Config newCFG) noexcept;
   mockable Config getConfig() const noexcept;
   mockable uint32_t getMaxQueuedCycle() const noexcept;
+
+  mockable Locker getPacketsMetadata() noexcept;
 };
 }

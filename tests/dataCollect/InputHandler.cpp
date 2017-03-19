@@ -324,3 +324,32 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
   ws_dissect_free(dissect);
   ws_capture_close(capture);
 }
+
+TEST_CASE("PacketMetadata bit field", "[InputHandler][temp]") {
+  InputHandler::PacketMetadata d;
+
+  d.writeFiled(0, 0x01);
+  d.writeFiled(1, 0xFF);
+  d.writeFiled(2, 0x10);
+  d.writeFiled(3, 0x12);
+  d.writeFiled(4, 0x13);
+  d.writeFiled(5, 0x14);
+  d.writeFiled(6, 0x15);
+  d.writeFiled(7, 0x00);
+  d.writeFiled(8, 0xFF);
+  REQUIRE(d.getFiled(0) == 0x01);
+  REQUIRE(d.getFiled(1) == 0xFF);
+  REQUIRE(d.getFiled(2) == 0x10);
+  REQUIRE(d.getFiled(3) == 0x12);
+  REQUIRE(d.getFiled(4) == 0x13);
+  REQUIRE(d.getFiled(5) == 0x14);
+  REQUIRE(d.getFiled(6) == 0x15);
+  REQUIRE(d.getFiled(7) == 0x00);
+  REQUIRE(d.getFiled(8) == 0);
+
+  d.writeFiled(1, 0x42);
+  REQUIRE(d.getFiled(0) == 0x01);
+  REQUIRE(d.getFiled(1) == 0x42);
+  REQUIRE(d.getFiled(0) == 0x01);
+  REQUIRE(d.getFiled(2) == 0x10);
+}

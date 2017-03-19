@@ -129,8 +129,9 @@ void CycleBuilder::buildNextCycle() noexcept {
         break;
       }
 
-      if (i.ASnd->RequestedServiceID == ASndServiceID::SDO)
+      if (i.ASnd->RequestedServiceID == ASndServiceID::SDO) {
         updateTargetNode = dst;
+      }
     } else if (i.getType() == PacketType::POLL_REQUEST) {
       updateTargetNode = dst;
     }

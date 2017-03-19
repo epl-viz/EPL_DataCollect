@@ -92,6 +92,7 @@ inline bool parseCycleError(std::mutex &m, InputHandler::CompletedCycle *cd) {
 
 bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
+  std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
   static std::vector<Packet>            tempPKG; // static: reuse memory
   ws_dissection                         diss;
 
@@ -118,6 +119,9 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     // cycleOffsetMap contains a map of already COMPLETELY parsed Cycles
     auto currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
 
+    PacketMetadata metaData;
+    metaData.cycleNum = cd->num;
+
     while (true) {
       int  err;
       auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
@@ -126,9 +130,37 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      pData.packetOffsetMap.emplace_back(diss.offset);
-
       Packet tmp = parsePacket(&diss);
+
+      metaData.flags  = 0;
+      metaData.offset = static_cast<uint64_t>(diss.offset);
+      metaData.writeFiled(PacketMetadata::SOURCE, pData.workingData.src);
+      metaData.writeFiled(PacketMetadata::DESTINATION, pData.workingData.dst);
+      metaData.writeFiled(PacketMetadata::PACKET_TYPE, pData.workingData.pType);
+
+      switch (pData.workingData.pType) {
+        case PacketType::START_OF_ASYNC:
+          metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
+          [[clang::fallthrough]];
+        case PacketType::POLL_RESPONSE: metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.pType); break;
+        case PacketType::ASYNC_SEND:
+          metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
+          switch (pData.workingData.ASnd.RequestedServiceID) {
+            case ASndServiceID::SDO:
+              metaData.writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.SDO.CMD.CommandID);
+              break;
+            case ASndServiceID::NMT_COMMAND:
+              metaData.writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
+              break;
+            default: break;
+          }
+
+          break;
+        default: break;
+      }
+
+      pData.packetOffsetMap.emplace_back(metaData);
+
       if (tmp.getType() == PacketType::START_OF_CYCLE) {
         pData.latestSoC = tmp;
         break;
@@ -157,8 +189,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     // Iterate from first to last - 1 (last is the NEXT SoC)
     for (auto i = first; i < last; ++i) {
-      if (ws_dissect_seek(pData.dissect, &diss, static_cast<int64_t>(pData.packetOffsetMap[i]), nullptr, nullptr) !=
-          1) {
+      if (ws_dissect_seek(
+                pData.dissect, &diss, static_cast<int64_t>(pData.packetOffsetMap[i].offset), nullptr, nullptr) != 1) {
         return errorFN();
       }
 
@@ -452,7 +484,7 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
     }
 
     pData.latestSoC = parsePacket(&diss);
-    pData.packetOffsetMap.emplace_back(diss.offset);
+    pData.packetOffsetMap.emplace_back(static_cast<uint64_t>(diss.offset));
   }
 }
 
@@ -475,4 +507,8 @@ InputHandler::Config InputHandler::getConfig() const noexcept { return cfg; }
  * \brief Returns the max. queued cycle
  */
 uint32_t InputHandler::getMaxQueuedCycle() const noexcept { return maxQueuedCycle; }
+
+InputHandler::Locker InputHandler::getPacketsMetadata() noexcept {
+  return Locker(pData.offsetMapLocker, &pData.packetOffsetMap);
+}
 }
