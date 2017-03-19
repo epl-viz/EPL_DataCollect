@@ -33,6 +33,16 @@
 #include <ws_capture.h>
 #include <ws_dissect.h>
 
+#if __cplusplus <= 201402L
+#if defined(__clang__)
+#define FALLTHROUGH [[clang::fallthrough]]
+#else
+#define FALLTHROUGH
+#endif
+#else
+#define FALLTHROUGH [[fallthrough]]
+#endif
+
 namespace EPL_DataCollect {
 
 using namespace WiresharkParser;
@@ -141,7 +151,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       switch (pData.workingData.pType) {
         case PacketType::START_OF_ASYNC:
           metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
-          [[clang::fallthrough]];
+          FALLTHROUGH;
         case PacketType::POLL_RESPONSE: metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.pType); break;
         case PacketType::ASYNC_SEND:
           metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
