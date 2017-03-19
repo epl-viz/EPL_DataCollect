@@ -57,7 +57,7 @@ InputHandler::~InputHandler() {
   }
 }
 
-Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
+Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
 
   // Reset the parser data
@@ -79,8 +79,41 @@ Packet InputHandler::parsePacket(ws_dissection *diss) noexcept {
 
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
-  Packet packet(&pData.workingData);
-  return packet;
+  if (!metaData)
+    return Packet(&pData.workingData);
+
+  metaData->flags  = 0;
+  metaData->offset = static_cast<uint64_t>(diss->offset);
+  metaData->writeFiled(PacketMetadata::SOURCE, pData.workingData.src);
+  metaData->writeFiled(PacketMetadata::DESTINATION, pData.workingData.dst);
+  metaData->writeFiled(PacketMetadata::PACKET_TYPE, pData.workingData.pType);
+
+  switch (pData.workingData.pType) {
+    case PacketType::START_OF_ASYNC:
+      metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
+      FALLTHROUGH;
+    case PacketType::POLL_RESPONSE: metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState); break;
+    case PacketType::ASYNC_SEND:
+      metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
+      switch (pData.workingData.ASnd.RequestedServiceID) {
+        case ASndServiceID::SDO:
+          metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.SDO.CMD.CommandID);
+          break;
+        case ASndServiceID::NMT_COMMAND:
+          metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
+          break;
+        case ASndServiceID::IDENT_RESPONSE:
+        case ASndServiceID::STATUS_RESPONSE:
+          metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
+          break;
+        default: break;
+      }
+
+      break;
+    default: break;
+  }
+
+  return Packet(&pData.workingData);
 }
 
 /*!
@@ -140,41 +173,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      Packet tmp = parsePacket(&diss);
-
-      metaData.flags  = 0;
-      metaData.offset = static_cast<uint64_t>(diss.offset);
-      metaData.writeFiled(PacketMetadata::SOURCE, pData.workingData.src);
-      metaData.writeFiled(PacketMetadata::DESTINATION, pData.workingData.dst);
-      metaData.writeFiled(PacketMetadata::PACKET_TYPE, pData.workingData.pType);
-
-      switch (pData.workingData.pType) {
-        case PacketType::START_OF_ASYNC:
-          metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
-          FALLTHROUGH;
-        case PacketType::POLL_RESPONSE:
-          metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
-          break;
-        case PacketType::ASYNC_SEND:
-          metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
-          switch (pData.workingData.ASnd.RequestedServiceID) {
-            case ASndServiceID::SDO:
-              metaData.writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.SDO.CMD.CommandID);
-              break;
-            case ASndServiceID::NMT_COMMAND:
-              metaData.writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
-              break;
-            case ASndServiceID::IDENT_RESPONSE:
-            case ASndServiceID::STATUS_RESPONSE:
-              metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
-              break;
-            default: break;
-          }
-
-          break;
-        default: break;
-      }
-
+      Packet tmp = parsePacket(&diss, &metaData);
       pData.packetOffsetMap.emplace_back(metaData);
 
       if (tmp.getType() == PacketType::START_OF_CYCLE) {
@@ -499,8 +498,13 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
       return;
     }
 
+    PacketMetadata metaData;
+    metaData.cycleNum = 0;
+
     pData.latestSoC = parsePacket(&diss);
-    pData.packetOffsetMap.emplace_back(static_cast<uint64_t>(diss.offset));
+    parsePacket(&diss, &metaData);
+
+    pData.packetOffsetMap.emplace_back(metaData);
   }
 }
 

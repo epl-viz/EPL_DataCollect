@@ -130,9 +130,6 @@ class InputHandler {
     uint64_t flags    = 0;
     uint32_t cycleNum = UINT32_MAX;
 
-    PacketMetadata() = default;
-    PacketMetadata(uint64_t o) : offset(o) {}
-
     inline void writeFiled(uint8_t index, uint8_t data) {
       if (index >= 8)
         return;
@@ -232,7 +229,7 @@ class InputHandler {
   InputHandler &operator=(const InputHandler &) = delete;
   InputHandler &operator=(InputHandler &&) = delete;
 
-  mockable Packet parsePacket(ws_dissection *diss) noexcept;
+  mockable Packet parsePacket(ws_dissection *diss, PacketMetadata *metaData = nullptr) noexcept;
   mockable bool parseCycle(CompletedCycle *cd) noexcept;
 
   mockable bool startLoop();
