@@ -152,7 +152,9 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         case PacketType::START_OF_ASYNC:
           metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
           FALLTHROUGH;
-        case PacketType::POLL_RESPONSE: metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.pType); break;
+        case PacketType::POLL_RESPONSE:
+          metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
+          break;
         case PacketType::ASYNC_SEND:
           metaData.writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
           switch (pData.workingData.ASnd.RequestedServiceID) {
@@ -161,6 +163,10 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
               break;
             case ASndServiceID::NMT_COMMAND:
               metaData.writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
+              break;
+            case ASndServiceID::IDENT_RESPONSE:
+            case ASndServiceID::STATUS_RESPONSE:
+              metaData.writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
               break;
             default: break;
           }
