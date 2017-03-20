@@ -54,6 +54,21 @@ namespace EPL_DataCollect {
 CaptureInstance::~CaptureInstance() {
   if (state == RUNNING)
     stopRecording();
+
+  iHandler.stopLoop();
+
+  if (dissect) {
+    iHandler.setDissector(nullptr);
+    ws_dissect_free(dissect);
+    dissect = nullptr;
+  }
+
+  if (capture) {
+    ws_capture_close(capture);
+    capture = nullptr;
+  }
+
+  pluginManager.reset(this);
 }
 
 /*!
@@ -102,15 +117,21 @@ int CaptureInstance::setupLoop() {
 }
 
 int CaptureInstance::errorCleanup(int retVal) {
-  if (dissect)
-    ws_dissect_free(dissect);
+  builder.stopLoop();
+  iHandler.stopLoop();
 
-  if (capture)
+  if (dissect) {
+    ws_dissect_free(dissect);
+    iHandler.setDissector(nullptr);
+    dissect = nullptr;
+  }
+
+  if (capture) {
     ws_capture_close(capture);
+    capture = nullptr;
+  }
 
   state = ERRORED;
-  iHandler.setDissector(nullptr);
-
   return retVal;
 }
 
@@ -178,23 +199,6 @@ int CaptureInstance::stopRecording() noexcept {
   }
 
   builder.stopLoop();
-  iHandler.stopLoop();
-
-  if (dissect) {
-    ws_dissect_free(dissect);
-    iHandler.setDissector(nullptr);
-    dissect = nullptr;
-  }
-
-  if (capture) {
-    ws_capture_close(capture);
-    capture = nullptr;
-  }
-
-  if (!pluginManager.reset(this)) {
-    state = ERRORED;
-    return 1;
-  }
 
   state = DONE;
   return 0;

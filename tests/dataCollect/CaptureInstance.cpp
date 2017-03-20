@@ -44,10 +44,10 @@ double                            CSTest1::getNumericValue() { return 0; }
 std::unique_ptr<CycleStorageBase> CSTest1::clone() { return std::make_unique<CSTest1>(*this); }
 
 TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
-  CaptureInstance ci;
-  PluginManager & pm = *ci.getPluginManager();
-
   Mock<PluginBase> pbMock[16];
+  CaptureInstance  ci;
+  PluginManager &  pm = *ci.getPluginManager();
+
   for (uint32_t i = 0; i < 16; i++) {
     When(Method(pbMock[i], run)).AlwaysReturn();
     When(Method(pbMock[i], initialize)).AlwaysReturn(true);
@@ -200,10 +200,10 @@ TEST_CASE("Testing CaptureInstance -- plugin init error", "[CaptureInstance]") {
 }
 
 TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") {
-  CaptureInstance ci;
-  PluginManager & pm = *ci.getPluginManager();
-
   Mock<PluginBase> pbMock[4];
+  CaptureInstance  ci;
+  PluginManager &  pm = *ci.getPluginManager();
+
   for (uint32_t i = 0; i < 4; i++) {
     When(Method(pbMock[i], run)).AlwaysReturn();
     When(Method(pbMock[i], initialize)).AlwaysReturn(true);
@@ -229,8 +229,8 @@ TEST_CASE("Testing CaptureInstance -- plugin reset error", "[CaptureInstance]") 
   REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
   REQUIRE(ci.getState() == CaptureInstance::RUNNING);
   REQUIRE(ci.getCurrentFilePath() != "");
-  REQUIRE(ci.stopRecording() == 1);
-  REQUIRE(ci.getState() == CaptureInstance::ERRORED);
+  REQUIRE(ci.stopRecording() == 0);
+  REQUIRE(ci.getState() == CaptureInstance::DONE);
 }
 
 TEST_CASE("Testing CaptureInstance -- config", "[CaptureInstance]") {

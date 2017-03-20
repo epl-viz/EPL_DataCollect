@@ -287,9 +287,13 @@ void CycleBuilder::buildLoop() noexcept {
             << std::endl
             << std::endl;
 
-  std::lock_guard<std::mutex> lk(stopLoopSignal);
-  isLoopRunning = false;
-  stopLoopWait.notify_all();
+  {
+    std::lock_guard<std::mutex> lk(stopLoopSignal);
+    isLoopRunning = false;
+    stopLoopWait.notify_all();
+  }
+
+  parent->stopRecording();
 }
 
 /*!
