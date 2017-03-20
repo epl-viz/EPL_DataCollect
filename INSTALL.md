@@ -36,7 +36,7 @@ cd "$BUILD_ROOT"
 wget http://www.tcpdump.org/release/libpcap-1.8.1.tar.gz
 tar -xf libpcap-1.8.1.tar.gz
 cd libpcap-1.8.1
-./configure --prefix="${PREFIX}" ..
+./configure --prefix="${PREFIX}"
 make
 make install
 ```
