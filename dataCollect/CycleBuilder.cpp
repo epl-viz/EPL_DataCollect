@@ -39,6 +39,8 @@ using namespace std::chrono;
 
 namespace EPL_DataCollect {
 
+CycleBuilder::CycleBuilder(CaptureInstance *ptr) : parent(ptr), ih(ptr->getInputHandler()) {}
+
 CycleBuilder::~CycleBuilder() {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (isLoopRunning)
@@ -91,12 +93,12 @@ void CycleBuilder::buildNextCycle() noexcept {
     nextCycleNum = 0;
   }
 
-  if (parent->getInputHandler()->getReachedEnd(nextCycleNum)) {
+  if (ih->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
     return;
   }
 
-  std::vector<Packet> packets = parent->getInputHandler()->getCyclePackets(nextCycleNum, seconds(10));
+  std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(10));
 
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);
@@ -396,8 +398,6 @@ Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
 
   if (targetCycle <= currentCycle.getCycleNum())
     return std::move(currentCycle);
-
-  InputHandler *ih = parent->getInputHandler();
 
   while (targetCycle > currentCycle.getCycleNum() && targetCycle < ih->getMaxQueuedCycle())
     buildNextCycle();

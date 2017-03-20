@@ -54,14 +54,8 @@ void SnapshotManager::registerCycle(Cycle *cycle) noexcept {
 Cycle SnapshotManager::getClosestCycle(uint32_t cycleNum) noexcept {
   std::lock_guard<std::mutex> lk(dataMutex);
 
-  if (data.empty())
-    return Cycle();
-
-  Cycle &  best     = *data.begin();
+  Cycle *  best     = nullptr;
   uint32_t bestDiff = UINT32_MAX;
-
-  if (best.getCycleNum() <= cycleNum)
-    bestDiff = cycleNum - best.getCycleNum();
 
   for (auto &i : data) {
     if (i.getCycleNum() > cycleNum)
@@ -69,11 +63,14 @@ Cycle SnapshotManager::getClosestCycle(uint32_t cycleNum) noexcept {
 
     if ((cycleNum - i.getCycleNum()) < bestDiff) {
       bestDiff = cycleNum - i.getCycleNum();
-      best     = i;
+      best     = &i;
     }
   }
 
-  return best;
+  if (best)
+    return *best;
+
+  return Cycle();
 }
 
 

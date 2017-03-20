@@ -108,7 +108,7 @@ TEST_CASE("Testing loading a EPL_Example", "[CycleBuilder]") {
   inst.getCycleBuilder()->waitForLoopToFinish();
 }
 
-TEST_CASE("Testing loading 1CN", "[CycleBuilder]") {
+TEST_CASE("Testing loading 1CN", "[CycleBuilder][1CN]") {
   CaptureInstance inst;
 
   std::string file = constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/1CN-with-ObjectMapping-PDO.pcapng";

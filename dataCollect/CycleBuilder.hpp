@@ -38,6 +38,7 @@
 namespace EPL_DataCollect {
 
 class CaptureInstance;
+class InputHandler;
 
 /*!
   * class CycleBuilder
@@ -77,6 +78,7 @@ class CycleBuilder {
 
  private:
   CaptureInstance *parent = nullptr;
+  InputHandler *   ih     = nullptr;
 
   Cycle                currentCycle;
   std::recursive_mutex accessMutex;
@@ -99,7 +101,7 @@ class CycleBuilder {
 
  public:
   CycleBuilder() = delete;
-  CycleBuilder(CaptureInstance *ptr) : parent(ptr) {}
+  CycleBuilder(CaptureInstance *ptr);
   virtual ~CycleBuilder();
 
   CycleBuilder(const CycleBuilder &) = delete;
