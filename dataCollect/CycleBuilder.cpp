@@ -276,7 +276,7 @@ void CycleBuilder::buildLoop() noexcept {
   auto end          = high_resolution_clock::now();
   stats.packetCount = parent->getInputHandler()->getPacketsMetadata()->size();
   stats.totalTime   = end - start;
-  stats.eventsCount = parent->getEventLog()->getAllEvents().size();
+  stats.eventsCount = static_cast<uint32_t>(parent->getEventLog()->getAllEvents().size());
   std::cout << std::endl << "               STATISTICS" << std::endl;
   std::cout << "               ==========" << std::endl << std::endl;
   std::cout << "[CycleBuilder] Cycle count:                   " << stats.cycleCount << std::endl;
