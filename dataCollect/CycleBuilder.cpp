@@ -260,17 +260,32 @@ void CycleBuilder::buildLoop() noexcept {
     startLoopWait.notify_all();
   }
 
+  stats.cycleCount = 0;
+
+  auto start = high_resolution_clock::now();
+
   while (keepLoopAlive) {
     buildNextCycle();
+    ++stats.cycleCount;
     std::lock_guard<std::recursive_mutex> sleep(sleepMutex);
 
-    if (reachedEnd) {
-      std::lock_guard<std::mutex> lk2(stopLoopSignal);
-      isLoopRunning = false;
-      stopLoopWait.notify_all();
-      return;
-    }
+    if (reachedEnd)
+      break;
   }
+
+  auto end          = high_resolution_clock::now();
+  stats.packetCount = parent->getInputHandler()->getPacketsMetadata()->size();
+  stats.totalTime   = end - start;
+  stats.eventsCount = parent->getEventLog()->getAllEvents().size();
+  std::cout << std::endl << "               STATISTICS" << std::endl;
+  std::cout << "               ==========" << std::endl << std::endl;
+  std::cout << "[CycleBuilder] Cycle count:                   " << stats.cycleCount << std::endl;
+  std::cout << "[CycleBuilder] Packet count:                  " << stats.packetCount << std::endl;
+  std::cout << "[CycleBuilder] Events Count:                  " << stats.eventsCount << std::endl;
+  std::cout << "[CycleBuilder] Total Cycle processing time:   " << stats.totalTime.count() << "ns" << std::endl;
+  std::cout << "[CycleBuilder] Average Cycle processing time: " << stats.totalTime.count() / stats.cycleCount << "ns"
+            << std::endl
+            << std::endl;
 
   std::lock_guard<std::mutex> lk(stopLoopSignal);
   isLoopRunning = false;
@@ -405,4 +420,6 @@ CycleBuilder::Locker CycleBuilder::getCurrentCyclePTR() noexcept {
   std::lock_guard<std::recursive_mutex> sleep(sleepMutex);
   return Locker(sleepMutex, &currentCycle);
 }
+
+CycleBuilder::Statistics CycleBuilder::getStats() const noexcept { return stats; }
 }

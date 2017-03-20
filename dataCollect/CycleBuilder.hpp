@@ -68,6 +68,13 @@ class CycleBuilder {
     inline Cycle *operator->() noexcept { return c; }
   };
 
+  struct Statistics {
+    std::chrono::nanoseconds totalTime   = std::chrono::nanoseconds(0);
+    uint64_t                 packetCount = UINT64_MAX;
+    uint32_t                 cycleCount  = UINT32_MAX;
+    uint32_t                 eventsCount = UINT32_MAX;
+  };
+
  private:
   CaptureInstance *parent = nullptr;
 
@@ -87,7 +94,8 @@ class CycleBuilder {
 
   bool reachedEnd = false;
 
-  uint32_t appID;
+  uint32_t   appID;
+  Statistics stats;
 
  public:
   CycleBuilder() = delete;
@@ -108,6 +116,7 @@ class CycleBuilder {
   mockable Cycle seekCycle(uint32_t targetCycle, Cycle start) noexcept;
   mockable Cycle getCurrentCycle() noexcept;
   mockable Locker getCurrentCyclePTR() noexcept;
+  mockable Statistics getStats() const noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:

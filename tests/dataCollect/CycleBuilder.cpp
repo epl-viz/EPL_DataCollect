@@ -73,10 +73,12 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   REQUIRE(fs::exists(filePath));
   REQUIRE(fs::is_regular_file(filePath));
 
+  REQUIRE(inst.getCycleBuilder()->getStats().cycleCount == UINT32_MAX);
   REQUIRE(inst.loadPCAP(file) == 0);
   REQUIRE(inst.getCycleBuilder()->isRunning() == true);
 
   inst.getCycleBuilder()->waitForLoopToFinish();
+  REQUIRE(inst.getCycleBuilder()->getStats().cycleCount != UINT32_MAX);
 }
 
 TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {
