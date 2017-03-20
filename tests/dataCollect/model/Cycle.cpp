@@ -73,6 +73,7 @@ TEST_CASE("Standard return values work", "[Cycle]") {
   REQUIRE(c.getPackets().empty() == true);
   REQUIRE(c.getActiveEvents().empty() == true);
   REQUIRE(c.getAllCycleStorage()->size() == 0);
+  REQUIRE(c == c);
 }
 
 TEST_CASE("Fetching non existant values fails", "[Cycle]") {

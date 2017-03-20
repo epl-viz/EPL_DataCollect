@@ -38,9 +38,13 @@ TEST_CASE("Test ODDescription", "[Model]") {
 
   ODDescription d1, d2;
 
-  ODEntryDescription e1(ObjectType::VAR, ObjectDataType::BOOLEAN);
-  ODEntryDescription e2(ObjectType::VAR, ObjectDataType::BOOLEAN);
-  e1 = std::move(e2);
+  SECTION("Test moving") {
+    ODEntryDescription e1(ObjectType::VAR, ObjectDataType::BOOLEAN);
+    e1 = std::move(entries[0]);
+    REQUIRE(e1.name == "Entry 0");
+    ODEntryDescription e2(std::move(e1));
+    REQUIRE(e2.name == "Entry 0");
+  }
 
   SECTION("Sanity check generated entries") {
     REQUIRE(entries[0].name == "Entry 0");

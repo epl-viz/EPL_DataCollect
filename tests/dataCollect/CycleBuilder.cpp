@@ -73,6 +73,7 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   REQUIRE(fs::is_regular_file(filePath));
 
   REQUIRE(inst.loadPCAP(file) == 0);
+  REQUIRE(inst.getCycleBuilder()->isRunning() == true);
 
   inst.getCycleBuilder()->waitForLoopToFinish();
 }

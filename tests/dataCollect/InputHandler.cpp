@@ -291,7 +291,9 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
   ws_dissect_t *dissect = ws_dissect_capture(capture);
   REQUIRE(dissect != nullptr);
 
+  REQUIRE(handler.getPacketsMetadata()->empty());
   handler.setDissector(dissect);
+  REQUIRE(!handler.getPacketsMetadata()->empty());
   handler.startLoop();
 
   std::vector<Packet> packets;
@@ -320,6 +322,8 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
 
   handler.stopLoop();
   handler.setDissector(nullptr);
+
+  REQUIRE(handler.getIsLoopRunning() == false);
 
   ws_dissect_free(dissect);
   ws_capture_close(capture);

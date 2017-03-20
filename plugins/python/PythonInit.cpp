@@ -41,6 +41,7 @@ PythonInit::PythonInit() {
   Py_Initialize();
   PyRun_SimpleString("import sys\n");
   addPath(EPL_DC_CM_BINARY_DIR + "/lib");
+  addPath(EPL_DC_INSTALL_PREFIX + "/lib/eplViz");
   addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins");
   addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/samples");
   addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests");

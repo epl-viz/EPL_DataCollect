@@ -60,6 +60,9 @@ TEST_CASE("Testing DefaultFilter", "[plugin][filter]") {
   REQUIRE(b != nullptr);
   REQUIRE(csF != nullptr);
 
+  REQUIRE(csF->isNumericValue() == false);
+  REQUIRE(csF->getNumericValue() <= std::numeric_limits<double>::epsilon());
+
   auto filters = csF->getFilters();
   REQUIRE(filters.size() == 1);
 
@@ -73,4 +76,10 @@ TEST_CASE("Testing DefaultFilter", "[plugin][filter]") {
   REQUIRE(f.isSet(0x5000) == false);
   REQUIRE(f.includeIndex(0x6000) == true);
   REQUIRE(f.isSet(0x6000) == true);
+
+  // CSViewFilters is movable
+  CSViewFilters::Filter csFMoveFrom(FilterType::INCLUDE, "Move test");
+  CSViewFilters::Filter csF2(std::move(csFMoveFrom));
+  REQUIRE(csF2.getName() == "Move test");
+  REQUIRE(csF2.getType() == FilterType::INCLUDE);
 }

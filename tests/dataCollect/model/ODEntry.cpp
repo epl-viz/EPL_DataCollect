@@ -117,6 +117,7 @@ TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
   t->setFromString("42");
   REQUIRE(t->data == 42);
   REQUIRE(t->toString() == "42");
+  REQUIRE(t->getArraySize() < 0);
   REQUIRE(t->getType() == ObjectClassType::INTEGER);
   REQUIRE(t->getType() == ct->getType());
   REQUIRE(t->getDataType() == ObjectDataType::INTEGER32);
@@ -139,6 +140,7 @@ TEST_CASE("Testing ODEntryUInt", "[ODEntry]") {
   t.setFromString("0x2A");
   REQUIRE(t.data == 42);
   REQUIRE(t.toString() == "42");
+  REQUIRE(t.getArraySize() < 0);
   REQUIRE(t.getType() == ObjectClassType::UNSIGNED);
   REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED16);
   REQUIRE(t.isNumericValue() == true);
@@ -159,6 +161,7 @@ TEST_CASE("Testing ODEntryBool", "[ODEntry]") {
   t.setFromString("True");
   REQUIRE(t.data == true);
   REQUIRE(t.toString() == "true");
+  REQUIRE(t.getArraySize() < 0);
   REQUIRE(t.getType() == ObjectClassType::BOOL);
   REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == true);
@@ -179,6 +182,7 @@ TEST_CASE("Testing ODEntryReal", "[ODEntry]") {
   t.setFromString("42");
   REQUIRE(checkDouble(t.data, 42) == true);
   REQUIRE(t.toString().substr(0, 2) == "42");
+  REQUIRE(t.getArraySize() < 0);
   REQUIRE(t.getType() == ObjectClassType::REAL);
   REQUIRE(t.getDataType() == ObjectDataType::REAL32);
   REQUIRE(t.isNumericValue() == true);
@@ -199,6 +203,7 @@ TEST_CASE("Testing ODEntryString", "[ODEntry]") {
   t.setFromString("Hello world");
   REQUIRE(t.data == "Hello world");
   REQUIRE(t.toString() == "Hello world");
+  REQUIRE(t.getArraySize() < 0);
   REQUIRE(t.getType() == ObjectClassType::STRING);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
@@ -229,6 +234,7 @@ TEST_CASE("Testing ODEntryArrayInt", "[ODEntry]") {
   t.setFromString("11", 5);
   REQUIRE(t.data[5] == 11);
   REQUIRE(t.toString() != "");
+  REQUIRE(t.getArraySize() >= 0);
   REQUIRE(t.getType() == ObjectClassType::ARRAY_INTEGER);
   REQUIRE(t.getDataType() == ObjectDataType::INTEGER40);
   REQUIRE(t.isNumericValue() == false);
@@ -249,6 +255,7 @@ TEST_CASE("Testing ODEntryArrayUInt", "[ODEntry]") {
   t.setFromString("11", 5);
   REQUIRE(t.data[5] == 11);
   REQUIRE(t.toString() != "");
+  REQUIRE(t.getArraySize() >= 0);
   REQUIRE(t.getType() == ObjectClassType::ARRAY_UNSIGNED);
   REQUIRE(t.getDataType() == ObjectDataType::UNSIGNED56);
   REQUIRE(t.isNumericValue() == false);
@@ -269,6 +276,7 @@ TEST_CASE("Testing ODEntryArrayBool", "[ODEntry]") {
   t.setFromString("TRUE", 5);
   REQUIRE(t.data[5] == true);
   REQUIRE(t.toString() != "");
+  REQUIRE(t.getArraySize() >= 0);
   REQUIRE(t.getType() == ObjectClassType::ARRAY_BOOL);
   REQUIRE(t.getDataType() == ObjectDataType::BOOLEAN);
   REQUIRE(t.isNumericValue() == false);
@@ -289,6 +297,7 @@ TEST_CASE("Testing ODEntryArrayReal", "[ODEntry]") {
   t.setFromString("11", 5);
   REQUIRE(checkDouble(t.data[5], 11) == true);
   REQUIRE(t.toString() != "");
+  REQUIRE(t.getArraySize() >= 0);
   REQUIRE(t.getType() == ObjectClassType::ARRAY_REAL);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);
@@ -311,6 +320,7 @@ TEST_CASE("Testing ODEntryComplex", "[ODEntry]") {
   t.setFromString("33", 0);
   REQUIRE(reinterpret_cast<ODEntryInt *>(*t.data[0])->data == 33);
   REQUIRE(t.toString() != "");
+  REQUIRE(t.getArraySize() >= 0);
   REQUIRE(t.getType() == ObjectClassType::COMPLEX);
   REQUIRE(t.getDataType() == ObjectDataType::VISIBLE_STRING);
   REQUIRE(t.isNumericValue() == false);

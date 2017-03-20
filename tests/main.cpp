@@ -26,45 +26,29 @@
 
 #define CATCH_CONFIG_RUNNER
 #include "Init.hpp"
+#include "PythonInit.hpp"
 #include <CycleBuilder.hpp>
 #include "Python.h"
 #include <catch.hpp>
 
+using namespace EPL_DataCollect;
+using namespace EPL_DataCollect::constants;
+using namespace EPL_DataCollect::plugins;
+
 int main(int argc, char *argv[]) {
-  EPL_DataCollect::Init init;
+  Init init;
   if (!init.getIsOK())
     return 1;
 
-  Py_Initialize();
-  std::string import_libs =
-        "import sys\nsys.path.append('" + EPL_DataCollect::constants::EPL_DC_CM_BINARY_DIR + "/lib')\n";
-  std::string import_plugins =
-        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins')\n";
-  std::string import_tests =
-        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests')\n";
-  std::string import_tests_loadtests =
-        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests')\n";
-  std::string import_tests_cycleaccesstests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
-                                              "/python/plugins/tests/cycleaccesstests')\n";
-  std::string import_tests_pluginguiapitests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
-                                               "/python/plugins/tests/pluginguiapitests')\n";
-  std::string import_tests_pluginapitests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
-                                            "/python/plugins/tests/pluginapitests')\n";
-  std::string import_tests_pluginclasstests = "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT +
-                                              "/python/plugins/tests/pluginclasstests')\n";
-
-  std::string import_samples =
-        "sys.path.append('" + EPL_DataCollect::constants::EPL_DC_BUILD_DIR_ROOT + "/python/plugins/samples')\n";
-
-  PyRun_SimpleString(import_libs.c_str());
-  PyRun_SimpleString(import_plugins.c_str());
-  PyRun_SimpleString(import_tests.c_str());
-  PyRun_SimpleString(import_tests_loadtests.c_str());
-  PyRun_SimpleString(import_tests_cycleaccesstests.c_str());
-  PyRun_SimpleString(import_tests_pluginguiapitests.c_str());
-  PyRun_SimpleString(import_tests_pluginapitests.c_str());
-  PyRun_SimpleString(import_tests_pluginclasstests.c_str());
-  PyRun_SimpleString(import_samples.c_str());
+  PythonInit pyInit;
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/cycleaccesstests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginguiapitests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginapitests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/pluginclasstests");
+  pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/samples");
 
   Catch::Session session;
 
@@ -72,7 +56,5 @@ int main(int argc, char *argv[]) {
   if (returnCode != 0) // Indicates a command line error
     return returnCode;
 
-  auto ret = session.run();
-  Py_Finalize();
-  return ret;
+  return session.run();
 }

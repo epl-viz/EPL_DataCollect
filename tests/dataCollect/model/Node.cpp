@@ -33,6 +33,9 @@ using namespace EPL_DataCollect;
 TEST_CASE("Initialization succeeds", "[Node]") {
   Node n(1);
 
+  REQUIRE(n.getXDDFiles().empty());
+  REQUIRE(n.getIdentity().Profile == UINT16_MAX);
+
   SECTION("Check for correct node ID") { REQUIRE(n.getID() == 1); }
   SECTION("Test node status initialized to unknown") { REQUIRE(n.getStatus() == NMTState::OFF); }
   SECTION("Test OD Initialization") {
