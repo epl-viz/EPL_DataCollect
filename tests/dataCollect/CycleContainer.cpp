@@ -58,5 +58,5 @@ TEST_CASE("Testing Cycle container", "[CycleContainer]") {
   REQUIRE(c.getCycleNum() == 4);
 
   c = inst.getCycleContainer()->pollCycle();
-  REQUIRE(c.getCycleNum() == 249);
+  REQUIRE(c.getCycleNum() == 248);
 }

@@ -93,12 +93,12 @@ void CycleBuilder::buildNextCycle() noexcept {
     nextCycleNum = 0;
   }
 
+  std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(10));
+
   if (ih->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
     return;
   }
-
-  std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(10));
 
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);

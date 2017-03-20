@@ -170,6 +170,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
       if (ret == 0 && err == 0) {
         pData.parserReachedEnd = true;
+        lastValidCycle         = cd->num - 1;
         return errorFN();
       }
 
@@ -312,7 +313,7 @@ InputHandler::CompletedCycle *InputHandler::updateQueue(InputHandler::CompletedC
       return nullptr;
     }
 
-    if (target > (maxQueuedCycle + 1)) {
+    if (target > lastValidCycle) {
       return nullptr;
     }
 
@@ -481,7 +482,7 @@ bool InputHandler::getReachedEnd(uint32_t target) noexcept {
   if (!buildLoopIsRunning)
     return true;
 
-  if (pData.parserReachedEnd && target > maxQueuedCycle)
+  if (target > lastValidCycle)
     return true;
 
   return false;
@@ -499,6 +500,7 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
     ws_dissection diss;
     if (ws_dissect_next(pData.dissect, &diss, nullptr, nullptr) == 0) {
       pData.parserReachedEnd = true;
+      lastValidCycle         = 0;
       return;
     }
 

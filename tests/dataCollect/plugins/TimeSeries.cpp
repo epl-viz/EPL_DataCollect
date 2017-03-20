@@ -87,5 +87,5 @@ TEST_CASE("Testing TimeSeries plugin -- with data", "[plugin][TimeSeries]") {
 
   ci.loadPCAP(file);
   ci.getCycleBuilder()->waitForLoopToFinish();
-  REQUIRE(ts->tsData.size() == 288);
+  REQUIRE(ts->tsData.size() == 287);
 }

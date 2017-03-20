@@ -213,6 +213,7 @@ class InputHandler {
 
   uint32_t maxQueuedCycle         = 0;
   uint32_t queuedAfterLastCleanup = 0;
+  uint32_t lastValidCycle         = UINT32_MAX;
   uint32_t lastCheckedForPrefetch = UINT32_MAX;
 
   CompletedCycle *updateQueue(CompletedCycle *oldCycle, uint32_t target = UINT32_MAX) noexcept;

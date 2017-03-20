@@ -46,6 +46,10 @@ CycleContainer::~CycleContainer() {}
    * \param  cycleNum The ID of the cycle to get
    */
 Cycle CycleContainer::getCycle(uint32_t cycleNum) noexcept {
+  Cycle currentCycle = parent->getCycleBuilder()->getCurrentCycle();
+  if (cycleNum == currentCycle.getCycleNum())
+    return currentCycle;
+
   Cycle worker = parent->getSnapshotManager()->getClosestCycle(cycleNum);
 
   if (cycleNum == worker.getCycleNum())
