@@ -54,24 +54,27 @@ void CycleBuilder::addNode(uint8_t nID) noexcept {
 
   auto cfg = parent->getNodeConfig(nID);
 
-  std::string xddDir  = parent->getConfig().xddDir + '/';
-  std::string xddPath = xddDir + cfg.baseProfile;
-
+  std::string xddDir = parent->getConfig().xddDir + '/';
   std::cout << "[CycleBuilder] Adding Node " << static_cast<int>(nID) << std::endl;
-  std::cout << "[CycleBuilder]   -- Loading baseProfile " << xddPath << std::endl;
 
-  auto ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
-  if (ret != XDDParser::SUCCESS) {
-    std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
-              << static_cast<int>(nID) << std::endl;
+  if (!cfg.baseProfile.empty()) {
+    std::string xddPath = xddDir + cfg.baseProfile;
+
+    std::cout << "[CycleBuilder]   -- Loading baseProfile " << xddPath << std::endl;
+
+    auto ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
+    if (ret != XDDParser::SUCCESS) {
+      std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
+                << static_cast<int>(nID) << std::endl;
+    }
+    currentCycle.getNode(nID)->xddFiles.emplace_back(xddPath);
   }
-  currentCycle.getNode(nID)->xddFiles.emplace_back(xddPath);
 
   if (!cfg.autoDeduceSpecificProfile && cfg.specificProfile != "") {
-    xddPath = xddDir + cfg.specificProfile;
+    std::string xddPath = xddDir + cfg.specificProfile;
     std::cout << "[CycleBuilder]   -- Loading specific profile " << xddPath << std::endl;
 
-    ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
+    auto ret = XDDParser::parseXDD(currentCycle.getNode(nID)->getOD(), xddPath);
     if (ret != XDDParser::SUCCESS) {
       std::cerr << "[CycleBuilder] Failed to parse XDD [" << EPLEnum2Str::toStr(ret) << "]" << xddPath << " for node "
                 << static_cast<int>(nID) << std::endl;
@@ -199,8 +202,6 @@ void CycleBuilder::buildNextCycle() noexcept {
               }
             }
           }
-
-          //! \todo Update Node vars
 
           break;
           default: break;

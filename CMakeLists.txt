@@ -316,7 +316,7 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "XDDParser.hpp" "epan/ftypes/ftypes.h"
+  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "XDDParser.hpp" "epan/ftypes/ftypes.h" "epan/prefs.h"
   INDENT_STR "  "
   NAMESPACE  "EPL_DataCollect"
   ENUMS
@@ -326,7 +326,7 @@ enum2str_generate(
 
     "CaptureInstance::CIstate" "XDDParser::ErrorCode"
 
-    "ftenum"
+    "ftenum" "prefs_set_pref_e"
   BLACKLIST
 )
 

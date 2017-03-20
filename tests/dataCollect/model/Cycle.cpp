@@ -79,15 +79,12 @@ TEST_CASE("Standard return values work", "[Cycle]") {
 TEST_CASE("Fetching non existant values fails", "[Cycle]") {
   Cycle c;
 
-  SECTION("Test getNode() returning a nullptr") { REQUIRE(c.getNode(200) == nullptr); }
-  SECTION("Test getCycleStorage() returning a nullptr") {
-    REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
-  }
-  SECTION("Test getODEntry() returning nullptr on non existant indices") {
-    REQUIRE(c.getODEntry(200, 0) == nullptr);
-    c.addNode(200);
-    REQUIRE(c.getODEntry(200, 1) == nullptr);
-  }
+  REQUIRE(c.getNode(200) == nullptr);
+  REQUIRE(c.getCycleStorage("Non_Existant_Plugin") == nullptr);
+  REQUIRE(c.getODEntry(201, 0) == nullptr);
+  REQUIRE(c.addNode(201) == true);
+  REQUIRE(c.addNode(201) == false);
+  REQUIRE(c.getODEntry(201, 1) == nullptr);
 }
 
 TEST_CASE("OD Entries are fetched correctly") {

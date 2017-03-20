@@ -32,14 +32,14 @@
 #include "EPLEnum2Str.hpp"
 #include "PluginBase.hpp"
 #include "PluginManager.hpp"
-#include <iostream>
-#include <ws_capture.h>
-#include <ws_dissect.h>
-
 #include <arpa/inet.h>
 #include <capchild/capture_session.h>
 #include <caputils/capture_ifinfo.h>
+#include <epan/prefs.h>
+#include <iostream>
 #include <netinet/in.h>
+#include <ws_capture.h>
+#include <ws_dissect.h>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
@@ -71,13 +71,29 @@ int CaptureInstance::setupLoop() {
   if (dissect == nullptr)
     return errorCleanup(-2);
 
+  prefs_reset();
+  for (auto i : nodeCfg) {
+    if (!i.second.autoDeduceSpecificProfile && !i.second.specificProfile.empty()) {
+      if (i.first >= 240)
+        continue;
+
+      std::string cfgStr = "uat:epl_nodeid_profiles:\"";
+      cfgStr += std::to_string(static_cast<int>(i.first));
+      cfgStr += "\",\"";
+      cfgStr += cfg.xddDir + "/" + i.second.specificProfile + "\"";
+      auto ret = prefs_set_pref(const_cast<char *>(cfgStr.c_str()));
+      std::cout << "[CaptureInstance] dissector pref: '" << cfgStr << "' --> " << EPLEnum2Str::toStr(ret) << std::endl;
+    }
+  }
+  prefs_apply_all();
+
   startCycle.cycleNum = UINT32_MAX; // Build from start
 
   iHandler.setDissector(dissect);
   iHandler.startLoop();
 
   if (!builder.startLoop(startCycle)) {
-    std::cerr << "[CaptureInstance] (startRecording) Failed to start build loop" << std::endl;
+    std::cerr << "[CaptureInstance] (setupLoop) Failed to start build loop" << std::endl;
     return errorCleanup(100);
   }
 

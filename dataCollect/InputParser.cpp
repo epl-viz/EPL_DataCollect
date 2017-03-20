@@ -413,6 +413,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     case EPL_PREFIX ".asnd.sdo.cmd.fragment"_h:           // == FT_FRAMENUM -- BASE_NONE ("Message fragment")
     case EPL_PREFIX ".asnd.sdo.cmd.fragment.error"_h: // == FT_FRAMENUM -- BASE_NONE ("Message defragmentation error")
     case EPL_PREFIX ".asnd.sdo.cmd.reassembled.in"_h: // == FT_FRAMENUM -- BASE_NONE ("Reassembled in")
+    case EPL_PREFIX ".asnd.ires.profilepath"_h:
     case "text"_h: break;
 
     case EPL_PREFIX ".asnd.sres.stat"_h:

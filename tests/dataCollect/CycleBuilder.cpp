@@ -48,22 +48,23 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   auto instCfg                  = inst.getConfig();
   auto cfg                      = inst.getDefaultNodeConfig();
   cfg.autoDeduceSpecificProfile = false;
+  cfg.baseProfile               = "";
 
   instCfg.xddDir = EPL_DC_BUILD_DIR_ROOT + "/external/resources/profiles/printer";
 
-  cfg.baseProfile = "steppercn4cn_1.xdc";
+  cfg.specificProfile = "steppercn4cn_1.xdc";
   inst.setNodeConfig(1, cfg);
 
-  cfg.baseProfile = "steppercn4cn_2.xdc";
+  cfg.specificProfile = "steppercn4cn_2.xdc";
   inst.setNodeConfig(2, cfg);
 
-  cfg.baseProfile = "steppercn4cn_3.xdc";
+  cfg.specificProfile = "steppercn4cn_3.xdc";
   inst.setNodeConfig(3, cfg);
 
-  cfg.baseProfile = "steppercn4cn_4.xdc";
+  cfg.specificProfile = "steppercn4cn_4.xdc";
   inst.setNodeConfig(4, cfg);
 
-  cfg.baseProfile = "00000000_POWERLINK_CiA302-4_MN.xdc";
+  cfg.specificProfile = "00000000_POWERLINK_CiA302-4_MN.xdc";
   inst.setNodeConfig(240, cfg);
   inst.setConfig(instCfg);
 
