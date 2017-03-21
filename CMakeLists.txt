@@ -98,7 +98,7 @@ run_git()
 
 add_compiler(
   GNU MIN_VERSION "6.2"
-  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas ${GCC_STDLIB_FLAGS}"
+  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -fno-strict-aliasing ${GCC_STDLIB_FLAGS}"
   DEBUG      "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
@@ -111,14 +111,14 @@ add_compiler(
 
 add_compiler(
   Clang MIN_VERSION 3.9
-  ALL        "-Weverything -ftemplate-backtrace-limit=0 "
+  ALL        "-Weverything -ftemplate-backtrace-limit=0 -fno-strict-aliasing"
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded ${CLANG_STDLIB_FLAGS}"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
              "-Wno-disabled-macro-expansion"
   DEBUG      "-Werror -fno-omit-frame-pointer"
-  RELEASE    "-O2"
+  RELEASE    "-O3"
 
   C_ALL      "-Weverything -ftemplate-backtrace-limit=0  -std=c11"
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
@@ -127,7 +127,7 @@ add_compiler(
              "-Wno-documentation-unknown-command -Wno-unknown-pragmas"
              "-Wno-disabled-macro-expansion"
   C_DEBUG    "-Werror -fno-omit-frame-pointer"
-  C_RELEASE  "-O2"
+  C_RELEASE  "-O3"
 
   SANITIZE "-fsanitize=${SANITIZERS}"
 )
