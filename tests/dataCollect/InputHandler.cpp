@@ -196,6 +196,7 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE(dissect != nullptr);
 
   handler.setDissector(dissect);
+  handler.keepBuildLoopRunning = true;
 
   InputHandler::CompletedCycle cd(0);
   cd.num = 0;
@@ -270,6 +271,8 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE(cd.num == 2);
   REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
   REQUIRE(cd.packets[1].getType() == PacketType::START_OF_ASYNC);
+
+  handler.keepBuildLoopRunning = false;
 
   ws_dissect_free(dissect);
   handler.setDissector(nullptr);

@@ -208,6 +208,9 @@ class InputHandler {
   std::condition_variable waitForWorkSignal;
   std::condition_variable waitForDoneWorkSignal;
 
+#if EPL_DC_ENABLE_MOCKING // This is required for some unit tests
+ public:
+#endif
   bool buildLoopIsRunning   = false;
   bool keepBuildLoopRunning = false;
 
@@ -220,6 +223,9 @@ class InputHandler {
   void builderLoop();
   bool waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept;
 
+  Packet parsePacket(ws_dissection *diss, PacketMetadata *metaData = nullptr) noexcept;
+  bool parseCycle(CompletedCycle *cd) noexcept;
+
  public:
   InputHandler() = default;
   virtual ~InputHandler();
@@ -229,9 +235,6 @@ class InputHandler {
 
   InputHandler &operator=(const InputHandler &) = delete;
   InputHandler &operator=(InputHandler &&) = delete;
-
-  mockable Packet parsePacket(ws_dissection *diss, PacketMetadata *metaData = nullptr) noexcept;
-  mockable bool parseCycle(CompletedCycle *cd) noexcept;
 
   mockable bool startLoop();
   mockable bool stopLoop();
