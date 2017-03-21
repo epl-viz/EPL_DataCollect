@@ -90,8 +90,12 @@ void ProtocolValidator::run(Cycle *cycle) {
 
     // checking if time between poll requests is fine
     if (packet.getType() == PacketType::POLL_REQUEST) {
-      int cycle_len = static_cast<int>(
-            cycle->getNode(packet.getDestNode())->getOD()->getEntry(CYCLE_TIME_ENTRY)->getNumericValue());
+      ODEntry *entry = cycle->getNode(packet.getDestNode())->getOD()->getEntry(CYCLE_TIME_ENTRY);
+
+      if(!entry)
+        continue;
+
+      int cycle_len = static_cast<int>(entry->getNumericValue());
       // cycle length not set just skip
       if (cycle_len != 0) {
         // check if preq has been sent before, if not set time
