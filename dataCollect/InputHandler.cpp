@@ -169,7 +169,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     PacketMetadata metaData;
     metaData.cycleNum = cd->num;
 
-    while (true) {
+    while (keepBuildLoopRunning) {
       int  err;
       auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
       if (ret == 0 && err == 0) {
