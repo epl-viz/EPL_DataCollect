@@ -93,10 +93,14 @@ void CycleBuilder::buildNextCycle() noexcept {
     nextCycleNum = 0;
   }
 
-  std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(10));
+  std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(1));
 
   if (ih->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
+    return;
+  }
+
+  if (packets.empty()) {
     return;
   }
 

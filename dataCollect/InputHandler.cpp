@@ -135,7 +135,6 @@ inline bool parseCycleError(std::mutex &m, InputHandler::CompletedCycle *cd) {
 
 bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
-  std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
   static std::vector<Packet>            tempPKG; // static: reuse memory
   ws_dissection                         diss;
 
@@ -159,8 +158,13 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     tempPKG.emplace_back(pData.latestSoC);
 
+    size_t currentCyclePacketIndex;
+
     // cycleOffsetMap contains a map of already COMPLETELY parsed Cycles
-    auto currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
+    {
+      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+      currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
+    }
 
     PacketMetadata metaData;
     metaData.cycleNum = cd->num;
@@ -170,11 +174,13 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
       if (ret == 0 && err == 0) {
         pData.parserReachedEnd = true;
-        lastValidCycle         = cd->num - 1;
+        lastValidCycle         = cd->num == 0 ? 0 : cd->num - 1;
         return errorFN();
       }
 
       Packet tmp = parsePacket(&diss, &metaData);
+
+      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
       pData.packetOffsetMap.emplace_back(metaData);
 
       if (tmp.getType() == PacketType::START_OF_CYCLE) {
@@ -198,6 +204,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     // ##################
     // ## Seek packets ##
     // ##################
+
+    std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
 
     auto next  = cd->num + 1;
     auto first = pData.cycleOffsetMap[cd->num];
