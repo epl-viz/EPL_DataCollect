@@ -50,6 +50,7 @@ Init::Init(std::string pluginsDir) {
     if (started_with_special_privs() || running_with_special_privs()) {
       std::cerr << "[Init] Failed to dropp special privileges! Start failed" << std::endl;
 
+      errorCode = APPLICATION_STARTED_AS_ROOT;
       return;
     }
   }
@@ -68,7 +69,7 @@ Init::Init(std::string pluginsDir) {
 
   if (ws_dissect_plugin_dir(pluginsDir.c_str()) != TRUE) {
     std::cerr << "Failed to set the wireshark plugin dir" << std::endl;
-    isOK = false;
+    errorCode = SETTING_WS_PLUGIN_DIR_FAILED;
     return;
   }
 
@@ -87,15 +88,23 @@ Init::Init(std::string pluginsDir) {
   std::cout << "[Init] ws_dissect_init returned:          " << ret2 << std::endl;
   std::cout << "[Init] Loaded the advanced EPL dissector: " << foundProto << std::endl;
 
-  if (ret0 == 0 && ret1 == 0 && ret2 == 0 && ret3 != 0) {
-    isOK = true;
+  if (ret0 != 0 || ret1 != 0 || ret2 != 0) {
+    errorCode = WIRESHARK_INIT_FAILED;
+    return;
   }
+
+  if (ret3 == 0) {
+    errorCode = LOADING_DISECTOR_FAILED;
+    return;
+  }
+
+  errorCode = OK;
 }
 
 Init::~Init() {
   std::cout << "[Init] finalizing wireshark" << std::endl;
 
-  if (!isOK)
+  if (errorCode != OK)
     return;
 
   ws_capture_finalize();

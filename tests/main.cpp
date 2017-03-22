@@ -37,7 +37,7 @@ using namespace EPL_DataCollect::plugins;
 
 int main(int argc, char *argv[]) {
   Init init;
-  if (!init.getIsOK())
+  if (init.getIsOK() != Init::OK)
     return 1;
 
   PythonInit pyInit;

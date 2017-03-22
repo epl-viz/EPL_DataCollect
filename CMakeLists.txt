@@ -316,7 +316,7 @@ enum2str_generate(
   PATH       "${PROJECT_SOURCE_DIR}/dataCollect"
   CLASS_NAME "EPLEnum2Str"
   FUNC_NAME  "toStr"
-  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "XDDParser.hpp" "epan/ftypes/ftypes.h" "epan/prefs.h"
+  INCLUDES   "EPLEnums.h" "CaptureInstance.hpp" "XDDParser.hpp" "epan/ftypes/ftypes.h" "epan/prefs.h" "Init.hpp"
   INDENT_STR "  "
   NAMESPACE  "EPL_DataCollect"
   ENUMS
@@ -324,7 +324,7 @@ enum2str_generate(
     "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState"
     "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
-    "CaptureInstance::CIstate" "XDDParser::ErrorCode"
+    "CaptureInstance::CIstate" "XDDParser::ErrorCode" "Init::InitErrorCode"
 
     "ftenum" "prefs_set_pref_e"
   BLACKLIST
