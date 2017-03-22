@@ -28,7 +28,7 @@
 #include <CycleBuilder.hpp>
 #include <InputHandler.hpp>
 #include <catch.hpp>
-#include <fakeit.hpp>
+#include <iostream>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
@@ -39,7 +39,6 @@ namespace fs = std::filesystem;
 #endif
 
 using namespace EPL_DataCollect;
-using namespace fakeit;
 using namespace constants;
 
 TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
@@ -79,6 +78,20 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   REQUIRE(inst.getCycleBuilder()->getStats().cycleCount != UINT32_MAX);
+}
+
+TEST_CASE("Testing loading 2017-03-17_br_robot_only_1cn.pcapng.gz", "[CycleBuilder][br_robot]") {
+  CaptureInstance inst;
+
+  std::string file =
+        constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/2017-03-17_br_robot_only_1cn.pcapng.gz";
+  fs::path filePath(file);
+  REQUIRE(fs::exists(filePath));
+  REQUIRE(fs::is_regular_file(filePath));
+
+  REQUIRE(inst.loadPCAP(file) == 0);
+
+  inst.getCycleBuilder()->waitForLoopToFinish();
 }
 
 TEST_CASE("Testing loading withCollisions", "[CycleBuilder][CN0]") {

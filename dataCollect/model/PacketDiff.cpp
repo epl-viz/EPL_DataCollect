@@ -60,80 +60,80 @@ uint8_t PacketDiff::getSubIndex() const noexcept { return subIndex; }
 ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
   ODEntry *entryPTR = od->getEntry(odIndex);
 
-  if (entryPTR) {
-    ODEntryContainer entry(entryPTR);
+  if (!entryPTR) {
+    std::cout << "[PacketDiff] Entry " << std::hex << odIndex << std::dec
+              << " does not exist -- creating new fallback OD Description Index" << std::endl;
 
-    switch (entry->getType()) {
-      case ObjectClassType::INTEGER:
-        switch (bitLength) {
-          case L8: entry.getData<ODEntryInt>()->data  = static_cast<int64_t>(static_cast<int8_t>(valInt)); break;
-          case L16: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int16_t>(valInt)); break;
-          case L32: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
-          case L64: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int64_t>(valInt)); break;
-        }
-        break;
-      case ObjectClassType::UNSIGNED: entry.getData<ODEntryUInt>()->data = valInt; break;
-      case ObjectClassType::BOOL: entry.getData<ODEntryBool>()->data     = valInt != 0; break;
-      case ObjectClassType::REAL: entry.getData<ODEntryReal>()->data     = valReal; break;
-      case ObjectClassType::STRING: entry.getData<ODEntryString>()->data = std::to_string(valInt); break;
-      case ObjectClassType::ARRAY_INTEGER:
-        switch (bitLength) {
-          case L8:
-            entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int8_t>(valInt));
-            break;
-          case L16:
-            entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int16_t>(valInt));
-            break;
-          case L32:
-            entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int32_t>(valInt));
-            break;
-          case L64:
-            entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int64_t>(valInt));
-            break;
-        }
-        break;
-      case ObjectClassType::ARRAY_UNSIGNED: entry.getData<ODEntryArrayUInt>()->data[subIndex] = valInt; break;
-      case ObjectClassType::ARRAY_BOOL: entry.getData<ODEntryArrayBool>()->data[subIndex]     = valInt != 0; break;
-      case ObjectClassType::ARRAY_REAL: entry.getData<ODEntryArrayReal>()->data[subIndex]     = valReal; break;
-      case ObjectClassType::COMPLEX:
-        auto                    desc = od->getODDesc()->getEntry(odIndex);
-        ODEntryComplexContainer temp;
+    ODEntryDescription newDesc(subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY, ObjectDataType::INTEGER64);
+    newDesc.name = "<NOT IN XDD>";
 
-        if (subIndex < desc->subEntries.size()) {
-          temp.init(desc->subEntries[subIndex].dataType);
-        } else {
-          temp.init(ObjectDataType::UNSIGNED64);
-        }
-
-        switch (temp->getType()) {
-          case ObjectClassType::INTEGER:
-            switch (bitLength) {
-              case L8: entry.getData<ODEntryInt>()->data  = static_cast<int64_t>(static_cast<int8_t>(valInt)); break;
-              case L16: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int16_t>(valInt)); break;
-              case L32: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
-              case L64: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int64_t>(valInt)); break;
-            }
-            break;
-          case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
-          case ObjectClassType::BOOL: temp.getData<ODEntryBool>()->data     = valInt != 0; break;
-          case ObjectClassType::REAL: temp.getData<ODEntryReal>()->data     = valReal; break;
-          default: temp->setFromString(std::to_string(valInt), subIndex);
-        }
-
-        entry.getData<ODEntryComplex>()->data[subIndex] = temp;
-        break;
-    }
-
-    return entry;
-  } else {
-    ODEntryContainer fallback(ObjectDataType::UNSIGNED64, subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY);
-
-    if (fallback->getType() == ObjectClassType::UNSIGNED)
-      fallback.getData<ODEntryUInt>()->data = valInt;
-    else if (fallback->getType() == ObjectClassType::ARRAY_UNSIGNED)
-      fallback.getData<ODEntryArrayUInt>()->data[subIndex] = valInt;
-
-    return fallback;
+    od->getODDesc()->setEntry(odIndex, newDesc);
+    entryPTR = od->getEntry(odIndex);
   }
+
+  ODEntryContainer entry(entryPTR);
+
+  switch (entry->getType()) {
+    case ObjectClassType::INTEGER:
+      switch (bitLength) {
+        case L8: entry.getData<ODEntryInt>()->data  = static_cast<int64_t>(static_cast<int8_t>(valInt)); break;
+        case L16: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int16_t>(valInt)); break;
+        case L32: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
+        case L64: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int64_t>(valInt)); break;
+      }
+      break;
+    case ObjectClassType::UNSIGNED: entry.getData<ODEntryUInt>()->data = valInt; break;
+    case ObjectClassType::BOOL: entry.getData<ODEntryBool>()->data     = valInt != 0; break;
+    case ObjectClassType::REAL: entry.getData<ODEntryReal>()->data     = valReal; break;
+    case ObjectClassType::STRING: entry.getData<ODEntryString>()->data = std::to_string(valInt); break;
+    case ObjectClassType::ARRAY_INTEGER:
+      switch (bitLength) {
+        case L8:
+          entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int8_t>(valInt));
+          break;
+        case L16:
+          entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int16_t>(valInt));
+          break;
+        case L32:
+          entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int32_t>(valInt));
+          break;
+        case L64:
+          entry.getData<ODEntryArrayInt>()->data[subIndex] = static_cast<int64_t>(static_cast<int64_t>(valInt));
+          break;
+      }
+      break;
+    case ObjectClassType::ARRAY_UNSIGNED: entry.getData<ODEntryArrayUInt>()->data[subIndex] = valInt; break;
+    case ObjectClassType::ARRAY_BOOL: entry.getData<ODEntryArrayBool>()->data[subIndex]     = valInt != 0; break;
+    case ObjectClassType::ARRAY_REAL: entry.getData<ODEntryArrayReal>()->data[subIndex]     = valReal; break;
+    case ObjectClassType::COMPLEX:
+      auto                    desc = od->getODDesc()->getEntry(odIndex);
+      ODEntryComplexContainer temp;
+
+      if (subIndex < desc->subEntries.size()) {
+        temp.init(desc->subEntries[subIndex].dataType);
+      } else {
+        temp.init(ObjectDataType::UNSIGNED64);
+      }
+
+      switch (temp->getType()) {
+        case ObjectClassType::INTEGER:
+          switch (bitLength) {
+            case L8: entry.getData<ODEntryInt>()->data  = static_cast<int64_t>(static_cast<int8_t>(valInt)); break;
+            case L16: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int16_t>(valInt)); break;
+            case L32: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
+            case L64: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int64_t>(valInt)); break;
+          }
+          break;
+        case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
+        case ObjectClassType::BOOL: temp.getData<ODEntryBool>()->data     = valInt != 0; break;
+        case ObjectClassType::REAL: temp.getData<ODEntryReal>()->data     = valReal; break;
+        default: temp->setFromString(std::to_string(valInt), subIndex);
+      }
+
+      entry.getData<ODEntryComplex>()->data[subIndex] = temp;
+      break;
+  }
+
+  return entry;
 }
 }

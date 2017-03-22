@@ -45,6 +45,14 @@ constexpr uint32_t calcMaxComplex(uint32_t prev) {
   return prev;
 }
 
+template <class C>
+constexpr uint32_t calcMaxAlignComplex(uint32_t prev) {
+  if (alignof(C) > prev)
+    return alignof(C);
+
+  return prev;
+}
+
 /*!
  * \brief Calculates the maximum size of an OD Entry
  */
@@ -58,11 +66,22 @@ constexpr uint32_t calcSizeComplex() {
 
   return size;
 }
+
+constexpr uint32_t calcAlignComplex() {
+  uint32_t size = 0;
+
+  size = calcMaxAlignComplex<ODEntryInt>(size);
+  size = calcMaxAlignComplex<ODEntryUInt>(size);
+  size = calcMaxAlignComplex<ODEntryBool>(size);
+  size = calcMaxAlignComplex<ODEntryReal>(size);
+
+  return size;
+}
 };
 
 class ODEntryComplexContainer {
  private:
-  char data[internal::calcSizeComplex()]; //!< The data storage
+  alignas(internal::calcAlignComplex()) char data[internal::calcSizeComplex()]; //!< The data storage
   bool isInit = false;
 
   template <class C>

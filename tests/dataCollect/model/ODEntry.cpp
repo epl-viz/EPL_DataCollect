@@ -26,10 +26,10 @@
 
 #include <ODEntryContainer.hpp>
 #include <catch.hpp>
-#include <fakeit.hpp>
+#include <iostream>
 
 using namespace EPL_DataCollect;
-using namespace fakeit;
+using namespace EPL_DataCollect::internal;
 
 bool checkDouble(double a, double b);
 bool checkDouble(double a, double b) {
@@ -107,8 +107,8 @@ TEST_CASE("Testing ODT 2 OCT", "[ODEntry]") {
 }
 
 TEST_CASE("Testing ODEntryInt", "[ODEntry]") {
-  std::cout << "ODEntry container size: \x1b[33;1m" << EPL_DataCollect::internal::calcSize() << "\x1b[0m Byte"
-            << std::endl;
+  std::cout << "ODEntry container size: \x1b[33;1m" << internal::calcSize() << "\x1b[m Byte" << std::endl
+            << "ODEntry alignment:      \x1b[33;1m" << internal::calcAlign() << "\x1b[m Byte" << std::endl;
 
   ODEntryContainer ct(ObjectDataType::INTEGER32);
   auto             ptr   = *ct;

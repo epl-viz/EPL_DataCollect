@@ -28,7 +28,6 @@
 #include <CycleBuilder.hpp>
 #include <InputHandler.hpp>
 #include <catch.hpp>
-#include <fakeit.hpp>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
@@ -39,7 +38,6 @@ namespace fs = std::filesystem;
 #endif
 
 using namespace EPL_DataCollect;
-using namespace fakeit;
 
 
 TEST_CASE("Testing Cycle container", "[CycleContainer]") {

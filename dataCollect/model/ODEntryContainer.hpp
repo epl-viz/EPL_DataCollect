@@ -48,6 +48,14 @@ constexpr uint32_t calcMax(uint32_t prev) {
   return prev;
 }
 
+template <class C>
+constexpr uint32_t calcMaxAlign(uint32_t prev) {
+  if (alignof(C) > prev)
+    return alignof(C);
+
+  return prev;
+}
+
 /*!
  * \brief Calculates the maximum size of an OD Entry
  */
@@ -67,6 +75,26 @@ constexpr uint32_t calcSize() {
 
   return size;
 }
+
+/*!
+ * \brief Calculates the maximum size of an OD Entry
+ */
+constexpr uint32_t calcAlign() {
+  uint32_t size = 0;
+
+  size = calcMaxAlign<ODEntryInt>(size);
+  size = calcMaxAlign<ODEntryUInt>(size);
+  size = calcMaxAlign<ODEntryBool>(size);
+  size = calcMaxAlign<ODEntryReal>(size);
+  size = calcMaxAlign<ODEntryString>(size);
+  size = calcMaxAlign<ODEntryArrayInt>(size);
+  size = calcMaxAlign<ODEntryArrayUInt>(size);
+  size = calcMaxAlign<ODEntryArrayBool>(size);
+  size = calcMaxAlign<ODEntryArrayReal>(size);
+  size = calcMaxAlign<ODEntryComplex>(size);
+
+  return size;
+}
 };
 
 /*!
@@ -74,7 +102,7 @@ constexpr uint32_t calcSize() {
  */
 class ODEntryContainer final {
  private:
-  char data[internal::calcSize()]; //!< The data storage
+  alignas(internal::calcAlign()) char data[internal::calcSize()]; //!< The data storage
 
   template <class C>
   inline C *init(ObjectDataType type) noexcept;
