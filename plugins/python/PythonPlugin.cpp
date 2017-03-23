@@ -35,6 +35,10 @@
 #include "EvView.hpp"
 #include "EventBase.hpp"
 #include "PyStorage.hpp"
+#include <EvDebug.hpp>
+#include <EvError.hpp>
+#include <EvInfo.hpp>
+#include <EvWarning.hpp>
 #include "EPLEnums.h"
 #include "Python.h"
 #include "iostream"
@@ -318,7 +322,28 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
                                                EventBase::INDEX_MAP()));
     case EvType::VIEW_EV_TEXT: // add event text
       return addEvent(std::make_unique<EvPluginText>(
-            getID(), std::string("PluginEvent"), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    case EvType::PROTO_ERROR: // add proto error event
+      try {
+        val = std::stoi(value);
+        if (val < 0)
+          return false;
+      } catch (std::invalid_argument ia) { return false; }
+      return addEvent(std::make_unique<EvDebug>(
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    // adding internal events
+    case EvType::ERROR:
+      return addEvent(std::make_unique<EvError>(
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    case EvType::WARNING:
+      return addEvent(std::make_unique<EvWarning>(
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    case EvType::INFO:
+      return addEvent(std::make_unique<EvInfo>(
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
+    case EvType::DEBUG:
+      return addEvent(std::make_unique<EvDebug>(
+            getID(), std::string(PLUGIN_EV), value, 0, getCurrentCycle(), EventBase::INDEX_MAP()));
     default: return false;
   }
 };
@@ -330,7 +355,8 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
  *
  */
 void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
-  auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+  auto *_filters =
+        dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
 
   if (filterID == UINT16_MAX)
     return;
@@ -346,14 +372,15 @@ void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
  * @return bool whether successful
  */
 bool PythonPlugin::requestFilter(int filterType) {
-  auto *_filters = dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+  auto *_filters =
+        dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
 
   // one filter is already set
   if (filterID != UINT16_MAX)
     return false;
 
   // if not set one
-  switch(static_cast<FilterType>(filterType)) {
+  switch (static_cast<FilterType>(filterType)) {
     case FilterType::INCLUDE:
       filterID = _filters->newFilter(FilterType::INCLUDE, std::string(FILTER_NAME) + plugID + ":INCLUDE");
       return true;
