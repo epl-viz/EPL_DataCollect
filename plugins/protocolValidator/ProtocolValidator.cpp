@@ -33,11 +33,17 @@
 #include "EPLEnum2Str.hpp"
 #include "EvPluginText.hpp"
 #include "Packet.hpp"
+#include <EvInfo.hpp>
+#include <EvProtoError.hpp>
 #include <EvView.hpp>
+#include <EvWarning.hpp>
 #include "EPLEnums.h"
 #include <iostream>
 
 #define PROTOCOL_VAL "ProtocolValidatorEvent"
+#define NAME_STATUS_CHANGE "StatusChange"
+#define NAME_NO_EPL_PACKET "NoEPL_Packet"
+#define NAME_TO "Timeout"
 #define CASE_NO_EPL_PACKET "Packet is not a EPL packet"
 #define CASE_STATUS_CHANGE(id, former, later) \
   "Node [" + id + "] changes state from\t[" + former + "] to \t[" + later + "]"
@@ -77,7 +83,8 @@ void ProtocolValidator::run(Cycle *cycle) {
     if ((*_nmtstati)[nodeID] != cycle->getNode(nodeID)->getStatus()) {
       std::string temp = CASE_STATUS_CHANGE(
             std::to_string(nodeID), EPLEnum2Str::toStr((*_nmtstati)[nodeID]), cycle->getNode(nodeID)->getStatusStr());
-      shootValidatorEvent(temp, cycle);
+      addEvent(std::make_unique<EvInfo>(
+            getID(), std::string(NAME_STATUS_CHANGE), temp, cycle->getCycleNum(), cycle, EventBase::INDEX_MAP()));
       (*_nmtstati)[nodeID] = cycle->getNode(nodeID)->getStatus();
     }
   }
@@ -85,14 +92,19 @@ void ProtocolValidator::run(Cycle *cycle) {
   for (auto packet : cycle->getPackets()) {
     // checking if it's a EPL packet in the first place
     if (packet.getType() == PacketType::UNDEF) {
-      shootValidatorEvent(CASE_NO_EPL_PACKET, cycle);
+      addEvent(std::make_unique<EvProtoError>(getID(),
+                                              std::string(NAME_NO_EPL_PACKET),
+                                              std::string(CASE_NO_EPL_PACKET),
+                                              cycle->getCycleNum(),
+                                              cycle,
+                                              EventBase::INDEX_MAP()));
     }
 
     // checking if time between poll requests is fine
     if (packet.getType() == PacketType::POLL_REQUEST) {
       ODEntry *entry = cycle->getNode(packet.getDestNode())->getOD()->getEntry(CYCLE_TIME_ENTRY);
 
-      if(!entry)
+      if (!entry)
         continue;
 
       int cycle_len = static_cast<int>(entry->getNumericValue());
@@ -107,7 +119,8 @@ void ProtocolValidator::run(Cycle *cycle) {
             std::string temp =
                   CASE_PREQ_INVALID_TIMES(std::to_string(packet.getDestNode()),
                                           std::to_string(packet.getTime() - (*_preqs)[packet.getDestNode()]));
-            shootValidatorEvent(temp, cycle);
+            addEvent(std::make_unique<EvWarning>(
+                  getID(), std::string(NAME_TO), temp, cycle->getCycleNum(), cycle, EventBase::INDEX_MAP()));
           }
         }
         (*_preqs)[packet.getDestNode()] = packet.getTime();
