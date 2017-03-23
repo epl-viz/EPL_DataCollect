@@ -192,6 +192,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     }
 
     pData.cycleOffsetMap.emplace_back(currentCyclePacketIndex);
+    pData.lastValidCyclePacket = pData.packetOffsetMap.size() - 1;
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
     cd->packets = std::move(tempPKG);
@@ -209,7 +210,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
     auto next  = cd->num + 1;
     auto first = pData.cycleOffsetMap[cd->num];
-    auto last  = next < pData.cycleOffsetMap.size() ? pData.cycleOffsetMap[next] : pData.packetOffsetMap.size();
+    auto last  = next < pData.cycleOffsetMap.size() ? pData.cycleOffsetMap[next] : pData.lastValidCyclePacket;
 
     // Iterate from first to last - 1 (last is the NEXT SoC)
     for (auto i = first; i < last; ++i) {

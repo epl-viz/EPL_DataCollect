@@ -104,6 +104,8 @@ void CycleBuilder::buildNextCycle() noexcept {
     return;
   }
 
+  std::lock_guard<std::mutex> lock(currentCycleAccessMutex);
+
   currentCycle.cycleNum = nextCycleNum;
   currentCycle.updatePackets(packets);
 
@@ -416,6 +418,7 @@ Cycle CycleBuilder::seekCycle(uint32_t targetCycle, Cycle start) noexcept {
  */
 Cycle CycleBuilder::getCurrentCycle() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  std::lock_guard<std::mutex>           lockCurCycle(currentCycleAccessMutex);
   return currentCycle;
 }
 

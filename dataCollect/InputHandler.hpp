@@ -180,7 +180,8 @@ class InputHandler {
     WiresharkParser::parserData workingData;
 
     std::vector<uint64_t> cycleOffsetMap;
-    bool                  parserReachedEnd = false;
+    uint64_t              lastValidCyclePacket = 0;
+    bool                  parserReachedEnd     = false;
 
     Packet latestSoC = Packet(nullptr);
 

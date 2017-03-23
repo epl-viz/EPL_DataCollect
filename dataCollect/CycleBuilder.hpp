@@ -80,7 +80,9 @@ class CycleBuilder {
   CaptureInstance *parent = nullptr;
   InputHandler *   ih     = nullptr;
 
-  Cycle                currentCycle;
+  std::mutex currentCycleAccessMutex;
+  Cycle      currentCycle;
+
   std::recursive_mutex accessMutex;
   std::thread          loopThread;
 
