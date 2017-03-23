@@ -235,21 +235,17 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
 
 
 bool InputHandler::waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept {
-  system_clock::time_point start = system_clock::now();
-  std::mutex               wait;
+  system_clock::time_point     start = system_clock::now();
+  std::unique_lock<std::mutex> lock(cyclesMutex);
 
   while (true) {
     if (system_clock::now() - start > timeout)
       break;
 
-    {
-      std::lock_guard<std::mutex> cLk(cyclesMutex);
-      if (cd->flags & DONE)
-        return true;
-    }
+    if (cd->flags & DONE)
+      return true;
 
-    std::unique_lock<std::mutex> lk(wait);
-    waitForDoneWorkSignal.wait_until(lk, start + timeout);
+    waitForDoneWorkSignal.wait_until(lock, start + timeout);
   }
 
   return false;
@@ -298,14 +294,21 @@ std::vector<Packet> InputHandler::getCyclePackets(uint32_t cycleNum, millisecond
   }
 
   if (cd->flags & DONE) {
+    std::lock_guard<std::mutex> cLk(cyclesMutex);
+    cd->flags |= CLEANUP;
     return cd->packets;
   } else {
+    {
+      std::lock_guard<std::mutex> cLk(cyclesMutex);
+      cd->flags |= NO_DELETE;
+    }
     if (!waitForCycleCompletion(cd, timeout)) {
       return std::vector<Packet>();
     }
   }
 
 
+  std::lock_guard<std::mutex> cLk(cyclesMutex);
   cd->flags |= CLEANUP;
   return cd->packets;
 }
@@ -407,7 +410,7 @@ void InputHandler::builderLoop() {
 
 
     if (!current.cleanup) {
-      parseCycle(current.out);
+      parseCycle(current.out);            // Locks cyclesMutex when needed
       waitForDoneWorkSignal.notify_all(); // let waiting threads continue
     } else {
       std::lock_guard<std::mutex> lk(cyclesMutex);
