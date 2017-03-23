@@ -10,3 +10,10 @@ cpdef enum Events:
   EV_JUMPTOTIME = <int>CEvents.EvType.VIEW_EV_JUMPTOTIME
   EV_TEXT = <int>CEvents.EvType.VIEW_EV_TEXT
   EV_OTHER = <int>CEvents.EvType.PLUGIN_OTHER
+
+  # misc events
+  EV_PROTO_ERROR = <int>CEvents.EvType.PROTO_ERROR
+  EV_ERROR = <int>CEvents.EvType.ERROR
+  EV_WARNING = <int>CEvents.EvType.WARNING
+  EV_INFO = <int>CEvents.EvType.INFO
+  EV_DEBUG = <int>CEvents.EvType.DEBUG

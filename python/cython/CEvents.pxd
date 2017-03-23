@@ -12,3 +12,10 @@ cdef extern from "EPLEnums.h" namespace "EPL_DataCollect::EvType":
     VIEW_EV_JUMPTOTIME,
     VIEW_EV_TEXT,
     VIEW_EV_IMAGE,
+
+    # misc
+    PROTO_ERROR,
+    ERROR,
+    WARNING,
+    INFO,
+    DEBUG,
