@@ -80,7 +80,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
   if (!metaData)
-    return Packet(&pData.workingData);
+    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset));
 
   metaData->flags  = 0;
   metaData->offset = static_cast<uint64_t>(diss->offset);
@@ -113,7 +113,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
     default: break;
   }
 
-  return Packet(&pData.workingData);
+  return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset));
 }
 
 /*!

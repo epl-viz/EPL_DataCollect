@@ -183,7 +183,7 @@ class InputHandler {
     uint64_t              lastValidCyclePacket = 0;
     bool                  parserReachedEnd     = false;
 
-    Packet latestSoC = Packet(nullptr);
+    Packet latestSoC = Packet(nullptr, 0);
 
     std::vector<PacketMetadata> packetOffsetMap;
   } pData;

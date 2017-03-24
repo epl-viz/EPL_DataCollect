@@ -114,6 +114,9 @@ void CycleBuilder::buildNextCycle() noexcept {
 
   // Process packets
   for (auto const &i : packets) {
+    if (i.getOffset() > maxProcessingOffset)
+      maxProcessingOffset = i.getOffset();
+
     if (i.getType() == PacketType::UNDEF)
       continue;
 
@@ -433,4 +436,6 @@ CycleBuilder::Locker CycleBuilder::getCurrentCyclePTR() noexcept {
 }
 
 CycleBuilder::Statistics CycleBuilder::getStats() const noexcept { return stats; }
+
+uint64_t CycleBuilder::getMaxProcessingOffset() const noexcept { return maxProcessingOffset; }
 }

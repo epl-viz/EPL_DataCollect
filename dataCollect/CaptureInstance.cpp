@@ -402,4 +402,26 @@ CaptureInstance::NodeConfig CaptureInstance::getNodeConfig(uint8_t node) noexcep
 void CaptureInstance::setNodeConfig(uint8_t node, CaptureInstance::NodeConfig newCfg) noexcept {
   nodeCfg[node] = newCfg;
 }
+
+/*!
+ * \brief Returns the size of the current file
+ * \note This may not be equivalent to the file size on the disk!
+ */
+uint64_t CaptureInstance::getFileSize() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  if (!capture)
+    return UINT64_MAX;
+
+  return ws_capture_file_size(capture);
+}
+
+/*!
+ * \brief Returns the current file processing offset
+ *
+ * The offset represents how much of the file has been processed.
+ */
+uint64_t CaptureInstance::getCurrentFileProcessingOffset() noexcept {
+  std::lock_guard<std::recursive_mutex> lock(accessMutex);
+  return builder.getMaxProcessingOffset();
+}
 }

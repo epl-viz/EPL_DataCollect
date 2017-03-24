@@ -145,6 +145,9 @@ class CaptureInstance {
 
   mockable NodeConfig getNodeConfig(uint8_t node) noexcept;
   mockable void setNodeConfig(uint8_t node, NodeConfig newCfg) noexcept;
+
+  mockable uint64_t getFileSize() noexcept;
+  mockable uint64_t getCurrentFileProcessingOffset() noexcept;
 };
 
 

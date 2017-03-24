@@ -101,6 +101,8 @@ class CycleBuilder {
   uint32_t   appID;
   Statistics stats;
 
+  uint64_t maxProcessingOffset = 0;
+
  public:
   CycleBuilder() = delete;
   CycleBuilder(CaptureInstance *ptr);
@@ -121,6 +123,8 @@ class CycleBuilder {
   mockable Cycle getCurrentCycle() noexcept;
   mockable Locker getCurrentCyclePTR() noexcept;
   mockable Statistics getStats() const noexcept;
+
+  mockable uint64_t getMaxProcessingOffset() const noexcept;
 
 #if EPL_DC_ENABLE_MOCKING == 0
  private:

@@ -122,10 +122,10 @@ TEST_CASE("Packets are updated correctly") {
   WiresharkParser::parserData d;
 
   // Create sample packets
-  newPackets.emplace_back(&d);
-  newPackets.emplace_back(&d);
-  newPackets.emplace_back(&d);
-  newPackets.emplace_back(&d);
+  newPackets.emplace_back(&d, 0);
+  newPackets.emplace_back(&d, 10);
+  newPackets.emplace_back(&d, 20);
+  newPackets.emplace_back(&d, 30);
 
   SECTION("Updating Packets") {
     c.updatePackets(newPackets);

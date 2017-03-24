@@ -82,6 +82,7 @@ class Packet {
   uint8_t nodeDest;
 
   TIME_POINT timeStamp;
+  uint64_t   offset;
 
  public:
   std::shared_ptr<s_SoC>        SoC            = nullptr;
@@ -99,7 +100,7 @@ class Packet {
   Packet() = delete;
   virtual ~Packet();
 
-  Packet(const WiresharkParser::parserData *const data);
+  Packet(const WiresharkParser::parserData *const data, uint64_t of);
 
   Packet(const Packet &) = default;
   Packet(Packet &&)      = default;
@@ -119,6 +120,7 @@ class Packet {
   mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;
   mockable int64_t getTime() const noexcept;
+  mockable uint64_t getOffset() const noexcept;
 
   mockable void addDiff(PacketDiff diff) noexcept;
 };

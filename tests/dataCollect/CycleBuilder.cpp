@@ -75,9 +75,11 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   REQUIRE(inst.getCycleBuilder()->getStats().cycleCount == UINT32_MAX);
   REQUIRE(inst.loadPCAP(file) == 0);
   REQUIRE(inst.getCycleBuilder()->isRunning() == true);
+  REQUIRE(inst.getFileSize() == 80961944);
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   REQUIRE(inst.getCycleBuilder()->getStats().cycleCount != UINT32_MAX);
+  REQUIRE(inst.getCurrentFileProcessingOffset() > 0);
 }
 
 TEST_CASE("Testing loading 2017-03-17_br_robot_only_1cn.pcapng.gz", "[CycleBuilder][br_robot]") {
