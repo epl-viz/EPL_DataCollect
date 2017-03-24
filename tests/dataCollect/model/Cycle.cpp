@@ -122,10 +122,13 @@ TEST_CASE("Packets are updated correctly") {
   WiresharkParser::parserData d;
 
   // Create sample packets
-  newPackets.emplace_back(&d, 0);
-  newPackets.emplace_back(&d, 10);
-  newPackets.emplace_back(&d, 20);
-  newPackets.emplace_back(&d, 30);
+  newPackets.emplace_back(&d, 0, 0);
+  newPackets.emplace_back(&d, 10, 1);
+  newPackets.emplace_back(&d, 20, 2);
+  newPackets.emplace_back(&d, 30, 3);
+
+  REQUIRE(newPackets[2].getOffset() == 20);
+  REQUIRE(newPackets[3].getPhysicalFileOffset() == 3);
 
   SECTION("Updating Packets") {
     c.updatePackets(newPackets);

@@ -80,7 +80,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
   if (!metaData)
-    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset));
+    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset), 0);
 
   metaData->flags  = 0;
   metaData->offset = static_cast<uint64_t>(diss->offset);
@@ -113,7 +113,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
     default: break;
   }
 
-  return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset));
+  return Packet(&pData.workingData, metaData->offset, metaData->phOffset);
 }
 
 /*!
@@ -178,7 +178,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      Packet tmp = parsePacket(&diss, &metaData);
+      metaData.phOffset = ws_capture_read_so_far(ws_dissect_get_capture(pData.dissect));
+      Packet tmp        = parsePacket(&diss, &metaData);
 
       std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
       pData.packetOffsetMap.emplace_back(metaData);
@@ -219,7 +220,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      tempPKG.emplace_back(parsePacket(&diss));
+      tempPKG.emplace_back(parsePacket(&diss, &pData.packetOffsetMap[i]));
     }
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);

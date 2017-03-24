@@ -114,8 +114,8 @@ void CycleBuilder::buildNextCycle() noexcept {
 
   // Process packets
   for (auto const &i : packets) {
-    if (i.getOffset() > maxProcessingOffset)
-      maxProcessingOffset = i.getOffset();
+    if (i.getPhysicalFileOffset() > maxProcessingOffset)
+      maxProcessingOffset = i.getPhysicalFileOffset();
 
     if (i.getType() == PacketType::UNDEF)
       continue;
