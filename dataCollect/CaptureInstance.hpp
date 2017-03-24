@@ -102,6 +102,8 @@ class CaptureInstance {
 
   Cycle startCycle;
 
+  uint64_t fileSize = UINT64_MAX;
+
   mockable int setupLoop();
   mockable int errorCleanup(int retVal);
 

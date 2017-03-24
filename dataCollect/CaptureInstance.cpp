@@ -238,6 +238,8 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
     return 12;
   }
 
+  fileSize = ws_capture_file_size(capture);
+
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
     ws_capture_close(capture);
@@ -409,10 +411,8 @@ void CaptureInstance::setNodeConfig(uint8_t node, CaptureInstance::NodeConfig ne
  */
 uint64_t CaptureInstance::getFileSize() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  if (!capture)
-    return UINT64_MAX;
 
-  return ws_capture_file_size(capture);
+  return fileSize;
 }
 
 /*!
