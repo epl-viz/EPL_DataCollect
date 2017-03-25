@@ -67,6 +67,20 @@ namespace EPL_DataCollect {
 class CaptureInstance {
  public:
   enum CIstate { SETUP, RUNNING, DONE, ERRORED };
+  enum CIErrorCode {
+    OK = 0,
+    INVALID_CI_STATE,
+    FILE_DOES_NOT_EXIST,
+    NOT_A_REGULAR_FILE,
+    FAILED_TO_LOAD_FILE,
+    WIRESHARK_FAILED_TO_DISSECT_CAPTURE,
+
+    INTERFACE_DOES_NOT_EXIST,
+    FAILED_TO_CAPTURE_ON_INTERFACE,
+
+    FAILED_TO_INITIALISE_PLUGINS,
+    FAILED_TO_START_BUILD_LOOP
+  };
 
   struct Config {
     SnapshotManager::Config smConfig;
@@ -104,8 +118,8 @@ class CaptureInstance {
 
   uint64_t fileSize = UINT64_MAX;
 
-  mockable int setupLoop();
-  mockable int errorCleanup(int retVal);
+  mockable CIErrorCode setupLoop();
+  mockable CIErrorCode errorCleanup(CIErrorCode retVal);
 
  public:
   CaptureInstance() : cycleContainer(this), builder(this) { cfg = getConfig(); }
@@ -118,9 +132,9 @@ class CaptureInstance {
   CaptureInstance &operator=(CaptureInstance &&) = delete;
 
 
-  mockable int startRecording(std::string interface) noexcept;
-  mockable int stopRecording() noexcept;
-  mockable int loadPCAP(std::string file) noexcept;
+  mockable CIErrorCode startRecording(std::string interface) noexcept;
+  mockable CIErrorCode stopRecording() noexcept;
+  mockable CIErrorCode loadPCAP(std::string file) noexcept;
 
   template <class C, class... ARGS>
   inline bool registerCycleStorage(std::string index, ARGS... args);

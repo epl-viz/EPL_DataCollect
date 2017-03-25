@@ -65,9 +65,9 @@ class Packet {
   typedef std::chrono::system_clock::time_point TIME_POINT;
 
   struct ASnd {
-    ASndServiceID        RequestedServiceID     = ASndServiceID::RESERVED_0;
-    uint8_t              RequestedServiceTarget = UINT8_MAX;
-    std::vector<uint8_t> Data;
+    ASndServiceID RequestedServiceID     = ASndServiceID::RESERVED_0;
+    uint8_t       RequestedServiceTarget = UINT8_MAX;
+    std::string   Data;
   };
 
  private:

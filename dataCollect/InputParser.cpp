@@ -72,7 +72,7 @@ inline void bindUINT64(parserData *d, field_info *fi, uint64_t &val);
 inline void bindTIME(parserData *d, field_info *fi, nstime_t &val);
 inline void bindBOOL(parserData *d, field_info *fi, bool &val);
 inline void bindSTRING(parserData *d, field_info *fi, std::string &val);
-inline void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val);
+inline void bindBYTES(parserData *d, field_info *fi, std::string &val);
 inline void bindIPV4(parserData *d, field_info *fi, std::string &val);
 inline void bindETHER(parserData *d, field_info *fi, std::string &val);
 inline void bindDIFF(parserData *d, field_info *fi, PacketDiff &val);
@@ -157,7 +157,7 @@ void bindSTRING(parserData *d, field_info *fi, std::string &val) {
   DPRINT(d, fi, val, "");
 }
 
-void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val) {
+void bindBYTES(parserData *d, field_info *fi, std::string &val) {
   if (fi->hfinfo->type != FT_BYTES) {
     std::cerr << "[WS Parser] bindBYTES: '" << fi->hfinfo->name << "' is not FT_BYTES but "
               << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
@@ -171,12 +171,12 @@ void bindBYTES(parserData *d, field_info *fi, std::vector<uint8_t> &val) {
     length = static_cast<size_t>(fi->value.ftype->wire_size);
   }
 
-  length /= 2; // length represents the length of a HEX STRING in wireshark (for some reason.....)
+  guint8 *bytes = static_cast<guint8 *>(fvalue_get(&fi->value));
+  char *  str   = bytestring_to_str(NULL, bytes, static_cast<guint32>(length), ' ');
+  val           = str;
+  wmem_free(NULL, str);
 
-  val.resize(length);
-
-  memcpy(val.data(), fi->value.value.bytes, length);
-  DPRINT(d, fi, std::to_string(fi->length) + " Bytes", "");
+  DPRINT(d, fi, val, "");
 }
 
 void bindIPV4(parserData *d, field_info *fi, std::string &val) {

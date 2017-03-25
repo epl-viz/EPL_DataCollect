@@ -57,7 +57,7 @@ namespace WiresharkParser {
 struct parserData final {
   std::string const *eplFrameName = nullptr;
 
-  std::vector<uint8_t>    data;
+  std::string             data;
   plf::colony<PacketDiff> diffs;
 
   PacketType                            pType       = PacketType::UNDEF;
@@ -129,91 +129,91 @@ struct parserData final {
 
   /* ASnd header */
   struct ASnd final {
-    ASndServiceID        RequestedServiceID     = ASndServiceID::RESERVED_0;
-    uint8_t              RequestedServiceTarget = UINT8_MAX;
-    std::vector<uint8_t> Data;
+    ASndServiceID RequestedServiceID     = ASndServiceID::RESERVED_0;
+    uint8_t       RequestedServiceTarget = UINT8_MAX;
+    std::string   Data;
 
     /* ASnd-->IdentResponse
      * \sa EPSG DS 301 V1.3.0 page 267-269
      */
     struct IdentResponse final {
-      bool                 ExceptionNew             = false;
-      bool                 ExceptionClear           = false;
-      AsyncSendPriority    Priority                 = AsyncSendPriority::LOWEST;
-      uint8_t              RequestToSend            = UINT8_MAX;
-      uint8_t              EPLVersion               = UINT8_MAX;
-      bool                 Isochronous              = false;
-      bool                 SDOByUDP_IP              = false;
-      bool                 SDOByASnd                = false;
-      bool                 SDOByPDO                 = false;
-      bool                 NMTInfoServices          = false;
-      bool                 ExtNMTStateCommands      = false;
-      bool                 DynamicPDOMapping        = false;
-      bool                 NMTServiceByUDP_IP       = false;
-      bool                 ConfigurationManager     = false;
-      bool                 MultiplexedAccess        = false;
-      bool                 NodeIDSetupBySW          = false;
-      bool                 NMBasicEthernetMode      = false;
-      bool                 RoutingType1Support      = false;
-      bool                 RoutingType2Support      = false;
-      bool                 SDOReadWriteAll          = false;
-      bool                 SDOReadWriteMultiple     = false;
-      bool                 MultipleASendSupport     = false;
-      bool                 RingRedundancy           = false;
-      bool                 PResChaining             = false;
-      bool                 MultiplePReqPRes         = false;
-      bool                 DynamicNodeAllocation    = false;
-      uint16_t             MTU                      = UINT16_MAX;
-      uint16_t             PollInSize               = UINT16_MAX;
-      uint16_t             PollOutSize              = UINT16_MAX;
-      uint32_t             ResponseTime             = UINT32_MAX;
-      std::string          DeviceType               = "";
-      uint16_t             Profile                  = UINT16_MAX;
-      uint32_t             VendorId                 = UINT32_MAX;
-      uint32_t             ProductCode              = UINT32_MAX;
-      uint32_t             RevisionNumber           = UINT32_MAX;
-      uint32_t             SerialNumber             = UINT32_MAX;
-      uint64_t             VendorSpecificExtension1 = UINT64_MAX;
-      uint32_t             VerifyConfigurationDate  = UINT32_MAX;
-      uint32_t             VerifyConfigurationTime  = UINT32_MAX;
-      uint32_t             ApplicationSwDate        = UINT32_MAX;
-      uint32_t             ApplicationSwTime        = UINT32_MAX;
-      std::string          IPAddress                = "";
-      std::string          SubnetMask               = "";
-      std::string          DefaultGateway           = "";
-      std::string          HostName                 = "";
-      std::vector<uint8_t> VendorSpecificExtension2;
+      bool              ExceptionNew             = false;
+      bool              ExceptionClear           = false;
+      AsyncSendPriority Priority                 = AsyncSendPriority::LOWEST;
+      uint8_t           RequestToSend            = UINT8_MAX;
+      uint8_t           EPLVersion               = UINT8_MAX;
+      bool              Isochronous              = false;
+      bool              SDOByUDP_IP              = false;
+      bool              SDOByASnd                = false;
+      bool              SDOByPDO                 = false;
+      bool              NMTInfoServices          = false;
+      bool              ExtNMTStateCommands      = false;
+      bool              DynamicPDOMapping        = false;
+      bool              NMTServiceByUDP_IP       = false;
+      bool              ConfigurationManager     = false;
+      bool              MultiplexedAccess        = false;
+      bool              NodeIDSetupBySW          = false;
+      bool              NMBasicEthernetMode      = false;
+      bool              RoutingType1Support      = false;
+      bool              RoutingType2Support      = false;
+      bool              SDOReadWriteAll          = false;
+      bool              SDOReadWriteMultiple     = false;
+      bool              MultipleASendSupport     = false;
+      bool              RingRedundancy           = false;
+      bool              PResChaining             = false;
+      bool              MultiplePReqPRes         = false;
+      bool              DynamicNodeAllocation    = false;
+      uint16_t          MTU                      = UINT16_MAX;
+      uint16_t          PollInSize               = UINT16_MAX;
+      uint16_t          PollOutSize              = UINT16_MAX;
+      uint32_t          ResponseTime             = UINT32_MAX;
+      std::string       DeviceType               = "";
+      uint16_t          Profile                  = UINT16_MAX;
+      uint32_t          VendorId                 = UINT32_MAX;
+      uint32_t          ProductCode              = UINT32_MAX;
+      uint32_t          RevisionNumber           = UINT32_MAX;
+      uint32_t          SerialNumber             = UINT32_MAX;
+      uint64_t          VendorSpecificExtension1 = UINT64_MAX;
+      uint32_t          VerifyConfigurationDate  = UINT32_MAX;
+      uint32_t          VerifyConfigurationTime  = UINT32_MAX;
+      uint32_t          ApplicationSwDate        = UINT32_MAX;
+      uint32_t          ApplicationSwTime        = UINT32_MAX;
+      std::string       IPAddress                = "";
+      std::string       SubnetMask               = "";
+      std::string       DefaultGateway           = "";
+      std::string       HostName                 = "";
+      std::string       VendorSpecificExtension2;
     } IdentResponse;
 
 
     /* ASnd-->NMTRequest */
     struct NMTRequest final {
-      NMTCommand           NMTRequestedCommandID     = NMTCommand::INVALID_SERVICE;
-      uint8_t              NMTRequestedCommandTarget = UINT8_MAX;
-      std::vector<uint8_t> NMTRequestedCommandData;
+      NMTCommand  NMTRequestedCommandID     = NMTCommand::INVALID_SERVICE;
+      uint8_t     NMTRequestedCommandTarget = UINT8_MAX;
+      std::string NMTRequestedCommandData;
     } NMTRequest;
 
 
     /* ASnd-->NMTCommand */
     struct NMTCmd final {
-      NMTCommand           NMTCommandId = NMTCommand::INVALID_SERVICE;
-      uint16_t             ResetReason  = UINT16_MAX;
-      std::vector<uint8_t> CommandData;
-      std::vector<uint8_t> HostName;
-      uint8_t              NodeID = UINT8_MAX;
-      std::vector<uint8_t> DateTime;
-      std::vector<uint8_t> DNA;
-      uint8_t              ValidFlags               = UINT8_MAX;
-      bool                 LeaseTimeValid           = false;
-      bool                 HubPortEnableMaskValid   = false;
-      bool                 SetNewNodeNumber         = false;
-      bool                 CompareCurrentMacID      = false;
-      bool                 CompareCurrentNodeNumber = false;
-      std::string          CurrentMacID             = "";
-      uint64_t             HubPortEnableMask        = UINT64_MAX;
-      uint32_t             CurrentNodeNumber        = UINT32_MAX;
-      uint32_t             NewNodeNumber            = UINT32_MAX;
-      nstime_t             LeaseTime                = {0, 0};
+      NMTCommand  NMTCommandId = NMTCommand::INVALID_SERVICE;
+      uint16_t    ResetReason  = UINT16_MAX;
+      std::string CommandData;
+      std::string HostName;
+      uint8_t     NodeID = UINT8_MAX;
+      std::string DateTime;
+      std::string DNA;
+      uint8_t     ValidFlags               = UINT8_MAX;
+      bool        LeaseTimeValid           = false;
+      bool        HubPortEnableMaskValid   = false;
+      bool        SetNewNodeNumber         = false;
+      bool        CompareCurrentMacID      = false;
+      bool        CompareCurrentNodeNumber = false;
+      std::string CurrentMacID             = "";
+      uint64_t    HubPortEnableMask        = UINT64_MAX;
+      uint32_t    CurrentNodeNumber        = UINT32_MAX;
+      uint32_t    NewNodeNumber            = UINT32_MAX;
+      nstime_t    LeaseTime                = {0, 0};
     } NMTCmd;
 
 
@@ -225,14 +225,14 @@ struct parserData final {
       uint8_t           RequestToSend  = UINT8_MAX;
 
       /* StaticErrorBitField */
-      bool                 GenericError       = false;
-      bool                 Current            = false;
-      bool                 Voltage            = false;
-      bool                 Temperature        = false;
-      bool                 CommunicationError = false;
-      bool                 DeviceProfileSpecB = false;
-      bool                 ManufacturerSpec   = false;
-      std::vector<uint8_t> DeviceProfileSpec;
+      bool        GenericError       = false;
+      bool        Current            = false;
+      bool        Voltage            = false;
+      bool        Temperature        = false;
+      bool        CommunicationError = false;
+      bool        DeviceProfileSpecB = false;
+      bool        ManufacturerSpec   = false;
+      std::string DeviceProfileSpec;
     } StatusResponse;
 
     /* ASnd-->SyncResponse */
@@ -276,14 +276,14 @@ struct parserData final {
         uint16_t        MappingOffset     = UINT16_MAX;
         uint16_t        MappingLength     = UINT16_MAX;
 
-        bool                 FragmentOverlap          = false;
-        bool                 FragmentOverlapConflicts = false;
-        bool                 FragmentTailFragments    = false;
-        bool                 FragmentTooLong          = false;
-        uint32_t             FragmentCount            = UINT32_MAX;
-        uint8_t              Reassembled              = UINT8_MAX;
-        uint32_t             ReassembledLength        = UINT32_MAX;
-        std::vector<uint8_t> ReassembledData;
+        bool        FragmentOverlap          = false;
+        bool        FragmentOverlapConflicts = false;
+        bool        FragmentTailFragments    = false;
+        bool        FragmentTooLong          = false;
+        uint32_t    FragmentCount            = UINT32_MAX;
+        uint8_t     Reassembled              = UINT8_MAX;
+        uint32_t    ReassembledLength        = UINT32_MAX;
+        std::string ReassembledData;
 
         PacketDiff data = PacketDiff(UINT16_MAX, UINT8_MAX, UINT64_C(0));
       } CMD;

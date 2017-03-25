@@ -324,7 +324,7 @@ enum2str_generate(
     "PacketType" "SDOCommandID" "ObjectClassType" "ASndServiceID" "SoARequestServiceID" "NMTState"
     "SDOResConnectionType" "SDOSndConnectionType" "SDOSegmentation" "NMTCommand"
 
-    "CaptureInstance::CIstate" "XDDParser::ErrorCode" "Init::InitErrorCode"
+    "CaptureInstance::CIstate" "CaptureInstance::CIErrorCode" "XDDParser::ErrorCode" "Init::InitErrorCode"
 
     "ftenum" "prefs_set_pref_e"
   BLACKLIST

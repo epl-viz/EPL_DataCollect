@@ -78,13 +78,13 @@ CaptureInstance::~CaptureInstance() {
  * \returns 1   on PluginManager error; THIS SETS THE STATE TO ERRORED
  * \returns 100 when unable to start the build loop; THIS SETS THE STATE TO ERRORED
  */
-int CaptureInstance::setupLoop() {
+CaptureInstance::CIErrorCode CaptureInstance::setupLoop() {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   if (!pluginManager.init(this))
-    return errorCleanup(1);
+    return errorCleanup(FAILED_TO_INITIALISE_PLUGINS);
 
   if (dissect == nullptr)
-    return errorCleanup(-2);
+    return errorCleanup(WIRESHARK_FAILED_TO_DISSECT_CAPTURE);
 
   prefs_reset();
   for (auto i : nodeCfg) {
@@ -109,14 +109,14 @@ int CaptureInstance::setupLoop() {
 
   if (!builder.startLoop(startCycle)) {
     std::cerr << "[CaptureInstance] (setupLoop) Failed to start build loop" << std::endl;
-    return errorCleanup(100);
+    return errorCleanup(FAILED_TO_START_BUILD_LOOP);
   }
 
   state = RUNNING;
-  return 0;
+  return OK;
 }
 
-int CaptureInstance::errorCleanup(int retVal) {
+CaptureInstance::CIErrorCode CaptureInstance::errorCleanup(CIErrorCode retVal) {
   builder.stopLoop();
   iHandler.stopLoop();
 
@@ -143,13 +143,13 @@ int CaptureInstance::errorCleanup(int retVal) {
  * \param  interface The network device to use for the live capture
  * \sa setupLoop for return values
  */
-int CaptureInstance::startRecording(std::string interface) noexcept {
+CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interface) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   (void)interface;
 
   if (state != SETUP) {
     std::cerr << "[CaptureInstance] (startRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
-    return -1;
+    return INVALID_CI_STATE;
   }
 
   auto list  = getDevices();
@@ -163,18 +163,18 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
 
   if (!found) {
     std::cerr << "[CaptureInstance] (startRecording) Interface '" << interface << "' does not exist!" << std::endl;
-    return 11;
+    return INTERFACE_DOES_NOT_EXIST;
   }
 
   capture = ws_capture_open_live(interface.c_str(), 0, nullptr, nullptr, nullptr);
   if (capture == nullptr) {
-    return 12;
+    return FAILED_TO_CAPTURE_ON_INTERFACE;
   }
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
     ws_capture_close(capture);
-    return 13;
+    return WIRESHARK_FAILED_TO_DISSECT_CAPTURE;
   }
 
   SLEEP(seconds, 1); //! \todo Remove this sleep once the issue is resolved
@@ -190,18 +190,18 @@ int CaptureInstance::startRecording(std::string interface) noexcept {
  * \returns 1  on PluginManager error; THIS SETS THE STATE TO ERRORED
  * \returns 2  when the build loop could not be stopped; THIS SETS THE STATE TO ERRORED
  */
-int CaptureInstance::stopRecording() noexcept {
+CaptureInstance::CIErrorCode CaptureInstance::stopRecording() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
 
   if (state != RUNNING) {
     std::cerr << "[CaptureInstance] (stopRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
-    return -1;
+    return INVALID_CI_STATE;
   }
 
   builder.stopLoop();
 
   state = DONE;
-  return 0;
+  return OK;
 }
 
 
@@ -215,27 +215,27 @@ int CaptureInstance::stopRecording() noexcept {
  * \returns 13 if the wireshark dissector failed to load the capture
  * \sa setupLoop for return values
  */
-int CaptureInstance::loadPCAP(std::string file) noexcept {
+CaptureInstance::CIErrorCode CaptureInstance::loadPCAP(std::string file) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
 
   if (state != SETUP) {
     std::cerr << "[CaptureInstance] (loadPCAP) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
-    return -1;
+    return INVALID_CI_STATE;
   }
 
   fs::path filePath(file);
 
   if (!fs::exists(filePath)) {
-    return 10;
+    return FILE_DOES_NOT_EXIST;
   }
 
   if (!fs::is_regular_file(filePath)) {
-    return 11;
+    return NOT_A_REGULAR_FILE;
   }
 
   capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
   if (capture == nullptr) {
-    return 12;
+    return FAILED_TO_LOAD_FILE;
   }
 
   fileSize = ws_capture_file_size(capture);
@@ -243,7 +243,7 @@ int CaptureInstance::loadPCAP(std::string file) noexcept {
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
     ws_capture_close(capture);
-    return 13;
+    return WIRESHARK_FAILED_TO_DISSECT_CAPTURE;
   }
 
   return setupLoop();

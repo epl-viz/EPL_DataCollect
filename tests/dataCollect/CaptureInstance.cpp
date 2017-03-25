@@ -107,7 +107,7 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     REQUIRE(ci.getState() == CaptureInstance::DONE);
 #else
     REQUIRE(ci.getCurrentFilePath() == "");
-    REQUIRE(ci.startRecording("") == 11);
+    REQUIRE(ci.startRecording("") == CaptureInstance::INTERFACE_DOES_NOT_EXIST);
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
 #endif
   }
@@ -122,13 +122,13 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x6].get(), [](PluginBase *) {}));
 
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
-    REQUIRE(ci.loadPCAP("") == 10);
-    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT) == 11);
+    REQUIRE(ci.loadPCAP("") == CaptureInstance::FILE_DOES_NOT_EXIST);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT) == CaptureInstance::NOT_A_REGULAR_FILE);
     REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 0);
-    REQUIRE(ci.loadPCAP("") == -1);
+    REQUIRE(ci.loadPCAP("") == CaptureInstance::INVALID_CI_STATE);
     REQUIRE(ci.getState() == CaptureInstance::RUNNING);
-    REQUIRE(ci.stopRecording() == 0);
-    REQUIRE(ci.stopRecording() == -1);
+    REQUIRE(ci.stopRecording() == CaptureInstance::OK);
+    REQUIRE(ci.stopRecording() == CaptureInstance::INVALID_CI_STATE);
     REQUIRE(ci.getState() == CaptureInstance::DONE);
   }
 
@@ -142,8 +142,10 @@ TEST_CASE("Testing CaptureInstance", "[CaptureInstance]") {
     pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0xC].get(), [](PluginBase *) {}));
 
     REQUIRE(ci.getState() == CaptureInstance::SETUP);
-    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 1);
-    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == -1);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") ==
+            CaptureInstance::FAILED_TO_INITIALISE_PLUGINS);
+    REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") ==
+            CaptureInstance::INVALID_CI_STATE);
     REQUIRE(ci.getState() == CaptureInstance::ERRORED);
   }
 
@@ -195,7 +197,8 @@ TEST_CASE("Testing CaptureInstance -- plugin init error", "[CaptureInstance]") {
   pm.addPlugin(std::shared_ptr<PluginBase>(&pbMock[0x3].get(), [](PluginBase *) {}));
 
   REQUIRE(ci.getState() == CaptureInstance::SETUP);
-  REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") == 1);
+  REQUIRE(ci.loadPCAP(constants::EPL_DC_BUILD_DIR_ROOT + "/external/resources/pcaps/EPL_Example.cap") ==
+          CaptureInstance::FAILED_TO_INITIALISE_PLUGINS);
   REQUIRE(ci.getState() == CaptureInstance::ERRORED);
 }
 
