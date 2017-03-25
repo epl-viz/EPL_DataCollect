@@ -76,5 +76,16 @@ class PyStorageStr final : public CycleStorageBase {
 
   std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<PyStorageStr>(*this); }
 };
+
+class PyStorageDouble final : public CycleStorageBase {
+ public:
+  double data = 0.0;
+
+  double      getNumericValue() override { return data; }
+  bool        isNumericValue() override { return true; }
+  std::string getStringRepresentation() override;
+
+  std::unique_ptr<CycleStorageBase> clone() override { return std::make_unique<PyStorageDouble>(*this); }
+};
 }
 }

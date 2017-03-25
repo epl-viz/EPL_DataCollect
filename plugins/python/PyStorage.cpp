@@ -39,5 +39,6 @@ PyStorage::~PyStorage() {}
 
 std::string PyStorageInt::getStringRepresentation() { return std::to_string(data); }
 std::string PyStorageStr::getStringRepresentation() { return data; }
+std::string PyStorageDouble::getStringRepresentation() { return std::to_string(data); }
 }
 }

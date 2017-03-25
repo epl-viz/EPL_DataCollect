@@ -21,6 +21,7 @@ cdef extern from "PythonPlugin.hpp" namespace "EPL_DataCollect::plugins":
     string getData(string)
     bool setDataStr(string, string)
     bool setDataInt(string, int)
+    bool setDataDouble(string, double)
 
     bool requestFilter(int)
     void addFilterEntry(int)

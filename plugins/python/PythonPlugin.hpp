@@ -70,6 +70,7 @@ class PythonPlugin : public PluginBase {
   std::string getData(std::string index);
   bool setDataStr(std::string index, std::string var);
   bool setDataInt(std::string index, int var);
+  bool setDataDouble(std::string index, double var);
 
   bool requestFilter(int filterType);
   void addFilterEntry(uint16_t filterEntry);
@@ -87,7 +88,7 @@ class PythonPlugin : public PluginBase {
   std::string plugDeps;
   PyObject *  pName, *pModule, *pDict, *pClass, *pInstance;
   PyObject *  pValue;
-  uint32_t filterID;
+  uint32_t    filterID;
 
   bool running = false;
 

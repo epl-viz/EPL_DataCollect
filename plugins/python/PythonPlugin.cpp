@@ -198,7 +198,7 @@ bool PythonPlugin::setDataStr(std::string index, std::string var) {
 };
 
 /**
- * @brief Setting data int at index, adding a PyStorageStr for access from all plugins
+ * @brief Setting data int at index, adding a PyStorageInt for access from all plugins
  *
  * @param index p_index: index
  * @param var p_var: what to be stored
@@ -225,13 +225,35 @@ bool PythonPlugin::setDataInt(std::string index, int var) {
  * @return bool success
  */
 bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
-  switch (typeAsInt) {
-    case 1: // adding int
+  switch (static_cast<PyDataType>(typeAsInt)) {
+    case PyDataType::PY_INT: // adding int
       return registerCycleStorage<PyStorageInt>(index);
-    case 2: // adding string
+    case PyDataType::PY_STR: // adding string
       return registerCycleStorage<PyStorageStr>(index);
+    case PyDataType::PY_DOUBLE: // adding double
+      return registerCycleStorage<PyStorageDouble>(index);
+    default: return false;
   }
-  return false;
+};
+
+/**
+ * @brief Setting data double at index, adding a PyStorageDouble for access from all plugins
+ *
+ * @param index p_index: index
+ * @param var p_var: what to be stored
+ * @return bool success or not
+ */
+bool PythonPlugin::setDataDouble(std::string index, double var) {
+  if (getCurrentCycle()->getCycleStorage(index) == nullptr)
+    return false;
+
+  auto *data = dynamic_cast<PyStorageDouble *>(getCurrentCycle()->getCycleStorage(index));
+
+  if (data == nullptr)
+    return false;
+
+  data->data = var;
+  return true;
 };
 
 
