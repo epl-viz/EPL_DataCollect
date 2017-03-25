@@ -55,6 +55,7 @@
 #define PLUGIN_EV "PluginEvent"
 #define FILTER_NAME "ViewFilter"
 
+#define ERROR_PYTHON_RUNTIME "Python Runtime Error"
 #define ERROR_MODULE_NOT_LOADED(id) "Module [" + id + "] could not be loaded"
 #define ERROR_CLASS_NOT_CREATED(id) "Class of [" + id + "] could not be created"
 #define ERROR_CLASS_NOT_CALLABLE(id) "Class [" + id + "] not callable"
@@ -445,7 +446,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   Py_DECREF(pName);
   if (pModule == NULL) {
     std::cerr << ERROR_MODULE_NOT_LOADED(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_MODULE_NOT_LOADED(plugID));
     return false;
   }
 
@@ -454,13 +454,11 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pClass = PyDict_GetItemString(pDict, plugID.c_str());
   if (pClass == NULL) {
     std::cerr << ERROR_CLASS_NOT_CREATED(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_CLASS_NOT_CREATED(plugID));
     return false;
   }
 
   if (!PyCallable_Check(pClass)) {
     std::cerr << ERROR_CLASS_NOT_CALLABLE(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_CLASS_NOT_CALLABLE(plugID));
     return false;
   }
   pInstance = PyObject_CallObject(pClass, NULL);
@@ -468,13 +466,11 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   // check if instance could be created, and correct instance of super class Plugin
   if (pInstance == NULL) {
     std::cerr << ERROR_CLASS_NOT_CREATED(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_CLASS_NOT_CREATED(plugID));
     return false;
   }
 
   if (strcmp(pInstance->ob_type->tp_base->tp_name, PLUGIN_PARENT) != 0) {
     std::cerr << ERROR_CLASS_PARENT_ILLEGAL(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_CLASS_PARENT_ILLEGAL(plugID));
     return false;
   }
 
@@ -482,7 +478,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_ID), NULL);
   if (pValue == NULL || strcmp(pValue->ob_type->tp_name, PYTHON_STR) != 0) {
     std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
 
@@ -491,7 +486,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   Py_DECREF(pValue);
   if (id.compare(plugID) != 0) {
     std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
 
@@ -501,7 +495,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
 
   if (strcmp(pValue->ob_type->tp_name, "str") != 0) {
     std::cerr << ERROR_PLUGIN_ID_ILLEGAL(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_PLUGIN_ID_ILLEGAL(plugID));
     return false;
   }
   pValue   = PyUnicode_AsUTF8String(pValue);
@@ -511,7 +504,6 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
   // cycle storage for plugin
   if (!registerCycleStorage<CSPythonPluginStorage>(plugID)) {
     std::cerr << ERROR_CYCLE_STORAGE_MISS(plugID) << std::endl;
-    addSimpleTextEvent(ERROR_CYCLE_STORAGE_MISS(plugID));
     return false;
   }
   // aswell as cycle storage for the plugin global filter if it's not there
@@ -519,13 +511,14 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     // id filter not found
     if (!registerCycleStorage<CSViewFilters>(FILTER_NAME)) {
       std::cerr << ERROR_FILTER_STORAGE_MISS(plugID) << std::endl;
-      addSimpleTextEvent(ERROR_FILTER_STORAGE_MISS(plugID));
       return false;
     }
   }
   filterID = UINT16_MAX;
 
   plugins[plugID] = this;
+
+  currentCycle = ci->getStartCycle();
 
   // now check if the initialization of the plugin is successful in python
   pValue = PyObject_CallMethod(pInstance, reinterpret_cast<const char *>(PLUGIN_INIT), NULL); // can't return NULL
@@ -553,7 +546,12 @@ void PythonPlugin::run(Cycle *cycle) {
 
   // if exception occured, print stack trace and stop plugin from running
   if (PyErr_Occurred() != NULL) {
-    addPyEvent(static_cast<int>(EvType::VIEW_EV_TEXT), ERROR_PYTHON_RUNTIME_ERROR(plugID), "ERROR STACK");
+    addEvent(std::make_unique<EvError>(getID(),
+                                       std::string(ERROR_PYTHON_RUNTIME),
+                                       std::string(ERROR_PYTHON_RUNTIME_ERROR(plugID)),
+                                       0,
+                                       getCurrentCycle(),
+                                       EventBase::INDEX_MAP()));
     running = false;
     PyErr_Print();
   }
