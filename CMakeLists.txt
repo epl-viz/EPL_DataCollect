@@ -235,6 +235,7 @@ new_project_library(
 )
 
 if( NOT DISABLE_TESTS )
+  set( DISABLE_INSTALL_tests ON )
   new_project_executable(
     PATH         "${PROJECT_SOURCE_DIR}/tests"
     NAME         "tests"
@@ -310,6 +311,14 @@ install( EXPORT ${PROJECT_NAME}Targets DESTINATION lib/cmake/${PROJECT_NAME} )
 install(
   FILES "${EPL_DC_INCLUDES_DIR}/defines.hpp" "${EPL_DC_INCLUDES_DIR}/EPLEnums.h"
   DESTINATION include/eplViz
+)
+
+install(
+  DIRECTORY
+    "${PROJECT_SOURCE_DIR}/python/plugins"
+    "${PROJECT_SOURCE_DIR}/xdd"
+  DESTINATION "share/eplViz"
+  PATTERN "__pycache__" EXCLUDE
 )
 
 enum2str_generate(

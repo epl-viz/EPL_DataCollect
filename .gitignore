@@ -8,6 +8,4 @@
 *.pyc
 customPreCommit.sh
 EPLEnum2Str.*
-/python/*.cxx
-/python/*.h
 !/external/CMakeLists.txt

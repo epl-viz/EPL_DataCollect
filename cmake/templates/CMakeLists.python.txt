@@ -37,10 +37,10 @@ set( PYTHON_FILES_LIST
 string( REGEX REPLACE "-Weverything" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
 
 foreach( I IN LISTS PYTHON_FILES_LIST )
-  string( REGEX REPLACE "pyx$"    "cxx" OUT_FILE "${I}"        )
-  string( REGEX REPLACE "/cython/" "/"  OUT_FILE "${OUT_FILE}" )
-  string( REGEX REPLACE "[^/]*/"  ""    OUT_NAME "${I}"        )
-  string( REGEX REPLACE "\\.pyx$" ""    OUT_NAME "${OUT_NAME}" )
+  string( REGEX REPLACE "pyx$"    "cxx"                     OUT_FILE "${I}"        )
+  string( REGEX REPLACE ".*/"     "${PROJECT_BINARY_DIR}/"  OUT_FILE "${OUT_FILE}" )
+  string( REGEX REPLACE "[^/]*/"  ""                        OUT_NAME "${I}"        )
+  string( REGEX REPLACE "\\.pyx$" ""                        OUT_NAME "${OUT_NAME}" )
   add_custom_command(
     OUTPUT "${OUT_FILE}"
     COMMAND cython -Wextra -3 --cplus -o ${OUT_FILE} ${I}
