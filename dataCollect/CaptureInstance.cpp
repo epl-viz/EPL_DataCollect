@@ -238,7 +238,7 @@ CaptureInstance::CIErrorCode CaptureInstance::loadPCAP(std::string file) noexcep
     return FAILED_TO_LOAD_FILE;
   }
 
-  fileSize = ws_capture_file_size(capture);
+  fileSize = fs::file_size(filePath);
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {

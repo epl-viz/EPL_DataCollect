@@ -233,8 +233,9 @@ bool PythonPlugin::registerPyCycleStorage(std::string index, int typeAsInt) {
       return registerCycleStorage<PyStorageStr>(index);
     case PyDataType::PY_DOUBLE: // adding double
       return registerCycleStorage<PyStorageDouble>(index);
-    default: return false;
   }
+
+  return false;
 };
 
 /**
