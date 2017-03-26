@@ -29,8 +29,7 @@
  */
 
 #include "PythonInit.hpp"
-
-#include "Python.h"
+#include <Python.h>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -42,10 +41,6 @@ PythonInit::PythonInit() {
   PyRun_SimpleString("import sys\n");
   addPath(EPL_DC_CM_BINARY_DIR + "/lib");
   addPath(EPL_DC_INSTALL_PREFIX + "/lib/eplViz");
-  addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins");
-  addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/samples");
-  addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests");
-  addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests");
 }
 
 PythonInit::~PythonInit() { Py_Finalize(); }
