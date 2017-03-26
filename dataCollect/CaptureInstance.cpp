@@ -166,18 +166,18 @@ CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfa
     return INTERFACE_DOES_NOT_EXIST;
   }
 
-  capture = ws_capture_open_live(interface.c_str(), 0, nullptr, nullptr, nullptr);
+  int err = 0;
+  capture = ws_capture_open_live(interface.c_str(), 0, nullptr, &err, nullptr);
   if (capture == nullptr) {
     return FAILED_TO_CAPTURE_ON_INTERFACE;
   }
+  std::cout << err << std::endl;
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
     ws_capture_close(capture);
     return WIRESHARK_FAILED_TO_DISSECT_CAPTURE;
   }
-
-  SLEEP(seconds, 1); //! \todo Remove this sleep once the issue is resolved
 
   return setupLoop();
 }
