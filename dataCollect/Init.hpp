@@ -55,8 +55,8 @@ class Init {
   InitErrorCode errorCode = UNINIT;
 
  public:
-  Init(std::string pluginsDir);
-  Init() : Init(constants::EPL_DC_WS_PLUGINS_DIR) {}
+  Init(std::string pluginsDir, std::string wiresharkLibDir);
+  Init() : Init(constants::EPL_DC_WS_PLUGINS_DIR, constants::EPL_DC_WS_LIB_DIR) {}
   ~Init();
 
   InitErrorCode getIsOK() const noexcept { return errorCode; }
