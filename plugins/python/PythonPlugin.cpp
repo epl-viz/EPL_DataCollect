@@ -379,8 +379,8 @@ bool PythonPlugin::addPyEvent(int key, std::string value, std::string argument) 
  *
  */
 void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
-  auto *_filters =
-        dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+  auto *_filters = dynamic_cast<CSViewFilters *>(
+        getCI()->getStartCycle()->getCycleStorage(constants::EPL_DC_PLUGIN_VIEW_FILTERS_CSID)); // can't be null
 
   if (filterID == UINT16_MAX)
     return;
@@ -396,8 +396,8 @@ void PythonPlugin::addFilterEntry(uint16_t filterEntry) {
  * @return bool whether successful
  */
 bool PythonPlugin::requestFilter(int filterType) {
-  auto *_filters =
-        dynamic_cast<CSViewFilters *>(getCI()->getStartCycle()->getCycleStorage(FILTER_NAME)); // can't be null
+  auto *_filters = dynamic_cast<CSViewFilters *>(
+        getCI()->getStartCycle()->getCycleStorage(constants::EPL_DC_PLUGIN_VIEW_FILTERS_CSID)); // can't be null
 
   // one filter is already set
   if (filterID != UINT16_MAX)
@@ -508,9 +508,9 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     return false;
   }
   // aswell as cycle storage for the plugin global filter if it's not there
-  if (ci->getStartCycle()->getCycleStorage(FILTER_NAME) == nullptr) {
+  if (ci->getStartCycle()->getCycleStorage(constants::EPL_DC_PLUGIN_VIEW_FILTERS_CSID) == nullptr) {
     // id filter not found
-    if (!registerCycleStorage<CSViewFilters>(FILTER_NAME)) {
+    if (!registerCycleStorage<CSViewFilters>(constants::EPL_DC_PLUGIN_VIEW_FILTERS_CSID)) {
       std::cerr << ERROR_FILTER_STORAGE_MISS(plugID) << std::endl;
       return false;
     }
