@@ -242,6 +242,13 @@ if( NOT DISABLE_TESTS )
     TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
     DEPENDENCIES epl_DataCollect_shared eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared eplp_protocolValidator_shared
   )
+
+  new_project_executable(
+    PATH         "${PROJECT_SOURCE_DIR}/eplCmd"
+    NAME         "eplcmd"
+    TEMPLATE     "${EPL_DC_TEMPLATES_DIR}/CMakeLists.exe.txt"
+    DEPENDENCIES epl_DataCollect_shared eplp_python_shared eplp_timeSeries_shared eplp_defaultFilter_shared eplp_protocolValidator_shared
+  )
 endif( NOT DISABLE_TESTS )
 
 ##############################
