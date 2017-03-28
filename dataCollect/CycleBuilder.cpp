@@ -85,6 +85,14 @@ void CycleBuilder::addNode(uint8_t nID) noexcept {
   }
 }
 
+enum {
+  NODEID_DYNAMIC                = 0,
+  NODEID_MN                     = 240,
+  NODEID_DIAGNOSTIC             = 253,
+  NODEID_LEGACY_ETHERNET_ROUTER = 254,
+  NODEID_BROADCAST              = 255
+};
+
 void CycleBuilder::buildNextCycle() noexcept {
   uint32_t currentCycleNum = currentCycle.getCycleNum();
   uint32_t nextCycleNum    = currentCycleNum + 1;
@@ -124,14 +132,6 @@ void CycleBuilder::buildNextCycle() noexcept {
     auto dst = i.getDestNode();
     if (src != NODEID_BROADCAST && src != NODEID_DYNAMIC && currentCycle.getNode(src) == nullptr)
       addNode(src);
-
-    enum {
-      NODEID_DYNAMIC                = 0,
-      NODEID_MN                     = 240,
-      NODEID_DIAGNOSTIC             = 253,
-      NODEID_LEGACY_ETHERNET_ROUTER = 254,
-      NODEID_BROADCAST              = 255
-    };
 
     if (dst != NODEID_BROADCAST && dst != NODEID_DYNAMIC && currentCycle.getNode(dst) == nullptr)
       addNode(dst);
