@@ -110,6 +110,13 @@ cdef class Cycle:
   ## getter methods for getting the commonly used node stuff, None if the node is not available !
   # str returned by:
   def getDeviceType(self, nodeNumber):
+    """
+    \brief This method returns the device type of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns device type of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -119,6 +126,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getDeviceType().decode()
 
   def getIPAddress(self, nodeNumber):
+    """
+    \brief This method returns the ip address of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns ip address of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -128,6 +142,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getIPAddress().decode()
 
   def getSubnetMask(self, nodeNumber):
+    """
+    \brief This method returns the subnet mask of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns subnet mask of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -137,6 +158,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getSubnetMask().decode()
 
   def getDefaultGateway(self, nodeNumber):
+    """
+    \brief This method returns the default gateway of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns default gateway of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -146,6 +174,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getDefaultGateway().decode()
 
   def getHostName(self, nodeNumber):
+    """
+    \brief This method returns the host name of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns host name of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -156,6 +191,13 @@ cdef class Cycle:
 
   # int returned by:
   def getProfile(self, nodeNumber):
+    """
+    \brief This method returns the profile of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns profile of CNs in the current cycle as str
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -165,6 +207,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getProfile()
 
   def getVendorId(self, nodeNumber):
+    """
+    \brief This method returns the vendor id of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns vendor id of CNs in the current cycle as int
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -174,6 +223,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getVendorId()
 
   def getProductCode(self, nodeNumber):
+    """
+    \brief This method returns the product code of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns product code of CNs in the current cycle as int
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -183,6 +239,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getProductCode()
 
   def getRevisionNumber(self, nodeNumber):
+    """
+    \brief This method returns the revision number of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns revision number of CNs in the current cycle as int
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -192,6 +255,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getRevisionNumber()
 
   def getSerialNumber(self, nodeNumber):
+    """
+    \brief This method returns the serial number of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns serial number of CNs in the current cycle as int
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -201,6 +271,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getSerialNumber()
 
   def getResponseTime(self, nodeNumber):
+    """
+    \brief This method returns the response time of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns response time of CNs in the current cycle as int
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -211,6 +288,13 @@ cdef class Cycle:
 
   # packet specific methods, returning None if no package of this type in cycle
   def getPacketSrc(self, nodeNumber):
+    """
+    \brief This method returns the device type of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns number of CNs in the current cycle
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0:                # and in correct size
@@ -220,6 +304,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getSrcNode()
 
   def getPacketDest(self, nodeNumber):
+    """
+    \brief This method returns the device type of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns number of CNs in the current cycle
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
@@ -229,6 +320,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getDestNode()
 
   def getPacketTime(self, nodeNumber):
+    """
+    \brief This method returns the device type of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns number of CNs in the current cycle
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
@@ -238,6 +336,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getTime()
 
   def getPacketType(self, nodeNumber):
+    """
+    \brief This method returns the device type of a node.
+
+    \param nodeNumber the number of the node
+
+    \returns number of CNs in the current cycle
+    """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
     if nodeNumber < 0 or nodeNumber >= self.getNumNodes():                # and in correct size
@@ -246,7 +351,7 @@ cdef class Cycle:
       return
     return self._C_Cycle.getPacket(nodeNumber).getTypeStr().decode()
 
-# creating a cycle from Cycle* ...
+# creating a cycle from Cycle*, internal function ...
 cdef createCycle(CCycle.Cycle* curCycle):
   cyc = Cycle()
   cyc._C_Cycle = curCycle
