@@ -406,10 +406,10 @@ bool PythonPlugin::requestFilter(int filterType) {
   // if not set one
   switch (static_cast<FilterType>(filterType)) {
     case FilterType::INCLUDE:
-      filterID = _filters->newFilter(FilterType::INCLUDE, std::string(FILTER_NAME) + plugID + ":INCLUDE");
+      filterID = _filters->newFilter(FilterType::INCLUDE, plugID);
       return true;
     case FilterType::EXCLUDE:
-      filterID = _filters->newFilter(FilterType::EXCLUDE, std::string(FILTER_NAME) + plugID + ":EXCLUDE");
+      filterID = _filters->newFilter(FilterType::EXCLUDE, plugID);
       return true;
   }
   return false;
