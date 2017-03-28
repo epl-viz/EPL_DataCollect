@@ -122,7 +122,7 @@ void CycleBuilder::buildNextCycle() noexcept {
 
     auto src = i.getSrcNode();
     auto dst = i.getDestNode();
-    if (currentCycle.getNode(src) == nullptr)
+    if (src != NODEID_BROADCAST && src != NODEID_DYNAMIC && currentCycle.getNode(src) == nullptr)
       addNode(src);
 
     enum {
