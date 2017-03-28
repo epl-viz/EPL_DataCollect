@@ -30,7 +30,6 @@
 #include <CycleBuilder.hpp>
 #include "Python.h"
 #include <catch.hpp>
-#include <iostream>
 
 using namespace EPL_DataCollect;
 using namespace EPL_DataCollect::constants;
