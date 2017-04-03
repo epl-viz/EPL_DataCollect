@@ -53,7 +53,6 @@
 #define PLUGIN_PARENT "Plugin.Plugin"
 #define PYTHON_STR "str"
 #define PLUGIN_EV "PluginEvent"
-#define FILTER_NAME "ViewFilter"
 
 #define ERROR_PYTHON_RUNTIME "Python Runtime Error"
 #define ERROR_MODULE_NOT_LOADED(id) "Module [" + id + "] could not be loaded"
