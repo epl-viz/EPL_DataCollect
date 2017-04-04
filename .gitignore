@@ -10,3 +10,4 @@ customPreCommit.sh
 EPLEnum2Str.*
 !/external/CMakeLists.txt
 /doxy/build
+*.cxx
