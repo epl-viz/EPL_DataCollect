@@ -42,7 +42,7 @@ using AID = ASndServiceID;
  * \param data Pointer to the paresed wireshark data
  * \warning data must not be nullptr
  */
-Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf) {
+Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf, uint64_t pI) {
   if (!data) {
     type         = PT::UNDEF;
     wiresharkSTR = "THE BEGINNING OF TIME";
@@ -60,6 +60,7 @@ Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf) {
   diffs              = data->diffs;
   offset             = of;
   physicalFileOffset = phOf;
+  packetIndex        = pI;
 
   switch (type) {
     case PT::START_OF_CYCLE: SoC = std::make_shared<s_SoC>(data->SoC); break;
@@ -172,6 +173,11 @@ uint64_t Packet::getOffset() const noexcept { return offset; }
  * \brief Returns the packet offset in the real file
  */
 uint64_t Packet::getPhysicalFileOffset() const noexcept { return physicalFileOffset; }
+
+/*!
+ * \brief Returns the packet Index
+ */
+uint64_t Packet::getPacketIndex() const noexcept { return packetIndex; }
 
 /*!
  * \brief Creates a new diff of data stored in 'entry' for the OD entry with given 'index' and adds it to the colony

@@ -50,7 +50,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   d.wsOther  = other;
   d.tp       = tp;
   d.pType    = PacketType::POLL_REQUEST;
-  Packet p(&d, 123, 12);
+  Packet p(&d, 123, 12, 1234);
 
   for (auto &i : ods) {
     p.addDiff(i);
@@ -64,6 +64,7 @@ TEST_CASE("Testing Packet", "[Packet]") {
   REQUIRE(p.getType() == PacketType::POLL_REQUEST);
   REQUIRE(p.getOffset() == 123);
   REQUIRE(p.getPhysicalFileOffset() == 12);
+  REQUIRE(p.getPacketIndex() == 1234);
 
   auto diffs = p.getDiffs();
   for (auto &it : ods) {

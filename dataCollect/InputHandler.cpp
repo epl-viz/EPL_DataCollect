@@ -57,7 +57,7 @@ InputHandler::~InputHandler() {
   }
 }
 
-Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) noexcept {
+Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
 
   // Reset the parser data
@@ -80,7 +80,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
   proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
   if (!metaData)
-    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset), 0);
+    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset), 0, index);
 
   metaData->flags  = 0;
   metaData->offset = static_cast<uint64_t>(diss->offset);
@@ -113,7 +113,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, PacketMetadata *metaData) 
     default: break;
   }
 
-  return Packet(&pData.workingData, metaData->offset, metaData->phOffset);
+  return Packet(&pData.workingData, metaData->offset, metaData->phOffset, index);
 }
 
 /*!
@@ -179,7 +179,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       }
 
       metaData.phOffset = ws_capture_read_so_far(ws_dissect_get_capture(pData.dissect));
-      Packet tmp        = parsePacket(&diss, &metaData);
+      Packet tmp        = parsePacket(&diss, pData.packetOffsetMap.size(), &metaData);
 
       std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
       pData.packetOffsetMap.emplace_back(metaData);
@@ -220,7 +220,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      tempPKG.emplace_back(parsePacket(&diss, &pData.packetOffsetMap[i]));
+      tempPKG.emplace_back(parsePacket(&diss, i, &pData.packetOffsetMap[i]));
     }
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
@@ -520,8 +520,8 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
     PacketMetadata metaData;
     metaData.cycleNum = 0;
 
-    pData.latestSoC = parsePacket(&diss);
-    parsePacket(&diss, &metaData);
+    pData.latestSoC = parsePacket(&diss, 0);
+    parsePacket(&diss, 0, &metaData);
 
     pData.packetOffsetMap.emplace_back(metaData);
   }

@@ -184,7 +184,7 @@ class InputHandler {
     uint64_t              lastValidCyclePacket = 0;
     bool                  parserReachedEnd     = false;
 
-    Packet latestSoC = Packet(nullptr, 0, 0);
+    Packet latestSoC = Packet(nullptr, 0, 0, 0);
 
     std::vector<PacketMetadata> packetOffsetMap;
   } pData;
@@ -225,7 +225,7 @@ class InputHandler {
   void builderLoop();
   bool waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept;
 
-  Packet parsePacket(ws_dissection *diss, PacketMetadata *metaData = nullptr) noexcept;
+  Packet parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData = nullptr) noexcept;
   bool parseCycle(CompletedCycle *cd) noexcept;
 
  public:
