@@ -1,29 +1,34 @@
 import Plugin
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+
 """
-\brief The plugin api provides some basic functionality and convenience method
+The plugin api provides some basic functionality and convenience method
 for user plugins.
-It interacts with the backend and modifies / adds events and additional user
+It interacts with the backend and modifies / adds filters and additional user
 data.
-
-:version: 1.0.0
 """
-
 def addFilter(plugin, filter):
-  """
-  \brief This method adds a filter for specific ODs or other data.
+  """Adding filter.
 
-  \param filters : Ints to be filtered
+  This method adds a filter for specific ODs or other data.
+
+  :param filter: Ints to be filtered
+  :type filter: python int
   """
   if isinstance(plugin, Plugin.Plugin):
     plugin.addFilterEntry(filter)
 
 def requestFilter(plugin, filterEnu):
-  """
-  \brief Requesting a filter of given type
+  """Requesting a filter of given type
 
-  \param filterEnu filter type as int
+  Adding a filter to a plugin.
+
+  :param filterEnu: filter type as int
+  :type filterEnu: python int from Filters.<FILTER>.value
+
+  .. note::
+    A filter has to be added to each plugin if you want to add filter ODs.
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(filterEnu, int):
     return plugin.requestFilter(filterEnu)

@@ -2,7 +2,7 @@ import Plugin
 import Events
 
 """
-\brief This class enables a plugin user to easily add GUI representation
+This class enables a plugin user to easily add GUI representation
 specific events to highlight or start and stop the representations quickly.
 It therefore provides convenience methods that add events to the backend.
 
@@ -10,55 +10,69 @@ It therefore provides convenience methods that add events to the backend.
 """
 
 def startLive(plugin):
-  """
-  \brief An easy method to use to add the start recording event to the current
+  """Adding the start live event.
+
+  An easy method to use to add the start recording event to the current
   cycle.
   It will just start the live representation of the recording, the recording will
   still go on in the background.
 
-  \param plugin the plugin currently used, has to be given
+  :param plugin: the plugin currently used, has to be given
+  :type plugin: @Plugin.Plugin
 
-  \returns whether successful or not
+  :return: whether successful or not
+  :rtype: python bool
   """
   if isinstance(plugin, Plugin.Plugin):
     return plugin.addEvent(Events.EV_STARTCAP.value, "", "")  # empty string added for method
   return False
 
 def stopLive(plugin):
-  """
-  \brief An easy method to use to add the stop recording event to the current
+  """Adding the stop live event.
+
+  An easy method to use to add the stop recording event to the current
   cycle.
   It will just stop the live representation of the recording, the recording will
   still go on in the background.
 
-  \param plugin the plugin currently used, has to be given
+  :param plugin: the plugin currently used, has to be given
+  :type plugin: @Plugin.Plugin
 
-  \returns whether successful or not
+  :return: whether successful or not
+  :rtype: python bool
   """
   if isinstance(plugin, Plugin.Plugin):
     return plugin.addEvent(Events.EV_ENDCAP.value, "", "")
   return False
 
 def highlightMN(plugin):
-  """
-  \brief This method highlights the MN in the gui.
+  """Highlighting an MN
 
-  \param plugin the plugin currently used, has to be given
+  This method highlights the MN in the gui.
 
-  \returns a bool showing whether the node highlight is successful
+  :param plugin: the plugin currently used, has to be given
+  :type plugin: @Plugin.Plugin
+
+  :return: a bool showing whether the node highlight is successful
+  :rtype: python bool
   """
   if isinstance(plugin, Plugin.Plugin):
     return plugin.addEvent(Events.EV_HIGHLIGHT_MN.value, "", "")
   return False
 
 def highlightNode(plugin, node):
-  """
-  \brief This method highlights a specific CN in the graphical representation.
+  """Highlighting a node.
 
-  \param plugin the plugin currently used, has to be given
-  \param Node node : The node to be highlighted in the graphical representation.
+  This method highlights a specific CN in the graphical representation.
 
-  \returns a bool showing whether the node highlight is successful
+  :param plugin: the plugin currently used, has to be given
+  :type plugin: @Plugin.Plugin
+
+  :param node: The node to be highlighted in the graphical representation.
+  :type node: python int
+
+  :return: a bool showing whether the node highlight is successful
+  :rtype: python bool
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(node, int):
     if node >= 0 and node < plugin.getCycle().getNumNodes():
@@ -67,16 +81,23 @@ def highlightNode(plugin, node):
   return False
 
 def highlightODEntry(plugin, entry, level):
-  """
-  \brief Highlights a specific OD Entry in the graphical representations.
+  """Highlighting ODEntry
+
+  Highlights a specific OD Entry in the graphical representations.
   The level of highlight is set by an unsigned integer, the graphical / other
   representation can build its own highlighting based on this number.
 
-  \param plugin the plugin currently used, has to be given
-  \param ODEntry entry : The entry to be highlighted.
-  \param unsigned int level : The level of highlighting to be used in the graphical representations, a int between 0 and 100
+  :param plugin: the plugin currently used, has to be given
+  :type plugin: @Plugin.Plugin
 
-  \returns true if highlighting was added successful.
+  :param entry: The entry to be highlighted.
+  :type entry: python int
+
+  :param level: The level of highlighting to be used in the graphical representations, a int between 0 and 100
+  :type level: python int
+
+  :return: true if highlighting was added successful.
+  :rtype: python bool
   """
   if isinstance(plugin, Plugin.Plugin) and isinstance(entry, int) and isinstance(level,int):
     if 0 < level <= 100 and entry >= 0x0000 and entry <= 0xFFFF:

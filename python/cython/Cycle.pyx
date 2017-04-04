@@ -6,35 +6,55 @@ from libcpp cimport bool
 from libcpp.unordered_map cimport unordered_map
 
 cdef class Cycle:
+  """Class representing a cycle.
+
+  :param _C_Cycle: Hidden cycle reference
+  """
   cdef CCycle.Cycle* _C_Cycle
 
   def __cinit__(self):
     pass
 
   cpdef int getNumNodes(self):
-    """
-    \brief This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+    """Getting the amount of nodes.
 
-    \returns number of CNs in the current cycle
+    This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+
+    :return: number of CNs in the current cycle
+    :rtype: as integer
+
+    .. seealso:: getAmountOfCN
     """
     return self._C_Cycle.getNumNodes()
 
   cpdef int getCycleNum(self):
-    """
-    \returns number of the current cycle
+    """Getting the current cycles number since start.
+
+    The number ranges from 0 to uint32t_max and are unsigned.
+
+    :return: number of the current cycle
+    :rtype: as integer
     """
     return self._C_Cycle.getCycleNum()
 
-  cdef void updateCycle(self, CCycle.Cycle* newCycle):  ## maybe implement this since it increases speed
+  cdef void updateCycle(self, CCycle.Cycle* newCycle):
+    # internal method
     if newCycle != NULL:
       self._C_Cycle = newCycle
 
   def getActiveEvents(self):
-    """
-    \brief getting the active events of the cycle, note that this is mostly empty and only contains data of python plugins.
-          This method is used if you try to get old cycles and check for their events
+    """Getting all active events in the cycle.
 
-    \returns touple (type as int, string type as str, name of event, description, integer flag)
+    Getting the active events of the cycle.
+
+    :return: touple of events
+    :rtype: touple -> (type as int, string type as str, name of event, description, integer flag)
+
+    .. note::
+      Note that this is mostly empty and only contains data of python plugins created events.
+
+    :Example:
+      This method is used if you try to get old cycles and check for their events or have dependent other plugins that may fire events first.
     """
     listOfEvents = []
     cdef vector[CCycle.EventBase *] eventVector = self._C_Cycle.getActiveEvents()
@@ -44,13 +64,21 @@ cdef class Cycle:
     return listOfEvents
 
   def getNodeStatus(self, nodeNumber):
-    """
-    \brief returns status of Node as str None if node not available, otherwise
-    { OFF, PRE_OPERATIONAL_2, READY, OPERATIONAL... (the POWERLINK states)}
+    """Returns the status of the node given
 
-    \param nodeNumber number of the node
+    Returning the status as a python str of any currently active node.
 
-    \returns str representation of od entry
+    :param nodeNumber: number of the node
+
+    :return: representation of the state in the cycle
+    :rtype: python str or None object if node not available
+
+    .. note::
+      All POWERLINK states are available
+      { OFF, PRE_OPERATIONAL_1, PRE_OPERATIONAL_2, READY, OPERATIONAL, ... }
+
+    :Example:
+      comparing like 'cycle.getNodeStatus(1) == "READY"'
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -61,13 +89,21 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getStatusStr().decode()
 
   def getODEntry(self, nodeNumber, odNumber):
-    """
-    \brief This method returns the ODEntry, subindex 0 as string represented. None if not available, standard values are 0 or ""<N/A>" on complex types
+    """Returning ODEntry of a node.
 
-    \param nodeNumber number of the node
-    \param odNumber number of the ODEntry
+    This method returns the ODEntry, subindex 0 represented as string. None if not available, standard values are 0 or ""<N/A>" on complex types
 
-    \returns str representation of od entry
+    :param nodeNumber: number of the node
+    :param odNumber: number of the ODEntry
+    :type nodeNumber: int
+    :type odNumber: int
+
+
+    :return: str representation of od entry
+    :rtype: python str
+
+    .. note::
+      Check for correct types if you want to cast.
     """
     if not (isinstance(nodeNumber, int) and isinstance(odNumber, int)):   # numbers have to be integer
       return
@@ -80,14 +116,22 @@ cdef class Cycle:
       return odEntry.toString(0).decode()
 
   def getODEntry_Sub(self, nodeNumber, odNumber, subindex):
-    """
-    \brief This method returns the ODEntry, subindex as string represented. None if not available, standard values are 0 or ""<N/A>" on complex types
+    """Getting complex ODEntry at given subindex.
 
-    \param nodeNumber number of the node
-    \param odNumber number of the ODEntry
-    \param subindex subindex number
+    This method returns the ODEntry, subindex as string represented. None if not available, standard values are 0 or ""<N/A>" on complex types
 
-    \returns str representation of od entry
+    :param nodeNumber: number of the node
+    :param odNumber: number of the ODEntry
+    :param subindex: subindex number
+    :type nodeNumber: int
+    :type odNumber: int
+    :type subindex: int
+
+    :return: str representation of od entry
+    :rtype: python str
+
+    .. note::
+      ODEntry with subindex, if non available returns 0th subindex
     """
     if not (isinstance(nodeNumber, int) and isinstance(odNumber, int) and isinstance(subindex, int)):   # numbers have to be integer
       return
@@ -100,22 +144,27 @@ cdef class Cycle:
       return odEntry.toString(subindex).decode()
 
   def getAmountOfCN(self):
-    """
-    \brief This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+    """Getting the amount of nodes.
 
-    \returns number of CNs in the current cycle
+    This method returns the amount of controlled nodes currently active. The amount of controlled nodes is retrieved from a specific cycle, thus representing the CNs active at that given cycle.
+
+    :return: number of CNs in the current cycle
+    :rtype: as integer
+
+    .. seealso:: getNumNodes
     """
     return self._C_Cycle.getNumNodes()
 
   ## getter methods for getting the commonly used node stuff, None if the node is not available !
   # str returned by:
   def getDeviceType(self, nodeNumber):
-    """
-    \brief This method returns the device type of a node.
+    """This method returns the device type of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: number of the node
+    :type nodeNumber: int
 
-    \returns device type of CNs in the current cycle as str
+    :return: device type of CNs in the current cycle as str
+    :rtype: pythons str or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -126,12 +175,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getDeviceType().decode()
 
   def getIPAddress(self, nodeNumber):
-    """
-    \brief This method returns the ip address of a node.
+    """This method returns the ip address of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns ip address of CNs in the current cycle as str
+    :return: ip address of CNs in the current cycle as str
+    :rtype: pythons str or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -142,12 +192,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getIPAddress().decode()
 
   def getSubnetMask(self, nodeNumber):
-    """
-    \brief This method returns the subnet mask of a node.
+    """This method returns the subnet mask of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns subnet mask of CNs in the current cycle as str
+    :return: subnet mask of CNs in the current cycle as str
+    :rtype: pythons str or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -158,12 +209,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getSubnetMask().decode()
 
   def getDefaultGateway(self, nodeNumber):
-    """
-    \brief This method returns the default gateway of a node.
+    """This method returns the default gateway of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns default gateway of CNs in the current cycle as str
+    :return: default gateway of CNs in the current cycle as str
+    :rtype: pythons str or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -174,12 +226,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getDefaultGateway().decode()
 
   def getHostName(self, nodeNumber):
-    """
-    \brief This method returns the host name of a node.
+    """This method returns the host name of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns host name of CNs in the current cycle as str
+    :return: host name of CNs in the current cycle as str
+    :rtype: pythons str or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -191,12 +244,13 @@ cdef class Cycle:
 
   # int returned by:
   def getProfile(self, nodeNumber):
-    """
-    \brief This method returns the profile of a node.
+    """This method returns the profile of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns profile of CNs in the current cycle as str
+    :return: profile of CNs in the current cycle as str
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -207,12 +261,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getProfile()
 
   def getVendorId(self, nodeNumber):
-    """
-    \brief This method returns the vendor id of a node.
+    """This method returns the vendor id of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns vendor id of CNs in the current cycle as int
+    :return: vendor id of CNs in the current cycle as int
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -223,12 +278,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getVendorId()
 
   def getProductCode(self, nodeNumber):
-    """
-    \brief This method returns the product code of a node.
+    """This method returns the product code of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns product code of CNs in the current cycle as int
+    :return: product code of CNs in the current cycle as int
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -239,12 +295,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getProductCode()
 
   def getRevisionNumber(self, nodeNumber):
-    """
-    \brief This method returns the revision number of a node.
+    """This method returns the revision number of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns revision number of CNs in the current cycle as int
+    :return: revision number of CNs in the current cycle as int
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -255,12 +312,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getRevisionNumber()
 
   def getSerialNumber(self, nodeNumber):
-    """
-    \brief This method returns the serial number of a node.
+    """This method returns the serial number of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns serial number of CNs in the current cycle as int
+    :return: serial number of CNs in the current cycle as int
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -271,12 +329,13 @@ cdef class Cycle:
     return self._C_Cycle.getNode(nodeNumber).getSerialNumber()
 
   def getResponseTime(self, nodeNumber):
-    """
-    \brief This method returns the response time of a node.
+    """This method returns the response time of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns response time of CNs in the current cycle as int
+    :return: response time of CNs in the current cycle as int
+    :rtype: pythons int or None if node not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -288,12 +347,13 @@ cdef class Cycle:
 
   # packet specific methods, returning None if no package of this type in cycle
   def getPacketSrc(self, nodeNumber):
-    """
-    \brief This method returns the device type of a node.
+    """This method returns the device type of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns number of CNs in the current cycle
+    :return: number of CNs in the current cycle
+    :rtype: pythons int or None if packet not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -304,12 +364,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getSrcNode()
 
   def getPacketDest(self, nodeNumber):
-    """
-    \brief This method returns the device type of a node.
+    """This method returns the device type of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns number of CNs in the current cycle
+    :return: number of CNs in the current cycle
+    :rtype: pythons int or None if packet not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -320,12 +381,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getDestNode()
 
   def getPacketTime(self, nodeNumber):
-    """
-    \brief This method returns the device type of a node.
+    """This method returns the device type of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns number of CNs in the current cycle
+    :return: number of CNs in the current cycle
+    :rtype: pythons int or None if packet not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
@@ -336,12 +398,13 @@ cdef class Cycle:
     return self._C_Cycle.getPacket(nodeNumber).getTime()
 
   def getPacketType(self, nodeNumber):
-    """
-    \brief This method returns the device type of a node.
+    """This method returns the device type of a node.
 
-    \param nodeNumber the number of the node
+    :param nodeNumber: the number of the node
+    :type nodeNumber: int
 
-    \returns number of CNs in the current cycle
+    :return: number of CNs in the current cycle
+    :rtype: pythons int or None if packet not available
     """
     if not (isinstance(nodeNumber, int)):   # numbers have to be integer
       return
