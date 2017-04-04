@@ -155,6 +155,12 @@ void CycleBuilder::buildNextCycle() noexcept {
     // Update OD entries
     Node *node       = currentCycle.getNode(src);
     Node *targetNode = currentCycle.getNode(updateTargetNode);
+
+    if (!node) {
+      std::cerr << "[CycleBuilder] Internal error! Invalid node" << std::endl;
+      continue;
+    }
+
     if (targetNode) {
       OD *od = targetNode->getOD();
       for (auto const &j : *i.getDiffs()) {
