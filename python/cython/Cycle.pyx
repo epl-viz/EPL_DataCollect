@@ -46,7 +46,7 @@ cdef class Cycle:
   def getNodeStatus(self, nodeNumber):
     """
     \brief returns status of Node as str None if node not available, otherwise
-            { OFF, PRE_OPERATIONAL_2, READY, OPERATIONAL... (the POWERLINK states)}
+    { OFF, PRE_OPERATIONAL_2, READY, OPERATIONAL... (the POWERLINK states)}
 
     \param nodeNumber number of the node
 
