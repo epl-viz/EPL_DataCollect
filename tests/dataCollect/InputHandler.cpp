@@ -272,6 +272,8 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE(cd.packets[0].getType() == PacketType::START_OF_CYCLE);
   REQUIRE(cd.packets[1].getType() == PacketType::START_OF_ASYNC);
 
+  REQUIRE(handler.generateWiresharkString(cd.packets[0]) != "");
+
   handler.keepBuildLoopRunning = false;
 
   ws_dissect_free(dissect);

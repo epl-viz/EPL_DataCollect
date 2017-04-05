@@ -75,8 +75,7 @@ class Packet {
   NMTState                state;
   plf::colony<PacketDiff> diffs;
 
-  std::string wiresharkSTR = "";
-  std::string miscData     = "<N/A>";
+  std::string miscData = "<N/A>";
 
   uint8_t nodeSource;
   uint8_t nodeDest;
@@ -117,7 +116,6 @@ class Packet {
   mockable NMTState getState() const noexcept;
   mockable const plf::colony<PacketDiff> *getDiffs() const noexcept;
   mockable std::string getMiscData() const noexcept;
-  mockable std::string getWiresharkString() const noexcept;
   mockable uint8_t getSrcNode() const noexcept;
   mockable uint8_t getDestNode() const noexcept;
   mockable TIME_POINT getTimeStamp() const noexcept;

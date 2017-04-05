@@ -30,7 +30,8 @@
 
 #define JENKINS_HASH_ID 0
 #define MURMUR_HASH_ID 1
-#define HASH_FUNC_TO_USE JENKINS_HASH_ID
+#define FNV1A_HASH_ID 2
+#define HASH_FUNC_TO_USE FNV1A_HASH_ID
 
 namespace EPL_DataCollect {
 
@@ -58,6 +59,27 @@ constexpr size_t jenkinsHash(char const *data, size_t n) {
   hash += hash << 3;
   hash ^= hash >> 11;
   hash += hash << 15;
+  return hash;
+}
+
+const size_t FNV1A_BASE  = 2166136261;
+const size_t FNV1A_PRIME = 16777619;
+
+inline size_t fnv1aHash(const char *data) {
+  size_t hash = FNV1A_BASE;
+  while (*data != 0) {
+    hash ^= *(data++);
+    hash *= FNV1A_PRIME;
+  }
+  return hash;
+}
+
+constexpr size_t fnv1aHash(const char *data, size_t n) {
+  size_t hash = FNV1A_BASE;
+  for (size_t i = 0; i < n; ++i) {
+    hash ^= data[i];
+    hash *= FNV1A_PRIME;
+  }
   return hash;
 }
 
@@ -107,6 +129,9 @@ inline size_t hashFunc(char const *data) { return jenkinsHash(data); }
 #elif HASH_FUNC_TO_USE == MURMUR_HASH_ID
 inline constexpr size_t hashFunc(char const *data, size_t n) { return MurmurHash64A(data, n); }
 inline size_t hashFunc(char const *data) { return MurmurHash64A(data, strlen(data)); }
+#elif HASH_FUNC_TO_USE == FNV1A_HASH_ID
+inline constexpr size_t hashFunc(char const *data, size_t n) { return fnv1aHash(data, n); }
+inline size_t hashFunc(char const *data) { return fnv1aHash(data); }
 #else
 #error "Invalid hash function set"
 #endif

@@ -58,8 +58,8 @@ InputHandler::~InputHandler() {
 }
 
 Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData) noexcept {
-  std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
   auto                                  start = high_resolution_clock::now();
+  std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
 
   // Reset the parser data
   pData.workingData.~parserData();
@@ -69,11 +69,6 @@ Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMeta
     std::lock_guard<std::mutex> configLock(configMutex);
     pData.workingData.eplFrameName = &cfg.eplFrameName;
   }
-
-  char *wsStr = nullptr;
-  ws_dissect_tostr(diss, &wsStr);
-  pData.workingData.wsString = wsStr;
-  g_free(wsStr);
 
   auto duration        = seconds(diss->timestamp.secs) + nanoseconds(diss->timestamp.nsecs);
   pData.workingData.tp = system_clock::time_point(duration_cast<system_clock::duration>(duration));
@@ -167,10 +162,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     size_t currentCyclePacketIndex;
 
     // cycleOffsetMap contains a map of already COMPLETELY parsed Cycles
-    {
-      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
-      currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
-    }
+    std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+    currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
 
     PacketMetadata metaData;
     metaData.cycleNum = cd->num;
@@ -187,7 +180,6 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       metaData.phOffset = ws_capture_read_so_far(ws_dissect_get_capture(pData.dissect));
       Packet tmp        = parsePacket(&diss, pData.packetOffsetMap.size(), &metaData);
 
-      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
       pData.packetOffsetMap.emplace_back(metaData);
 
       if (tmp.getType() == PacketType::START_OF_CYCLE) {
@@ -563,4 +555,26 @@ InputHandler::Locker InputHandler::getPacketsMetadata() noexcept {
 }
 
 InputHandler::Statistics InputHandler::getStats() const noexcept { return stats; }
+
+std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
+  ws_dissection diss;
+
+  {
+    std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+
+    if (ws_dissect_seek(pData.dissect,
+                        &diss,
+                        static_cast<int64_t>(pData.packetOffsetMap[p.getPacketIndex()].offset),
+                        nullptr,
+                        nullptr) != 1) {
+      return "";
+    }
+  }
+
+  char *wsStr = nullptr;
+  ws_dissect_tostr(&diss, &wsStr);
+  std::string str = wsStr;
+  g_free(wsStr);
+  return str;
+}
 }

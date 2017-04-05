@@ -44,9 +44,8 @@ using AID = ASndServiceID;
  */
 Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf, uint64_t pI) {
   if (!data) {
-    type         = PT::UNDEF;
-    wiresharkSTR = "THE BEGINNING OF TIME";
-    miscData     = "THE BEGINNING OF TIME";
+    type     = PT::UNDEF;
+    miscData = "THE BEGINNING OF TIME";
     return;
   }
 
@@ -54,7 +53,6 @@ Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf, uint64_
   state              = data->nmtState;
   nodeSource         = data->src;
   nodeDest           = data->dst;
-  wiresharkSTR       = data->wsString;
   miscData           = data->wsOther;
   timeStamp          = data->tp;
   diffs              = data->diffs;
@@ -93,8 +91,7 @@ Packet::Packet(const parserData *const data, uint64_t of, uint64_t phOf, uint64_
 Packet::~Packet() {}
 
 bool Packet::operator==(const Packet &r) const {
-  return ((type == r.type) && (wiresharkSTR == r.wiresharkSTR) && (miscData == r.miscData) &&
-          (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp));
+  return ((type == r.type) && (miscData == r.miscData) && (nodeSource == r.nodeSource) && (timeStamp == r.timeStamp));
 }
 
 /*!
@@ -135,13 +132,6 @@ const plf::colony<PacketDiff> *Packet::getDiffs() const noexcept { return &diffs
  * \return The miscellaneous data of this packet as a std::string
  */
 std::string Packet::getMiscData() const noexcept { return miscData; }
-
-
-/*!
- * \brief Returns the data that was parsed and formatted by Wireshark
- * \return The packet data as given by Wireshark as a std::string
- */
-std::string Packet::getWiresharkString() const noexcept { return wiresharkSTR; }
 
 
 /*!

@@ -264,5 +264,7 @@ class InputHandler {
 
   mockable Locker getPacketsMetadata() noexcept;
   mockable Statistics getStats() const noexcept;
+
+  mockable std::string generateWiresharkString(Packet const &p) noexcept;
 };
 }

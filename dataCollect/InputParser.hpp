@@ -62,7 +62,6 @@ struct parserData final {
 
   PacketType                            pType       = PacketType::UNDEF;
   NMTState                              nmtState    = NMTState::OFF;
-  std::string                           wsString    = "";
   std::string                           wsOther     = "";
   uint8_t                               src         = UINT8_MAX;
   uint8_t                               dst         = UINT8_MAX;

@@ -44,12 +44,11 @@ TEST_CASE("Testing Packet", "[Packet]") {
   auto tp = std::chrono::system_clock::now();
 
   WiresharkParser::parserData d;
-  d.dst      = 20;
-  d.src      = 10;
-  d.wsString = wire;
-  d.wsOther  = other;
-  d.tp       = tp;
-  d.pType    = PacketType::POLL_REQUEST;
+  d.dst     = 20;
+  d.src     = 10;
+  d.wsOther = other;
+  d.tp      = tp;
+  d.pType   = PacketType::POLL_REQUEST;
   Packet p(&d, 123, 12, 1234);
 
   for (auto &i : ods) {
@@ -57,7 +56,6 @@ TEST_CASE("Testing Packet", "[Packet]") {
   }
 
   REQUIRE(p.getMiscData() == other);
-  REQUIRE(p.getWiresharkString() == wire);
   REQUIRE(p.getDestNode() == 20);
   REQUIRE(p.getSrcNode() == 10);
   REQUIRE(p.getTimeStamp() == tp);
