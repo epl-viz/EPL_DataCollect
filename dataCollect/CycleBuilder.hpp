@@ -70,10 +70,11 @@ class CycleBuilder {
   };
 
   struct Statistics {
-    std::chrono::nanoseconds totalTime   = std::chrono::nanoseconds(0);
-    uint64_t                 packetCount = UINT64_MAX;
-    uint32_t                 cycleCount  = UINT32_MAX;
-    uint32_t                 eventsCount = UINT32_MAX;
+    std::chrono::nanoseconds totalTime          = std::chrono::nanoseconds(0);
+    std::chrono::nanoseconds waitForPacketsTime = std::chrono::nanoseconds(0);
+    uint64_t                 packetCount        = UINT64_MAX;
+    uint32_t                 cycleCount         = UINT32_MAX;
+    uint32_t                 eventsCount        = UINT32_MAX;
   };
 
  private:

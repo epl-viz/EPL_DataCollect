@@ -34,8 +34,10 @@
 #include "XDDParser.hpp"
 #include <chrono>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std::chrono;
+using namespace std;
 
 namespace EPL_DataCollect {
 
@@ -101,7 +103,10 @@ void CycleBuilder::buildNextCycle() noexcept {
     nextCycleNum = 0;
   }
 
+  auto                start   = high_resolution_clock::now();
   std::vector<Packet> packets = ih->getCyclePackets(nextCycleNum, seconds(1));
+  auto                end     = high_resolution_clock::now();
+  stats.waitForPacketsTime += end - start;
 
   if (ih->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
@@ -156,11 +161,6 @@ void CycleBuilder::buildNextCycle() noexcept {
     Node *node       = currentCycle.getNode(src);
     Node *targetNode = currentCycle.getNode(updateTargetNode);
 
-    if (!node) {
-      std::cerr << "[CycleBuilder] Internal error! Invalid node" << std::endl;
-      continue;
-    }
-
     if (targetNode) {
       OD *od = targetNode->getOD();
       for (auto const &j : *i.getDiffs()) {
@@ -178,6 +178,9 @@ void CycleBuilder::buildNextCycle() noexcept {
         }
       }
     }
+
+    if (!node)
+      continue;
 
     // Handle other packet stuff
     switch (i.getType()) {
@@ -272,7 +275,7 @@ void CycleBuilder::buildNextCycle() noexcept {
 void CycleBuilder::buildLoop() noexcept {
 
   {
-    std::lock_guard<std::mutex> lk(startLoopSignal);
+    lock_guard<mutex> lk(startLoopSignal);
     isLoopRunning = true;
     startLoopWait.notify_all();
   }
@@ -284,7 +287,7 @@ void CycleBuilder::buildLoop() noexcept {
   while (keepLoopAlive) {
     buildNextCycle();
     ++stats.cycleCount;
-    std::lock_guard<std::recursive_mutex> sleep(sleepMutex);
+    lock_guard<recursive_mutex> sleep(sleepMutex);
 
     if (reachedEnd)
       break;
@@ -294,18 +297,50 @@ void CycleBuilder::buildLoop() noexcept {
   stats.packetCount = parent->getInputHandler()->getPacketsMetadata()->size();
   stats.totalTime   = end - start;
   stats.eventsCount = static_cast<uint32_t>(parent->getEventLog()->getAllEvents().size());
-  std::cout << std::endl << "               STATISTICS" << std::endl;
-  std::cout << "               ==========" << std::endl << std::endl;
-  std::cout << "[CycleBuilder] Cycle count:                   " << stats.cycleCount << std::endl;
-  std::cout << "[CycleBuilder] Packet count:                  " << stats.packetCount << std::endl;
-  std::cout << "[CycleBuilder] Events Count:                  " << stats.eventsCount << std::endl;
-  std::cout << "[CycleBuilder] Total Cycle processing time:   " << stats.totalTime.count() << "ns" << std::endl;
-  std::cout << "[CycleBuilder] Average Cycle processing time: " << stats.totalTime.count() / stats.cycleCount << "ns"
-            << std::endl
-            << std::endl;
+
+  string s[] = {" ==> ", "   -- ", "", "", ""};
+  if (isatty(fileno(stdout))) {
+    s[0] = " \x1b[32;1m==> \x1b[1;37m";
+    s[1] = "   \x1b[34;1m-- \x1b[0;37m";
+    s[2] = "\x1b[0;33m";
+    s[3] = "\x1b[0m";
+    s[4] = "\x1b[1;35m";
+  }
+
+  auto ihStats = parent->getInputHandler()->getStats();
+
+  cout << endl
+       << s[4] << "               STATISTICS" << s[3] << endl
+       << s[4] << "               ==========" << s[3] << endl
+       << endl
+       << " - NOTE: All time value are in nanoseconds" << endl
+       << endl
+       << s[0] << "Cycle count:    " << s[2] << stats.cycleCount << s[3] << endl
+       << s[0] << "Packet count:   " << s[2] << stats.packetCount << s[3] << endl
+       << s[0] << "Events count:   " << s[2] << stats.eventsCount << s[3] << endl
+       << endl
+       << s[0] << "Packets parsed: " << s[2] << ihStats.packetsParsed << s[3] << endl
+       << s[0] << "Cycles parsed:  " << s[2] << ihStats.cyclesParsed << s[3] << endl
+       << endl
+       << s[0] << "Cycle proccessing time:" << s[3] << endl
+       << s[1] << "Total:         " << s[2] << stats.totalTime.count() << s[3] << endl
+       << s[1] << "Average:       " << s[2] << stats.totalTime.count() / stats.cycleCount << s[3] << endl
+       << endl
+       << s[0] << "Time waited for packets to be parsed: " << s[3] << endl
+       << s[1] << "Total:         " << s[2] << stats.waitForPacketsTime.count() << s[3] << endl
+       << s[1] << "Average:       " << s[2] << stats.waitForPacketsTime.count() / stats.cycleCount << s[3] << endl
+       << endl
+       << s[0] << "Packets parsing time:" << s[3] << endl
+       << s[1] << "Total:         " << s[2] << ihStats.timePacketsParsed.count() << s[3] << endl
+       << s[1] << "Average:       " << s[2] << ihStats.timePacketsParsed.count() / ihStats.packetsParsed << s[3] << endl
+       << endl
+       << s[0] << "All packets of a Cycle parsing time:" << s[3] << endl
+       << s[1] << "Total:         " << s[2] << ihStats.timeCyclesParsed.count() << s[3] << endl
+       << s[1] << "Average:       " << s[2] << ihStats.timeCyclesParsed.count() / ihStats.cyclesParsed << s[3] << endl
+       << endl;
 
   {
-    std::lock_guard<std::mutex> lk(stopLoopSignal);
+    lock_guard<mutex> lk(stopLoopSignal);
     isLoopRunning = false;
     stopLoopWait.notify_all();
   }

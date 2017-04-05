@@ -43,6 +43,7 @@
 #include <vector>
 
 using std::chrono::milliseconds;
+using std::chrono::nanoseconds;
 
 extern "C" {
 typedef struct ws_capture_t ws_capture_t;
@@ -104,6 +105,13 @@ class InputHandler {
     milliseconds deleteCyclesAfter = milliseconds(5000);
 
     std::string eplFrameName = "Ethernet POWERLINK+XDD";
+  };
+
+  struct Statistics {
+    int64_t     packetsParsed     = 0;
+    int64_t     cyclesParsed      = 0;
+    nanoseconds timePacketsParsed = nanoseconds(0);
+    nanoseconds timeCyclesParsed  = nanoseconds(0);
   };
 
   /*!
@@ -210,6 +218,8 @@ class InputHandler {
   std::condition_variable waitForWorkSignal;
   std::condition_variable waitForDoneWorkSignal;
 
+  Statistics stats;
+
 #if EPL_DC_ENABLE_MOCKING // This is required for some unit tests
  public:
 #endif
@@ -253,5 +263,6 @@ class InputHandler {
   mockable uint32_t getMaxQueuedCycle() const noexcept;
 
   mockable Locker getPacketsMetadata() noexcept;
+  mockable Statistics getStats() const noexcept;
 };
 }

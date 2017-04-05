@@ -59,6 +59,7 @@ InputHandler::~InputHandler() {
 
 Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
+  auto                                  start = high_resolution_clock::now();
 
   // Reset the parser data
   pData.workingData.~parserData();
@@ -112,6 +113,11 @@ Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMeta
       break;
     default: break;
   }
+
+  auto end = high_resolution_clock::now();
+
+  stats.timePacketsParsed += end - start;
+  stats.packetsParsed++;
 
   return Packet(&pData.workingData, metaData->offset, metaData->phOffset, index);
 }
@@ -411,7 +417,12 @@ void InputHandler::builderLoop() {
 
 
     if (!current.cleanup) {
-      parseCycle(current.out);            // Locks cyclesMutex when needed
+      auto start = high_resolution_clock::now();
+      parseCycle(current.out); // Locks cyclesMutex when needed
+      auto end = high_resolution_clock::now();
+      stats.timeCyclesParsed += end - start;
+      stats.cyclesParsed++;
+
       waitForDoneWorkSignal.notify_all(); // let waiting threads continue
     } else {
       std::lock_guard<std::mutex> lk(cyclesMutex);
@@ -550,4 +561,6 @@ uint32_t InputHandler::getMaxQueuedCycle() const noexcept { return maxQueuedCycl
 InputHandler::Locker InputHandler::getPacketsMetadata() noexcept {
   return Locker(pData.offsetMapLocker, &pData.packetOffsetMap);
 }
+
+InputHandler::Statistics InputHandler::getStats() const noexcept { return stats; }
 }
