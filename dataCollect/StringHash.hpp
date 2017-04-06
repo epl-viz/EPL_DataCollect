@@ -68,7 +68,7 @@ const size_t FNV1A_PRIME = 16777619;
 inline size_t fnv1aHash(const char *data) {
   size_t hash = FNV1A_BASE;
   while (*data != 0) {
-    hash ^= *(data++);
+    hash ^= static_cast<size_t>(*(data++));
     hash *= FNV1A_PRIME;
   }
   return hash;
@@ -77,7 +77,7 @@ inline size_t fnv1aHash(const char *data) {
 constexpr size_t fnv1aHash(const char *data, size_t n) {
   size_t hash = FNV1A_BASE;
   for (size_t i = 0; i < n; ++i) {
-    hash ^= data[i];
+    hash ^= static_cast<size_t>(data[i]);
     hash *= FNV1A_PRIME;
   }
   return hash;
