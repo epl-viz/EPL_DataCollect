@@ -166,12 +166,18 @@ CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfa
     return INTERFACE_DOES_NOT_EXIST;
   }
 
-  int err = 0;
-  capture = ws_capture_open_live(interface.c_str(), 0, nullptr, &err, nullptr);
+  int   err     = 0;
+  char *errInfo = nullptr;
+  capture       = ws_capture_open_live(interface.c_str(), 0, nullptr, &err, &errInfo);
   if (capture == nullptr) {
+    if (errInfo) {
+      std::cerr << "[CaptureInstance] ws_capture_open_live returned " << err << " (" << errInfo << ")" << std::endl;
+      g_free(errInfo);
+    } else {
+      std::cerr << "[CaptureInstance] ws_capture_open_live returned " << err << std::endl;
+    }
     return FAILED_TO_CAPTURE_ON_INTERFACE;
   }
-  std::cout << err << std::endl;
 
   dissect = ws_dissect_capture(capture);
   if (dissect == nullptr) {
@@ -233,8 +239,16 @@ CaptureInstance::CIErrorCode CaptureInstance::loadPCAP(std::string file) noexcep
     return NOT_A_REGULAR_FILE;
   }
 
-  capture = ws_capture_open_offline(file.c_str(), 0, nullptr, nullptr);
+  int   err     = 0;
+  char *errInfo = nullptr;
+  capture       = ws_capture_open_offline(file.c_str(), 0, &err, &errInfo);
   if (capture == nullptr) {
+    if (errInfo) {
+      std::cerr << "[CaptureInstance] ws_capture_open_offline returned " << err << " (" << errInfo << ")" << std::endl;
+      g_free(errInfo);
+    } else {
+      std::cerr << "[CaptureInstance] ws_capture_open_offline returned " << err << std::endl;
+    }
     return FAILED_TO_LOAD_FILE;
   }
 
