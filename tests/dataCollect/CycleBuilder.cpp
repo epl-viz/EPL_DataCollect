@@ -49,7 +49,9 @@ TEST_CASE("Testing load of a 100mb file", "[CycleBuilder][bigFile]") {
   cfg.autoDeduceSpecificProfile = false;
   cfg.baseProfile               = "";
 
-  instCfg.xddDir = EPL_DC_BUILD_DIR_ROOT + "/external/resources/profiles/printer";
+
+  instCfg.xddDir                      = EPL_DC_BUILD_DIR_ROOT + "/external/resources/profiles/printer";
+  instCfg.ihConfig.enablePreSOCCycles = true;
 
   cfg.specificProfile = "steppercn4cn_1.xdc";
   inst.setNodeConfig(1, cfg);

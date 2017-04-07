@@ -53,6 +53,10 @@ struct ws_dissection;
 
 namespace EPL_DataCollect {
 
+namespace intetnal {
+struct parsePacketConfig;
+}
+
 /*!
   * class InputHandler
   * \brief The InputHandler is a wrapper for the libwireshark backend
@@ -98,11 +102,12 @@ class InputHandler {
   };
 
   struct Config {
-    uint32_t     cleanupInterval   = 50;
-    uint8_t      prefetchSize      = 20; //!< \brief The number of cycles to prefetch
-    uint8_t      checkPrefetch     = 13; //!< \brief Checks for prefetching every [num] cycles
-    milliseconds loopWaitTimeout   = milliseconds(500);
-    milliseconds deleteCyclesAfter = milliseconds(5000);
+    uint32_t     cleanupInterval    = 50;
+    uint8_t      prefetchSize       = 20; //!< \brief The number of cycles to prefetch
+    uint8_t      checkPrefetch      = 13; //!< \brief Checks for prefetching every [num] cycles
+    milliseconds loopWaitTimeout    = milliseconds(500);
+    milliseconds deleteCyclesAfter  = milliseconds(5000);
+    bool         enablePreSOCCycles = false; //!< \brief When true, Every SoA is treated as a SoC before the 1st SoC
 
     std::string eplFrameName = "Ethernet POWERLINK+XDD";
   };
@@ -160,6 +165,14 @@ class InputHandler {
     }
   };
 
+  struct ParsePacketConfig {
+    ws_dissection * diss              = nullptr;
+    PacketMetadata *metaData          = nullptr;
+    uint64_t        index             = 0;
+    bool            checkForNextCycle = false;
+    bool            newCycle          = false;
+  };
+
   class Locker {
    private:
     std::unique_lock<std::recursive_mutex> lk;
@@ -184,6 +197,7 @@ class InputHandler {
   struct {
     std::recursive_mutex parserLocker;
     std::recursive_mutex offsetMapLocker;
+    std::mutex           dissectLocker;
 
     ws_dissect_t *              dissect = nullptr;
     WiresharkParser::parserData workingData;
@@ -191,6 +205,7 @@ class InputHandler {
     std::vector<uint64_t> cycleOffsetMap;
     uint64_t              lastValidCyclePacket = 0;
     bool                  parserReachedEnd     = false;
+    bool                  firstSoCArrived      = false;
 
     Packet latestSoC = Packet(nullptr, 0, 0, 0);
 
@@ -235,7 +250,7 @@ class InputHandler {
   void builderLoop();
   bool waitForCycleCompletion(CompletedCycle *cd, milliseconds timeout) noexcept;
 
-  Packet parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData = nullptr) noexcept;
+  Packet parsePacket(ParsePacketConfig &pCfg) noexcept;
   bool parseCycle(CompletedCycle *cd) noexcept;
 
  public:

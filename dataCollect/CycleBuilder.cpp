@@ -309,6 +309,16 @@ void CycleBuilder::buildLoop() noexcept {
 
   auto ihStats = parent->getInputHandler()->getStats();
 
+  // Make sure not to devide by 0
+  if (stats.cycleCount == 0)
+    stats.cycleCount = 1;
+
+  if (ihStats.packetsParsed == 0)
+    ihStats.packetsParsed = 1;
+
+  if (ihStats.cyclesParsed == 0)
+    ihStats.cyclesParsed = 1;
+
   cout << endl
        << s[4] << "               STATISTICS" << s[3] << endl
        << s[4] << "               ==========" << s[3] << endl

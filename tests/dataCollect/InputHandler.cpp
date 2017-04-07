@@ -64,10 +64,12 @@ TEST_CASE("InputHandler parsing EPL_Example", "[InputHandler]") {
 
   handler.setDissector(dissect);
 
-  uint32_t      counter = 0;
-  ws_dissection diss;
+  uint32_t                        counter = 0;
+  ws_dissection                   diss;
+  InputHandler::ParsePacketConfig pCfg;
+  pCfg.diss = &diss;
   while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
-    Packet packet = handler.parsePacket(&diss, 0);
+    Packet packet = handler.parsePacket(pCfg);
 
 #if ENABLE_DEBUG_PRINT
     std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
@@ -97,10 +99,12 @@ TEST_CASE("InputHandler parsing epl_sdo_udp", "[InputHandler]") {
 
   handler.setDissector(dissect);
 
-  uint32_t      counter = 0;
-  ws_dissection diss;
+  uint32_t                        counter = 0;
+  ws_dissection                   diss;
+  InputHandler::ParsePacketConfig pCfg;
+  pCfg.diss = &diss;
   while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
-    Packet packet = handler.parsePacket(&diss, 0);
+    Packet packet = handler.parsePacket(pCfg);
 
 #if ENABLE_DEBUG_PRINT
     std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
@@ -130,10 +134,12 @@ TEST_CASE("InputHandler parsing 1CN", "[InputHandler]") {
 
   handler.setDissector(dissect);
 
-  uint32_t      counter = 0;
-  ws_dissection diss;
+  uint32_t                        counter = 0;
+  ws_dissection                   diss;
+  InputHandler::ParsePacketConfig pCfg;
+  pCfg.diss = &diss;
   while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
-    Packet packet = handler.parsePacket(&diss, 0);
+    Packet packet = handler.parsePacket(pCfg);
 
 #if ENABLE_DEBUG_PRINT
     std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();
@@ -163,10 +169,12 @@ TEST_CASE("InputHandler parsing 1CN-with-ObjectMapping-PDO", "[InputHandler]") {
 
   handler.setDissector(dissect);
 
-  uint32_t      counter = 0;
-  ws_dissection diss;
+  uint32_t                        counter = 0;
+  ws_dissection                   diss;
+  InputHandler::ParsePacketConfig pCfg;
+  pCfg.diss = &diss;
   while (ws_dissect_next(dissect, &diss, nullptr, nullptr)) {
-    Packet packet = handler.parsePacket(&diss, 0);
+    Packet packet = handler.parsePacket(pCfg);
 
 #if ENABLE_DEBUG_PRINT
     std::cout << "\x1b[32;1mCOUNTER:\x1b[34;1m " << counter << "\x1b[m" << std::endl << packet.getMiscData();

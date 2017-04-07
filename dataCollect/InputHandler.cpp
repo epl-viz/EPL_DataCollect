@@ -57,7 +57,7 @@ InputHandler::~InputHandler() {
   }
 }
 
-Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMetadata *metaData) noexcept {
+Packet InputHandler::parsePacket(ParsePacketConfig &pCfg) noexcept {
   auto                                  start = high_resolution_clock::now();
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
 
@@ -70,41 +70,57 @@ Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMeta
     pData.workingData.eplFrameName = &cfg.eplFrameName;
   }
 
-  auto duration        = seconds(diss->timestamp.secs) + nanoseconds(diss->timestamp.nsecs);
+  auto duration        = seconds(pCfg.diss->timestamp.secs) + nanoseconds(pCfg.diss->timestamp.nsecs);
   pData.workingData.tp = system_clock::time_point(duration_cast<system_clock::duration>(duration));
 
-  proto_tree_children_foreach(diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
+  proto_tree_children_foreach(pCfg.diss->edt->tree, foreachFunc, reinterpret_cast<gpointer>(&pData.workingData));
 
-  if (!metaData)
-    return Packet(&pData.workingData, static_cast<uint64_t>(diss->offset), 0, index);
+  if (!pCfg.metaData)
+    return Packet(&pData.workingData, static_cast<uint64_t>(pCfg.diss->offset), 0, pCfg.index);
 
-  metaData->flags  = 0;
-  metaData->offset = static_cast<uint64_t>(diss->offset);
-  metaData->writeFiled(PacketMetadata::SOURCE, pData.workingData.src);
-  metaData->writeFiled(PacketMetadata::DESTINATION, pData.workingData.dst);
-  metaData->writeFiled(PacketMetadata::PACKET_TYPE, pData.workingData.pType);
+  pCfg.metaData->flags  = 0;
+  pCfg.metaData->offset = static_cast<uint64_t>(pCfg.diss->offset);
+  pCfg.metaData->writeFiled(PacketMetadata::SOURCE, pData.workingData.src);
+  pCfg.metaData->writeFiled(PacketMetadata::DESTINATION, pData.workingData.dst);
+  pCfg.metaData->writeFiled(PacketMetadata::PACKET_TYPE, pData.workingData.pType);
 
   switch (pData.workingData.pType) {
     case PacketType::START_OF_ASYNC:
-      metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
+      if (pCfg.checkForNextCycle && cfg.enablePreSOCCycles && !pData.firstSoCArrived) {
+
+        pCfg.metaData->cycleNum++;
+        pCfg.newCycle = true;
+      }
+
+      pCfg.metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.SoA.RequestedServiceID);
       FALLTHROUGH;
-    case PacketType::POLL_RESPONSE: metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState); break;
+    case PacketType::POLL_RESPONSE:
+      pCfg.metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
+      break;
     case PacketType::ASYNC_SEND:
-      metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
+      pCfg.metaData->writeFiled(PacketMetadata::SERVICE_ID, pData.workingData.ASnd.RequestedServiceID);
       switch (pData.workingData.ASnd.RequestedServiceID) {
         case ASndServiceID::SDO:
-          metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.SDO.CMD.CommandID);
+          pCfg.metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.SDO.CMD.CommandID);
           break;
         case ASndServiceID::NMT_COMMAND:
-          metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
+          pCfg.metaData->writeFiled(PacketMetadata::COMMAND, pData.workingData.ASnd.NMTCmd.NMTCommandId);
           break;
         case ASndServiceID::IDENT_RESPONSE:
         case ASndServiceID::STATUS_RESPONSE:
-          metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
+          pCfg.metaData->writeFiled(PacketMetadata::NMT_STATE, pData.workingData.nmtState);
           break;
         default: break;
       }
 
+      break;
+    case PacketType::START_OF_CYCLE:
+      if (!pCfg.checkForNextCycle)
+        break;
+
+      pData.firstSoCArrived = true;
+      pCfg.metaData->cycleNum++;
+      pCfg.newCycle = true;
       break;
     default: break;
   }
@@ -114,7 +130,7 @@ Packet InputHandler::parsePacket(ws_dissection *diss, uint64_t index, PacketMeta
   stats.timePacketsParsed += end - start;
   stats.packetsParsed++;
 
-  return Packet(&pData.workingData, metaData->offset, metaData->phOffset, index);
+  return Packet(&pData.workingData, pCfg.metaData->offset, pCfg.metaData->phOffset, pCfg.index);
 }
 
 /*!
@@ -138,6 +154,8 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
   std::lock_guard<std::recursive_mutex> lock(pData.parserLocker);
   static std::vector<Packet>            tempPKG; // static: reuse memory
   ws_dissection                         diss;
+  ParsePacketConfig                     pCfg;
+  pCfg.diss = &diss;
 
   tempPKG.clear(); // tempPKG is static (less malloc) ==> must be cleared
 
@@ -162,27 +180,41 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     size_t currentCyclePacketIndex;
 
     // cycleOffsetMap contains a map of already COMPLETELY parsed Cycles
-    std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
-    currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
+    {
+      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+      currentCyclePacketIndex = pData.packetOffsetMap.size() - 1;
+    }
 
     PacketMetadata metaData;
-    metaData.cycleNum = cd->num;
+    metaData.cycleNum      = cd->num;
+    pCfg.metaData          = &metaData;
+    pCfg.checkForNextCycle = true;
 
     while (keepBuildLoopRunning) {
-      int  err;
-      auto ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
+      // Fetch packet
+      int      err;
+      gboolean ret;
+      {
+        std::lock_guard<std::mutex> dissLocker(pData.dissectLocker);
+        ret = ws_dissect_next(pData.dissect, &diss, &err, nullptr);
+      }
       if (ret == 0 && err == 0) {
         pData.parserReachedEnd = true;
         lastValidCycle         = cd->num == 0 ? 0 : cd->num - 1;
         return errorFN();
       }
 
+      // Process packet
       metaData.phOffset = ws_capture_read_so_far(ws_dissect_get_capture(pData.dissect));
-      Packet tmp        = parsePacket(&diss, pData.packetOffsetMap.size(), &metaData);
+      pCfg.index        = pData.packetOffsetMap.size();
+
+      std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+      Packet                                tmp = parsePacket(pCfg);
 
       pData.packetOffsetMap.emplace_back(metaData);
 
-      if (tmp.getType() == PacketType::START_OF_CYCLE) {
+
+      if (pCfg.newCycle) {
         pData.latestSoC = tmp;
         break;
       }
@@ -206,6 +238,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
     // ##################
 
     std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+    std::lock_guard<std::mutex>           dissLocker(pData.dissectLocker);
 
     auto next  = cd->num + 1;
     auto first = pData.cycleOffsetMap[cd->num];
@@ -218,7 +251,10 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
         return errorFN();
       }
 
-      tempPKG.emplace_back(parsePacket(&diss, i, &pData.packetOffsetMap[i]));
+      pCfg.metaData = &pData.packetOffsetMap[i];
+      pCfg.index    = i;
+
+      tempPKG.emplace_back(parsePacket(pCfg));
     }
 
     std::lock_guard<std::mutex> cLk(cyclesMutex);
@@ -417,8 +453,8 @@ void InputHandler::builderLoop() {
 
       waitForDoneWorkSignal.notify_all(); // let waiting threads continue
     } else {
-      std::lock_guard<std::mutex> lk(cyclesMutex);
       std::lock_guard<std::mutex> lkCFG(configMutex);
+      std::lock_guard<std::mutex> lk(cyclesMutex);
       auto                        now = system_clock::now();
 
       auto it = cycles.begin();
@@ -520,12 +556,15 @@ void InputHandler::setDissector(ws_dissect_t *dissPTR) {
       return;
     }
 
-    PacketMetadata metaData;
+    PacketMetadata    metaData;
+    ParsePacketConfig pCfg;
     metaData.cycleNum = 0;
 
-    pData.latestSoC = parsePacket(&diss, 0);
-    parsePacket(&diss, 0, &metaData);
+    pCfg.diss     = &diss;
+    pCfg.metaData = &metaData;
+    pCfg.index    = 0;
 
+    pData.latestSoC = parsePacket(pCfg);
     pData.packetOffsetMap.emplace_back(metaData);
   }
 }
@@ -561,6 +600,7 @@ std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
 
   {
     std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
+    std::lock_guard<std::mutex>           dissLocker(pData.dissectLocker);
 
     if (ws_dissect_seek(pData.dissect,
                         &diss,
