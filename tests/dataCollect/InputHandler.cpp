@@ -305,6 +305,7 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
   REQUIRE(dissect != nullptr);
 
   REQUIRE(handler.getPacketsMetadata()->empty());
+  REQUIRE(handler.getNumBytesRead() == 0);
   handler.setDissector(dissect);
   REQUIRE(!handler.getPacketsMetadata()->empty());
   handler.startLoop();
@@ -332,6 +333,8 @@ TEST_CASE("InputHandler Cycle run", "[InputHandler]") {
   REQUIRE(packets[0].getType() == PacketType::START_OF_CYCLE);
   REQUIRE(packets[1].getType() == PacketType::START_OF_ASYNC);
   REQUIRE(packets[2].getType() == PacketType::ASYNC_SEND);
+
+  REQUIRE(handler.getNumBytesRead() > 0);
 
   handler.stopLoop();
   handler.setDissector(nullptr);

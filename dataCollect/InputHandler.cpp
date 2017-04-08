@@ -30,6 +30,7 @@
 
 #include "InputHandler.hpp"
 #include <iostream>
+#include <regex>
 #include <ws_capture.h>
 #include <ws_dissect.h>
 
@@ -595,6 +596,13 @@ InputHandler::Locker InputHandler::getPacketsMetadata() noexcept {
 
 InputHandler::Statistics InputHandler::getStats() const noexcept { return stats; }
 
+uint64_t InputHandler::getNumBytesRead() noexcept {
+  if (!pData.dissect)
+    return 0;
+
+  return ws_capture_read_so_far(ws_dissect_get_capture(pData.dissect));
+}
+
 std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
   ws_dissection diss;
 
@@ -615,6 +623,18 @@ std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
   ws_dissect_tostr(&diss, &wsStr);
   std::string str = wsStr;
   g_free(wsStr);
+
+  /*!
+   * \todo Remove this hack fix once issue epl-viz/liblibwireshark#1 is resolved
+   * (https://github.com/epl-viz/liblibwireshark/issues/1)
+   */
+
+  std::regex r1("Frame [0-9]+:", std::regex::ECMAScript);
+  std::regex r2("Frame Number: [0-9]+", std::regex::ECMAScript);
+
+  str = std::regex_replace(str, r1, "Frame " + std::to_string(p.getPacketIndex()) + ":");
+  str = std::regex_replace(str, r2, "Frame Number: " + std::to_string(p.getPacketIndex()));
+
   return str;
 }
 }
