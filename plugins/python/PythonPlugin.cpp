@@ -70,6 +70,8 @@
 #define ERROR_PYTHON_INIT_FAIL(id) "Plugin [" + id + "] Python initialization failed"
 #define ERROR_PYTHON_RUNTIME_ERROR(id) "Python runtime error in [" + id + "] occured"
 
+#define Py_REFCNT(ob) (((PyObject *)(ob))->ob_refcnt)
+
 namespace EPL_DataCollect {
 namespace plugins {
 
@@ -88,7 +90,7 @@ PythonPlugin *PythonPlugin::getPythonPlugin(std::string name) { return plugins[n
 // const / dest
 PythonPlugin::PythonPlugin() {}
 
-PythonPlugin::~PythonPlugin() {}
+PythonPlugin::~PythonPlugin() { plugins.erase(plugID); }
 
 
 /**
@@ -404,12 +406,8 @@ bool PythonPlugin::requestFilter(int filterType) {
 
   // if not set one
   switch (static_cast<FilterType>(filterType)) {
-    case FilterType::INCLUDE:
-      filterID = _filters->newFilter(FilterType::INCLUDE, plugID);
-      return true;
-    case FilterType::EXCLUDE:
-      filterID = _filters->newFilter(FilterType::EXCLUDE, plugID);
-      return true;
+    case FilterType::INCLUDE: filterID = _filters->newFilter(FilterType::INCLUDE, plugID); return true;
+    case FilterType::EXCLUDE: filterID = _filters->newFilter(FilterType::EXCLUDE, plugID); return true;
   }
   return false;
 }
