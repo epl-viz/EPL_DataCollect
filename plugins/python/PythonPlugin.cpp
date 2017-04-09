@@ -70,8 +70,6 @@
 #define ERROR_PYTHON_INIT_FAIL(id) "Plugin [" + id + "] Python initialization failed"
 #define ERROR_PYTHON_RUNTIME_ERROR(id) "Python runtime error in [" + id + "] occured"
 
-#define Py_REFCNT(ob) (((PyObject *)(ob))->ob_refcnt)
-
 namespace EPL_DataCollect {
 namespace plugins {
 
