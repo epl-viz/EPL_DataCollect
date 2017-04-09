@@ -33,6 +33,14 @@ cdef class Plugin:
     """
     return True  #initialize can be empty
 
+  cpdef getID(self):
+    """Getting ID, namely the Plugins name.
+
+    .. note::
+      This method should be overwritten to create a custom initialize for your plugin.
+    """
+    return type(self).__name__  #initialize can be empty
+
   cpdef run(self):
     """Run method of a plugin. (OPTIONAL: OVERWRITE)
 

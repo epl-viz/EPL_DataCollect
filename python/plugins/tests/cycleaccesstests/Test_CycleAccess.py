@@ -7,8 +7,6 @@ ERROR_MSG = PYTHON_PRE + "Python failed, if compiled with C++ this is an error"
 
 # run test case after plugin test case
 class Test_CycleAccess(Plugin.Plugin, unittest.TestCase):
-  def getID(self):
-    return "Test_CycleAccess"
 
   def run(self):
     cy = self.getCycle()
