@@ -445,6 +445,12 @@ bool PythonPlugin::initialize(CaptureInstance *ci) {
     return false;
   }
 
+  pModule = PyImport_ReloadModule(pModule);
+  if (pModule == NULL) {
+    std::cerr << ERROR_MODULE_NOT_LOADED(plugID) << std::endl;
+    return false;
+  }
+
   // check if correct class is available
   pDict  = PyModule_GetDict(pModule);
   pClass = PyDict_GetItemString(pDict, plugID.c_str());
