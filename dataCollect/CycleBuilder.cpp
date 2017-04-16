@@ -95,7 +95,7 @@ enum {
   NODEID_BROADCAST              = 255
 };
 
-void CycleBuilder::buildNextCycle() noexcept {
+bool CycleBuilder::buildNextCycle() noexcept {
   uint32_t currentCycleNum = currentCycle.getCycleNum();
   uint32_t nextCycleNum    = currentCycleNum + 1;
 
@@ -110,11 +110,11 @@ void CycleBuilder::buildNextCycle() noexcept {
 
   if (ih->getReachedEnd(nextCycleNum)) {
     reachedEnd = true;
-    return;
+    return false;
   }
 
   if (packets.empty()) {
-    return;
+    return false;
   }
 
   std::lock_guard<std::mutex> lock(currentCycleAccessMutex);
@@ -266,6 +266,7 @@ void CycleBuilder::buildNextCycle() noexcept {
   }
 
   parent->getSnapshotManager()->registerCycle(&currentCycle);
+  return true;
 }
 
 
@@ -285,8 +286,9 @@ void CycleBuilder::buildLoop() noexcept {
   auto start = high_resolution_clock::now();
 
   while (keepLoopAlive) {
-    buildNextCycle();
-    ++stats.cycleCount;
+    if (buildNextCycle())
+      ++stats.cycleCount;
+
     lock_guard<recursive_mutex> sleep(sleepMutex);
 
     if (reachedEnd)

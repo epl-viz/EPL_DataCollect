@@ -130,7 +130,7 @@ class CycleBuilder {
 #if EPL_DC_ENABLE_MOCKING == 0
  private:
 #endif
-  mockable void buildNextCycle() noexcept;
+  mockable bool buildNextCycle() noexcept;
   mockable void buildLoop() noexcept;
 
   mockable void addNode(uint8_t nID) noexcept;
