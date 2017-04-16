@@ -40,36 +40,13 @@ namespace EPL_DataCollect {
 
 using namespace constants;
 
-Init::Init(std::string pluginsDir) {
-  init_process_policies();
-
-  if (started_with_special_privs() || running_with_special_privs()) {
-    std::cout << "[Init] Program started with root privileges! This is dangerous ==> dropping them" << std::endl;
-    relinquish_special_privs_perm();
-
-    if (started_with_special_privs() || running_with_special_privs()) {
-      std::cerr << "[Init] Failed to dropp special privileges! Start failed" << std::endl;
-
-      errorCode = APPLICATION_STARTED_AS_ROOT;
-      return;
-    }
-  }
-
-  if (ws_dissect_plugin_dir(pluginsDir.c_str()) != TRUE) {
-    std::cerr << "Failed to set the wireshark plugin dir" << std::endl;
-    errorCode = SETTING_WS_PLUGIN_DIR_FAILED;
-    return;
-  }
-
+Init::Init() {
   auto ret1 = ws_capture_init();
   auto ret2 = ws_dissect_init();
   auto ret3 = proto_name_already_registered(EPL_DC_PLUGIN_PROTO_NAME.c_str());
 
   std::string foundProto = ret3 != 0 ? "true" : "false";
 
-  ws_dissect_proto_disable("epl"); // Disable old dissector
-
-  std::cout << "[Init] Wireshark plugins dir:             " << pluginsDir << std::endl;
   std::cout << "[Init] ws_capture_init returned:          " << ret1 << std::endl;
   std::cout << "[Init] ws_dissect_init returned:          " << ret2 << std::endl;
   std::cout << "[Init] Loaded the advanced EPL dissector: " << foundProto << std::endl;

@@ -41,22 +41,13 @@ namespace EPL_DataCollect {
  */
 class Init {
  public:
-  enum InitErrorCode {
-    UNINIT,
-    OK,
-    APPLICATION_STARTED_AS_ROOT,
-    SETTING_WS_PLUGIN_DIR_FAILED,
-    LOADING_DISECTOR_FAILED,
-    WIRESHARK_INIT_FAILED,
-    ERROR
-  };
+  enum InitErrorCode { UNINIT, OK, LOADING_DISECTOR_FAILED, WIRESHARK_INIT_FAILED };
 
  private:
   InitErrorCode errorCode = UNINIT;
 
  public:
-  Init(std::string pluginsDir);
-  Init() : Init(constants::EPL_DC_WS_PLUGINS_DIR) {}
+  Init();
   ~Init();
 
   InitErrorCode getIsOK() const noexcept { return errorCode; }

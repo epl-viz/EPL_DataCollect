@@ -109,7 +109,7 @@ class InputHandler {
     milliseconds deleteCyclesAfter  = milliseconds(5000);
     bool         enablePreSOCCycles = false; //!< \brief When true, Every SoA is treated as a SoC before the 1st SoC
 
-    std::string eplFrameName = "Ethernet POWERLINK+XDD";
+    std::string eplFrameName = constants::EPL_DC_PLUGIN_PROTO_NAME;
   };
 
   struct Statistics {

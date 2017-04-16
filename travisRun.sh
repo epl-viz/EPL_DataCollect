@@ -99,9 +99,8 @@ testExec chmod -R a+rwx .
 
 msg "START TEST"
 
-testExecNoRoot     LD_LIBRARY_PATH="/usr/lib" ./bin/tests
-testFail           LD_LIBRARY_PATH="/usr/lib" ./bin/tests
-testExecNoRootFail LD_LIBRARY_PATH="/usr/lib" ./bin/tests --asd-asdf
+testExec     ./bin/tests
+testExecFail ./bin/tests --asd-asdf
 
 if (( $ERROR_COUNT == 0 )); then
   msg "Installing files"
