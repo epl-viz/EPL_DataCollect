@@ -1,7 +1,5 @@
 # Ubuntu 16.04
 
-:warning: Uninstalling all system wireshark versions is highly recommended! :warning:
-
 ## Installing packets:
 
 ```bash
@@ -9,8 +7,8 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt update
 
 sudo apt install cmake git gcc-6 g++-6
-sudo apt install qt5-default libqt5svg5-dev qtmultimedia5-dev qttools5-dev-tools qtcreator extra-cmake-modules libkf5texteditor-dev
-sudo apt install libglib2.0-dev libkrb5-dev flex liblua5.2-dev zlib1g-dev bison libxml2-dev libgeoip-dev
+sudo apt install qt5-default libqt5svg5-dev qtmultimedia5-dev qttools5-dev-tools extra-cmake-modules libkf5texteditor-dev
+sudo apt install libglib2.0-dev libkrb5-dev flex liblua5.2-dev zlib1g-dev bison libxml2-dev libgeoip-dev libc-ares-dev libssh-gcrypt-dev
 sudo apt install python3.5-dev python3-pip
 
 pip3 install cython
@@ -55,9 +53,7 @@ cmake -DPCAP_HINTS="${PREFIX}" -DCMAKE_INSTALL_PREFIX="${PREFIX}" ..
 make -j$(nproc)
 make install # may require root
 
-# Install additional files not covered with make install
-cp ./run/libcapchild.a ${PREFIX}/lib
-cp ./run/libcaputils.a ${PREFIX}/lib
+# Install include files not covered with make install
 cd ..
 mkdir -p "${PREFIX}/include/wireshark"
 find . -name "*.h" ! -path "*build*" -exec cp --parents {} "${PREFIX}/include/wireshark" \;
