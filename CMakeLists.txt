@@ -98,11 +98,11 @@ run_git()
 
 add_compiler(
   GNU MIN_VERSION "6.2"
-  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -fno-strict-aliasing ${GCC_STDLIB_FLAGS}"
+  ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -fno-strict-aliasing -fdiagnostics-color=always ${GCC_STDLIB_FLAGS}"
   DEBUG      "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
 
-  C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -std=c11"
+  C_ALL      "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -std=c11 -fdiagnostics-color=always"
   C_DEBUG    "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   C_RELEASE  "-O3"
 
@@ -111,7 +111,7 @@ add_compiler(
 
 add_compiler(
   Clang MIN_VERSION 3.9
-  ALL        "-Weverything -ftemplate-backtrace-limit=0 -fno-strict-aliasing"
+  ALL        "-Weverything -ftemplate-backtrace-limit=0 -fno-strict-aliasing -fcolor-diagnostics"
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded ${CLANG_STDLIB_FLAGS}"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
@@ -120,7 +120,7 @@ add_compiler(
   DEBUG      "-Werror -fno-omit-frame-pointer"
   RELEASE    "-O3"
 
-  C_ALL      "-Weverything -ftemplate-backtrace-limit=0  -std=c11"
+  C_ALL      "-Weverything -ftemplate-backtrace-limit=0  -std=c11 -fcolor-diagnostics"
              "-Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded -Wno-float-equal"
              "-Wno-gnu-anonymous-struct -Wno-nested-anon-types -Wno-exit-time-destructors"
              "-Wno-global-constructors -Wno-switch-enum -Wno-reserved-id-macro"
@@ -214,7 +214,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads ${FS_LIB}
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark caputils capchild ${PCAP_LIBRARIES}
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark ${PCAP_LIBRARIES}
     TinyXML2::TinyXML2
 )
 
