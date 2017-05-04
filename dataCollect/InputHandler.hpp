@@ -282,5 +282,6 @@ class InputHandler {
 
   mockable uint64_t getNumBytesRead() noexcept;
   mockable std::string generateWiresharkString(Packet const &p) noexcept;
+  mockable std::string generateWiresharkString(uint64_t p) noexcept;
 };
 }

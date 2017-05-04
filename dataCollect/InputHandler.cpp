@@ -608,17 +608,18 @@ uint64_t InputHandler::getNumBytesRead() noexcept {
 }
 
 std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
+  return generateWiresharkString(p.getPacketIndex());
+}
+
+std::string InputHandler::generateWiresharkString(uint64_t p) noexcept {
   ws_dissection diss;
 
   {
     std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
     std::lock_guard<std::mutex>           dissLocker(pData.dissectLocker);
 
-    if (ws_dissect_seek(pData.dissect,
-                        &diss,
-                        static_cast<int64_t>(pData.packetOffsetMap[p.getPacketIndex()].offset),
-                        nullptr,
-                        nullptr) != 1) {
+    if (ws_dissect_seek(
+              pData.dissect, &diss, static_cast<int64_t>(pData.packetOffsetMap[p].offset), nullptr, nullptr) != 1) {
       return "";
     }
   }
@@ -636,8 +637,8 @@ std::string InputHandler::generateWiresharkString(Packet const &p) noexcept {
   std::regex r1("Frame [0-9]+:", std::regex::ECMAScript);
   std::regex r2("Frame Number: [0-9]+", std::regex::ECMAScript);
 
-  str = std::regex_replace(str, r1, "Frame " + std::to_string(p.getPacketIndex()) + ":");
-  str = std::regex_replace(str, r2, "Frame Number: " + std::to_string(p.getPacketIndex()));
+  str = std::regex_replace(str, r1, "Frame " + std::to_string(p) + ":");
+  str = std::regex_replace(str, r2, "Frame Number: " + std::to_string(p));
 
   return str;
 }
