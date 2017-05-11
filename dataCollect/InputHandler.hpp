@@ -139,10 +139,11 @@ class InputHandler {
   struct PacketMetadata final {
     enum Index : uint8_t { SOURCE = 0, DESTINATION = 1, PACKET_TYPE = 2, NMT_STATE = 3, SERVICE_ID = 4, COMMAND = 5 };
 
-    uint64_t offset   = 0;
-    uint64_t phOffset = 0;
-    uint64_t flags    = 0;
-    uint32_t cycleNum = UINT32_MAX;
+    uint64_t offset    = 0;
+    uint64_t phOffset  = 0;
+    uint64_t flags     = 0;
+    int64_t  timeStamp = 0;
+    uint32_t cycleNum  = UINT32_MAX;
 
     inline void writeFiled(uint8_t index, uint8_t data) {
       if (index >= 8)

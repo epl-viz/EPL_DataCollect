@@ -213,6 +213,7 @@ bool InputHandler::parseCycle(CompletedCycle *cd) noexcept {
       std::lock_guard<std::recursive_mutex> lockOffset(pData.offsetMapLocker);
       Packet                                tmp = parsePacket(pCfg);
 
+      metaData.timeStamp = tmp.getTime();
       pData.packetOffsetMap.emplace_back(metaData);
 
 
