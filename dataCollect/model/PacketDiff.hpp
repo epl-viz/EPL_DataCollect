@@ -42,21 +42,19 @@ class OD;
   * \brief One change of one ODEntry in one Packet
   */
 class PacketDiff {
- public:
-  enum BitLength { L8, L16, L32, L64 };
-
  private:
-  uint16_t  odIndex;
-  uint8_t   subIndex;
-  uint64_t  valInt    = UINT64_MAX;
-  BitLength bitLength = L64;
-  double    valReal   = 0;
+  uint16_t    odIndex;
+  uint8_t     subIndex;
+  std::string valString;
+  uint64_t    valInt  = UINT64_MAX;
+  double      valReal = 0;
 
  public:
   PacketDiff() = delete;
   virtual ~PacketDiff();
 
-  PacketDiff(uint16_t index, uint8_t sIndex, uint64_t entry, BitLength length);
+  PacketDiff(uint16_t index, uint8_t sIndex, std::string entry);
+  PacketDiff(uint16_t index, uint8_t sIndex, uint64_t entry);
   PacketDiff(uint16_t index, uint8_t sIndex, double entry);
 
   PacketDiff(const PacketDiff &) = default;

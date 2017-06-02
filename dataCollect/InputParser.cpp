@@ -253,38 +253,38 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
       return;
 
     case FT_BOOLEAN:
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger));
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
+      return;
+
     case FT_INT8:
-    case FT_UINT8:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L8);
-      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
-      return;
-
     case FT_INT16:
-    case FT_UINT16:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L16);
-      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
-      return;
-
     case FT_INT24:
     case FT_INT32:
-    case FT_UINT24:
-    case FT_UINT32:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger), PacketDiff::L32);
-      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger), "");
-      return;
 
     case FT_INT40:
     case FT_INT48:
     case FT_INT56:
     case FT_INT64:
+
+    case FT_UINT8:
+    case FT_UINT16:
+    case FT_UINT24:
+    case FT_UINT32:
     case FT_UINT40:
     case FT_UINT48:
     case FT_UINT56:
     case FT_UINT64:
-      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger64), PacketDiff::L64);
+      val = PacketDiff(i, si, static_cast<uint64_t>(fi->value.value.uinteger64));
       DPRINT(d, fi, debugStr + std::to_string(fi->value.value.uinteger64), "");
       return;
 
+    case FT_STRING:
+      val = PacketDiff(i, si, std::string(fi->value.value.string));
+      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.string), "");
+      return;
+
+    case FT_BYTES:
     default:
       std::cerr << "[WS Parser] bindDIFF: '" << fi->hfinfo->name << "' is not a float or integer but "
                 << EPLEnum2Str::toStr(fi->hfinfo->type) << std::endl;
@@ -315,6 +315,15 @@ void foreachPDOFunc(proto_tree *node, gpointer data) {
   switch (hashFunc(hi->abbrev)) {
     case EPL_PREFIX ".pdo.index"_h: bindUINT16(d, fi, d->TempPDO.Index); break;
     case EPL_PREFIX ".pdo.subindex"_h: bindUINT8(d, fi, d->TempPDO.SubIndex); break;
+    case EPL_PREFIX ".od.boolean"_h:
+    case EPL_PREFIX ".od.data.int"_h:
+    case EPL_PREFIX ".od.data.uint"_h:
+    case EPL_PREFIX ".od.data.real"_h:
+    case EPL_PREFIX ".od.data.string"_h:
+    case EPL_PREFIX ".od.data.bytestring"_h:
+    case EPL_PREFIX ".od.data.ethaddr"_h:
+    case EPL_PREFIX ".od.data.ipv4"_h:
+    case EPL_PREFIX ".od.data.time"_h:
     case EPL_PREFIX ".od.data"_h: bindDIFF(d, fi, d->TempPDO.Data); break;
     case "data"_h: break;
     default:
@@ -655,7 +664,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
     case EPL_PREFIX ".asnd.ires.devicetype"_h:
       bindSTRING(d, fi, d->ASnd.IdentResponse.DeviceType);
       break; // == FT_STRING -- BASE_NONE ("DeviceType")
-    case EPL_PREFIX ".asnd.ires.profile"_h:
+    case EPL_PREFIX ".asnd.ires.devicetype.add"_h:
       bindUINT16(d, fi, d->ASnd.IdentResponse.Profile);
       break; // == FT_UINT16 -- BASE_DEC ("Profile")
     case EPL_PREFIX ".asnd.ires.vendorid"_h:
