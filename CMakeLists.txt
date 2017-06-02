@@ -145,8 +145,7 @@ find_package( TinyXML2     4.0 REQUIRED )
 find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
 find_package( PCAP             REQUIRED )
-find_package( PkgConfig        REQUIRED )
-pkg_search_module(GLIB REQUIRED glib-2.0)
+find_package( GLIB2            REQUIRED )
 
 
 set( CM_WS_PLUGINS_DIR "${Wireshark_INSTALL_DIR}/${Wireshark_PLUGIN_INSTALL_DIR}" )
