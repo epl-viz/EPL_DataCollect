@@ -281,7 +281,7 @@ void bindDIFF(parserData *d, field_info *fi, PacketDiff &val) {
 
     case FT_STRING:
       val = PacketDiff(i, si, std::string(fi->value.value.string));
-      DPRINT(d, fi, debugStr + std::to_string(fi->value.value.string), "");
+      DPRINT(d, fi, debugStr + fi->value.value.string, "");
       return;
 
     case FT_BYTES:
@@ -662,11 +662,11 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       bindUINT32(d, fi, d->ASnd.IdentResponse.ResponseTime);
       break; // == FT_UINT32 -- BASE_DEC ("ResponseTime")
     case EPL_PREFIX ".asnd.ires.devicetype"_h:
-      bindSTRING(d, fi, d->ASnd.IdentResponse.DeviceType);
-      break; // == FT_STRING -- BASE_NONE ("DeviceType")
+      bindUINT16(d, fi, d->ASnd.IdentResponse.DeviceType);
+      break; // == FT_UINT16 -- BASE_NONE ("DeviceType")
     case EPL_PREFIX ".asnd.ires.devicetype.add"_h:
-      bindUINT16(d, fi, d->ASnd.IdentResponse.Profile);
-      break; // == FT_UINT16 -- BASE_DEC ("Profile")
+      bindUINT16(d, fi, d->ASnd.IdentResponse.AdditionalDeviceType);
+      break; // == FT_UINT16 -- BASE_NONE ("DeviceType -- Additional info")
     case EPL_PREFIX ".asnd.ires.vendorid"_h:
       bindUINT32(d, fi, d->ASnd.IdentResponse.VendorId);
       break; // == FT_UINT32 -- BASE_DEC_HEX ("VendorId")
@@ -937,6 +937,14 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
       bindUINT8(d, fi, d->ASnd.SDO.CMD.ODSubIndex);
       d->TempPDO.SubIndex = d->ASnd.SDO.CMD.ODSubIndex;
       break; // == FT_UINT8 -- BASE_HEX ("OD SubIndex")
+    case EPL_PREFIX ".od.data.int"_h:
+    case EPL_PREFIX ".od.data.uint"_h:
+    case EPL_PREFIX ".od.data.real"_h:
+    case EPL_PREFIX ".od.data.string"_h:
+    case EPL_PREFIX ".od.data.bytestring"_h:
+    case EPL_PREFIX ".od.data.ethaddr"_h:
+    case EPL_PREFIX ".od.data.ipv4"_h:
+    case EPL_PREFIX ".od.data.time"_h:
     case EPL_PREFIX ".od.data"_h:
       bindDIFF(d, fi, d->ASnd.SDO.CMD.data);
       d->diffs.emplace(d->ASnd.SDO.CMD.data);

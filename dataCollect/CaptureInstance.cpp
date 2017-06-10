@@ -96,8 +96,15 @@ CaptureInstance::CIErrorCode CaptureInstance::setupLoop() {
       cfgStr += std::to_string(static_cast<int>(i.first));
       cfgStr += "\",\"";
       cfgStr += cfg.xddDir + "/" + i.second.specificProfile + "\"";
-      auto ret = prefs_set_pref(const_cast<char *>(cfgStr.c_str()));
-      std::cout << "[CaptureInstance] dissector pref: '" << cfgStr << "' --> " << EPLEnum2Str::toStr(ret) << std::endl;
+      char *      errStr = nullptr;
+      std::string errStrSTD;
+      auto        ret = prefs_set_pref(const_cast<char *>(cfgStr.c_str()), &errStr);
+      if (errStr) {
+        errStrSTD = errStr;
+        g_free(errStr);
+      }
+      std::cout << "[CaptureInstance] dissector pref: '" << cfgStr << "' --> " << EPLEnum2Str::toStr(ret) << " ("
+                << errStrSTD << ")" << std::endl;
     }
   }
   prefs_apply_all();

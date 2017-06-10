@@ -80,13 +80,13 @@ void Node::setStatus(NMTState newStatus) noexcept { status = newStatus; }
 void Node::setIdentity(Node::IDENT i) noexcept { identity = i; }
 
 std::vector<std::string> Node::getXDDFiles() const noexcept { return xddFiles; }
-std::string              Node::getDeviceType() noexcept { return identity.DeviceType; }
+std::string              Node::getDeviceType() noexcept { return std::to_string(identity.DeviceType); }
 
 std::string Node::getIPAddress() noexcept { return identity.IPAddress; }
 std::string Node::getSubnetMask() noexcept { return identity.SubnetMask; }
 std::string Node::getDefaultGateway() noexcept { return identity.DefaultGateway; }
 std::string Node::getHostName() noexcept { return identity.HostName; }
-uint32_t    Node::getProfile() noexcept { return static_cast<uint32_t>(identity.Profile); }
+uint32_t    Node::getProfile() noexcept { return static_cast<uint32_t>(identity.DeviceType); }
 uint32_t    Node::getVendorId() noexcept { return identity.VendorId; }
 uint32_t    Node::getProductCode() noexcept { return identity.ProductCode; }
 uint32_t    Node::getRevisionNumber() noexcept { return identity.RevisionNumber; }

@@ -166,8 +166,8 @@ struct parserData final {
       uint16_t          PollInSize               = UINT16_MAX;
       uint16_t          PollOutSize              = UINT16_MAX;
       uint32_t          ResponseTime             = UINT32_MAX;
-      std::string       DeviceType               = "";
-      uint16_t          Profile                  = UINT16_MAX;
+      uint16_t          DeviceType               = UINT16_MAX;
+      uint16_t          AdditionalDeviceType     = UINT16_MAX;
       uint32_t          VendorId                 = UINT32_MAX;
       uint32_t          ProductCode              = UINT32_MAX;
       uint32_t          RevisionNumber           = UINT32_MAX;

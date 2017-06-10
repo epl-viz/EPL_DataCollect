@@ -204,12 +204,12 @@ bool CycleBuilder::buildNextCycle() noexcept {
             node->setIdentity(*i.IdentResponse);
 
             auto nodeCfg = parent->getNodeConfig(src);
-            if (i.IdentResponse->Profile >= 400 && nodeCfg.autoDeduceSpecificProfile) {
+            if (i.IdentResponse->DeviceType >= 400 && nodeCfg.autoDeduceSpecificProfile) {
               std::cout << "[CycleBuilder] Autodetected Node " << static_cast<int>(src) << " Profile "
-                        << i.IdentResponse->Profile << std::endl;
+                        << i.IdentResponse->DeviceType << std::endl;
 
               std::string xddPath = parent->getConfig().xddDir + '/';
-              xddPath += std::to_string(i.IdentResponse->Profile) + ".xdd";
+              xddPath += std::to_string(i.IdentResponse->DeviceType) + ".xdd";
 
               auto ret = XDDParser::parseXDD(currentCycle.getNode(src)->getOD(), xddPath);
               if (ret != XDDParser::SUCCESS) {

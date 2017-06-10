@@ -266,7 +266,7 @@ TEST_CASE("InputHandler Cycle parsing", "[InputHandler]") {
   REQUIRE(cd.packets[2].ASnd.get() != nullptr);
   REQUIRE(cd.packets[2].ASnd->RequestedServiceID == ASndServiceID::IDENT_RESPONSE);
   REQUIRE(cd.packets[2].IdentResponse.get() != nullptr);
-  REQUIRE(cd.packets[2].IdentResponse->Profile == 401);
+  REQUIRE(cd.packets[2].IdentResponse->DeviceType == 401);
   REQUIRE(cd.packets[2].IdentResponse->VendorId == 0x0100006C);
 
   cd.flags = 0;
