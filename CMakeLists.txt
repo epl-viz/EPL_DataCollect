@@ -260,7 +260,7 @@ include_directories( SYSTEM
   ${PYTHON_INCLUDE_DIRS}
   ${Wireshark_INCLUDE_DIR}
   ${LIBLIBW_INCLUDE_DIRS}
-  ${GLIB_INCLUDE_DIRS}
+  ${GLIB2_INCLUDE_DIRS}
   ${PLF_COLONY_DIR}
   ${TinyXML2_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/external/liblibwireshark/
