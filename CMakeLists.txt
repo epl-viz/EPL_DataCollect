@@ -97,7 +97,7 @@ endif( USE_CLANG_LIBCXX )
 run_git()
 
 add_compiler(
-  GNU MIN_VERSION "6.2"
+  GNU MIN_VERSION "7.1"
   ALL        "-Wall -Wextra -Wfloat-equal -Wshadow -Wno-unknown-pragmas -fno-strict-aliasing -fdiagnostics-color=always ${GCC_STDLIB_FLAGS}"
   DEBUG      "-O0 -Werror -fno-omit-frame-pointer" ${COVERAGE_COMPILER_FLAG}
   RELEASE    "-O3"
