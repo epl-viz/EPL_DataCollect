@@ -44,6 +44,20 @@
 #endif
 #endif
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+// Undef ERROR constant
+#include <plf_colony.h>
+
+extern "C" {
+#include <WinSock2.h>
+#include <windows.h>
+#include <wingdi.h>
+#undef ERROR
+#undef OPTIONAL
+#undef CONST
+}
+#endif
+
 #ifndef SLEEP
 #define SLEEP(unit, amount) std::this_thread::sleep_for(std::chrono::unit(amount));
 #endif

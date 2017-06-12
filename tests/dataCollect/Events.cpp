@@ -24,6 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <Cycle.hpp>
 #include <EvDebug.hpp>
 #include <EvError.hpp>
@@ -32,7 +34,6 @@
 #include <EvProtoError.hpp>
 #include <EvWarning.hpp>
 #include <EventBase.hpp>
-#include <catch.hpp>
 #include <fakeit.hpp>
 
 using namespace EPL_DataCollect;

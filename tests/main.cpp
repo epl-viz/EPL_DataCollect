@@ -25,11 +25,12 @@
  */
 
 #define CATCH_CONFIG_RUNNER
+#include <catch.hpp>
+
 #include "Init.hpp"
 #include "PythonInit.hpp"
 #include <CycleBuilder.hpp>
 #include "Python.h"
-#include <catch.hpp>
 
 using namespace EPL_DataCollect;
 using namespace EPL_DataCollect::constants;

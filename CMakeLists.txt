@@ -76,6 +76,25 @@ if( NOT DEFINED CM_PLUGIN_PROTO_NAME )
   set( CM_PLUGIN_PROTO_NAME "Ethernet POWERLINK" )
 endif( NOT DEFINED CM_PLUGIN_PROTO_NAME )
 
+##############################################
+# Tell the great Windows compiler what to do #
+##############################################
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+if(WIN32)
+  set(WIRESHARK_TARGET_PLATFORM win64)
+  set(PROCESSOR_ARCHITECTURE amd64)
+endif(WIN32)
+
+if( WIRESHARK_BASE_DIR )
+  set( ENV{WIRESHARK_BASE_DIR} "${WIRESHARK_BASE_DIR}" )
+  set( ENV{WIRESHARK_LIB_DIR}  "${WIRESHARK_BASE_DIR}/wireshark-${WIRESHARK_TARGET_PLATFORM}-libs-2.4" )
+  if( NOT EXISTS "$ENV{WIRESHARK_LIB_DIR}" )
+	set( ENV{WIRESHARK_LIB_DIR}  "${WIRESHARK_BASE_DIR}/wireshark-${WIRESHARK_TARGET_PLATFORM}-libs" )
+  endif( NOT EXISTS "$ENV{WIRESHARK_LIB_DIR}" )
+endif( WIRESHARK_BASE_DIR )
+
 ################################
 # Set up the build environment #
 ################################
@@ -84,15 +103,17 @@ if( ENABLE_CODE_COVERAGE )
   set( COVERAGE_COMPILER_FLAG "--coverage" )
 endif( ENABLE_CODE_COVERAGE )
 
-if( USE_CLANG_LIBCXX )
-  set( GCC_STDLIB_FLAGS   "-nodefaultlibs -lc++ -lc++abi" )
-  set( CLANG_STDLIB_FLAGS "-stdlib=libc++" )
-  set( FS_LIB c++experimental )
-else( USE_CLANG_LIBCXX )
-  set( GCC_STDLIB_FLAGS   "" )
-  set( CLANG_STDLIB_FLAGS "" )
-   set( FS_LIB stdc++fs )
-endif( USE_CLANG_LIBCXX )
+if( NOT WIN32 )
+  if( USE_CLANG_LIBCXX )
+    set( GCC_STDLIB_FLAGS   "-nodefaultlibs -lc++ -lc++abi" )
+    set( CLANG_STDLIB_FLAGS "-stdlib=libc++" )
+    set( FS_LIB c++experimental )
+  else( USE_CLANG_LIBCXX )
+    set( GCC_STDLIB_FLAGS   "" )
+    set( CLANG_STDLIB_FLAGS "" )
+    set( FS_LIB stdc++fs )
+  endif( USE_CLANG_LIBCXX )
+endif( NOT WIN32 )
 
 run_git()
 

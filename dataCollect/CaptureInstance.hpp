@@ -132,7 +132,7 @@ class CaptureInstance {
   CaptureInstance &operator=(CaptureInstance &&) = delete;
 
 
-  mockable CIErrorCode startRecording(std::string interface) noexcept;
+  mockable CIErrorCode startRecording(std::string interfaceSTR) noexcept;
   mockable CIErrorCode stopRecording() noexcept;
   mockable CIErrorCode loadPCAP(std::string file) noexcept;
 

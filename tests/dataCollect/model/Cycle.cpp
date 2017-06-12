@@ -24,9 +24,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include "InputParser.hpp"
 #include <Cycle.hpp>
-#include <catch.hpp>
 #include <cmath>
 #include <fakeit.hpp>
 #include <limits>

@@ -11,3 +11,6 @@ EPLEnum2Str.*
 !/external/CMakeLists.txt
 /doxy/build
 *.cxx
+
+/.vs
+/CMakeSettings.json

@@ -28,6 +28,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
+#include <catch.hpp>
+
 #include "CSViewFilters.hpp"
 #include "DefaultFilter.hpp"
 #include "PluginManager.hpp"
@@ -35,7 +37,6 @@
 #include <Cycle.hpp>
 #include <EvView.hpp>
 #include <PythonPlugin.hpp>
-#include <catch.hpp>
 #include <fakeit.hpp>
 #include <iostream>
 

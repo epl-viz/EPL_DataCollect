@@ -34,7 +34,10 @@
 #include "XDDParser.hpp"
 #include <chrono>
 #include <iostream>
+
+#if defined(unix) || defined(__unix)
 #include <unistd.h>
+#endif
 
 using namespace std::chrono;
 using namespace std;
@@ -301,6 +304,8 @@ void CycleBuilder::buildLoop() noexcept {
   stats.eventsCount = static_cast<uint32_t>(parent->getEventLog()->getAllEvents().size());
 
   string s[] = {" ==> ", "   -- ", "", "", ""};
+
+#if defined(unix) || defined(__unix)
   if (isatty(fileno(stdout))) {
     s[0] = " \x1b[32;1m==> \x1b[1;37m";
     s[1] = "   \x1b[34;1m-- \x1b[0;37m";
@@ -308,6 +313,7 @@ void CycleBuilder::buildLoop() noexcept {
     s[3] = "\x1b[0m";
     s[4] = "\x1b[1;35m";
   }
+#endif
 
   auto ihStats = parent->getInputHandler()->getStats();
 

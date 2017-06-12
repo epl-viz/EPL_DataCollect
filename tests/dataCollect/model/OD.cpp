@@ -24,8 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <OD.hpp>
 #include <catch.hpp>
+
+#include <OD.hpp>
 
 using namespace EPL_DataCollect;
 

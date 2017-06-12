@@ -24,9 +24,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <OD.hpp>
 #include <XDDParser.hpp>
-#include <catch.hpp>
 #include <fakeit.hpp>
 
 using namespace EPL_DataCollect;

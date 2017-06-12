@@ -418,7 +418,7 @@ XDDParser::ErrorCode XDDParser::parseXDD(OD *od, std::string str) {
     return FILE_IS_NOT_A_REGUAR_FILE;
 
 
-  XMLDocument doc;
+  tinyxml2::XMLDocument doc;
   if (doc.LoadFile(str.c_str()) != XML_SUCCESS)
     return FAILED_TO_PARSE_XML;
 

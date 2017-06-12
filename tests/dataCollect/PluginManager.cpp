@@ -24,11 +24,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <CaptureInstance.hpp>
 #include <Cycle.hpp>
 #include <PluginBase.hpp>
 #include <PluginManager.hpp>
-#include <catch.hpp>
 #include <fakeit.hpp>
 
 using namespace EPL_DataCollect;

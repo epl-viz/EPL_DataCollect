@@ -726,7 +726,7 @@ void foreachEPLFunc(proto_tree *node, gpointer data) {
 
     /* ASnd-->SyncResponse */
     case EPL_PREFIX ".asnd.syncresponse.sync"_h:
-      bindUINT8(d, fi, d->ASnd.SyncResponse.SyncResponse);
+      bindUINT8(d, fi, d->ASnd.SyncResponse.SyncResponseID);
       break; // == FT_UINT8 -- BASE_HEX ("SyncResponse")
     case EPL_PREFIX ".asnd.syncresponse.fst.val"_h:
       bindBOOL(d, fi, d->ASnd.SyncResponse.PResTimeFirstValid);

@@ -236,7 +236,7 @@ struct parserData final {
 
     /* ASnd-->SyncResponse */
     struct SyncResponse final {
-      uint8_t SyncResponse        = UINT8_MAX;
+      uint8_t SyncResponseID      = UINT8_MAX;
       bool    PResTimeFirstValid  = false;
       bool    PResTimeSecondValid = false;
       bool    PResModeStatus      = false;

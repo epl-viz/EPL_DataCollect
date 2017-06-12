@@ -24,8 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Packet.hpp>
 #include <catch.hpp>
+
+#include <Packet.hpp>
 #include <fakeit.hpp>
 
 using namespace EPL_DataCollect;

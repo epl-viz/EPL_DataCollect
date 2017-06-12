@@ -24,10 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include "defines.hpp"
 #include "EPLEnum2Str.hpp"
 #include <InputHandler.hpp>
-#include <catch.hpp>
 #include <epan/print.h>
 #include <epan/proto.h>
 #include <iostream>

@@ -24,9 +24,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <Node.hpp>
 #include <EPLEnums.h>
-#include <catch.hpp>
 
 using namespace EPL_DataCollect;
 

@@ -24,10 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <CaptureInstance.hpp>
 #include <CycleBuilder.hpp>
 #include <InputHandler.hpp>
-#include <catch.hpp>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>

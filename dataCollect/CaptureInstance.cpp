@@ -32,14 +32,19 @@
 #include "EPLEnum2Str.hpp"
 #include "PluginBase.hpp"
 #include "PluginManager.hpp"
-#include <arpa/inet.h>
 #include <capchild/capture_session.h>
 #include <caputils/capture_ifinfo.h>
 #include <epan/prefs.h>
 #include <iostream>
-#include <netinet/in.h>
 #include <ws_capture.h>
 #include <ws_dissect.h>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+// TODO include windows alternatives
+#else
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#endif
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
@@ -150,9 +155,8 @@ CaptureInstance::CIErrorCode CaptureInstance::errorCleanup(CIErrorCode retVal) {
  * \param  interface The network device to use for the live capture
  * \sa setupLoop for return values
  */
-CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interface) noexcept {
+CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfaceSTR) noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
-  (void)interface;
 
   if (state != SETUP) {
     std::cerr << "[CaptureInstance] (startRecording) Invalid state " << EPLEnum2Str::toStr(state) << std::endl;
@@ -162,20 +166,20 @@ CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfa
   auto list  = getDevices();
   bool found = false;
   for (auto const &i : list) {
-    if (i == interface) {
+    if (i == interfaceSTR) {
       found = true;
       break;
     }
   }
 
   if (!found) {
-    std::cerr << "[CaptureInstance] (startRecording) Interface '" << interface << "' does not exist!" << std::endl;
+    std::cerr << "[CaptureInstance] (startRecording) Interface '" << interfaceSTR << "' does not exist!" << std::endl;
     return INTERFACE_DOES_NOT_EXIST;
   }
 
   int   err     = 0;
   char *errInfo = nullptr;
-  capture       = ws_capture_open_live(interface.c_str(), 0, nullptr, &err, &errInfo);
+  capture       = ws_capture_open_live(interfaceSTR.c_str(), 0, nullptr, &err, &errInfo);
   if (capture == nullptr) {
     if (errInfo) {
       std::cerr << "[CaptureInstance] ws_capture_open_live returned " << err << " (" << errInfo << ")" << std::endl;
@@ -278,7 +282,9 @@ CaptureInstance::CIErrorCode CaptureInstance::loadPCAP(std::string file) noexcep
 std::vector<std::string> CaptureInstance::getDevices() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   std::vector<std::string>              devList;
-
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+  // TODO
+#else
   GList *interf;
   int    err;
   char * errInfo;
@@ -302,7 +308,7 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
   } while ((interf = interf->next));
 
   free_interface_list(interf);
-
+#endif
   return devList;
 }
 

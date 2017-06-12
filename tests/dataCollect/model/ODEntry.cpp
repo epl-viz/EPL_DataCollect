@@ -24,8 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <ODEntryContainer.hpp>
 #include <catch.hpp>
+
+#include <ODEntryContainer.hpp>
 #include <iostream>
 
 using namespace EPL_DataCollect;

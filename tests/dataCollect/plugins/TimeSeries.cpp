@@ -24,11 +24,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <CSTimeSeriesPtr.hpp>
 #include <CaptureInstance.hpp>
 #include <TimeSeries.hpp>
 #include <TimeSeriesBuilder.hpp>
-#include <catch.hpp>
 #include <iostream>
 
 #if __cplusplus <= 201402L

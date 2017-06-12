@@ -24,11 +24,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <Cycle.hpp>
 #include <EvDebug.hpp>
 #include <EventBase.hpp>
 #include <EventLog.hpp>
-#include <catch.hpp>
 #include <fakeit.hpp>
 #include <iostream>
 

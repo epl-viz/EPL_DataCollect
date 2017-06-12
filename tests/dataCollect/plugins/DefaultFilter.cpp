@@ -24,10 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <catch.hpp>
+
 #include <CaptureInstance.hpp>
 #include <DefaultFilter.hpp>
 #include "EPLEnums.h"
-#include <catch.hpp>
 
 #if __cplusplus <= 201402L
 #include <experimental/filesystem>
