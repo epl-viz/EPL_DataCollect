@@ -234,7 +234,7 @@ new_project_library(
   DEPENDENCIES
     ${PYTHON_LIBRARIES}
     Threads::Threads ${FS_LIB}
-    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} libwireshark ${PCAP_LIBRARIES}
+    ${Wireshark_LIBRARY} ${GLIB_LIBRARIES} liblibwireshark ${PCAP_LIBRARIES}
     TinyXML2::TinyXML2
 )
 
