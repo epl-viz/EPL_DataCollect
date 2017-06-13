@@ -152,7 +152,7 @@ CaptureInstance::CIErrorCode CaptureInstance::errorCleanup(CIErrorCode retVal) {
  * \brief starts recording on the specified ethernet device
  *
  * A list of available devices can be obtained with getDevices()
- * \param  interface The network device to use for the live capture
+ * \param  interfaceSTR The network device to use for the live capture
  * \sa setupLoop for return values
  */
 CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfaceSTR) noexcept {
@@ -283,7 +283,7 @@ std::vector<std::string> CaptureInstance::getDevices() noexcept {
   std::lock_guard<std::recursive_mutex> lock(accessMutex);
   std::vector<std::string>              devList;
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
-  // TODO
+// TODO
 #else
   GList *interf;
   int    err;
