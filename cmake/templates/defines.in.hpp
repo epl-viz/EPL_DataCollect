@@ -47,6 +47,7 @@
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
 // Undef ERROR constant
 #include <plf_colony.h>
+#include <tinyxml2.h>
 
 extern "C" {
 #include <WinSock2.h>
@@ -55,6 +56,9 @@ extern "C" {
 #undef ERROR
 #undef OPTIONAL
 #undef CONST
+#ifdef DEBUG
+#undef DEBUG
+#endif
 }
 #endif
 

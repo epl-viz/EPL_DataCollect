@@ -64,6 +64,10 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
       INSTALL_RPATH  ${CMAKE_INSTALL_PREFIX}/lib/eplViz
       INSTALL_RPATH_USE_LINK_PATH TRUE
   )
+
+  if( WIN32 )
+    set_target_properties(${OUT_NAME}_cythonLib PROPERTIES SUFFIX ".pyd")
+  endif( WIN32 )
 endforeach( I IN LISTS PYTHON_FILES_LIST )
 
 set( @CM_CURRENT_LIB_SRC@

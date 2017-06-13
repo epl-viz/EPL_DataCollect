@@ -30,25 +30,45 @@
 
 #include "PythonInit.hpp"
 #include <Python.h>
+#include <regex>
+
+#if __cplusplus <= 201402L
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 namespace EPL_DataCollect {
 namespace plugins {
 
 using namespace constants;
 
-PythonInit::PythonInit() {
+PythonInit::PythonInit(int argc, char *argv[]) {
   Py_Initialize();
   PyRun_SimpleString("import sys\n");
   addPath(EPL_DC_CM_BINARY_DIR + "/lib");
   addPath(EPL_DC_INSTALL_PREFIX + "/lib/eplViz");
+
+  fs::path exePath(argv[0]);
+  auto absolutePath = fs::absolute(exePath);
+  addPath(absolutePath.parent_path().string());
 }
 
 PythonInit::~PythonInit() { Py_Finalize(); }
 
 void PythonInit::addPath(std::string path) {
+	fs::path fsPath(path);
+	path = fsPath.string();
+
+	std::regex reg("\\\\");
+	path = std::regex_replace(path, reg, "\\\\");
+
   std::string temp = "sys.path.append('";
   temp += path;
   temp += "')\n";
+
   PyRun_SimpleString(temp.c_str());
 }
 }

@@ -84,13 +84,13 @@ inline bool strToBool(std::string str) {
   return str == "true" || str == "True" || str == "TRUE" || str == "1" || str == "ON" || str == "on";
 }
 
-void ODEntryInt::setFromString(std::string str, uint8_t) { data = std::stol(str, nullptr, 0); }
-void ODEntryUInt::setFromString(std::string str, uint8_t) { data = std::stoul(str, nullptr, 0); }
+void ODEntryInt::setFromString(std::string str, uint8_t) { data = std::stoll(str, nullptr, 0); }
+void ODEntryUInt::setFromString(std::string str, uint8_t) { data = std::stoull(str, nullptr, 0); }
 void ODEntryBool::setFromString(std::string str, uint8_t) { data = strToBool(str); }
 void ODEntryReal::setFromString(std::string str, uint8_t) { data = std::stod(str); }
 void ODEntryString::setFromString(std::string str, uint8_t) { data = str; }
-void ODEntryArrayInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stol(str); }
-void ODEntryArrayUInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stoul(str); }
+void ODEntryArrayInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stoll(str); }
+void ODEntryArrayUInt::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stoull(str); }
 void ODEntryArrayBool::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = strToBool(str) ? 1 : 0; }
 void ODEntryArrayReal::setFromString(std::string str, uint8_t subIndex) { data[subIndex] = std::stod(str); }
 

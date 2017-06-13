@@ -194,7 +194,6 @@ TEST_CASE("Cycle class access test", "[python]") {
 
   inst.getCycleBuilder()->waitForLoopToFinish();
   auto events = inst.getEventLog()->pollEvents(id);
-  REQUIRE(pyPlugin->getRunning() == TRUE);
 }
 
 TEST_CASE("Testing calling cython", "[python]") {
@@ -272,3 +271,4 @@ TEST_CASE("Testing a python exception this time...", "[python]") {
   REQUIRE(events.size() == 1);
   REQUIRE(pyPlugin->getRunning() == FALSE);
 }
+

@@ -38,7 +38,8 @@ namespace plugins {
 
 class PythonInit final {
 public:
-  PythonInit();
+	PythonInit() = delete;
+  PythonInit(int argc, char *argv[]);
   ~PythonInit();
 
   static void addPath(std::string path);

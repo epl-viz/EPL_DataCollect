@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   if (init.getIsOK() != Init::OK)
     return 1;
 
-  PythonInit pyInit;
+  PythonInit pyInit(argc, argv);
   pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins");
   pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests");
   pyInit.addPath(EPL_DC_BUILD_DIR_ROOT + "/python/plugins/tests/loadtests");
