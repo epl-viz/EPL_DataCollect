@@ -56,7 +56,7 @@ make install # may require root
 # Install include files not covered with make install
 cd ..
 mkdir -p "${PREFIX}/include/wireshark"
-find . -name "*.h" ! -path "*build*" -exec cp --parents {} "${PREFIX}/include/wireshark" \;
+find . -name "*.h" ! -path "*build*" ! -name "cfile.h" -exec cp --parents {} "${PREFIX}/include/wireshark" \;
 ```
 
 ## Building TinyXML2 version 4
