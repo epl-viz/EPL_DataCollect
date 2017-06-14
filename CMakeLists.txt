@@ -91,7 +91,7 @@ if( WIRESHARK_BASE_DIR )
   set( ENV{WIRESHARK_BASE_DIR} "${WIRESHARK_BASE_DIR}" )
   set( ENV{WIRESHARK_LIB_DIR}  "${WIRESHARK_BASE_DIR}/wireshark-${WIRESHARK_TARGET_PLATFORM}-libs-2.4" )
   if( NOT EXISTS "$ENV{WIRESHARK_LIB_DIR}" )
-	set( ENV{WIRESHARK_LIB_DIR}  "${WIRESHARK_BASE_DIR}/wireshark-${WIRESHARK_TARGET_PLATFORM}-libs" )
+    set( ENV{WIRESHARK_LIB_DIR}  "${WIRESHARK_BASE_DIR}/wireshark-${WIRESHARK_TARGET_PLATFORM}-libs" )
   endif( NOT EXISTS "$ENV{WIRESHARK_LIB_DIR}" )
 endif( WIRESHARK_BASE_DIR )
 
@@ -177,35 +177,8 @@ message( STATUS "Wireshark plugins dir: ${CM_WS_PLUGINS_DIR}" )
 link_directories( ${Wireshark_LIB_DIR} )
 
 if( NOT DISABLE_TESTS )
-  set( FUNC_RED_PREFIX "${PROJECT_BINARY_DIR}/funcRedirect" )
-  set( FUNC_RED_INSTALL_DIR "${FUNC_RED_PREFIX}/install_dir" )
-  set( FUNC_RED_LIB_DIR     "${FUNC_RED_INSTALL_DIR}/lib" )
-
-  set( FUNC_RED_INCLUDE_DIRS "${FUNC_RED_INSTALL_DIR}/include/funcRedirect" )
-
-  ExternalProject_Add( catch
-    PREFIX            ${CMAKE_BINARY_DIR}/catch
-    GIT_REPOSITORY    https://github.com/philsquared/Catch.git
-    UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND     ""
-    INSTALL_COMMAND   ""
-  )
-
-  ExternalProject_Add( FakeIt
-    PREFIX            ${CMAKE_BINARY_DIR}/FakeIt
-    GIT_REPOSITORY    https://github.com/eranpeer/FakeIt.git
-    UPDATE_COMMAND    ${GIT_EXECUTABLE} pull
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND     ""
-    INSTALL_COMMAND   ""
-  )
-
-  ExternalProject_Get_Property( catch source_dir )
-  set( CATCH_INCLUDE_DIR "${source_dir}/include" )
-
-  ExternalProject_Get_Property( FakeIt source_dir )
-  set( FAKE_IT_INCLUDE_DIR "${source_dir}/single_header/standalone" )
+  set( CATCH_INCLUDE_DIR   "${CMAKE_CURRENT_LIST_DIR}/external/catch/include" )
+  set( FAKE_IT_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/external/FakeIt/single_header/catch" )
 
   set( CM_ENABLE_MOCKING 1 )
 endif( NOT DISABLE_TESTS )
@@ -308,7 +281,6 @@ foreach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 endforeach( I IN LISTS EPL_DataCollect_SUBDIR_LIST )
 
 if( NOT DISABLE_TESTS )
-  add_dependencies( epl_DataCollect_obj FakeIt catch )
   add_custom_target( check COMMAND tests )
 endif( NOT DISABLE_TESTS )
 

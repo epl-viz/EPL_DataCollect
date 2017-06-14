@@ -10,3 +10,9 @@
 [submodule "external/resources"]
 	path = external/resources
 	url = https://github.com/epl-viz/resources.git
+[submodule "external/catch"]
+	path = external/catch
+	url = https://github.com/philsquared/Catch.git
+[submodule "external/FakeIt"]
+	path = external/FakeIt
+	url = https://github.com/eranpeer/FakeIt.git
