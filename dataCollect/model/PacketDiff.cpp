@@ -67,7 +67,7 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
     std::cout << "[PacketDiff] Entry " << std::hex << odIndex << std::dec
               << " does not exist -- creating new fallback OD Description Index" << std::endl;
 
-    ODEntryDescription newDesc(subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY, ObjectDataType::INTEGER64);
+    ODEntryDescription newDesc(subIndex == 0 ? ObjectType::VAR : ObjectType::ARRAY, ObjectDataType::INTEGER32);
     newDesc.name = "<NOT IN XDD>";
 
     od->getODDesc()->setEntry(odIndex, newDesc);
@@ -77,7 +77,17 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
   ODEntryContainer entry(entryPTR);
 
   switch (entry->getType()) {
-    case ObjectClassType::INTEGER: entry.getData<ODEntryInt>()->data   = static_cast<int64_t>(valInt); break;
+    case ObjectClassType::INTEGER:
+      switch (entry->getDataType()) {
+        case ObjectDataType::INTEGER8:
+        case ObjectDataType::INTEGER16:
+        case ObjectDataType::INTEGER24:
+        case ObjectDataType::INTEGER32:
+          entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
+        default:
+          entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
+	  	}
+	  	break;
     case ObjectClassType::UNSIGNED: entry.getData<ODEntryUInt>()->data = valInt; break;
     case ObjectClassType::BOOL: entry.getData<ODEntryBool>()->data     = valInt != 0; break;
     case ObjectClassType::REAL: entry.getData<ODEntryReal>()->data     = valReal; break;
@@ -100,7 +110,17 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
       }
 
       switch (temp->getType()) {
-        case ObjectClassType::INTEGER: entry.getData<ODEntryInt>()->data  = static_cast<int64_t>(valInt); break;
+        case ObjectClassType::INTEGER:
+          switch (entry->getDataType()) {
+            case ObjectDataType::INTEGER8:
+            case ObjectDataType::INTEGER16:
+            case ObjectDataType::INTEGER24:
+            case ObjectDataType::INTEGER32:
+              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
+            default:
+              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
+          }
+          break;
         case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
         case ObjectClassType::BOOL: temp.getData<ODEntryBool>()->data     = valInt != 0; break;
         case ObjectClassType::REAL: temp.getData<ODEntryReal>()->data     = valReal; break;
