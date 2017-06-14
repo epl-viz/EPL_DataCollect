@@ -37,6 +37,5 @@ namespace plugins {
 CSPythonPluginStorage::CSPythonPluginStorage() {}
 
 CSPythonPluginStorage::~CSPythonPluginStorage() {}
-
 }
 }

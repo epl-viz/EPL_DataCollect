@@ -55,8 +55,8 @@ void TimeSeriesBuilder::run(Cycle *cycle) {
       i->addDataPoint(cycleNum, cycle->getCycleStorage(i->getCSID()));
     } else {
       ODEntry *entry = nullptr;
-      auto *node = cycle->getNode(i->getNodeID());
-      if(node) {
+      auto *   node  = cycle->getNode(i->getNodeID());
+      if (node) {
         entry = node->getOD()->getEntry(i->getIndex());
       }
 

@@ -129,7 +129,7 @@ cdef class Plugin:
 
   # internal method
   cdef registerCycleStorage(self, index, type):
-    cdef int c_type
+    cdef int c_type = 1
 
     if (type == int):
       c_type = 1

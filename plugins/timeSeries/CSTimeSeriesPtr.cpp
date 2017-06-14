@@ -37,6 +37,5 @@ CSTimeSeriesPtr::~CSTimeSeriesPtr() {}
 
 CSTimeSeriesPtr::CONTAINER *CSTimeSeriesPtr::getTsPTRs() noexcept { return &timeSeries; }
 void CSTimeSeriesPtr::addTS(std::shared_ptr<TimeSeries> newTS) noexcept { timeSeries.emplace(std::move(newTS)); }
-
 }
 }

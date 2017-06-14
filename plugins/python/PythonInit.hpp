@@ -37,8 +37,8 @@ namespace EPL_DataCollect {
 namespace plugins {
 
 class PythonInit final {
-public:
-	PythonInit() = delete;
+ public:
+  PythonInit() = delete;
   PythonInit(int argc, char *argv[]);
   ~PythonInit();
 

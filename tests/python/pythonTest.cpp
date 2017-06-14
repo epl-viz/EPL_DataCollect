@@ -271,4 +271,3 @@ TEST_CASE("Testing a python exception this time...", "[python]") {
   REQUIRE(events.size() == 1);
   REQUIRE(pyPlugin->getRunning() == FALSE);
 }
-

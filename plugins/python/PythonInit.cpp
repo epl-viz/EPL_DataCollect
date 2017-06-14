@@ -45,25 +45,25 @@ namespace plugins {
 
 using namespace constants;
 
-PythonInit::PythonInit(int argc, char *argv[]) {
+PythonInit::PythonInit(int, char *argv[]) {
   Py_Initialize();
   PyRun_SimpleString("import sys\n");
   addPath(EPL_DC_CM_BINARY_DIR + "/lib");
   addPath(EPL_DC_INSTALL_PREFIX + "/lib/eplViz");
 
   fs::path exePath(argv[0]);
-  auto absolutePath = fs::absolute(exePath);
+  auto     absolutePath = fs::absolute(exePath);
   addPath(absolutePath.parent_path().string());
 }
 
 PythonInit::~PythonInit() { Py_Finalize(); }
 
 void PythonInit::addPath(std::string path) {
-	fs::path fsPath(path);
-	path = fsPath.string();
+  fs::path fsPath(path);
+  path = fsPath.string();
 
-	std::regex reg("\\\\");
-	path = std::regex_replace(path, reg, "\\\\");
+  std::regex reg("\\\\");
+  path = std::regex_replace(path, reg, "\\\\");
 
   std::string temp = "sys.path.append('";
   temp += path;

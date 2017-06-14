@@ -46,7 +46,7 @@ class DefaultFilter final : public PluginBase {
   uint32_t filterID = UINT32_MAX;
 
  public:
-  DefaultFilter() = default;
+  DefaultFilter()  = default;
   ~DefaultFilter() = default;
 
   void run(Cycle *cycle) override;

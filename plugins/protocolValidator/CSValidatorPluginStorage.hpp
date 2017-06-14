@@ -33,8 +33,8 @@
 
 #include "defines.hpp"
 #include "CycleStorageBase.hpp"
-#include <unordered_map>
 #include "EPLEnums.h"
+#include <unordered_map>
 
 namespace EPL_DataCollect {
 namespace plugins {
@@ -55,7 +55,7 @@ class CSValidatorPluginStorage : public CycleStorageBase {
   CSValidatorPluginStorage &operator=(CSValidatorPluginStorage &&) = default;
 
   std::unordered_map<uint8_t, NMTState> nodeStatus;
-  std::unordered_map<uint8_t, int64_t> pReqTimes; // mapping the last poll request
+  std::unordered_map<uint8_t, int64_t>  pReqTimes; // mapping the last poll request
 
   double getNumericValue() override { return 0; }
 
@@ -82,4 +82,3 @@ class CSValidatorPluginStorage : public CycleStorageBase {
 };
 }
 }
-

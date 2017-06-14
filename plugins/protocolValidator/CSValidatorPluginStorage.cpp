@@ -36,7 +36,5 @@ namespace plugins {
 CSValidatorPluginStorage::CSValidatorPluginStorage() {}
 
 CSValidatorPluginStorage::~CSValidatorPluginStorage() {}
-
 }
 }
-

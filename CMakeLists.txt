@@ -366,7 +366,7 @@ enum2str_generate(
   BLACKLIST
 )
 
-generate_format_command( format 3.9.1 )
+generate_format_command( format 4.0.0 )
 
 #################
 # Code Coverage #
