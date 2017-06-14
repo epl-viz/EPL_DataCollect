@@ -83,11 +83,11 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
         case ObjectDataType::INTEGER16:
         case ObjectDataType::INTEGER24:
         case ObjectDataType::INTEGER32:
-          entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
-        default:
-          entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
-	  	}
-	  	break;
+          entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt));
+          break;
+        default: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
+      }
+      break;
     case ObjectClassType::UNSIGNED: entry.getData<ODEntryUInt>()->data = valInt; break;
     case ObjectClassType::BOOL: entry.getData<ODEntryBool>()->data     = valInt != 0; break;
     case ObjectClassType::REAL: entry.getData<ODEntryReal>()->data     = valReal; break;
@@ -116,9 +116,9 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
             case ObjectDataType::INTEGER16:
             case ObjectDataType::INTEGER24:
             case ObjectDataType::INTEGER32:
-              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt)); break;
-            default:
-              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
+              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt));
+              break;
+            default: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
           }
           break;
         case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
