@@ -43,7 +43,7 @@ foreach( I IN LISTS PYTHON_FILES_LIST )
   string( REGEX REPLACE "\\.pyx$" ""                        OUT_NAME "${OUT_NAME}" )
   add_custom_command(
     OUTPUT "${OUT_FILE}"
-    COMMAND cython -Wextra -3 --cplus -X embedsignature=True -o ${OUT_FILE} ${I}
+    COMMAND Cython::Cython -Wextra -3 --cplus -X embedsignature=True -o ${OUT_FILE} ${I}
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     COMMENT "cython: generating ${OUT_FILE}"
     DEPENDS ${I}
