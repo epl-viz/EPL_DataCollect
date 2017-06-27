@@ -6,7 +6,7 @@
 # BEGIN CONFIG SECTION #
 ########################
 
-CLANG_FORMAT_VERSIONS=( "3.9.1" "4.0.0" )
+CLANG_FORMAT_VERSIONS=( "3.9.1" "4.0.0" "4.0.1" )
 CALNG_FORMAT_DEFAULT_CMD="clang-format"
 EXTENSIONS=( cpp c hpp h )
 SOURCE_DIRS=( dataCollect tests )
@@ -107,8 +107,7 @@ checkFormat() {
 
   for I in "${SOURCE_LIST[@]}"; do
     for J in "${EXTENSIONS[@]}"; do
-      echo "$I" | grep -E "\.$J$" &> /dev/null
-      (( $? != 0 )) && continue
+      [[ ! "$I" =~ \.$J$ ]] && continue
 
       (( NUM_FILES++ ))
 
