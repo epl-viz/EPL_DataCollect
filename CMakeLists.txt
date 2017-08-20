@@ -167,7 +167,7 @@ find_package( Threads          REQUIRED )
 find_package( Wireshark        REQUIRED )
 find_package( PCAP             REQUIRED )
 find_package( GLIB2            REQUIRED )
-find_package( Cython    0.25.2 REQUIRED )
+find_package( Cython      0.26 REQUIRED )
 
 
 set( CM_WS_PLUGINS_DIR "${Wireshark_INSTALL_DIR}/${Wireshark_PLUGIN_INSTALL_DIR}" )

@@ -39,7 +39,7 @@ if( CYTHON_EXE )
     ERROR_VARIABLE  CYTHON_VERSION_RAW
   )
 
-  string( REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" CYTHON_VERSION "${CYTHON_VERSION_RAW}" )
+  string( REGEX MATCH "[0-9]+\.[0-9]+(\.[0-9]+)?" CYTHON_VERSION "${CYTHON_VERSION_RAW}" )
 endif( CYTHON_EXE )
 
 find_package_handle_standard_args(
