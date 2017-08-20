@@ -86,7 +86,8 @@ class CaptureInstance {
     SnapshotManager::Config smConfig;
     InputHandler::Config    ihConfig;
 
-    std::string xddDir = constants::EPL_DC_BUILD_DIR_ROOT + "/xdd";
+    bool        enableHardwareTimestamps = true;
+    std::string xddDir                   = constants::EPL_DC_BUILD_DIR_ROOT + "/xdd";
   };
 
   struct NodeConfig {

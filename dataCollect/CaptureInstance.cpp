@@ -177,9 +177,15 @@ CaptureInstance::CIErrorCode CaptureInstance::startRecording(std::string interfa
     return INTERFACE_DOES_NOT_EXIST;
   }
 
+  int   flags   = 0;
   int   err     = 0;
   char *errInfo = nullptr;
-  capture       = ws_capture_open_live(interfaceSTR.c_str(), 0, nullptr, &err, &errInfo);
+
+  if (cfg.enableHardwareTimestamps) {
+    flags = WS_CAPTURE_TSTAMP_ADAPTER_UNSYNCED;
+  }
+
+  capture = ws_capture_open_live(interfaceSTR.c_str(), flags, nullptr, &err, &errInfo);
   if (capture == nullptr) {
     if (errInfo) {
       std::cerr << "[CaptureInstance] ws_capture_open_live returned " << err << " (" << errInfo << ")" << std::endl;
