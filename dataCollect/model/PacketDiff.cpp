@@ -116,9 +116,9 @@ ODEntryContainer PacketDiff::getEntry(OD *od) const noexcept {
             case ObjectDataType::INTEGER16:
             case ObjectDataType::INTEGER24:
             case ObjectDataType::INTEGER32:
-              entry.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt));
+              temp.getData<ODEntryInt>()->data = static_cast<int64_t>(static_cast<int32_t>(valInt));
               break;
-            default: entry.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
+            default: temp.getData<ODEntryInt>()->data = static_cast<int64_t>(valInt); break;
           }
           break;
         case ObjectClassType::UNSIGNED: temp.getData<ODEntryUInt>()->data = valInt; break;
